@@ -1,0 +1,1209 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#F2F4F3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0E0D" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+</style>
+<title>Nutri Prático</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Nutri Prático">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+<style>
+/* Layout: uma coluna de app nativo (máx. 600px), cabeçalho translúcido fixo, cartões só onde há objeto próprio, barra de totais no rodapé. */
+:root{
+  --bg:#F2F4F3; --surface:#FFFFFF; --surface-2:#F7F9F8; --ink:#0D1311; --ink-2:#3B4642; --muted:#707C77;
+  --line:#E2E7E5; --line-2:#D3DAD7; --accent:#0B7A5E; --accent-ink:#FFFFFF; --accent-soft:#E2F2EC;
+  --carb:#C9821A; --prot:#4C58D0; --fat:#D9475F; --danger:#C93636; --shadow:0 1px 2px rgba(13,19,17,.05),0 8px 24px rgba(13,19,17,.06);
+  --seg-on:#FFFFFF; --inv-bg:#0D1311; --inv-fg:#F2F4F3; --inv-acc:#5FE0B4; --scrim:rgba(5,10,8,.42);
+  --font:"Geist",-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+  --mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --r:16px; --r-sm:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0B0E0D; --surface:#141917; --surface-2:#1A201E; --ink:#EDF2F0; --ink-2:#C2CBC7; --muted:#88948F;
+  --line:#242D2A; --line-2:#313C38; --accent:#47C79F; --accent-ink:#04140E; --accent-soft:#143128;
+  --carb:#EDA84A; --prot:#8E97FF; --fat:#FF7D92; --danger:#FF6B6B; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+  --seg-on:#313C38; --inv-bg:#1D2522; --inv-fg:#EDF2F0; --inv-acc:#47C79F; --scrim:rgba(0,0,0,.6); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B0E0D; --surface:#141917; --surface-2:#1A201E; --ink:#EDF2F0; --ink-2:#C2CBC7; --muted:#88948F;
+  --line:#242D2A; --line-2:#313C38; --accent:#47C79F; --accent-ink:#04140E; --accent-soft:#143128;
+  --carb:#EDA84A; --prot:#8E97FF; --fat:#FF7D92; --danger:#FF6B6B; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+  --seg-on:#313C38; --inv-bg:#1D2522; --inv-fg:#EDF2F0; --inv-acc:#47C79F; --scrim:rgba(0,0,0,.6); color-scheme:dark}
+
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.4;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none;padding:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.app{max-width:600px;margin:0 auto;padding-bottom:190px}
+.totals{transition:transform .2s,opacity .2s}
+.totals.kb{transform:translateY(120%);opacity:0}
+
+/* Cabeçalho */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;margin:0 calc(-1 * max(16px,env(safe-area-inset-left,0px)));
+  padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));
+  background:color-mix(in srgb,var(--bg) 82%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);
+  border-bottom:1px solid transparent;transition:border-color .2s}
+.top.scrolled{border-bottom-color:var(--line)}
+.top-row{max-width:600px;margin:0 auto;display:flex;align-items:center;gap:12px;min-height:40px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:600;letter-spacing:-.01em}
+.mark{width:26px;height:26px;border-radius:8px;background:var(--ink);color:var(--bg);display:grid;place-items:center}
+.mark svg{width:15px;height:15px}
+.spacer{flex:1}
+.icon-btn{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;color:var(--ink);background:var(--surface);border:1px solid var(--line)}
+.icon-btn svg{width:18px;height:18px}
+.icon-btn.accent{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.back{display:flex;align-items:center;gap:2px;color:var(--accent);font-weight:500;margin-left:-6px;padding:6px}
+.back svg{width:20px;height:20px}
+
+h1{font-size:32px;line-height:1.1;letter-spacing:-.03em;font-weight:650;margin:18px 0 4px;text-wrap:balance}
+.sub{color:var(--muted);font-size:14px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* Busca */
+.search{position:relative;margin:16px 0 8px}
+.search svg{position:absolute;left:13px;top:50%;width:17px;height:17px;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.search input{width:100%;height:46px;border-radius:14px;border:1px solid var(--line);background:var(--surface);padding:0 14px 0 40px;font-size:16px;outline:none}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+
+/* Lista de pacientes */
+.plist{display:flex;flex-direction:column;margin-top:8px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.pitem{display:flex;align-items:center;gap:13px;padding:13px 14px;text-align:left;width:100%;border-top:1px solid var(--line)}
+.pitem:first-child{border-top:0}
+.pitem:active{background:var(--surface-2)}
+.avatar{width:42px;height:42px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:600;font-size:15px;flex:none;letter-spacing:-.01em}
+.pmain{flex:1;min-width:0}
+.pname{font-weight:550;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pmeta{color:var(--muted);font-size:13px}
+.pkcal{font-family:var(--mono);font-size:12px;color:var(--muted);text-align:right;white-space:nowrap}
+.pkcal b{display:block;color:var(--ink);font-weight:500;font-size:14px}
+.chip{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:6px;background:var(--surface-2);border:1px solid var(--line);color:var(--muted);vertical-align:2px;margin-left:6px}
+.empty{padding:36px 18px;text-align:center;color:var(--muted)}
+.foot-note{margin:22px 4px 0;color:var(--muted);font-size:12.5px;display:flex;gap:8px;align-items:flex-start}
+.foot-note svg{width:15px;height:15px;flex:none;margin-top:1px}
+.nudge{display:flex;align-items:center;gap:12px;margin-top:14px;padding:12px 14px;border-radius:var(--r);background:var(--accent-soft);color:var(--ink)}
+.nudge div{flex:1;font-size:14px}
+.nudge b{display:block;font-weight:600}
+.nudge .btn{height:38px;padding:0 14px;font-size:14px}
+.bk-row{display:flex;flex-direction:column;gap:10px}
+.bk-meta{font-size:13px;color:var(--muted);margin:-6px 0 16px}
+
+/* Botões */
+.btn{height:46px;padding:0 18px;border-radius:14px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:8px;letter-spacing:-.01em}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:var(--surface);border:1px solid var(--line)}
+.btn.danger{color:var(--danger);background:transparent;border:1px solid var(--line)}
+.btn.block{width:100%}
+.btn:active{transform:scale(.985)}
+.btn[disabled]{opacity:.4;pointer-events:none}
+
+/* Sheet */
+.scrim{position:fixed;inset:0;background:var(--scrim);z-index:50;opacity:0;transition:opacity .2s}
+.scrim.on{opacity:1}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:51;background:var(--surface);border-radius:22px 22px 0 0;max-width:600px;margin:0 auto;
+  padding:10px max(18px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px));
+  transform:translateY(100%);transition:transform .26s cubic-bezier(.2,.8,.2,1);box-shadow:0 -10px 40px rgba(0,0,0,.18);max-height:92%;overflow:auto}
+.sheet.on{transform:none}
+.grab{width:38px;height:5px;border-radius:3px;background:var(--line-2);margin:0 auto 14px}
+.sheet h2{font-size:21px;letter-spacing:-.02em;margin:0 0 16px;font-weight:650}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.field label{font-size:13px;color:var(--muted);font-weight:500}
+.input{height:50px;border-radius:13px;border:1px solid var(--line);background:var(--surface-2);padding:0 14px;font-size:17px;outline:none;width:100%}
+.input:focus{border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 4px var(--accent-soft)}
+.err{color:var(--danger);font-size:13px;min-height:18px}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;padding:4px;background:var(--surface-2);border:1px solid var(--line);border-radius:13px}
+.seg button{height:40px;border-radius:10px;font-weight:550;font-size:14px;color:var(--ink-2);padding:0 4px;line-height:1.1}
+.seg button.on{background:var(--seg-on);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08),0 0 0 1px var(--line)}
+.seg.big button{height:46px;font-size:15px}
+.row-actions{display:flex;gap:10px;margin-top:8px}
+.row-actions .btn{flex:1}
+.confirm{display:flex;gap:8px;align-items:center;margin-top:14px;font-size:14px;color:var(--ink-2)}
+
+/* Paciente */
+.phead{margin:14px 0 14px}
+.phead h1{margin:0 0 4px;font-size:28px}
+.tabs{position:sticky;top:calc(env(safe-area-inset-top,0px) + 61px);z-index:15;padding:6px 0 10px;background:var(--bg)}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.stack{display:flex;flex-direction:column;gap:12px}
+.card-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:12px}
+.card-t{font-weight:600;font-size:16px;letter-spacing:-.01em}
+
+/* Energia */
+.hero{background:var(--inv-bg);color:var(--inv-fg);border:0;padding:18px}
+.hero .eyebrow{color:color-mix(in srgb,var(--inv-fg) 60%,transparent)}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.big{font-size:38px;font-weight:600;letter-spacing:-.035em;line-height:1;font-variant-numeric:tabular-nums}
+.big small{font-size:14px;font-weight:500;letter-spacing:0;margin-left:4px;opacity:.6}
+.hero .lbl{font-size:13px;opacity:.7;margin-bottom:6px}
+.hero-foot{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid color-mix(in srgb,var(--inv-fg) 18%,transparent);font-size:12.5px;font-family:var(--mono);opacity:.85}
+.hero .gold{color:var(--inv-acc)}
+.measures{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mfield{position:relative}
+.mfield input{height:62px;font-size:26px;font-weight:600;letter-spacing:-.02em;padding-right:44px}
+.mfield span{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none}
+.facts{display:flex;gap:6px 14px;flex-wrap:wrap;margin-top:12px;color:var(--muted);font-size:13px}
+.facts b{color:var(--ink);font-weight:550}
+.res{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.res > div{background:var(--surface-2);border-radius:12px;padding:10px 12px;border:1px solid var(--line)}
+.res .k{font-size:11.5px;color:var(--muted);font-family:var(--mono);letter-spacing:.04em;text-transform:uppercase}
+.res .v{font-size:19px;font-weight:600;letter-spacing:-.02em;margin-top:2px;font-variant-numeric:tabular-nums}
+.res .v.acc{color:var(--accent)}
+.eq{margin-top:10px;font-family:var(--mono);font-size:11.5px;color:var(--muted);line-height:1.5}
+.seg4{grid-auto-flow:row;grid-template-columns:repeat(4,1fr)}
+.seg4 button{font-size:13px;height:44px}
+@media (max-width:370px){.seg4{grid-template-columns:repeat(2,1fr)}}
+.note{font-size:12.5px;color:var(--muted);margin-top:8px}
+.warn{color:var(--carb)}
+
+/* Plano */
+.plan-head{display:grid;grid-template-columns:1fr 128px;gap:10px}
+.acw{position:relative}
+.ac{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:40;background:var(--surface);border:1px solid var(--line-2);border-radius:14px;box-shadow:var(--shadow);max-height:300px;overflow:auto;padding:4px;overscroll-behavior:contain}
+.ac-item{display:flex;align-items:center;gap:10px;padding:10px 10px;border-radius:10px;cursor:pointer;min-height:44px}
+.ac-item.on{background:var(--accent-soft)}
+.ac-l{flex:1;min-width:0;font-size:15px}
+.ac-l b{font-weight:650;color:var(--accent)}
+.ac-m{font-family:var(--mono);font-size:11.5px;color:var(--muted);white-space:nowrap}
+.ac-x{width:28px;height:28px;border-radius:8px;color:var(--muted);display:grid;place-items:center;font-size:18px;line-height:1}
+.ac-x:hover{background:var(--surface-2)}
+.ac-sec{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:8px 10px 4px}
+
+.meal{padding:0;overflow:visible}
+.meal-h{display:flex;align-items:center;gap:8px;padding:12px 12px 10px 14px;border-bottom:1px solid var(--line)}
+.meal-h .acw{flex:1}
+.meal-name{width:100%;border:0;background:transparent;font-size:17px;font-weight:620;letter-spacing:-.015em;outline:none;padding:6px 0}
+.meal-name::placeholder{color:var(--muted);font-weight:500}
+.meal-sum{display:flex;gap:10px;flex-wrap:wrap;padding:8px 14px 10px;font-family:var(--mono);font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);background:var(--surface-2)}
+.meal-sum .kc{color:var(--ink);font-weight:600}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:1px}
+.d-c{background:var(--carb)} .d-p{background:var(--prot)} .d-g{background:var(--fat)}
+.rows{display:flex;flex-direction:column}
+.item{padding:10px 12px 10px 14px;border-top:1px solid var(--line);scroll-margin-top:130px}
+.item:first-child{border-top:0}
+.item-l1{display:flex;align-items:center;gap:6px}
+.item-l1 .acw{flex:1;min-width:0}
+.food{width:100%;border:0;background:transparent;font-size:16px;outline:none;padding:7px 0;font-weight:500;text-overflow:ellipsis}
+.food::placeholder{color:var(--muted);font-weight:400}
+.x{width:30px;height:30px;border-radius:9px;color:var(--muted);display:grid;place-items:center;flex:none}
+.x svg{width:15px;height:15px}
+.x:hover{background:var(--surface-2);color:var(--danger)}
+.item-l2{display:grid;grid-template-columns:minmax(0,1fr) 64px 70px;gap:8px;align-items:center;margin-top:4px}
+.cell{height:38px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);padding:0 10px;font-size:16px;outline:none;width:100%;min-width:0}
+.cell:focus{border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 3px var(--accent-soft)}
+.qty{text-align:center;font-weight:600;font-variant-numeric:tabular-nums}
+.kcal{text-align:right;font-weight:600;font-variant-numeric:tabular-nums;font-size:15px;white-space:nowrap}
+.kcal small{color:var(--muted);font-weight:500;font-size:11px;margin-left:2px}
+.item-l3{display:flex;gap:12px;flex-wrap:wrap;margin-top:7px;font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.item-l3 .g{color:var(--ink-2)}
+.item.blank .item-l2,.item.blank .item-l3,.item.blank .x{display:none}
+.quick{display:none;gap:6px;margin-top:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.quick::-webkit-scrollbar{display:none}
+.item.qfocus .quick{display:flex}
+.quick button{flex:none;height:34px;min-width:42px;padding:0 10px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line);font-weight:600;font-variant-numeric:tabular-nums}
+.quick button.next{background:var(--accent);color:var(--accent-ink);border-color:transparent;margin-left:auto;padding:0 14px}
+.meal-del{color:var(--muted)}
+.add-meal{width:100%;height:52px;border-radius:var(--r);border:1.5px dashed var(--line-2);color:var(--ink-2);font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px}
+.add-meal svg{width:18px;height:18px}
+.add-meal:hover{border-color:var(--accent);color:var(--accent)}
+.plan-tools{display:flex;gap:10px}
+.plan-tools .btn{flex:1;height:42px;font-size:14px}
+
+/* Barra de totais */
+.totals{position:fixed;left:0;right:0;bottom:0;z-index:25;padding:0 max(12px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));pointer-events:none}
+.tbar{max-width:600px;margin:0 auto;background:var(--inv-bg);color:var(--inv-fg);border:1px solid var(--line);border-radius:20px;padding:12px 14px;box-shadow:0 12px 34px rgba(0,0,0,.25);pointer-events:auto}
+.t1{display:flex;align-items:baseline;gap:8px}
+.t-kcal{font-size:24px;font-weight:650;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.t-of{font-size:13px;opacity:.6;font-variant-numeric:tabular-nums}
+.t-pct{margin-left:auto;font-family:var(--mono);font-size:12px;opacity:.75}
+.prog{height:4px;border-radius:3px;background:color-mix(in srgb,var(--inv-fg) 16%,transparent);margin:8px 0 10px;overflow:hidden;display:flex}
+.prog i{display:block;height:100%}
+.t2{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-variant-numeric:tabular-nums}
+.t2 div{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.t2 span{display:block;font-family:var(--mono);font-size:10.5px;font-weight:400;opacity:.65;letter-spacing:.02em}
+.toast{position:fixed;left:50%;bottom:calc(150px + env(safe-area-inset-bottom,0px));transform:translate(-50%,10px);background:var(--inv-bg);color:var(--inv-fg);padding:10px 16px;border-radius:12px;font-size:14px;font-weight:500;opacity:0;transition:.2s;z-index:60;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.view{animation:in .22s ease-out}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.src{margin:26px 4px 0;font-size:11.5px;color:var(--muted);line-height:1.5}
+</style>
+
+</head>
+<body>
+<div class="app" id="app"></div>
+<div class="totals" id="totals" hidden></div>
+<div class="toast" id="toast"></div>
+
+<script type="application/json" id="food-data">{"cats":["Cereais e derivados","Verduras, hortaliças e derivados","Frutas e derivados","Gorduras e óleos","Pescados e frutos do mar","Carnes e derivados","Leite e derivados","Bebidas (alcoólicas e não alcoólicas)","Ovos e derivados","Produtos açucarados","Miscelâneas","Outros alimentos industrializados","Alimentos preparados","Leguminosas e derivados","Nozes e sementes"],"foods":[[1,"Arroz, integral, cozido",124,25.8,2.6,1.0,2.7,0,[["Colher de arroz/servir",63.0],["Colher de chá",5.0],["Colher de sobremesa",10.0],["Colher de sopa",20.0],["Pegador",20.0],["Prato de sobremesa",50.0],["Escumadeira",59.0],["Caneca",100.0],["Prato raso",100.0],["Concha",117.0],["Porção",198.0],["Prato fundo",200.0]]],[2,"Arroz, integral, cru",360,77.5,7.3,1.9,4.8,0,[]],[3,"Arroz, tipo 1, cozido",128,28.1,2.5,0.2,1.6,0,[["Colher de arroz/servir",45.0],["Colher de café",3.1],["Colher de chá",6.3],["Colher de sobremesa",12.5],["Colher de sopa",25.0],["Garfada",25.0],["Pegador",25.0],["Prato de sobremesa",50.0],["Escumadeira",85.0],["Caneca",100.0],["Caneco",100.0],["Concha",100.0],["Copo americano",100.0],["Pote",100.0],["Prato raso",100.0],["Tigela",100.0],["Xícara de chá",100.0],["Porção",125.0],["Copo grande",200.0],["Copo médio",200.0],["Prato fundo",200.0]]],[4,"Arroz, tipo 1, cru",358,78.8,7.2,0.3,1.6,0,[]],[5,"Arroz, tipo 2, cozido",130,28.2,2.6,0.4,1.1,0,[["Colher de arroz/servir",45.0],["Colher de café",3.1],["Colher de chá",6.3],["Colher de sobremesa",12.5],["Colher de sopa",25.0],["Garfada",25.0],["Pegador",25.0],["Prato de sobremesa",50.0],["Escumadeira",85.0],["Caneca",100.0],["Caneco",100.0],["Concha",100.0],["Copo americano",100.0],["Pote",100.0],["Prato raso",100.0],["Tigela",100.0],["Xícara de chá",100.0],["Porção",125.0],["Copo grande",200.0],["Copo médio",200.0],["Prato fundo",200.0]]],[6,"Arroz, tipo 2, cru",358,78.9,7.2,0.3,1.7,0,[]],[7,"Aveia, flocos, crua",394,66.6,13.9,8.5,9.1,0,[["Colher de sopa",15.0],["Colher de café",1.0],["Colher de chá",2.0],["Colher de sobremesa",7.0],["Colher de arroz/servir",30.0],["Porção",37.5]]],[8,"Biscoito, doce, maisena",443,75.2,8.1,12.0,2.1,0,[["Unidade",5.0],["Concha",17.0],["Copo grande",17.0],["Copo médio",17.0],["Punhado",17.0],["Pote",17.0],["Prato raso",17.0],["Tigela",17.0],["Xícara de café",17.0],["Xícara de chá",17.0],["Porção",35.0],["Pacote",200.0],["Saco",200.0]]],[9,"Biscoito, doce, recheado com chocolate",472,70.5,6.4,19.6,3.0,0,[["Unidade",5.0],["Concha",17.0],["Copo grande",17.0],["Copo médio",17.0],["Punhado",17.0],["Pote",17.0],["Prato raso",17.0],["Tigela",17.0],["Xícara de café",17.0],["Xícara de chá",17.0],["Porção",35.0],["Pacote",200.0],["Saco",200.0]]],[10,"Biscoito, doce, recheado com morango",471,71.0,5.7,19.6,1.5,0,[["Unidade",5.0],["Concha",17.0],["Copo grande",17.0],["Copo médio",17.0],["Punhado",17.0],["Pote",17.0],["Prato raso",17.0],["Tigela",17.0],["Xícara de café",17.0],["Xícara de chá",17.0],["Porção",35.0],["Pacote",200.0],["Saco",200.0]]],[11,"Biscoito, doce, wafer, recheado de chocolate",502,67.5,5.6,24.7,1.8,0,[["Unidade",5.0],["Concha",17.0],["Copo grande",17.0],["Copo médio",17.0],["Punhado",17.0],["Pote",17.0],["Prato raso",17.0],["Tigela",17.0],["Xícara de café",17.0],["Xícara de chá",17.0],["Porção",35.0],["Pacote",200.0],["Saco",200.0]]],[12,"Biscoito, doce, wafer, recheado de morango",513,67.4,4.5,26.4,0.8,0,[["Unidade",5.0],["Concha",17.0],["Copo grande",17.0],["Copo médio",17.0],["Punhado",17.0],["Pote",17.0],["Prato raso",17.0],["Tigela",17.0],["Xícara de café",17.0],["Xícara de chá",17.0],["Porção",35.0],["Pacote",200.0],["Saco",200.0]]],[13,"Biscoito, salgado, cream cracker",432,68.7,10.1,14.4,2.5,0,[["Unidade",5.0],["Copo grande",17.0],["Copo tulipa",17.0],["Punhado",17.0],["Prato fundo",17.0],["Tigela",17.0],["Xícara de café",17.0],["Porção",32.5],["Pacote",200.0],["Saco",200.0]]],[14,"Bolo, mistura para",419,84.7,6.2,6.1,1.7,0,[]],[15,"Bolo, pronto, aipim",324,47.9,4.4,12.7,0.7,0,[["Fatia",80.0],["Pedaço",80.0]]],[16,"Bolo, pronto, chocolate",410,54.7,6.2,18.5,1.4,0,[["Fatia",60.0],["Porção",35.0],["Pedaço",60.0]]],[17,"Bolo, pronto, coco",333,52.3,5.7,11.3,1.1,0,[["Fatia",60.0],["Pedaço",60.0]]],[18,"Bolo, pronto, milho",311,45.1,4.8,12.4,0.7,0,[["Fatia",60.0],["Porção",50.0],["Pedaço",60.0]]],[19,"Canjica, branca, crua",358,78.1,7.2,1.0,5.5,0,[]],[20,"Canjica, com leite integral",112,23.6,2.4,1.2,1.2,0,[["Copo médio",240.0],["Colher de sopa",25.0],["Fatia",25.0],["Pedaço",25.0],["Colher de arroz/servir",50.0],["Copo de cafezinho",60.0],["Xícara de café",60.0],["Concha",120.0],["Cumbuca",120.0],["Escumadeira",120.0],["Pires",120.0],["Pote",120.0],["Prato de sobremesa",150.0],["Copo americano",180.0],["Xícara de chá",180.0],["Caneca",240.0],["Caneco",240.0],["Copo de requeijão",240.0],["Copo grande",240.0],["Prato raso",300.0],["Prato fundo",460.0]]],[21,"Cereais, milho, flocos, com sal",370,80.8,7.3,1.6,5.3,0,[["Porção",30.0],["Colher de sobremesa",2.0],["Colher de sopa",4.0],["Colher de arroz/servir",8.0],["Pacote",20.0],["Copo americano",25.0],["Copo médio",29.5],["Tigela",30.0],["Xícara de chá",30.0]]],[22,"Cereais, milho, flocos, sem sal",363,80.4,6.9,1.2,1.8,0,[["Porção",30.0],["Colher de sobremesa",2.0],["Colher de sopa",4.0],["Colher de arroz/servir",8.0],["Pacote",20.0],["Copo americano",25.0],["Copo médio",29.5],["Tigela",30.0],["Xícara de chá",30.0]]],[23,"Cereais, mingau, milho, infantil",394,87.3,6.4,1.1,3.2,0,[]],[24,"Cereais, mistura para vitamina, trigo, cevada e aveia",381,81.6,8.9,2.1,5.0,0,[]],[25,"Cereal matinal, milho",365,83.8,7.2,1.0,4.1,0,[["Tigela",30.0],["Colher de sopa",4.0],["Xícara de café",7.5],["Colher de arroz/servir",8.0],["Punhado",9.0],["Pacote",20.0],["Barra",25.0],["Copo americano",25.0],["Caneca",29.5],["Copo médio",29.5],["Cumbuca",30.0],["Pires",30.0],["Porção",30.0],["Prato raso",30.0],["Taça",30.0],["Xícara de chá",30.0],["Prato fundo",60.0]]],[26,"Cereal matinal, milho, açúcar",377,88.8,4.7,0.7,2.1,0,[["Tigela",30.0],["Colher de sopa",4.0],["Xícara de café",7.5],["Colher de arroz/servir",8.0],["Punhado",9.0],["Pacote",20.0],["Barra",25.0],["Copo americano",25.0],["Caneca",29.5],["Copo médio",29.5],["Cumbuca",30.0],["Pires",30.0],["Porção",30.0],["Prato raso",30.0],["Taça",30.0],["Xícara de chá",30.0],["Prato fundo",60.0]]],[27,"Creme de arroz, pó",386,83.9,7.0,1.2,1.1,0,[["Prato fundo",375.0],["Concha",110.0],["Xícara de chá",115.0],["Prato raso",195.0]]],[28,"Creme de milho, pó",333,86.1,4.8,1.6,3.7,0,[["Colher de sopa",33.0],["Colher de chá",13.5],["Colher de sobremesa",27.0],["Colher de arroz/servir",67.0],["Concha",110.0],["Copo médio",112.0],["Porção",195.0],["Prato fundo",375.0]]],[29,"Curau, milho verde",78,13.9,2.4,1.6,0.5,0,[["Pedaço",150.0],["Colher de sopa",35.0],["Pires",150.0],["Prato raso",300.0],["Prato fundo",500.0]]],[30,"Curau, milho verde, mistura para",402,79.8,2.2,13.4,2.5,0,[]],[31,"Farinha, de arroz, enriquecida",363,85.5,1.3,0.3,0.6,0,[]],[32,"Farinha, de centeio, integral",336,73.3,12.5,1.8,15.5,0,[]],[33,"Farinha, de milho, amarela",351,79.1,7.2,1.5,5.5,0,[["Colher de sopa",12.0],["Colher de chá",3.0],["Colher de sobremesa",6.0],["Colher de arroz/servir",24.0],["Porção",42.0],["Concha",48.0]]],[34,"Farinha, de rosca",371,75.8,11.4,1.5,4.8,0,[]],[35,"Farinha, de trigo",360,75.1,9.8,1.4,2.3,0,[]],[36,"Farinha, láctea, de cereais",415,77.8,11.9,5.8,1.9,0,[["Colher de sopa",20.0],["Colher de sobremesa",10.0],["Porção",30.0],["Copo americano",31.3],["Colher de arroz/servir",40.0],["Xícara de chá",41.7],["Copo médio",50.0],["Caneca",62.5],["Copo grande",62.5],["Tigela",62.5],["Concha",80.0],["Prato raso",195.0],["Prato fundo",375.0]]],[37,"Lasanha, massa fresca, cozida",164,32.5,5.8,1.2,1.6,0,[]],[38,"Lasanha, massa fresca, crua",220,45.1,7.0,1.3,1.6,0,[]],[39,"Macarrão, instantâneo",436,62.4,8.8,17.2,5.6,0,[["Prato fundo",400.0],["Colher de sopa",25.0],["Garfada",30.0],["Colher de arroz/servir",50.0],["Porção",105.0],["Concha",110.0],["Escumadeira",110.0],["Pegador",110.0],["Pacote",320.0],["Pote",320.0],["Prato raso",320.0],["Tigela",320.0],["Unidade",320.0]]],[40,"Macarrão, trigo, cru",371,77.9,10.0,1.3,2.9,0,[["Pegador",110.0],["Colher de sopa",25.0],["Garfada",30.0],["Colher de arroz/servir",50.0],["Porção",105.0],["Concha",110.0],["Escumadeira",110.0],["Prato raso",320.0],["Prato fundo",400.0]]],[41,"Macarrão, trigo, cru, com ovos",371,76.6,10.3,2.0,2.3,0,[["Pegador",110.0],["Colher de sopa",25.0],["Garfada",30.0],["Colher de arroz/servir",50.0],["Porção",105.0],["Concha",110.0],["Escumadeira",110.0],["Prato raso",320.0],["Prato fundo",400.0]]],[42,"Milho, amido, cru",361,87.1,0.6,0.0,0.7,0,[]],[43,"Milho, fubá, cru",353,78.9,7.2,1.9,4.7,0,[["Colher de sopa",35.0],["Colher de arroz/servir",60.0],["Porção",105.0],["Concha",150.0],["Fatia",150.0],["Pedaço",150.0],["Prato raso",300.0],["Prato fundo",500.0]]],[44,"Milho, verde, cru",138,28.6,6.6,0.6,3.9,0,[["Colher de sopa",24.0],["Colher de sobremesa",17.0]]],[45,"Milho, verde, enlatado, drenado",98,17.1,3.2,2.4,4.6,0,[["Colher de sopa",24.0],["Colher de café",4.3],["Colher de chá",8.5],["Colher de sobremesa",17.0],["Colher de arroz/servir",38.0],["Punhado",38.0],["Unidade pequena",50.0],["Concha",76.0],["Unidade",100.0],["Porção",172.0],["Lata (n. e.)",200.0]]],[46,"Mingau tradicional, pó",373,89.3,0.6,0.4,0.9,0,[]],[47,"Pamonha, barra para cozimento, pré-cozida",171,30.7,2.6,4.8,2.4,0,[]],[48,"Pão, aveia, forma",343,59.6,12.3,5.7,6.0,0,[["Fatia",25.0],["Banda",25.0],["Metade",25.0]]],[49,"Pão, de soja",309,56.5,11.3,3.6,5.7,0,[["Unidade",50.0],["Banda",25.0],["Fatia",25.0],["Metade",25.0],["Pedaço",25.0],["Porção",50.0],["Bisnaga",200.0]]],[50,"Pão, glúten, forma",253,44.1,12.0,2.7,2.5,0,[["Fatia",25.0],["Banda",25.0],["Metade",25.0]]],[51,"Pão, milho, forma",292,56.4,8.3,3.1,4.3,0,[["Unidade",70.0],["Fatia",35.0],["Porção",70.0]]],[52,"Pão, trigo, forma, integral",253,49.9,9.4,3.7,6.9,0,[["Fatia",25.0],["Banda",25.0]]],[53,"Pão, trigo, francês",300,58.6,8.0,3.1,2.3,0,[["Unidade",50.0],["Rodela",16.7],["Banda",25.0],["Fatia",25.0],["Metade",25.0],["Pedaço",25.0],["Porção",50.0]]],[54,"Pão, trigo, sovado",311,61.5,8.4,2.8,2.4,0,[["Unidade",50.0],["Rodela",16.7],["Banda",25.0],["Fatia",25.0],["Metade",25.0],["Pedaço",25.0],["Porção",50.0]]],[55,"Pastel, de carne, cru",289,42.0,10.7,8.8,1.0,0,[]],[56,"Pastel, de carne, frito",388,43.8,10.1,20.1,1.0,0,[["Unidade",32.0],["Pedaço",8.0],["Unidade pequena",8.0],["Metade",16.0]]],[57,"Pastel, de queijo, cru",308,45.9,9.9,9.6,1.1,0,[]],[58,"Pastel, de queijo, frito",422,48.1,8.7,22.7,0.9,0,[["Unidade",32.0],["Pedaço",8.0],["Unidade pequena",8.0],["Metade",16.0]]],[59,"Pastel, massa, crua",310,57.4,6.9,5.5,1.4,0,[]],[60,"Pastel, massa, frita",570,49.3,6.0,40.9,1.3,0,[["Unidade",32.0],["Pedaço",8.0],["Unidade pequena",8.0],["Metade",16.0]]],[61,"Pipoca, com óleo de soja, sem sal",448,70.3,9.9,15.9,14.3,0,[["Pacote",20.0],["Punhado",2.0],["Xícara de café",2.0],["Colher de arroz/servir",3.0],["Concha",6.0],["Copo americano",6.0],["Xícara de chá",6.0],["Copo de requeijão",7.0],["Copo médio",7.0],["Pires",7.0],["Pote",9.0],["Cumbuca",10.0],["Prato de sobremesa",10.0],["Tigela",10.0],["Copo grande",11.0],["Prato raso",14.0],["Saco",20.0],["Prato fundo",24.0],["Porção",30.0]]],[62,"Polenta, pré-cozida",103,23.3,2.3,0.3,2.4,0,[["Pedaço",150.0],["Colher de sobremesa",17.5],["Colher de sopa",35.0],["Garfada",35.0],["Pegador",35.0],["Colher de arroz/servir",60.0],["Porção",105.0],["Concha",150.0],["Escumadeira",150.0],["Prato raso",300.0],["Prato fundo",500.0]]],[63,"Torrada, pão francês",377,74.6,10.5,3.3,3.4,0,[["Unidade",8.0],["Porção",40.0],["Pacote",160.0]]],[64,"Abóbora, cabotian, cozida",48,10.8,1.4,0.7,2.5,1,[["Colher de sopa",36.0],["Colher de chá",9.0],["Colher de sobremesa",18.0],["Rodela",30.0],["Pegador",36.0],["Fatia",50.0],["Pedaço",50.0],["Porção",70.0],["Colher de arroz/servir",72.0],["Concha",100.0],["Escumadeira",100.0],["Tigela",100.0],["Prato raso",140.0],["Prato fundo",280.0]]],[65,"Abóbora, cabotian, crua",39,8.4,1.7,0.5,2.2,1,[["Colher de sopa",36.0],["Pedaço",50.0],["Porção",70.0],["Colher de arroz/servir",72.0],["Concha",100.0]]],[66,"Abóbora, menina brasileira, crua",14,3.3,0.6,0.0,1.2,1,[["Colher de sopa",36.0],["Pedaço",50.0],["Porção",70.0],["Colher de arroz/servir",72.0],["Concha",100.0]]],[67,"Abóbora, moranga, crua",12,2.7,1.0,0.1,1.7,1,[["Colher de sopa",36.0],["Pedaço",50.0],["Porção",70.0],["Colher de arroz/servir",72.0],["Concha",100.0]]],[68,"Abóbora, moranga, refogada",29,6.0,0.4,0.8,1.5,1,[["Colher de sopa",30.0],["Rodela",30.0],["Fatia",50.0],["Pedaço",50.0],["Colher de arroz/servir",60.0],["Porção",70.0],["Concha",105.0],["Escumadeira",105.0],["Prato fundo",280.0]]],[69,"Abóbora, pescoço, crua",24,6.1,0.7,0.1,2.3,1,[["Colher de sopa",36.0],["Pedaço",50.0],["Porção",70.0],["Colher de arroz/servir",72.0],["Concha",100.0]]],[70,"Abobrinha, italiana, cozida",15,3.0,1.1,0.2,1.6,1,[["Colher de sopa",30.0],["Colher de sobremesa",15.0],["Pedaço",17.0],["Rodela",18.0],["Pegador",30.0],["Porção",57.0],["Fatia",61.0],["Colher de arroz/servir",70.0],["Concha",90.0],["Escumadeira",90.0],["Unidade",335.0]]],[71,"Abobrinha, italiana, crua",19,4.3,1.1,0.1,1.4,1,[["Colher de sopa",30.0],["Colher de chá",7.5],["Porção",57.0],["Colher de arroz/servir",70.0],["Escumadeira",90.0]]],[72,"Abobrinha, italiana, refogada",24,4.2,1.1,0.8,1.4,1,[["Colher de sopa",30.0],["Colher de chá",7.5],["Colher de sobremesa",15.0],["Pedaço",17.0],["Rodela",18.0],["Pegador",30.0],["Porção",57.0],["Colher de arroz/servir",70.0],["Concha",90.0],["Escumadeira",90.0],["Unidade",335.0]]],[73,"Abobrinha, paulista, crua",31,7.9,0.6,0.1,2.6,1,[["Colher de sopa",30.0],["Colher de chá",7.5],["Porção",57.0],["Colher de arroz/servir",70.0],["Escumadeira",90.0]]],[74,"Acelga, crua",21,4.6,1.4,0.1,1.1,1,[["Colher de sopa",6.0],["Garfada",6.0],["Pegador",6.0],["Colher de arroz/servir",10.0],["Folha",10.0],["Pires",60.0],["Porção",60.0],["Prato fundo",60.0]]],[75,"Agrião, cru",17,2.3,2.7,0.2,2.1,1,[["Colher de arroz/servir",50.0],["Folha",5.0],["Maço",5.0],["Ramo",5.0],["Colher de sopa",7.0],["Pegador",7.0],["Pires",10.0],["Garfada",30.0],["Porção",37.5],["Prato fundo",80.0],["Prato raso",80.0]]],[76,"Aipo, cru",19,4.3,0.8,0.1,1.0,1,[["Colher de sopa",14.3]]],[77,"Alface, americana, crua",9,1.7,0.6,0.1,1.0,1,[["Folha",10.0],["Colher de chá",2.0],["Colher de sobremesa",4.0],["Colher de sopa",8.0],["Garfada",8.0],["Pegador",8.0],["Colher de arroz/servir",16.0],["Escumadeira",16.0],["Pires",20.0],["Tigela",20.0],["Porção",27.0],["Prato de sobremesa",30.0],["Concha",32.0],["Prato raso",50.0],["Prato fundo",60.0],["Metade",100.0],["Unidade pequena",130.0],["Maço",200.0],["Unidade",200.0]]],[78,"Alface, crespa, crua",11,1.7,1.3,0.2,1.8,1,[["Folha",10.0],["Colher de chá",2.0],["Colher de sobremesa",4.0],["Colher de sopa",8.0],["Garfada",8.0],["Pegador",8.0],["Colher de arroz/servir",16.0],["Escumadeira",16.0],["Pires",20.0],["Tigela",20.0],["Porção",27.0],["Prato de sobremesa",30.0],["Concha",32.0],["Prato raso",50.0],["Prato fundo",60.0],["Metade",100.0],["Unidade pequena",130.0],["Maço",200.0],["Unidade",200.0]]],[79,"Alface, lisa, crua",14,2.4,1.7,0.1,2.3,1,[["Folha",10.0],["Colher de chá",2.0],["Colher de sobremesa",4.0],["Colher de sopa",8.0],["Garfada",8.0],["Pegador",8.0],["Colher de arroz/servir",16.0],["Escumadeira",16.0],["Pires",20.0],["Tigela",20.0],["Porção",27.0],["Prato de sobremesa",30.0],["Concha",32.0],["Prato raso",50.0],["Prato fundo",60.0],["Metade",100.0],["Unidade pequena",130.0],["Maço",200.0],["Unidade",200.0]]],[80,"Alface, roxa, crua",13,2.5,0.9,0.2,2.0,1,[["Folha",10.0],["Colher de chá",2.0],["Colher de sobremesa",4.0],["Colher de sopa",8.0],["Garfada",8.0],["Pegador",8.0],["Colher de arroz/servir",16.0],["Escumadeira",16.0],["Pires",20.0],["Tigela",20.0],["Porção",27.0],["Prato de sobremesa",30.0],["Concha",32.0],["Prato raso",50.0],["Prato fundo",60.0],["Metade",100.0],["Unidade pequena",130.0],["Maço",200.0],["Unidade",200.0]]],[81,"Alfavaca, crua",29,5.2,2.7,0.5,4.1,1,[]],[82,"Alho, cru",113,23.9,7.0,0.2,4.3,1,[["Unidade",4.4]]],[83,"Alho-poró, cru",32,6.9,1.4,0.1,2.5,1,[["Porção",15.0]]],[84,"Almeirão, cru",18,3.3,1.8,0.2,2.6,1,[["Folha",12.0],["Pires",24.0],["Prato raso",24.0],["Colher de sopa",25.0],["Garfada",25.0],["Pegador",25.0],["Porção",27.0],["Prato fundo",48.0],["Colher de arroz/servir",50.0]]],[85,"Almeirão, refogado",65,5.7,1.7,4.8,3.4,1,[["Porção",27.0],["Pires",24.0],["Colher de sopa",25.0],["Colher de arroz/servir",50.0]]],[86,"Batata, baroa, cozida",80,18.9,0.9,0.2,1.8,1,[["Colher de sopa",35.0],["Unidade",80.0]]],[87,"Batata, baroa, crua",101,24.0,1.0,0.2,2.1,1,[["Colher de sopa",35.0]]],[88,"Batata, doce, cozida",77,18.4,0.6,0.1,2.2,1,[["Pedaço",70.0],["Colher de sopa",42.0],["Pegador",42.0],["Fatia",70.0],["Rodela",70.0],["Colher de arroz/servir",100.0],["Concha",100.0],["Prato de sobremesa",100.0],["Prato raso",100.0],["Porção",150.0],["Metade",177.5],["Unidade pequena",266.3],["Prato fundo",300.0],["Unidade",355.0]]],[89,"Batata, doce, crua",118,28.2,1.3,0.1,2.6,1,[["Unidade",355.0]]],[90,"Batata, frita, tipo chips, industrializada",543,51.2,5.6,36.6,2.5,1,[]],[91,"Batata, inglesa, cozida",52,11.9,1.2,0.0,1.3,1,[["Unidade",140.0],["Colher de chá",7.5],["Colher de sobremesa",15.0],["Fatia",16.0],["Pedaço",16.0],["Rodela",16.0],["Colher de sopa",30.0],["Garfada",30.0],["Pegador",30.0],["Colher de arroz/servir",60.0],["Metade",70.0],["Unidade pequena",70.0],["Concha",80.0],["Escumadeira",80.0],["Porção",90.0],["Prato raso",100.0]]],[92,"Batata, inglesa, crua",64,14.7,1.8,0.0,1.2,1,[["Porção",90.0],["Unidade pequena",70.0]]],[93,"Batata, inglesa, frita",267,35.6,5.0,13.1,8.1,1,[["Porção",110.0],["Fatia",16.0],["Pedaço",16.0],["Rodela",16.0],["Colher de sopa",25.0],["Garfada",25.0],["Pegador",25.0],["Pires",39.0],["Punhado",45.0],["Colher de arroz/servir",50.0],["Concha",65.0],["Escumadeira",65.0],["Unidade pequena",70.0],["Prato de sobremesa",78.0],["Prato raso",78.0],["Unidade",140.0],["Prato fundo",156.0]]],[94,"Batata, inglesa, sauté",68,14.1,1.3,0.9,1.4,1,[["Unidade",140.0],["Colher de sopa",30.0],["Porção",90.0]]],[95,"Berinjela, cozida",19,4.5,0.7,0.1,2.5,1,[["Colher de sopa",25.0],["Colher de sobremesa",12.5],["Fatia",20.0],["Pedaço",20.0],["Porção",60.0],["Colher de arroz/servir",75.0],["Prato raso",110.0],["Unidade pequena",112.5],["Escumadeira",125.0]]],[96,"Berinjela, crua",20,4.4,1.2,0.1,2.9,1,[["Porção",60.0],["Concha",125.0]]],[97,"Beterraba, cozida",32,7.2,1.3,0.1,1.9,1,[["Rodela",12.0],["Colher de sobremesa",10.0],["Fatia",12.0],["Pedaço",12.0],["Colher de sopa",20.0],["Garfada",20.0],["Pegador",20.0],["Colher de arroz/servir",38.0],["Porção",43.0],["Escumadeira",45.0],["Metade",62.5],["Unidade pequena",75.0],["Concha",76.0],["Pires",84.0],["Xícara de chá",84.0],["Unidade",125.0],["Prato de sobremesa",168.0],["Prato raso",168.0]]],[98,"Beterraba, crua",49,11.1,1.9,0.1,3.4,1,[["Colher de sopa",16.0],["Colher de sobremesa",8.0],["Fatia",12.0],["Pedaço",12.0],["Rodela",12.0],["Pegador",16.0],["Colher de arroz/servir",38.0],["Porção",42.0],["Concha",76.0],["Unidade",140.0],["Prato de sobremesa",168.0]]],[99,"Biscoito, polvilho doce",438,80.5,1.3,12.2,1.2,1,[["Unidade",3.0],["Pacote",30.0],["Porção",30.0],["Saco",30.0]]],[100,"Brócolis, cozido",25,4.4,2.1,0.5,3.4,1,[["Colher de sopa",10.0],["Colher de sobremesa",5.0],["Garfada",10.0],["Pegador",10.0],["Colher de arroz/servir",20.0],["Escumadeira",20.0],["Concha",40.0],["Porção",60.0],["Ramo",60.0],["Unidade",60.0],["Pires",75.0]]],[101,"Brócolis, cru",25,4.0,3.6,0.3,2.9,1,[["Colher de arroz/servir",20.0],["Colher de sobremesa",5.0],["Pegador",10.0],["Porção",60.0]]],[102,"Cará, cozido",78,18.9,1.5,0.1,2.6,1,[["Pedaço",100.0],["Colher de sopa",30.0],["Rodela",30.0],["Colher de arroz/servir",60.0],["Escumadeira",60.0],["Concha",120.0],["Porção",126.0]]],[103,"Cará, cru",96,23.0,2.3,0.1,7.3,1,[["Pedaço",100.0],["Colher de sopa",30.0],["Rodela",30.0],["Colher de arroz/servir",60.0],["Escumadeira",60.0],["Concha",120.0],["Porção",126.0]]],[104,"Caruru, cru",34,6.0,3.2,0.6,4.5,1,[["Colher de arroz/servir",42.0],["Colher de sopa",20.0],["Concha",84.0]]],[105,"Catalonha, crua",24,4.8,1.9,0.3,2.0,1,[["Porção",42.0]]],[106,"Catalonha, refogada",63,4.8,1.9,4.8,3.6,1,[["Porção",42.0]]],[107,"Cebola, crua",39,8.9,1.7,0.1,2.2,1,[["Rodela",6.0],["Colher de chá",2.5],["Colher de sobremesa",5.0],["Fatia",6.0],["Colher de sopa",10.0],["Garfada",10.0],["Pegador",10.0],["Pedaço",17.5],["Colher de arroz/servir",20.0],["Porção",20.0],["Pires",30.0],["Unidade pequena",30.0],["Banda",35.0],["Metade",35.0],["Unidade",70.0]]],[108,"Cebolinha, crua",20,3.4,1.9,0.3,3.5,1,[["Colher de sopa",2.3],["Ramo",6.2]]],[109,"Cenoura, cozida",30,6.7,0.8,0.2,2.6,1,[["Colher de sopa",25.0],["Fatia",5.0],["Pedaço",5.0],["Rodela",5.0],["Pegador",25.0],["Porção",35.0],["Colher de arroz/servir",40.0],["Unidade pequena",46.0],["Concha",48.0],["Escumadeira",48.0],["Pires",48.0],["Tigela",48.0],["Xícara de chá",48.0],["Metade",50.0],["Unidade",100.0]]],[110,"Cenoura, crua",34,7.7,1.3,0.2,3.2,1,[["Colher de sopa",12.0],["Fatia",5.0],["Pedaço",5.0],["Rodela",5.0],["Colher de sobremesa",6.0],["Pegador",12.0],["Porção",38.0],["Colher de arroz/servir",40.0],["Concha",48.0],["Copo americano",48.0],["Escumadeira",48.0],["Prato raso",48.0],["Unidade pequena",55.0],["Banda",60.0],["Copo grande",96.0],["Copo médio",96.0],["Unidade",120.0]]],[111,"Chicória, crua",14,2.9,1.1,0.1,2.2,1,[["Colher de sopa",45.0],["Folha",12.0],["Prato raso",24.0],["Porção",42.0],["Pegador",45.0],["Concha",136.0],["Escumadeira",136.0]]],[112,"Chuchu, cozido",19,4.8,0.4,0.0,1.0,1,[["Colher de sopa",20.0],["Colher de sobremesa",10.0],["Rodela",15.0],["Pegador",20.0],["Fatia",30.0],["Pedaço",30.0],["Colher de arroz/servir",45.0],["Prato raso",45.0],["Porção",57.0],["Concha",110.0],["Escumadeira",110.0],["Tigela",110.0],["Metade",115.0],["Unidade pequena",145.0],["Unidade",230.0]]],[113,"Chuchu, cru",17,4.1,0.7,0.1,1.3,1,[["Colher de sopa",20.0],["Pegador",20.0],["Fatia",30.0],["Pedaço",30.0],["Colher de arroz/servir",45.0],["Porção",57.0],["Escumadeira",110.0],["Unidade",230.0]]],[114,"Coentro, folhas desidratadas",309,48.0,20.9,10.4,37.3,1,[["Colher de sopa",8.0]]],[115,"Couve, manteiga, crua",27,4.3,2.9,0.5,3.1,1,[["Colher de sopa",20.0],["Colher de chá",5.0],["Folha",20.0],["Garfada",20.0],["Pegador",20.0],["Colher de arroz/servir",42.0],["Escumadeira",42.0],["Porção",42.0],["Concha",84.0],["Tigela",84.0],["Prato de sobremesa",120.0],["Prato raso",120.0]]],[116,"Couve, manteiga, refogada ",90,8.7,1.7,6.6,5.7,1,[["Colher de sopa",20.0],["Colher de chá",5.0],["Colher de sobremesa",10.0],["Garfada",20.0],["Pegador",20.0],["Folha",25.0],["Colher de arroz/servir",42.0],["Escumadeira",42.0],["Porção",42.0],["Concha",84.0],["Xícara de chá",84.0],["Prato fundo",120.0]]],[117,"Couve-flor, crua",23,4.5,1.9,0.2,2.4,1,[["Colher de sopa",25.0],["Pegador",25.0],["Colher de arroz/servir",50.0],["Escumadeira",50.0],["Pedaço",60.0],["Ramo",60.0],["Unidade",60.0],["Porção",69.0]]],[118,"Couve-flor, cozida",19,3.9,1.2,0.3,2.1,1,[["Ramo",60.0],["Colher de sobremesa",12.5],["Colher de sopa",25.0],["Pegador",25.0],["Unidade pequena",30.0],["Colher de arroz/servir",50.0],["Escumadeira",50.0],["Pires",50.0],["Pedaço",60.0],["Unidade",60.0],["Porção",69.0],["Concha",100.0],["Prato de sobremesa",100.0]]],[119,"Espinafre, Nova Zelândia, cru",16,2.6,2.0,0.2,2.1,1,[["Colher de sopa",25.0],["Pegador",25.0],["Porção",67.0]]],[120,"Espinafre, Nova Zelândia, refogado",67,4.2,2.7,5.4,2.5,1,[["Colher de sopa",25.0],["Colher de sobremesa",12.5],["Escumadeira",50.0],["Porção",67.0]]],[121,"Farinha, de mandioca, crua",361,87.9,1.6,0.3,6.4,1,[["Colher de sopa",16.0],["Colher de café",3.0],["Colher de chá",5.0],["Colher de sobremesa",10.0],["Punhado",23.0],["Colher de arroz/servir",33.0],["Porção",40.0],["Copo de cafezinho",42.3],["Xícara de café",42.3],["Prato raso",101.0],["Concha",110.0],["Copo americano",127.0],["Pote",148.0],["Tigela",148.0],["Xícara de chá",148.0],["Prato de sobremesa",150.0],["Caneca",171.0],["Caneco",171.0],["Copo de requeijão",172.0],["Copo grande",172.0],["Copo médio",172.0],["Copo tulipa",172.0],["Prato fundo",271.0]]],[122,"Farinha, de mandioca, torrada",365,89.2,1.2,0.3,6.5,1,[["Colher de sopa",16.0],["Colher de café",3.0],["Colher de chá",5.0],["Colher de sobremesa",10.0],["Punhado",23.0],["Colher de arroz/servir",33.0],["Porção",40.0],["Copo de cafezinho",42.3],["Xícara de café",42.3],["Prato raso",101.0],["Concha",110.0],["Copo americano",127.0],["Pote",148.0],["Tigela",148.0],["Xícara de chá",148.0],["Prato de sobremesa",150.0],["Caneca",171.0],["Caneco",171.0],["Copo de requeijão",172.0],["Copo grande",172.0],["Copo médio",172.0],["Copo tulipa",172.0],["Prato fundo",271.0]]],[123,"Farinha, de puba",360,87.3,1.6,0.5,4.2,1,[]],[124,"Fécula, de mandioca",331,81.1,0.5,0.3,0.6,1,[]],[125,"Feijão, broto, cru",39,7.8,4.2,0.1,2.0,1,[["Pegador",27.0]]],[126,"Inhame, cru",97,23.2,2.1,0.2,1.7,1,[["Rodela",30.0],["Escumadeira",110.0],["Unidade",125.0],["Porção",126.0]]],[127,"Jiló, cru",27,6.2,1.4,0.2,4.8,1,[["Colher de sopa",60.0],["Unidade",26.0],["Porção",40.0],["Pegador",60.0],["Colher de arroz/servir",95.0]]],[128,"Jurubeba, crua",126,23.1,4.4,3.9,23.9,1,[["Unidade",10.0]]],[129,"Mandioca, cozida",125,30.1,0.6,0.3,1.6,1,[["Pedaço",100.0],["Colher de sopa",30.0],["Pegador",30.0],["Colher de arroz/servir",60.0],["Escumadeira",60.0],["Fatia",100.0],["Concha",120.0],["Porção",128.0]]],[130,"Mandioca, crua",151,36.2,1.1,0.3,1.9,1,[["Pedaço",100.0]]],[131,"Mandioca, farofa, temperada",406,80.3,2.1,9.1,7.8,1,[]],[132,"Mandioca, frita",300,50.3,1.4,11.2,1.9,1,[["Pedaço",80.0],["Colher de sopa",35.0],["Bola",45.0],["Punhado",45.0],["Colher de arroz/servir",60.0],["Fatia",70.0],["Porção",80.0],["Concha",95.0]]],[133,"Manjericão, cru",21,3.6,2.0,0.4,3.3,1,[]],[134,"Maxixe, cru",14,2.7,1.4,0.1,2.2,1,[["Colher de sopa",40.0]]],[135,"Mostarda, folha, crua",18,3.2,2.1,0.2,1.9,1,[["Folha",10.0],["Colher de sopa",45.0]]],[136,"Nhoque, batata, cozido",181,36.8,5.9,1.9,1.8,1,[["Colher de arroz/servir",70.0],["Colher de sopa",30.0],["Concha",100.0],["Escumadeira",100.0]]],[137,"Nabo, cru",18,4.1,1.2,0.1,2.6,1,[["Porção",30.0]]],[138,"Palmito, juçara, em conserva",23,4.3,1.8,0.4,3.1,1,[["Colher de sopa",15.0],["Colher de arroz/servir",30.0],["Escumadeira",30.0],["Pires",30.0],["Prato de sobremesa",30.0],["Porção",50.0],["Concha",60.0],["Unidade pequena",75.0],["Unidade",100.0]]],[139,"Palmito, pupunha, em conserva",29,5.5,2.5,0.5,2.5,1,[["Colher de sopa",15.0],["Colher de arroz/servir",30.0],["Escumadeira",30.0],["Pires",30.0],["Prato de sobremesa",30.0],["Porção",50.0],["Concha",60.0],["Unidade pequena",75.0],["Unidade",100.0]]],[140,"Pão, de queijo, assado",363,34.2,5.1,24.6,0.6,1,[["Unidade",20.0],["Unidade pequena",10.0],["Porção",58.0]]],[141,"Pão, de queijo, cru",295,38.5,3.6,14.0,1.0,1,[["Unidade",20.0],["Unidade pequena",10.0],["Porção",58.0]]],[142,"Pepino, cru",10,2.0,0.9,0.0,1.1,1,[["Rodela",3.0],["Fatia",3.0],["Pedaço",3.0],["Colher de chá",4.5],["Colher de sobremesa",9.0],["Colher de sopa",18.0],["Pegador",18.0],["Colher de arroz/servir",36.0],["Escumadeira",36.0],["Porção",36.0],["Prato raso",36.0],["Taça",36.0],["Metade",50.0],["Unidade pequena",75.0],["Unidade",100.0]]],[143,"Pimentão, amarelo, cru",28,6.0,1.2,0.4,1.9,1,[["Rodela",6.0],["Fatia",6.0],["Pedaço",6.0],["Colher de sopa",13.0],["Garfada",13.0],["Pegador",13.0],["Colher de arroz/servir",26.0],["Metade",27.5],["Unidade pequena",38.0],["Concha",52.0],["Unidade",55.0],["Porção",56.0]]],[144,"Pimentão, verde, cru",21,4.9,1.1,0.1,2.6,1,[["Rodela",6.0],["Fatia",6.0],["Pedaço",6.0],["Colher de sopa",13.0],["Garfada",13.0],["Pegador",13.0],["Colher de arroz/servir",26.0],["Metade",27.5],["Unidade pequena",38.0],["Concha",52.0],["Unidade",55.0],["Porção",56.0]]],[145,"Pimentão, vermelho, cru",23,5.5,1.0,0.1,1.6,1,[["Rodela",6.0],["Fatia",6.0],["Pedaço",6.0],["Colher de sopa",13.0],["Garfada",13.0],["Pegador",13.0],["Colher de arroz/servir",26.0],["Metade",27.5],["Unidade pequena",38.0],["Concha",52.0],["Unidade",55.0],["Porção",56.0]]],[146,"Polvilho, doce",351,86.8,0.4,0.0,0.2,1,[]],[147,"Quiabo, cru",30,6.4,1.9,0.3,4.6,1,[["Colher de sopa",40.0],["Unidade",18.0]]],[148,"Rabanete, cru",14,2.7,1.4,0.1,2.2,1,[["Unidade",25.0],["Fatia",4.0],["Colher de sopa",11.0],["Pegador",11.0],["Rodela",12.5],["Colher de arroz/servir",22.0],["Escumadeira",22.0],["Porção",90.0]]],[149,"Repolho, branco, cru",17,3.9,0.9,0.1,1.9,1,[["Colher de sopa",10.0],["Colher de chá",2.5],["Colher de sobremesa",5.0],["Garfada",10.0],["Pegador",10.0],["Colher de arroz/servir",25.0],["Escumadeira",25.0],["Folha",26.0],["Concha",50.0],["Porção",60.0],["Cumbuca",100.0],["Pires",100.0],["Taça",100.0],["Tigela",100.0],["Prato raso",150.0],["Prato fundo",200.0]]],[150,"Repolho, roxo, cru",31,7.2,1.9,0.1,2.0,1,[["Colher de sopa",10.0],["Colher de chá",2.5],["Colher de sobremesa",5.0],["Garfada",10.0],["Pegador",10.0],["Colher de arroz/servir",25.0],["Escumadeira",25.0],["Folha",26.0],["Concha",50.0],["Porção",60.0],["Cumbuca",100.0],["Pires",100.0],["Taça",100.0],["Tigela",100.0],["Prato raso",150.0],["Prato fundo",200.0]]],[151,"Repolho, roxo, refogado",42,7.6,1.8,1.2,1.8,1,[["Colher de sopa",20.0],["Colher de chá",2.5],["Colher de sobremesa",5.0],["Pegador",18.0],["Colher de arroz/servir",45.0],["Escumadeira",45.0],["Concha",50.0],["Porção",75.0],["Prato de sobremesa",150.0],["Prato raso",150.0]]],[152,"Rúcula, crua",13,2.2,1.8,0.1,1.7,1,[["Folha",6.0],["Ramo",6.0],["Colher de sopa",8.0],["Garfada",8.0],["Pegador",8.0],["Colher de arroz/servir",16.0],["Escumadeira",16.0],["Pires",20.0],["Porção",27.0],["Prato de sobremesa",30.0],["Tigela",30.0],["Prato fundo",60.0],["Prato raso",80.0]]],[153,"Salsa, crua",33,5.7,3.3,0.6,1.9,1,[]],[154,"Seleta de legumes, enlatada",57,12.7,3.4,0.4,3.1,1,[]],[155,"Serralha, crua",30,4.9,2.7,0.7,3.5,1,[["Colher de sopa",25.0],["Porção",67.0]]],[156,"Taioba, crua",34,5.4,2.9,0.9,4.5,1,[["Porção",42.0],["Colher de arroz/servir",46.6]]],[157,"Tomate, com semente, cru",15,3.1,1.1,0.2,1.2,1,[["Rodela",15.0],["Colher de chá",7.5],["Colher de sobremesa",15.0],["Fatia",15.0],["Pedaço",15.0],["Colher de sopa",30.0],["Garfada",30.0],["Pegador",30.0],["Banda",50.0],["Metade",50.0],["Unidade pequena",50.0],["Colher de arroz/servir",60.0],["Escumadeira",60.0],["Pires",60.0],["Prato de sobremesa",60.0],["Prato raso",60.0],["Porção",80.0],["Unidade",100.0],["Concha",120.0]]],[158,"Tomate, extrato",61,15.0,2.4,0.2,2.8,1,[]],[159,"Tomate, molho industrializado",38,7.7,1.4,0.9,3.1,1,[["Colher de sopa",20.0],["Colher de chá",8.5],["Colher de sobremesa",17.0],["Porção",20.0],["Prato raso",40.0],["Colher de arroz/servir",45.0],["Escumadeira",45.0],["Concha",80.0]]],[160,"Tomate, purê",28,6.9,1.4,0.0,1.0,1,[]],[161,"Tomate, salada",21,5.1,0.8,0.0,2.3,1,[]],[162,"Vagem, crua",25,5.3,1.8,0.2,2.4,1,[["Colher de sopa",20.0],["Porção",44.0]]],[163,"Abacate, cru",96,6.0,1.2,8.4,6.3,2,[["Unidade",430.0],["Pedaço",22.5],["Colher de sopa",45.0],["Porção",45.0],["Fatia",90.0],["Pote",175.0],["Prato de sobremesa",175.0],["Taça",175.0],["Copo grande",200.0],["Copo médio",200.0],["Banda",215.0],["Metade",215.0],["Unidade pequena",370.0]]],[164,"Abacaxi, cru",48,12.3,0.9,0.1,1.0,2,[["Rodela",75.0],["Pedaço",11.0],["Fatia",75.0],["Copo médio",100.0],["Porção",130.0],["Banda",375.0],["Unidade pequena",480.0],["Unidade",750.0]]],[165,"Abacaxi, polpa, congelada",31,7.8,0.5,0.1,0.3,2,[]],[166,"Abiu, cru",62,14.9,0.8,0.7,1.7,2,[["Unidade",50.0]]],[167,"Açaí, polpa, com xarope de guaraná e glucose",110,21.5,0.7,3.7,1.7,2,[["Tigela",202.0],["Concha",101.0],["Pires",101.0],["Prato de sobremesa",101.0],["Copo americano",187.0],["Xícara de chá",187.0],["Copo tulipa",202.0],["Cumbuca",202.0],["Porção",202.0],["Pote",202.0],["Taça",202.0],["Copo médio",273.0],["Prato raso",273.0],["Caneca",326.0],["Caneco",326.0],["Copo grande",326.0],["Prato fundo",326.0]]],[168,"Açaí, polpa, congelada",58,6.2,0.8,3.9,2.6,2,[["Tigela",202.0],["Concha",101.0],["Pires",101.0],["Prato de sobremesa",101.0],["Copo americano",187.0],["Xícara de chá",187.0],["Copo tulipa",202.0],["Cumbuca",202.0],["Porção",202.0],["Pote",202.0],["Taça",202.0],["Copo médio",273.0],["Prato raso",273.0],["Caneca",326.0],["Caneco",326.0],["Copo grande",326.0],["Prato fundo",326.0]]],[169,"Acerola, crua",33,8.0,0.9,0.2,1.5,2,[["Unidade",12.0],["Copo americano",62.5],["Copo médio",100.0],["Copo grande",125.0],["Porção",224.0]]],[170,"Acerola, polpa, congelada",22,5.5,0.6,0.0,0.7,2,[]],[171,"Ameixa, calda, enlatada ",183,46.9,0.4,0.0,0.5,2,[]],[172,"Ameixa, crua",53,13.9,0.8,0.0,2.4,2,[["Unidade",42.0],["Colher de sopa",25.0],["Porção",30.0],["Unidade pequena",34.0],["Copo médio",100.0],["Taça",100.0],["Copo grande",125.0]]],[173,"Ameixa, em calda, enlatada, drenada ",177,47.7,1.0,0.3,4.5,2,[]],[174,"Atemóia, crua",97,25.3,1.0,0.3,2.1,2,[["Unidade",227.0]]],[175,"Banana, da terra, crua",128,33.7,1.4,0.2,1.5,2,[["Unidade",75.0],["Pedaço",16.0],["Fatia",26.0],["Banda",37.5],["Metade",37.5],["Unidade pequena",56.3],["Porção",86.0],["Prato de sobremesa",170.0],["Prato raso",235.0],["Prato fundo",326.0]]],[176,"Banana, doce em barra",280,75.7,2.2,0.1,3.8,2,[]],[177,"Banana, figo, crua",105,27.8,1.1,0.1,2.8,2,[["Unidade",75.0],["Pedaço",16.0],["Fatia",26.0],["Banda",37.5],["Metade",37.5],["Unidade pequena",56.3],["Porção",86.0],["Prato de sobremesa",170.0],["Prato raso",235.0],["Prato fundo",326.0]]],[178,"Banana, maçã, crua",87,22.3,1.8,0.1,2.6,2,[["Unidade",75.0],["Pedaço",16.0],["Fatia",26.0],["Banda",37.5],["Metade",37.5],["Unidade pequena",56.3],["Porção",86.0],["Prato de sobremesa",170.0],["Prato raso",235.0],["Prato fundo",326.0]]],[179,"Banana, nanica, crua",92,23.8,1.4,0.1,1.9,2,[["Unidade",75.0],["Pedaço",16.0],["Fatia",26.0],["Banda",37.5],["Metade",37.5],["Unidade pequena",56.3],["Porção",86.0],["Prato de sobremesa",170.0],["Prato raso",235.0],["Prato fundo",326.0]]],[180,"Banana, ouro, crua",112,29.3,1.5,0.2,2.0,2,[["Unidade",75.0],["Pedaço",16.0],["Fatia",26.0],["Banda",37.5],["Metade",37.5],["Unidade pequena",56.3],["Porção",86.0],["Prato de sobremesa",170.0],["Prato raso",235.0],["Prato fundo",326.0]]],[181,"Banana, pacova, crua",78,20.3,1.2,0.1,2.0,2,[["Unidade",75.0],["Pedaço",16.0],["Fatia",26.0],["Banda",37.5],["Metade",37.5],["Unidade pequena",56.3],["Porção",86.0],["Prato de sobremesa",170.0],["Prato raso",235.0],["Prato fundo",326.0]]],[182,"Banana, prata, crua",98,26.0,1.3,0.1,2.0,2,[["Unidade",75.0],["Pedaço",16.0],["Fatia",26.0],["Banda",37.5],["Metade",37.5],["Unidade pequena",56.3],["Porção",86.0],["Prato de sobremesa",170.0],["Prato raso",235.0],["Prato fundo",326.0]]],[183,"Cacau, cru",74,19.4,1.0,0.1,2.2,2,[["Unidade",91.2],["Copo médio",100.0],["Copo grande",125.0]]],[184,"Cajá-Manga, cru",46,11.4,1.3,0.0,2.6,2,[["Unidade",55.0],["Unidade pequena",40.0],["Copo americano",62.5],["Copo de requeijão",100.0],["Copo médio",100.0],["Copo grande",125.0]]],[185,"Cajá, polpa, congelada",26,6.4,0.6,0.2,1.4,2,[]],[186,"Caju, cru",43,10.3,1.0,0.3,1.7,2,[["Unidade",90.0],["Copo americano",62.5],["Unidade pequena",80.0],["Copo médio",100.0],["Copo tulipa",120.8],["Copo grande",125.0]]],[187,"Caju, polpa, congelada",37,9.4,0.5,0.2,0.8,2,[]],[188,"Caju, suco concentrado, envasado",45,10.7,0.4,0.2,0.6,2,[]],[189,"Caqui, chocolate, cru",71,19.3,0.4,0.1,6.5,2,[]],[190,"Carambola, crua",46,11.5,0.9,0.2,2.0,2,[["Unidade",75.0],["Pedaço",6.0],["Copo americano",62.5],["Copo médio",100.0],["Copo grande",125.0],["Porção",130.0]]],[191,"Ciriguela, crua",76,18.9,1.4,0.4,3.9,2,[["Unidade",10.0],["Unidade pequena",5.6],["Porção",50.0],["Copo médio",100.0],["Copo grande",125.0]]],[192,"Cupuaçu, cru",49,10.4,1.2,1.0,3.1,2,[["Copo médio",100.0],["Colher de sopa",20.0],["Porção",60.0],["Pote",60.0],["Taça",60.0],["Tigela",60.0],["Copo tulipa",120.8],["Copo grande",125.0]]],[193,"Cupuaçu, polpa, congelada",49,11.4,0.8,0.6,1.6,2,[]],[194,"Figo, cru",41,10.2,1.0,0.2,1.8,2,[["Unidade",55.0],["Porção",60.0]]],[195,"Figo, enlatado, em calda",184,50.3,0.6,0.1,2.0,2,[]],[196,"Fruta-pão, crua",67,17.2,1.1,0.2,5.5,2,[["Pedaço",70.0],["Porção",35.0],["Concha",70.0],["Fatia",70.0]]],[197,"Goiaba, branca, com casca, crua",52,12.4,0.9,0.5,6.3,2,[["Unidade",170.0],["Pedaço",42.5],["Unidade pequena",50.0],["Banda",85.0],["Copo grande",125.0]]],[198,"Goiaba, doce em pasta",269,74.1,0.6,0.0,3.7,2,[]],[199,"Goiaba, doce, cascão",286,78.7,0.4,0.1,4.4,2,[]],[200,"Goiaba, vermelha, com casca, crua",54,13.0,1.1,0.4,6.2,2,[["Unidade",170.0],["Pedaço",42.5],["Unidade pequena",50.0],["Banda",85.0],["Copo grande",125.0]]],[201,"Graviola, crua",62,15.8,0.8,0.2,1.9,2,[["Unidade",227.0],["Pedaço",56.8],["Copo americano",62.5],["Porção",70.0],["Copo de requeijão",100.0],["Copo médio",100.0],["Copo tulipa",120.8],["Copo grande",125.0]]],[202,"Graviola, polpa, congelada",38,9.8,0.6,0.1,1.2,2,[]],[203,"Jabuticaba, crua",58,15.3,0.6,0.1,2.3,2,[]],[204,"Jaca, crua",88,22.5,1.4,0.3,2.4,2,[["Bago",12.0],["Copo médio",100.0],["Porção",132.0],["Taça",150.0],["Tigela",150.0]]],[205,"Jambo, cru",27,6.5,0.9,0.1,5.1,2,[["Unidade",40.0]]],[206,"Jamelão, cru",41,10.6,0.5,0.1,1.8,2,[["Unidade",5.0]]],[207,"Kiwi, cru",51,11.5,1.3,0.6,2.7,2,[["Unidade",94.0],["Rodela",11.0],["Pedaço",23.5],["Unidade pequena",57.0],["Copo americano",62.5],["Copo grande",125.0]]],[208,"Laranja, baía, crua",45,11.5,1.0,0.1,1.1,2,[["Unidade",180.0],["Bago",18.0],["Fatia",18.0],["Gomo",18.0],["Pedaço",18.0],["Rodela",18.0],["Banda",90.0],["Metade",90.0],["Unidade pequena",90.0],["Porção",144.0],["Copo americano",150.0],["Copo de requeijão",240.0],["Copo médio",240.0],["Copo grande",300.0]]],[209,"Laranja, baía, suco",37,8.7,0.7,0.0,0.0,2,[["Copo médio",240.0],["Xícara de café",50.0],["Copo americano",150.0],["Taça",150.0],["Garrafa (200 ml)",200.0],["Xícara de chá",200.0],["Garrafa (237 ml)",237.0],["Copo de requeijão",240.0],["Garrafa (250 ml)",250.0],["Garrafa (275 ml)",275.0],["Copo tulipa",290.0],["Garrafa (290 ml)",290.0],["Caneca",300.0],["Caneco",300.0],["Copo grande",300.0],["Garrafa (350 ml)",350.0],["Lata (350 ml)",350.0],["Garrafa (450 ml)",450.0],["Garrafa (500 ml)",500.0],["Garrafa (600 ml)",600.0],["Garrafa (1 l)",1000.0]]],[210,"Laranja, da terra, crua",51,12.9,1.1,0.2,4.0,2,[["Unidade",180.0],["Bago",18.0],["Fatia",18.0],["Gomo",18.0],["Pedaço",18.0],["Rodela",18.0],["Banda",90.0],["Metade",90.0],["Unidade pequena",90.0],["Porção",144.0],["Copo americano",150.0],["Copo de requeijão",240.0],["Copo médio",240.0],["Copo grande",300.0]]],[211,"Laranja, da terra, suco",41,9.6,0.7,0.1,1.0,2,[["Copo médio",240.0],["Xícara de café",50.0],["Copo americano",150.0],["Taça",150.0],["Garrafa (200 ml)",200.0],["Xícara de chá",200.0],["Garrafa (237 ml)",237.0],["Copo de requeijão",240.0],["Garrafa (250 ml)",250.0],["Garrafa (275 ml)",275.0],["Copo tulipa",290.0],["Garrafa (290 ml)",290.0],["Caneca",300.0],["Caneco",300.0],["Copo grande",300.0],["Garrafa (350 ml)",350.0],["Lata (350 ml)",350.0],["Garrafa (450 ml)",450.0],["Garrafa (500 ml)",500.0],["Garrafa (600 ml)",600.0],["Garrafa (1 l)",1000.0]]],[212,"Laranja, lima, crua",46,11.5,1.1,0.1,1.8,2,[["Unidade",180.0],["Bago",18.0],["Fatia",18.0],["Gomo",18.0],["Pedaço",18.0],["Rodela",18.0],["Banda",90.0],["Metade",90.0],["Unidade pequena",90.0],["Porção",144.0],["Copo americano",150.0],["Copo de requeijão",240.0],["Copo médio",240.0],["Copo grande",300.0]]],[213,"Laranja, lima, suco",39,9.2,0.7,0.1,0.4,2,[["Copo médio",240.0],["Xícara de café",50.0],["Copo americano",150.0],["Taça",150.0],["Garrafa (200 ml)",200.0],["Xícara de chá",200.0],["Garrafa (237 ml)",237.0],["Copo de requeijão",240.0],["Garrafa (250 ml)",250.0],["Garrafa (275 ml)",275.0],["Copo tulipa",290.0],["Garrafa (290 ml)",290.0],["Caneca",300.0],["Caneco",300.0],["Copo grande",300.0],["Garrafa (350 ml)",350.0],["Lata (350 ml)",350.0],["Garrafa (450 ml)",450.0],["Garrafa (500 ml)",500.0],["Garrafa (600 ml)",600.0],["Garrafa (1 l)",1000.0]]],[214,"Laranja, pêra, crua",37,8.9,1.0,0.1,0.8,2,[["Unidade",180.0],["Bago",18.0],["Fatia",18.0],["Gomo",18.0],["Pedaço",18.0],["Rodela",18.0],["Banda",90.0],["Metade",90.0],["Unidade pequena",90.0],["Porção",144.0],["Copo americano",150.0],["Copo de requeijão",240.0],["Copo médio",240.0],["Copo grande",300.0]]],[215,"Laranja, pêra, suco",33,7.6,0.7,0.1,0.0,2,[["Copo médio",240.0],["Xícara de café",50.0],["Copo americano",150.0],["Taça",150.0],["Garrafa (200 ml)",200.0],["Xícara de chá",200.0],["Garrafa (237 ml)",237.0],["Copo de requeijão",240.0],["Garrafa (250 ml)",250.0],["Garrafa (275 ml)",275.0],["Copo tulipa",290.0],["Garrafa (290 ml)",290.0],["Caneca",300.0],["Caneco",300.0],["Copo grande",300.0],["Garrafa (350 ml)",350.0],["Lata (350 ml)",350.0],["Garrafa (450 ml)",450.0],["Garrafa (500 ml)",500.0],["Garrafa (600 ml)",600.0],["Garrafa (1 l)",1000.0]]],[216,"Laranja, valência, crua",46,11.7,0.8,0.2,1.7,2,[["Unidade",180.0],["Bago",18.0],["Fatia",18.0],["Gomo",18.0],["Pedaço",18.0],["Rodela",18.0],["Banda",90.0],["Metade",90.0],["Unidade pequena",90.0],["Porção",144.0],["Copo americano",150.0],["Copo de requeijão",240.0],["Copo médio",240.0],["Copo grande",300.0]]],[217,"Laranja, valência, suco",36,8.6,0.5,0.1,0.4,2,[["Copo médio",240.0],["Xícara de café",50.0],["Copo americano",150.0],["Taça",150.0],["Garrafa (200 ml)",200.0],["Xícara de chá",200.0],["Garrafa (237 ml)",237.0],["Copo de requeijão",240.0],["Garrafa (250 ml)",250.0],["Garrafa (275 ml)",275.0],["Copo tulipa",290.0],["Garrafa (290 ml)",290.0],["Caneca",300.0],["Caneco",300.0],["Copo grande",300.0],["Garrafa (350 ml)",350.0],["Lata (350 ml)",350.0],["Garrafa (450 ml)",450.0],["Garrafa (500 ml)",500.0],["Garrafa (600 ml)",600.0],["Garrafa (1 l)",1000.0]]],[218,"Limão, cravo, suco",14,5.2,0.3,0.0,0.0,2,[]],[219,"Limão, galego, suco",22,7.3,0.6,0.1,0.0,2,[]],[220,"Limão, tahiti, cru",32,11.1,0.9,0.1,1.2,2,[["Unidade",84.0],["Fatia",16.8],["Pedaço",16.8],["Rodela",16.8],["Banda",42.0],["Metade",42.0],["Copo de requeijão",84.0],["Copo médio",84.0],["Copo grande",105.0],["Porção",252.0]]],[221,"Maçã, Argentina, com casca, crua",63,16.6,0.2,0.2,2.0,2,[["Unidade",150.0],["Fatia",37.5],["Pedaço",37.5],["Banda",75.0],["Metade",75.0],["Unidade pequena",90.0],["Porção",130.0]]],[222,"Maçã, Fuji, com casca, crua",56,15.2,0.3,0.0,1.3,2,[["Unidade",150.0],["Fatia",37.5],["Pedaço",37.5],["Banda",75.0],["Metade",75.0],["Unidade pequena",90.0],["Porção",130.0]]],[223,"Macaúba, crua",404,13.9,2.1,40.7,13.4,2,[]],[224," Mamão, doce em calda, drenado",196,54.0,0.2,0.1,1.3,2,[]],[225,"Mamão, Formosa, cru",45,11.6,0.8,0.1,1.8,2,[["Fatia",170.0],["Colher de sopa",40.0],["Colher de arroz/servir",70.0],["Pedaço",120.0],["Concha",140.0],["Banda",155.0],["Metade",155.0],["Porção",160.0],["Prato de sobremesa",165.0],["Taça",165.0],["Rodela",170.0],["Unidade pequena",270.0],["Unidade",310.0]]],[226,"Mamão, Papaia, cru",40,10.4,0.5,0.1,1.0,2,[["Fatia",170.0],["Colher de sopa",40.0],["Colher de arroz/servir",70.0],["Pedaço",120.0],["Concha",140.0],["Banda",155.0],["Metade",155.0],["Porção",160.0],["Prato de sobremesa",165.0],["Taça",165.0],["Rodela",170.0],["Unidade pequena",270.0],["Unidade",310.0]]],[227," Mamão verde, doce em calda, drenado",209,57.6,0.3,0.1,1.2,2,[]],[228,"Manga, Haden, crua",64,16.7,0.4,0.3,1.6,2,[["Unidade",140.0],["Colher de sopa",22.0],["Fatia",22.0],["Pedaço",22.0],["Colher de arroz/servir",44.0],["Unidade pequena",60.0],["Banda",70.0],["Metade",70.0],["Porção",110.0]]],[229,"Manga, Palmer, crua",72,19.4,0.4,0.2,1.6,2,[["Unidade",140.0],["Colher de sopa",22.0],["Fatia",22.0],["Pedaço",22.0],["Colher de arroz/servir",44.0],["Unidade pequena",60.0],["Banda",70.0],["Metade",70.0],["Porção",110.0]]],[230,"Manga, polpa, congelada",48,12.5,0.4,0.2,1.1,2,[]],[231,"Manga, Tommy Atkins, crua",51,12.8,0.9,0.2,2.1,2,[["Unidade",140.0],["Colher de sopa",22.0],["Fatia",22.0],["Pedaço",22.0],["Colher de arroz/servir",44.0],["Unidade pequena",60.0],["Banda",70.0],["Metade",70.0],["Porção",110.0]]],[232,"Maracujá, cru",68,12.3,2.0,2.1,1.1,2,[["Unidade",45.0],["Copo americano",62.5],["Copo médio",100.0],["Copo grande",125.0]]],[233,"Maracujá, polpa, congelada",39,9.6,0.8,0.2,0.5,2,[]],[234,"Maracujá, suco concentrado, envasado",42,9.6,0.8,0.2,0.4,2,[["Copo médio",240.0],["Copo de cafezinho",50.0],["Xícara de café",50.0],["Copo americano",150.0],["Taça",150.0],["Garrafa (200 ml)",200.0],["Xícara de chá",200.0],["Copo de requeijão",240.0],["Copo tulipa",290.0],["Caneca",300.0],["Caneco",300.0],["Copo grande",300.0],["Lata (350 ml)",350.0]]],[235,"Melancia, crua",33,8.1,0.9,0.0,0.1,2,[["Fatia",200.0],["Copo americano",62.5],["Copo médio",100.0],["Copo grande",125.0],["Pedaço",150.0],["Porção",296.0]]],[236,"Melão, cru",29,7.5,0.7,0.0,0.2,2,[["Fatia",90.0],["Pedaço",22.5],["Porção",230.0],["Banda",330.0],["Unidade",660.0]]],[237,"Mexerica, Murcote, crua",58,14.9,0.9,0.1,3.1,2,[["Unidade",135.0],["Gomo",16.9],["Unidade pequena",100.0]]],[238,"Mexerica, Rio, crua",37,9.3,0.7,0.1,2.7,2,[["Unidade",135.0],["Gomo",16.9],["Unidade pequena",100.0]]],[239,"Morango, cru",30,6.8,0.9,0.3,1.7,2,[["Unidade",12.0],["Unidade pequena",7.0],["Copo americano",62.5],["Porção",120.0],["Prato de sobremesa",120.0],["Taça",120.0],["Xícara de chá",120.0]]],[240,"Nêspera, crua",43,11.5,0.3,0.0,3.0,2,[["Unidade",27.0]]],[241,"Pequi, cru",205,13.0,2.3,18.0,19.0,2,[["Unidade",3.8]]],[242,"Pêra, Park, crua",61,16.1,0.2,0.2,3.0,2,[["Unidade",130.0],["Fatia",32.5],["Pedaço",32.5],["Banda",65.0],["Metade",65.0],["Unidade pequena",97.5]]],[243,"Pêra, Williams, crua",53,14.0,0.6,0.1,3.0,2,[["Unidade",130.0],["Fatia",32.5],["Pedaço",32.5],["Banda",65.0],["Metade",65.0],["Unidade pequena",97.5]]],[244,"Pêssego, Aurora, cru",36,9.3,0.8,0.0,1.4,2,[["Unidade",60.0],["Pedaço",15.0],["Unidade pequena",32.0],["Taça",80.0],["Tigela",80.0],["Porção",226.0]]],[245,"Pêssego, enlatado, em calda",63,16.9,0.7,0.0,1.0,2,[]],[246,"Pinha, crua",88,22.4,1.5,0.3,3.4,2,[["Unidade",60.0],["Unidade pequena",45.0]]],[247,"Pitanga, crua",41,10.2,0.9,0.2,3.2,2,[["Unidade",10.0],["Copo americano",62.5],["Copo médio",100.0]]],[248,"Pitanga, polpa, congelada",19,4.8,0.3,0.1,0.7,2,[]],[249,"Romã, crua",56,15.1,0.4,0.0,0.4,2,[["Unidade",70.0]]],[250,"Tamarindo, cru",276,72.5,3.2,0.5,6.4,2,[["Unidade",8.1],["Porção",25.0],["Copo americano",62.5],["Copo de requeijão",100.0],["Copo médio",100.0],["Copo grande",125.0]]],[251,"Tangerina, Poncã, crua",38,9.6,0.8,0.1,0.9,2,[["Unidade",135.0],["Bago",16.9],["Gomo",16.9],["Copo americano",62.5],["Metade",67.5],["Copo médio",100.0],["Unidade pequena",100.0],["Copo grande",125.0]]],[252,"Tangerina, Poncã, suco",36,8.8,0.5,0.0,0.0,2,[]],[253,"Tucumã, cru",262,26.5,2.1,19.1,12.7,2,[["Unidade",11.7]]],[254,"Umbu, cru",37,9.4,0.8,0.0,2.0,2,[["Unidade",33.3],["Copo americano",62.5],["Copo médio",100.0],["Copo grande",125.0]]],[255,"Umbu, polpa, congelada",34,8.8,0.5,0.1,1.3,2,[]],[256,"Uva, Itália, crua",53,13.6,0.7,0.2,0.9,2,[["Cacho",170.0],["Unidade pequena",4.0],["Bago",8.0],["Gomo",8.0],["Unidade",8.0],["Copo americano",70.0],["Porção",99.2],["Copo de requeijão",140.0],["Copo grande",140.0],["Copo médio",140.0],["Copo tulipa",140.0],["Punhado",170.0]]],[257,"Uva, Rubi, crua",49,12.7,0.6,0.2,0.9,2,[["Cacho",170.0],["Unidade pequena",4.0],["Bago",8.0],["Gomo",8.0],["Unidade",8.0],["Copo americano",70.0],["Porção",99.2],["Copo de requeijão",140.0],["Copo grande",140.0],["Copo médio",140.0],["Copo tulipa",140.0],["Punhado",170.0]]],[258,"Uva, suco concentrado, envasado",58,14.7,0.0,0.0,0.2,2,[]],[259,"Azeite, de dendê",884,0.0,0.0,100.0,0.0,3,[["Colher de chá",2.0],["Colher de café",1.0],["Colher de sobremesa",5.0],["Porção",7.6],["Colher de sopa",8.0],["Colher de arroz/servir",16.0]]],[260,"Azeite, de oliva, extra virgem",884,0.0,0.0,100.0,0.0,3,[["Colher de chá",2.0],["Colher de café",1.0],["Colher de sobremesa",5.0],["Porção",7.6],["Colher de sopa",8.0],["Colher de arroz/servir",16.0]]],[261,"Manteiga, com sal",726,0.1,0.4,82.4,0.0,3,[["Ponta de faca",5.0],["Colher de café",4.0],["Colher de chá",8.0],["Porção",9.8],["Colher de sobremesa",23.0],["Colher de sopa",32.0],["Fatia",32.0],["Garfada",32.0],["Colher de arroz/servir",64.0],["Copo americano",155.0],["Copo médio",155.0]]],[262,"Manteiga, sem sal",758,0.0,0.4,86.0,0.0,3,[["Ponta de faca",5.0],["Colher de café",4.0],["Colher de chá",8.0],["Porção",9.8],["Colher de sobremesa",23.0],["Colher de sopa",32.0],["Fatia",32.0],["Garfada",32.0],["Colher de arroz/servir",64.0],["Copo americano",155.0],["Copo médio",155.0]]],[263,"Margarina, com óleo hidrogenado, com sal (65% de lipídeos)",596,0.0,0.0,67.4,0.0,3,[["Ponta de faca",5.0],["Colher de café",4.0],["Colher de chá",8.0],["Porção",9.8],["Colher de sobremesa",23.0],["Colher de sopa",32.0],["Fatia",32.0],["Garfada",32.0],["Colher de arroz/servir",64.0],["Concha",64.0],["Copo americano",155.0],["Xícara de chá",155.0]]],[264,"Margarina, com óleo hidrogenado, sem sal (80% de lipídeos)",723,0.0,0.0,81.7,0.0,3,[["Ponta de faca",5.0],["Colher de café",4.0],["Colher de chá",8.0],["Porção",9.8],["Colher de sobremesa",23.0],["Colher de sopa",32.0],["Fatia",32.0],["Garfada",32.0],["Colher de arroz/servir",64.0],["Concha",64.0],["Copo americano",155.0],["Xícara de chá",155.0]]],[265,"Margarina, com óleo interesterificado, com sal (65%de lipídeos)",594,0.0,0.0,67.2,0.0,3,[["Ponta de faca",5.0],["Colher de café",4.0],["Colher de chá",8.0],["Porção",9.8],["Colher de sobremesa",23.0],["Colher de sopa",32.0],["Fatia",32.0],["Garfada",32.0],["Colher de arroz/servir",64.0],["Concha",64.0],["Copo americano",155.0],["Xícara de chá",155.0]]],[266,"Margarina, com óleo interesterificado, sem sal (65% de lipídeos)",593,0.0,0.0,67.1,0.0,3,[["Ponta de faca",5.0],["Colher de café",4.0],["Colher de chá",8.0],["Porção",9.8],["Colher de sobremesa",23.0],["Colher de sopa",32.0],["Fatia",32.0],["Garfada",32.0],["Colher de arroz/servir",64.0],["Concha",64.0],["Copo americano",155.0],["Xícara de chá",155.0]]],[267,"Óleo, de babaçu",884,0.0,0.0,100.0,0.0,3,[["Colher de sopa",8.0],["Colher de café",1.0],["Colher de sobremesa",5.0],["Porção",8.0]]],[268,"Óleo, de canola",884,0.0,0.0,100.0,0.0,3,[["Colher de sopa",8.0],["Colher de café",1.0],["Colher de sobremesa",5.0],["Porção",8.0]]],[269,"Óleo, de girassol",884,0.0,0.0,100.0,0.0,3,[["Colher de sopa",8.0],["Colher de café",1.0],["Colher de sobremesa",5.0],["Porção",8.0]]],[270,"Óleo, de milho",884,0.0,0.0,100.0,0.0,3,[["Colher de sopa",8.0],["Colher de café",1.0],["Colher de sobremesa",5.0],["Porção",8.0]]],[271,"Óleo, de pequi",884,0.0,0.0,100.0,0.0,3,[["Colher de sopa",8.0],["Colher de café",1.0],["Colher de sobremesa",5.0],["Porção",8.0]]],[272,"Óleo, de soja",884,0.0,0.0,100.0,0.0,3,[["Colher de sopa",8.0],["Colher de café",1.0],["Colher de chá",2.0],["Concha",32.0]]],[273,"Abadejo, filé, congelado, assado",112,0.0,23.5,1.2,0.0,4,[["Filé",120.0],["Bola",15.0],["Colher de sopa",20.0],["Porção",75.0],["Banda",100.0],["Metade",100.0],["Unidade pequena",150.0],["Posta",200.0],["Unidade",200.0]]],[274,"Abadejo, filé, congelado,cozido",91,0.0,19.3,0.9,0.0,4,[["Filé",120.0],["Porção",75.0],["Concha",80.0],["Posta",200.0],["Unidade",200.0]]],[275,"Abadejo, filé, congelado, cru",59,0.0,13.1,0.4,0.0,4,[["Filé",120.0],["Porção",75.0],["Posta",200.0],["Unidade",200.0]]],[276,"Abadejo, filé, congelado, grelhado",130,0.0,27.6,1.3,0.0,4,[["Filé",120.0],["Porção",75.0],["Bife",120.0],["Posta",200.0],["Unidade",200.0]]],[277,"Atum, conserva em óleo",166,0.0,26.2,6.0,0.0,4,[["Colher de sopa",16.0],["Colher de sobremesa",10.0],["Porção",112.0],["Lata (n. e.)",135.0]]],[278,"Atum, fresco, cru",118,0.0,25.7,0.9,0.0,4,[["Unidade",200.0],["Porção",75.0],["Filé",120.0],["Posta",200.0]]],[279,"Bacalhau, salgado, cru",136,0.0,29.0,1.3,0.0,4,[["Colher de arroz/servir",55.0],["Porção",135.0]]],[280,"Bacalhau, salgado, refogado",140,1.2,24.0,3.6,0.0,4,[["Colher de sopa",20.0],["Concha",110.0]]],[281,"Cação, posta, com farinha de trigo, frita",208,3.1,25.0,10.0,0.5,4,[["Posta",200.0],["Porção",75.0],["Bife",120.0],["Filé",120.0],["Unidade pequena",150.0],["Unidade",200.0]]],[282,"Cação, posta, cozida",116,0.0,25.6,0.7,0.0,4,[["Posta",200.0],["Porção",75.0],["Concha",80.0],["Filé",120.0],["Unidade",200.0]]],[283,"Cação, posta, crua",83,0.0,17.9,0.8,0.0,4,[["Posta",200.0],["Porção",75.0],["Filé",120.0],["Unidade",200.0]]],[284,"Camarão, Rio Grande, grande, cozido",90,0.0,19.0,1.0,0.0,4,[["Colher de sopa",20.0],["Colher de chá",30.0],["Unidade",30.0],["Colher de arroz/servir",35.0],["Escumadeira",35.0],["Prato raso",35.0],["Tigela",35.0],["Xícara de chá",35.0],["Punhado",40.0],["Concha",70.0],["Prato fundo",70.0],["Porção",190.0]]],[285,"Camarão, Rio Grande, grande, cru",47,0.0,10.0,0.5,0.0,4,[["Colher de sopa",20.0],["Porção",190.0]]],[286,"Camarão, Sete Barbas, sem cabeça, com casca, frito",231,2.9,18.4,15.6,0.0,4,[["Unidade",30.0],["Colher de sopa",20.0],["Colher de arroz/servir",35.0],["Escumadeira",35.0],["Prato raso",35.0],["Punhado",40.0],["Concha",70.0],["Prato fundo",70.0],["Porção",104.0]]],[287,"Caranguejo, cozido",83,0.0,18.5,0.4,0.0,4,[["Unidade",20.0],["Porção",45.0]]],[288,"Corimba, cru",128,-0.0,17.4,6.0,0.0,4,[["Posta",200.0],["Porção",75.0]]],[289,"Corimbatá, assado",261,0.0,19.9,19.6,0.0,4,[["Unidade",200.0],["Porção",75.0],["Banda",100.0],["Bife",120.0],["Filé",120.0],["Unidade pequena",150.0],["Posta",200.0]]],[290,"Corimbatá, cozido",239,0.0,20.1,16.9,0.0,4,[["Unidade",200.0],["Colher de sopa",20.0],["Colher de arroz/servir",40.0],["Porção",75.0],["Concha",80.0],["Banda",100.0],["Metade",100.0],["Bife",120.0],["Filé",120.0],["Unidade pequena",150.0],["Posta",200.0]]],[291,"Corvina de água doce, crua",101,0.0,18.9,2.2,0.0,4,[["Posta",200.0],["Porção",75.0]]],[292,"Corvina do mar, crua",94,0.0,18.6,1.6,0.0,4,[["Unidade",200.0],["Porção",75.0],["Filé",120.0],["Posta",200.0]]],[293,"Corvina grande, assada",147,0.0,26.8,3.6,0.0,4,[["Unidade",200.0],["Bola",15.0],["Colher de sopa",20.0],["Porção",75.0],["Banda",100.0],["Metade",100.0],["Filé",120.0],["Unidade pequena",150.0],["Posta",200.0]]],[294,"Corvina grande, cozida",100,0.0,23.4,2.6,0.0,4,[["Unidade",200.0],["Porção",75.0],["Concha",80.0],["Filé",120.0],["Posta",200.0]]],[295,"Dourada de água doce, fresca",131,0.0,18.8,5.6,0.0,4,[["Unidade",200.0]]],[296,"Lambari, congelado, cru",131,0.0,16.8,6.5,0.0,4,[["Posta",200.0],["Porção",75.0]]],[297,"Lambari, congelado, frito",327,0.0,28.4,22.8,0.0,4,[["Unidade",200.0],["Colher de arroz/servir",40.0],["Porção",75.0],["Concha",80.0],["Banda",100.0],["Metade",100.0],["Bife",120.0],["Filé",120.0],["Unidade pequena",150.0],["Posta",200.0]]],[298,"Lambari, fresco, cru",152,0.0,15.7,9.4,0.0,4,[["Posta",200.0],["Porção",75.0]]],[299,"Manjuba, com farinha de trigo, frita",344,10.2,23.4,22.6,0.4,4,[["Unidade",200.0],["Porção",75.0],["Bife",120.0],["Filé",120.0],["Unidade pequena",150.0],["Posta",200.0]]],[300,"Manjuba, frita",349,0.0,30.1,24.5,0.0,4,[["Unidade",200.0],["Porção",75.0],["Bife",120.0],["Filé",120.0],["Unidade pequena",150.0],["Posta",200.0]]],[301,"Merluza, filé, assado",122,0.0,26.6,0.9,0.0,4,[["Filé",120.0],["Bola",15.0],["Colher de sopa",20.0],["Porção",75.0],["Banda",100.0],["Metade",100.0],["Unidade pequena",150.0],["Posta",200.0],["Unidade",200.0]]],[302,"Merluza, filé, cru",89,0.0,16.6,2.0,0.0,4,[["Filé",120.0],["Porção",75.0],["Posta",200.0],["Unidade",200.0]]],[303,"Merluza, filé, frito",192,0.0,26.9,8.5,0.0,4,[["Filé",120.0],["Porção",75.0],["Bife",120.0],["Unidade pequena",150.0],["Posta",200.0],["Unidade",200.0]]],[304,"Pescada, branca, crua",111,0.0,16.3,4.6,0.0,4,[["Unidade",200.0],["Porção",75.0],["Filé",120.0],["Posta",200.0]]],[305,"Pescada, branca, frita",223,0.0,27.4,11.8,0.0,4,[["Unidade",200.0],["Porção",75.0],["Bife",120.0],["Filé",120.0],["Unidade pequena",150.0],["Posta",200.0]]],[306,"Pescada, filé, com farinha de trigo, frito",283,5.0,21.4,19.1,0.0,4,[["Filé",120.0],["Porção",75.0],["Bife",120.0],["Unidade pequena",150.0],["Posta",200.0],["Unidade",200.0]]],[307,"Pescada, filé, cru",107,0.0,16.6,4.0,0.0,4,[["Filé",120.0],["Porção",75.0],["Posta",200.0],["Unidade",200.0]]],[308,"Pescada, filé, frito",154,0.0,28.6,3.6,0.0,4,[["Filé",120.0],["Porção",75.0],["Bife",120.0],["Unidade pequena",150.0],["Posta",200.0],["Unidade",200.0]]],[309,"Pescada, filé, molho escabeche",142,5.0,11.8,8.0,0.8,4,[["Filé",120.0],["Porção",75.0],["Concha",80.0],["Posta",200.0],["Unidade",200.0]]],[310,"Pescadinha, crua",76,0.0,15.5,1.1,0.0,4,[["Unidade",200.0],["Porção",75.0],["Filé",120.0],["Posta",200.0]]],[311,"Pintado, assado",192,0.0,36.5,4.0,0.0,4,[["Unidade",200.0],["Porção",75.0],["Banda",100.0],["Bife",120.0],["Filé",120.0],["Unidade pequena",150.0],["Posta",200.0]]],[312,"Pintado, cru",91,0.0,18.6,1.3,0.0,4,[["Posta",200.0],["Porção",75.0]]],[313,"Pintado, grelhado",152,0.0,30.8,2.3,0.0,4,[["Unidade",200.0],["Porção",75.0],["Bife",120.0],["Filé",120.0],["Unidade pequena",150.0],["Posta",200.0]]],[314,"Porquinho, cru",93,0.0,20.5,0.6,0.0,4,[["Unidade",200.0],["Porção",75.0],["Filé",120.0],["Posta",200.0]]],[315,"Salmão, filé, com pele, fresco,  grelhado",229,0.0,23.9,14.0,0.0,4,[["Filé",120.0],["Porção",75.0],["Bife",120.0],["Posta",200.0],["Unidade",200.0]]],[316,"Salmão, sem pele, fresco, cru",170,0.0,19.3,9.7,0.0,4,[["Unidade",200.0],["Porção",75.0],["Filé",120.0],["Posta",200.0]]],[317,"Salmão, sem pele, fresco, grelhado",243,0.0,26.1,14.5,0.0,4,[["Posta",200.0],["Porção",75.0],["Bife",120.0],["Filé",120.0],["Unidade",200.0]]],[318,"Sardinha, assada",164,0.0,32.2,3.0,0.0,4,[["Unidade",200.0],["Bola",15.0],["Colher de sopa",20.0],["Porção",75.0],["Banda",100.0],["Metade",100.0],["Filé",120.0],["Unidade pequena",150.0],["Posta",200.0]]],[319,"Sardinha, conserva em óleo",285,0.0,15.9,24.0,0.0,4,[["Unidade",41.5],["Colher de sobremesa",10.0],["Colher de sopa",16.0],["Unidade pequena",31.1],["Colher de arroz/servir",32.0],["Porção",41.5],["Lata (n. e.)",125.0],["Lata (250 ml)",250.0],["Lata (335 ml)",335.0],["Lata (350 ml)",350.0]]],[320,"Sardinha, frita",257,0.0,33.4,12.7,0.0,4,[["Unidade",200.0],["Porção",75.0],["Bife",120.0],["Filé",120.0],["Unidade pequena",150.0],["Posta",200.0]]],[321,"Sardinha, inteira, crua",114,0.0,21.1,2.6,0.0,4,[["Unidade",200.0],["Porção",75.0],["Filé",120.0],["Posta",200.0]]],[322,"Tucunaré, filé, congelado, cru",88,-0.0,18.0,1.2,0.0,4,[["Posta",200.0],["Porção",75.0]]],[323,"Apresuntado",129,2.9,13.4,6.7,0.0,5,[["Fatia",15.0]]],[324,"Caldo de carne, tablete",241,15.1,7.8,16.6,0.6,5,[]],[325,"Caldo de galinha, tablete",251,10.6,6.3,20.4,11.8,5,[]],[326,"Carne, bovina, acém, moído, cozido",212,0.0,26.7,10.9,0.0,5,[["Colher de arroz/servir",60.0],["Colher de sobremesa",12.5],["Colher de sopa",25.0],["Bola",50.0],["Escumadeira",60.0],["Prato raso",60.0],["Porção",63.0],["Concha",120.0]]],[327,"Carne, bovina, acém, moído, cru",137,0.0,19.4,5.9,0.0,5,[["Colher de arroz/servir",60.0],["Colher de sopa",25.0],["Porção",63.0],["Concha",120.0]]],[328,"Carne, bovina, acém, sem gordura, cozido",215,0.0,27.3,10.9,0.0,5,[["Pedaço",35.0],["Colher de arroz/servir",70.0],["Porção",75.0],["Bife",100.0]]],[329,"Carne, bovina, acém, sem gordura, cru",144,0.0,20.8,6.1,0.0,5,[["Pedaço",35.0],["Colher de arroz/servir",70.0],["Porção",75.0],["Bife",100.0]]],[330,"Carne, bovina, almôndegas, cruas",189,9.8,12.3,11.2,0.0,5,[["Pedaço",35.0],["Escumadeira",70.0],["Porção",75.0],["Fatia",90.0],["Bife",100.0],["Concha",140.0]]],[331,"Carne, bovina, almôndegas, fritas",272,14.3,18.2,15.8,0.0,5,[["Pedaço",35.0],["Colher de sopa",30.0],["Rodela",35.0],["Costela",40.0],["Espetinho",46.0],["Espeto",46.0],["Bola",50.0],["Colher de arroz/servir",70.0],["Escumadeira",70.0],["Tigela",70.0],["Porção",75.0],["Fatia",90.0],["Bife",100.0],["Filé",100.0],["Prato raso",105.0],["Concha",140.0],["Prato fundo",140.0]]],[332,"Carne, bovina, bucho, cozido",133,0.0,21.6,4.5,0.0,5,[["Pedaço",35.0],["Colher de sopa",30.0],["Garfada",30.0],["Pegador",30.0],["Rodela",35.0],["Costela",40.0],["Espetinho",46.0],["Colher de arroz/servir",70.0],["Escumadeira",70.0],["Prato de sobremesa",70.0],["Porção",75.0],["Fatia",90.0],["Bife",100.0],["Filé",100.0],["Prato raso",105.0],["Concha",140.0],["Prato fundo",140.0]]],[333,"Carne, bovina, bucho, cru",137,0.0,20.5,5.5,0.0,5,[["Pedaço",35.0],["Escumadeira",70.0],["Porção",75.0],["Fatia",90.0],["Bife",100.0],["Concha",140.0]]],[334,"Carne, bovina, capa de contra-filé, com gordura, crua",217,0.0,19.2,15.0,0.0,5,[["Bife",100.0],["Pedaço",35.0],["Porção",75.0]]],[335,"Carne, bovina, capa de contra-filé, com gordura, grelhada",312,0.0,30.7,20.0,0.0,5,[["Bife",100.0],["Pedaço",35.0]]],[336,"Carne, bovina, capa de contra-filé, sem gordura, crua",131,0.0,21.5,4.3,0.0,5,[["Bife",100.0],["Pedaço",35.0],["Porção",75.0]]],[337,"Carne, bovina, capa de contra-filé, sem gordura, grelhada",239,-0.0,35.1,9.9,0.0,5,[["Bife",100.0],["Pedaço",35.0]]],[338,"Carne, bovina, charque, cozido",263,0.0,36.4,11.9,0.0,5,[["Pedaço",35.0],["Colher de sopa",30.0],["Garfada",30.0],["Pegador",30.0],["Rodela",35.0],["Costela",40.0],["Espetinho",46.0],["Colher de arroz/servir",70.0],["Escumadeira",70.0],["Prato de sobremesa",70.0],["Porção",75.0],["Fatia",90.0],["Bife",100.0],["Filé",100.0],["Prato raso",105.0],["Concha",140.0],["Prato fundo",140.0]]],[339,"Carne, bovina, charque, cru",249,0.0,22.7,16.8,0.0,5,[["Pedaço",35.0],["Escumadeira",70.0],["Porção",75.0],["Fatia",90.0],["Bife",100.0],["Concha",140.0]]],[340,"Carne, bovina, contra-filé, à milanesa",352,12.2,20.6,24.0,0.4,5,[["Bife",80.0]]],[341,"Carne, bovina, contra-filé de costela, cru",202,0.0,19.8,13.1,0.0,5,[["Bife",100.0],["Pedaço",35.0],["Porção",75.0]]],[342,"Carne, bovina, contra-filé de costela, grelhado",275,0.0,29.9,16.3,0.0,5,[["Bife",100.0],["Pedaço",35.0]]],[343,"Carne, bovina, contra-filé, com gordura, cru",206,0.0,21.1,12.8,0.0,5,[["Bife",100.0],["Pedaço",35.0],["Porção",75.0]]],[344,"Carne, bovina, contra-filé, com gordura, grelhado",278,0.0,32.4,15.5,0.0,5,[["Bife",100.0],["Pedaço",35.0]]],[345,"Carne, bovina, contra-filé, sem gordura, cru",157,0.0,24.0,6.0,0.0,5,[["Bife",100.0],["Pedaço",35.0],["Porção",75.0]]],[346,"Carne, bovina, contra-filé, sem gordura, grelhado",194,0.0,35.9,4.5,0.0,5,[["Bife",100.0],["Pedaço",35.0]]],[347,"Carne, bovina, costela, assada",373,0.0,28.8,27.7,0.0,5,[["Pedaço",40.0]]],[348,"Carne, bovina, costela, crua",358,0.0,16.7,31.8,0.0,5,[["Pedaço",40.0],["Porção",40.0],["Colher de arroz/servir",70.0],["Concha",140.0]]],[349,"Carne, bovina, coxão duro, sem gordura, cozido",217,0.0,31.9,8.9,0.0,5,[["Pedaço",35.0],["Colher de sopa",30.0],["Garfada",30.0],["Pegador",30.0],["Rodela",35.0],["Costela",40.0],["Espetinho",46.0],["Colher de arroz/servir",70.0],["Escumadeira",70.0],["Prato de sobremesa",70.0],["Porção",75.0],["Fatia",90.0],["Bife",100.0],["Filé",100.0],["Prato raso",105.0],["Concha",140.0],["Prato fundo",140.0]]],[350,"Carne, bovina, coxão duro, sem gordura, cru",148,0.0,21.5,6.2,0.0,5,[["Pedaço",35.0],["Escumadeira",70.0],["Porção",75.0],["Fatia",90.0],["Bife",100.0],["Concha",140.0]]],[351,"Carne, bovina, coxão mole, sem gordura, cozido",219,0.0,32.4,8.9,0.0,5,[["Pedaço",35.0],["Colher de sopa",30.0],["Garfada",30.0],["Pegador",30.0],["Rodela",35.0],["Costela",40.0],["Espetinho",46.0],["Colher de arroz/servir",70.0],["Escumadeira",70.0],["Prato de sobremesa",70.0],["Porção",75.0],["Fatia",90.0],["Bife",100.0],["Filé",100.0],["Prato raso",105.0],["Concha",140.0],["Prato fundo",140.0]]],[352,"Carne, bovina, coxão mole, sem gordura, cru",169,0.0,21.2,8.7,0.0,5,[["Pedaço",35.0],["Escumadeira",70.0],["Porção",75.0],["Fatia",90.0],["Bife",100.0],["Concha",140.0]]],[353,"Carne, bovina, cupim, assado",330,0.0,28.6,23.0,0.0,5,[["Pedaço",35.0],["Colher de sopa",30.0],["Costela",40.0],["Espetinho",46.0],["Espeto",46.0],["Colher de arroz/servir",70.0],["Escumadeira",70.0],["Porção",75.0],["Fatia",90.0],["Bife",100.0],["Filé",100.0],["Prato raso",105.0],["Concha",140.0],["Prato fundo",140.0]]],[354,"Carne, bovina, cupim, cru",221,0.0,19.5,15.3,0.0,5,[["Pedaço",35.0],["Escumadeira",70.0],["Porção",75.0],["Fatia",90.0],["Bife",100.0],["Concha",140.0]]],[355,"Carne, bovina, fígado, cru",141,1.1,20.7,5.4,0.0,5,[["Bife",100.0]]],[356,"Carne, bovina, fígado, grelhado",225,4.2,29.9,9.0,0.0,5,[["Bife",100.0],["Pedaço",35.0]]],[357,"Carne, bovina, filé mingnon, sem gordura, cru",143,0.0,21.6,5.6,0.0,5,[["Pedaço",35.0]]],[358,"Carne, bovina, filé mingnon, sem gordura, grelhado",220,0.0,32.8,8.8,0.0,5,[["Filé",100.0],["Fatia",35.0],["Pedaço",35.0],["Bife",100.0],["Unidade",100.0]]],[359,"Carne, bovina, flanco, sem gordura, cozido",196,0.0,29.4,7.8,0.0,5,[["Pedaço",35.0],["Colher de sopa",30.0],["Garfada",30.0],["Pegador",30.0],["Rodela",35.0],["Costela",40.0],["Espetinho",46.0],["Colher de arroz/servir",70.0],["Escumadeira",70.0],["Prato de sobremesa",70.0],["Porção",75.0],["Fatia",90.0],["Bife",100.0],["Filé",100.0],["Prato raso",105.0],["Concha",140.0],["Prato fundo",140.0]]],[360,"Carne, bovina, flanco, sem gordura, cru",141,0.0,20.0,6.2,0.0,5,[["Pedaço",35.0],["Escumadeira",70.0],["Porção",75.0],["Fatia",90.0],["Bife",100.0],["Concha",140.0]]],[361,"Carne, bovina, fraldinha, com gordura, cozida",338,0.0,24.2,26.0,0.0,5,[["Pedaço",35.0],["Colher de arroz/servir",70.0]]],[362,"Carne, bovina, fraldinha, com gordura, crua",221,0.0,17.6,16.1,0.0,5,[["Pedaço",35.0],["Colher de arroz/servir",70.0]]],[363,"Carne, bovina, lagarto, cozido",222,0.0,32.9,9.1,0.0,5,[["Pedaço",35.0],["Colher de sopa",30.0],["Garfada",30.0],["Pegador",30.0],["Rodela",35.0],["Costela",40.0],["Espetinho",46.0],["Colher de arroz/servir",70.0],["Escumadeira",70.0],["Prato de sobremesa",70.0],["Porção",75.0],["Fatia",90.0],["Bife",100.0],["Filé",100.0],["Prato raso",105.0],["Concha",140.0],["Prato fundo",140.0]]],[364,"Carne, bovina, lagarto, cru",135,0.0,20.5,5.2,0.0,5,[["Pedaço",35.0],["Escumadeira",70.0],["Porção",75.0],["Fatia",90.0],["Bife",100.0],["Concha",140.0]]],[365,"Carne, bovina, língua, cozida",315,0.0,21.4,24.8,0.0,5,[["Pedaço",35.0],["Colher de sopa",30.0],["Garfada",30.0],["Pegador",30.0],["Rodela",35.0],["Costela",40.0],["Espetinho",46.0],["Colher de arroz/servir",70.0],["Escumadeira",70.0],["Prato de sobremesa",70.0],["Porção",75.0],["Fatia",90.0],["Bife",100.0],["Filé",100.0],["Prato raso",105.0],["Concha",140.0],["Prato fundo",140.0]]],[366,"Carne, bovina, língua, crua",215,0.0,17.1,15.8,0.0,5,[["Pedaço",35.0],["Escumadeira",70.0],["Porção",75.0],["Fatia",90.0],["Bife",100.0],["Concha",140.0]]],[367,"Carne, bovina, maminha, crua",153,0.0,20.9,7.0,0.0,5,[["Fatia",35.0],["Pedaço",35.0],["Bife",100.0]]],[368,"Carne, bovina, maminha, grelhada",153,0.0,30.7,2.4,0.0,5,[["Bife",100.0],["Fatia",35.0],["Pedaço",35.0],["Porção",75.0],["Filé",100.0]]],[369,"Carne, bovina, miolo de alcatra, sem gordura, cru",163,0.0,21.6,7.8,0.0,5,[["Bife",100.0]]],[370,"Carne, bovina, miolo de alcatra, sem gordura, grelhado",241,0.0,31.9,11.6,0.0,5,[["Bife",100.0],["Fatia",35.0],["Pedaço",35.0],["Espeto",46.0],["Porção",75.0]]],[371,"Carne, bovina, músculo, sem gordura, cozido",194,0.0,31.2,6.7,0.0,5,[["Pedaço",35.0],["Colher de sopa",30.0],["Escumadeira",70.0],["Porção",75.0],["Bife",100.0],["Concha",140.0]]],[372,"Carne, bovina, músculo, sem gordura, cru",142,0.0,21.6,5.5,0.0,5,[["Pedaço",35.0],["Colher de sopa",30.0],["Escumadeira",70.0],["Porção",75.0],["Bife",100.0],["Concha",140.0]]],[373,"Carne, bovina, paleta, com gordura, crua",159,0.0,21.4,7.5,0.0,5,[["Pedaço",35.0],["Escumadeira",70.0],["Porção",75.0],["Fatia",90.0],["Bife",100.0],["Concha",140.0]]],[374,"Carne, bovina, paleta, sem gordura, cozida",194,0.0,29.7,7.4,0.0,5,[["Pedaço",35.0],["Colher de sopa",30.0],["Garfada",30.0],["Pegador",30.0],["Rodela",35.0],["Costela",40.0],["Espetinho",46.0],["Colher de arroz/servir",70.0],["Escumadeira",70.0],["Prato de sobremesa",70.0],["Porção",75.0],["Fatia",90.0],["Bife",100.0],["Filé",100.0],["Prato raso",105.0],["Concha",140.0],["Prato fundo",140.0]]],[375,"Carne, bovina, paleta, sem gordura, crua",141,0.0,21.0,5.7,0.0,5,[["Pedaço",35.0],["Escumadeira",70.0],["Porção",75.0],["Fatia",90.0],["Bife",100.0],["Concha",140.0]]],[376,"Carne, bovina, patinho, sem gordura, cru",133,0.0,21.7,4.5,0.0,5,[["Pedaço",35.0],["Porção",75.0],["Bife",100.0]]],[377,"Carne, bovina, patinho, sem gordura, grelhado",219,0.0,35.9,7.3,0.0,5,[["Bife",100.0],["Fatia",35.0],["Pedaço",35.0]]],[378,"Carne, bovina, peito, sem gordura, cozido",338,0.0,22.2,27.0,0.0,5,[["Pedaço",35.0],["Colher de arroz/servir",70.0],["Concha",140.0]]],[379,"Carne, bovina, peito, sem gordura, cru",259,0.0,17.6,20.4,0.0,5,[["Pedaço",35.0],["Colher de arroz/servir",70.0],["Concha",140.0]]],[380,"Carne, bovina, picanha, com gordura, crua",213,0.0,18.8,14.7,0.0,5,[["Pedaço",35.0],["Porção",75.0]]],[381,"Carne, bovina, picanha, com gordura, grelhada",289,0.0,26.4,19.5,0.0,5,[["Bife",100.0],["Pedaço",35.0],["Espetinho",46.0],["Porção",75.0],["Fatia",90.0],["Filé",100.0]]],[382,"Carne, bovina, picanha, sem gordura, crua",134,0.0,21.2,4.7,0.0,5,[["Pedaço",35.0],["Porção",75.0]]],[383,"Carne, bovina, picanha, sem gordura, grelhada",238,0.0,31.9,11.3,0.0,5,[["Bife",100.0],["Pedaço",35.0],["Espetinho",46.0],["Porção",75.0],["Fatia",90.0],["Filé",100.0]]],[384,"Carne, bovina, seca, cozida",313,0.0,26.9,21.9,0.0,5,[["Pedaço",65.0],["Colher de sopa",18.0],["Colher de arroz/servir",28.0],["Porção",40.0],["Concha",56.0]]],[385,"Carne, bovina, seca, crua",313,0.0,19.7,25.4,0.0,5,[]],[386,"Coxinha de frango, frita",283,34.5,9.6,11.8,5.0,5,[["Unidade",50.0],["Pedaço",20.0],["Unidade pequena",20.0]]],[387,"Croquete, de carne, cru",246,13.9,12.0,15.6,0.0,5,[]],[388,"Croquete, de carne, frito",347,18.1,16.9,22.7,0.0,5,[["Unidade",55.0],["Unidade pequena",10.0],["Pacote",110.0]]],[389,"Empada de frango, pré-cozida, assada",358,47.5,6.9,15.6,2.2,5,[["Unidade",55.0],["Pedaço",12.0],["Unidade pequena",12.0],["Metade",27.5],["Fatia",110.0]]],[390,"Empada, de frango, pré-cozida",377,35.5,7.3,22.9,2.2,5,[["Unidade",55.0],["Pedaço",12.0],["Unidade pequena",12.0],["Metade",27.5],["Fatia",110.0]]],[391,"Frango, asa, com pele, crua",213,0.0,18.1,15.1,0.0,5,[["Unidade",40.0]]],[392,"Frango, caipira, inteiro, com pele, cozido",243,0.0,23.9,15.6,0.0,5,[["Pedaço",55.0],["Pescoço",10.0],["Asa",40.0],["Coxa",55.0],["Costela",60.0],["Sobrecoxa",65.0],["Porção",100.0],["Peito",180.0]]],[393,"Frango, caipira, inteiro, sem pele, cozido",196,0.0,29.6,7.7,0.0,5,[["Pedaço",55.0],["Pescoço",10.0],["Asa",40.0],["Coxa",55.0],["Costela",60.0],["Sobrecoxa",65.0],["Porção",100.0],["Peito",180.0]]],[394,"Frango, coração, cru",222,0.0,12.6,18.6,0.0,5,[["Unidade",5.0],["Colher de sopa",50.0],["Porção",100.0]]],[395,"Frango, coração, grelhado",207,0.6,22.4,12.1,0.0,5,[["Unidade",5.0],["Espetinho",46.0],["Punhado",50.0],["Porção",100.0]]],[396,"Frango, coxa, com pele, assada",215,0.1,28.5,10.4,0.0,5,[["Coxa",55.0],["Asa",40.0],["Pedaço",55.0],["Sobrecoxa",65.0],["Porção",100.0],["Peito",180.0]]],[397,"Frango, coxa, com pele, crua",161,0.0,17.1,9.8,0.0,5,[["Coxa",55.0]]],[398,"Frango, coxa, sem pele, cozida",167,0.0,26.9,5.8,0.0,5,[["Coxa",55.0],["Pescoço",10.0],["Asa",40.0],["Pedaço",55.0],["Costela",60.0],["Sobrecoxa",65.0],["Porção",100.0],["Peito",180.0]]],[399,"Frango, coxa, sem pele, crua",120,0.0,17.8,4.9,0.0,5,[["Coxa",55.0]]],[400,"Frango, fígado, cru",106,-0.0,17.6,3.5,0.0,5,[["Unidade",30.0],["Pedaço",30.0],["Colher de sopa",50.0],["Colher de arroz/servir",100.0],["Porção",100.0],["Concha",150.0]]],[401,"Frango, filé, à milanesa",221,7.5,28.5,7.8,1.1,5,[["Filé",140.0],["Porção",80.0],["Bife",140.0],["Unidade",140.0]]],[402,"Frango, inteiro, com pele, cru",226,0.0,16.4,17.3,0.0,5,[["Coxa",55.0]]],[403,"Frango, inteiro, sem pele, assado",187,0.0,28.0,7.5,0.0,5,[["Pedaço",55.0],["Asa",40.0],["Coxa",55.0],["Sobrecoxa",65.0],["Porção",100.0],["Peito",180.0]]],[404,"Frango, inteiro, sem pele, cozido",170,0.0,25.0,7.1,0.0,5,[["Pedaço",55.0],["Pescoço",10.0],["Asa",40.0],["Coxa",55.0],["Costela",60.0],["Sobrecoxa",65.0],["Porção",100.0],["Peito",180.0]]],[405,"Frango, inteiro, sem pele, cru",129,0.0,20.6,4.6,0.0,5,[["Coxa",55.0]]],[406,"Frango, peito, com pele, assado",212,0.0,33.4,7.6,0.0,5,[["Peito",180.0],["Espetinho",46.0],["Concha",80.0],["Bife",100.0],["Filé",100.0],["Porção",100.0],["Fatia",180.0],["Pedaço",180.0],["Unidade",180.0]]],[407,"Frango, peito, com pele, cru",149,0.0,20.8,6.7,0.0,5,[["Pedaço",180.0],["Unidade",180.0]]],[408,"Frango, peito, sem pele, cozido",163,0.0,31.5,3.2,0.0,5,[["Peito",180.0],["Colher de sopa",20.0],["Colher de arroz/servir",40.0],["Bife",100.0],["Filé",100.0],["Porção",100.0],["Fatia",180.0],["Pedaço",180.0],["Unidade",180.0]]],[409,"Frango, peito, sem pele, cru",119,0.0,21.5,3.0,0.0,5,[["Pedaço",180.0],["Unidade",180.0]]],[410,"Frango, peito, sem pele, grelhado",159,0.0,32.0,2.5,0.0,5,[["Peito",180.0],["Espetinho",46.0],["Espeto",46.0],["Bife",100.0],["Filé",100.0],["Porção",100.0],["Fatia",180.0],["Pedaço",180.0],["Unidade",180.0]]],[411,"Frango, sobrecoxa, com pele, assada",260,0.0,28.7,15.2,0.0,5,[["Sobrecoxa",65.0],["Asa",40.0],["Coxa",55.0],["Pedaço",55.0],["Porção",100.0],["Peito",180.0]]],[412,"Frango, sobrecoxa, com pele, crua",255,0.0,15.5,20.9,0.0,5,[["Coxa",55.0]]],[413,"Frango, sobrecoxa, sem pele, assada",233,0.0,29.2,12.0,0.0,5,[["Sobrecoxa",65.0],["Asa",40.0],["Coxa",55.0],["Pedaço",55.0],["Porção",100.0],["Peito",180.0]]],[414,"Frango, sobrecoxa, sem pele, crua",162,0.0,17.6,9.6,0.0,5,[["Coxa",55.0]]],[415,"Hambúrguer, bovino, cru",215,4.2,13.2,16.2,0.0,5,[["Unidade",56.0]]],[416,"Hambúrguer, bovino, frito",258,6.3,20.0,17.0,0.0,5,[["Unidade",56.0],["Pedaço",28.0]]],[417,"Hambúrguer, bovino, grelhado",210,11.3,13.2,12.4,0.0,5,[["Unidade",56.0],["Pedaço",28.0]]],[418,"Lingüiça, frango, crua",218,0.0,14.2,17.4,0.0,5,[["Pedaço",10.0],["Banda",30.0]]],[419,"Lingüiça, frango, frita",245,0.0,18.3,18.5,0.0,5,[["Pedaço",10.0],["Fatia",10.0],["Rodela",10.0],["Banda",30.0],["Porção",50.0],["Gomo",60.0],["Unidade",60.0],["Unidade pequena",60.0]]],[420,"Lingüiça, frango, grelhada",244,0.0,18.2,18.4,0.0,5,[["Pedaço",10.0],["Gomo",60.0],["Unidade",60.0]]],[421,"Lingüiça, porco, crua",227,0.0,16.1,17.6,0.0,5,[["Pedaço",10.0],["Fatia",10.0],["Rodela",10.0],["Porção",50.0],["Gomo",60.0]]],[422,"Lingüiça, porco, frita",280,0.0,20.5,21.3,0.0,5,[["Pedaço",10.0],["Fatia",10.0],["Rodela",10.0],["Colher de sopa",22.0],["Pegador",22.0],["Colher de arroz/servir",36.0],["Escumadeira",36.0],["Porção",50.0],["Gomo",60.0],["Unidade",60.0],["Unidade pequena",60.0],["Concha",72.0]]],[423,"Lingüiça, porco, grelhada",296,0.0,23.2,21.9,0.0,5,[["Pedaço",10.0],["Espetinho",46.0],["Porção",50.0],["Gomo",60.0],["Unidade",60.0],["Unidade pequena",60.0]]],[424,"Mortadela",269,5.8,12.0,21.6,0.0,5,[["Fatia",15.0],["Pedaço",15.0],["Porção",62.0]]],[425,"Peru, congelado, assado",163,0.0,26.2,5.7,0.0,5,[["Pedaço",32.0],["Fatia",32.0],["Porção",96.0]]],[426,"Peru, congelado, cru",94,0.0,18.1,1.8,0.0,5,[["Pedaço",32.0]]],[427,"Porco, bisteca, crua",164,0.0,21.5,8.0,0.0,5,[["Pedaço",70.0],["Bife",70.0]]],[428,"Porco, bisteca, frita",311,0.0,33.7,18.5,0.0,5,[["Pedaço",70.0],["Bife",70.0],["Filé",100.0],["Porção",140.0]]],[429,"Porco, bisteca, grelhada",280,0.0,28.9,17.4,0.0,5,[["Pedaço",70.0],["Bife",70.0]]],[430,"Porco, costela, assada",402,0.0,30.2,30.3,0.0,5,[["Costela",25.0],["Pedaço",25.0],["Unidade",25.0],["Porção",40.0]]],[431,"Porco, costela, crua",256,0.0,18.0,19.8,0.0,5,[["Pedaço",25.0]]],[432,"Porco, lombo, assado",210,0.0,35.7,6.4,0.0,5,[["Pedaço",95.0],["Fatia",190.0]]],[433,"Porco, lombo, cru",176,0.0,22.6,8.8,0.0,5,[["Pedaço",95.0]]],[434,"Porco, orelha, salgada, crua",258,0.0,18.5,19.9,0.0,5,[]],[435,"Porco, pernil, assado",262,0.0,32.1,13.9,0.0,5,[["Pedaço",42.0],["Bife",42.0],["Fatia",90.0]]],[436,"Porco, pernil, cru",186,0.0,20.1,11.1,0.0,5,[["Pedaço",42.0],["Porção",140.0]]],[437,"Porco, rabo, salgado, cru",377,0.0,15.6,34.5,0.0,5,[]],[438,"Presunto, com capa de gordura",128,1.4,14.4,6.8,0.0,5,[["Fatia",15.0]]],[439,"Presunto, sem capa de gordura",94,2.1,14.3,2.7,0.0,5,[["Fatia",15.0]]],[440,"Quibe, assado",136,12.9,14.6,2.7,1.9,5,[["Unidade",50.0],["Pedaço",12.0],["Unidade pequena",12.0]]],[441,"Quibe, cru",109,10.8,12.4,1.7,1.6,5,[]],[442,"Quibe, frito",254,12.3,14.9,15.8,0.0,5,[["Unidade",50.0],["Pedaço",12.0],["Unidade pequena",12.0]]],[443,"Salame",398,2.9,25.8,30.6,0.0,5,[["Fatia",20.0],["Porção",62.0]]],[444,"Toucinho, cru",593,0.0,11.5,60.3,0.0,5,[]],[445,"Toucinho, frito",697,0.0,27.3,64.3,0.0,5,[["Pedaço",10.0],["Porção",7.5]]],[446,"Bebida láctea, pêssego",55,7.6,2.1,1.9,0.3,6,[["Copo médio",240.0],["Copo de cafezinho",50.0],["Copo americano",150.0],["Garrafa (200 ml)",200.0],["Copo de requeijão",240.0],["Copo tulipa",290.0],["Copo grande",300.0]]],[447,"Creme de Leite",221,4.5,1.5,22.5,0.0,6,[["Colher de sopa",15.0],["Colher de café",2.5],["Colher de chá",5.0],["Ponta de faca",12.5],["Colher de sobremesa",20.0],["Colher de arroz/servir",30.0],["Copo americano",150.0],["Pote",150.0],["Taça",150.0],["Tigela",150.0],["Copo de requeijão",240.0],["Copo médio",240.0]]],[448,"Iogurte, natural",51,1.9,4.1,3.0,0.0,6,[["Pote",200.0],["Colher de sopa",15.0],["Copo americano",150.0],["Garrafa (200 ml)",200.0],["Copo de requeijão",240.0],["Copo médio",240.0],["Copo grande",300.0]]],[449,"Iogurte, natural, desnatado",41,5.8,3.8,0.3,0.0,6,[["Pote",200.0],["Ponta de faca",12.5],["Copo americano",150.0],["Copo médio",240.0]]],[450,"Iogurte, sabor abacaxi",0,0.0,0.0,0.0,0.0,6,[["Pote",200.0],["Colher de sopa",15.0],["Copo de cafezinho",50.0],["Xícara de café",50.0],["Copo americano",150.0],["Porção",165.0],["Garrafa (200 ml)",200.0],["Garrafa (n. e.)",200.0],["Xícara de chá",200.0],["Copo de requeijão",240.0],["Copo médio",240.0],["Garrafa (275 ml)",275.0],["Copo tulipa",290.0],["Caneca",300.0],["Caneco",300.0],["Copo grande",300.0],["Garrafa (300 ml)",300.0],["Garrafa (500 ml)",500.0],["Garrafa (600 ml)",600.0],["Garrafa (1 l)",1000.0]]],[451,"Iogurte, sabor morango",70,9.7,2.7,2.3,0.2,6,[["Pote",200.0],["Colher de sopa",15.0],["Copo de cafezinho",50.0],["Xícara de café",50.0],["Copo americano",150.0],["Porção",165.0],["Garrafa (200 ml)",200.0],["Garrafa (n. e.)",200.0],["Xícara de chá",200.0],["Copo de requeijão",240.0],["Copo médio",240.0],["Garrafa (275 ml)",275.0],["Copo tulipa",290.0],["Caneca",300.0],["Caneco",300.0],["Copo grande",300.0],["Garrafa (300 ml)",300.0],["Garrafa (500 ml)",500.0],["Garrafa (600 ml)",600.0],["Garrafa (1 l)",1000.0]]],[452,"Iogurte, sabor pêssego",68,9.4,2.5,2.3,0.7,6,[["Pote",200.0],["Colher de sopa",15.0],["Copo de cafezinho",50.0],["Xícara de café",50.0],["Copo americano",150.0],["Porção",165.0],["Garrafa (200 ml)",200.0],["Garrafa (n. e.)",200.0],["Xícara de chá",200.0],["Copo de requeijão",240.0],["Copo médio",240.0],["Garrafa (275 ml)",275.0],["Copo tulipa",290.0],["Caneca",300.0],["Caneco",300.0],["Copo grande",300.0],["Garrafa (300 ml)",300.0],["Garrafa (500 ml)",500.0],["Garrafa (600 ml)",600.0],["Garrafa (1 l)",1000.0]]],[453,"Leite, condensado",313,57.0,7.7,6.7,0.0,6,[["Colher de sopa",15.0],["Colher de chá",2.0],["Colher de sobremesa",10.0],["Ponta de faca",12.5],["Colher de arroz/servir",30.0],["Xícara de café",50.0],["Pote",150.0],["Taça",150.0],["Xícara de chá",200.0],["Copo médio",240.0],["Lata (250 ml)",250.0],["Copo grande",300.0],["Lata (350 ml)",350.0],["Lata (n. e.)",395.0]]],[454,"Leite, de cabra",66,5.2,3.1,3.8,0.0,6,[["Copo médio",240.0],["Xícara de café",50.0],["Copo americano",150.0],["Xícara de chá",200.0]]],[455,"Leite, de vaca, achocolatado",83,14.2,2.1,2.2,0.6,6,[["Copo médio",240.0],["Copo de cafezinho",50.0],["Xícara de café",50.0],["Copo americano",150.0],["Garrafa (200 ml)",200.0],["Xícara de chá",200.0],["Copo de requeijão",240.0],["Copo tulipa",290.0],["Caneca",300.0],["Caneco",300.0],["Copo grande",300.0]]],[456,"Leite, de vaca, desnatado, pó",362,53.0,34.7,0.9,0.0,6,[["Colher de sopa",10.0],["Colher de café",1.8],["Colher de chá",3.5],["Xícara de café",4.2],["Copo americano",12.5],["Xícara de chá",16.7],["Colher de arroz/servir",20.0],["Copo médio",20.0],["Copo grande",25.0]]],[457,"Leite, de vaca, desnatado, UHT",0,0.0,0.0,0.0,0.0,6,[["Copo médio",240.0],["Xícara de café",50.0],["Copo americano",150.0],["Xícara de chá",200.0],["Copo de requeijão",240.0],["Porção",270.0],["Copo tulipa",290.0],["Caneca",300.0],["Caneco",300.0],["Copo grande",300.0]]],[458,"Leite, de vaca, integral",0,0.0,0.0,0.0,0.0,6,[["Copo médio",240.0],["Copo de cafezinho",50.0],["Xícara de café",50.0],["Copo americano",150.0],["Porção",182.0],["Xícara de chá",200.0],["Copo de requeijão",240.0],["Prato raso",240.0],["Copo tulipa",290.0],["Caneca",300.0],["Caneco",300.0],["Copo grande",300.0],["Prato fundo",300.0],["Garrafa (500 ml)",500.0]]],[459,"Leite, de vaca, integral, pó",497,39.2,25.4,26.9,0.0,6,[["Colher de sopa",16.0],["Colher de café",2.3],["Colher de chá",4.5],["Xícara de café",6.7],["Colher de sobremesa",9.0],["Copo americano",20.0],["Xícara de chá",26.7],["Colher de arroz/servir",32.0],["Copo de requeijão",32.0],["Copo médio",32.0],["Copo tulipa",38.7],["Caneco",40.0],["Copo grande",40.0],["Concha",64.0]]],[460,"Leite, fermentado",70,15.7,1.9,0.1,0.0,6,[["Unidade",80.0],["Pote",80.0],["Copo de requeijão",240.0],["Copo médio",240.0],["Copo grande",300.0]]],[461,"Queijo, minas, frescal",264,3.2,17.4,20.2,0.0,6,[["Fatia",45.0],["Porção",50.0]]],[462,"Queijo, minas, meia cura",321,3.6,21.2,24.6,0.0,6,[["Fatia",45.0],["Porção",50.0]]],[463,"Queijo, mozarela",330,3.0,22.6,25.2,0.0,6,[["Fatia",20.0],["Porção",45.0]]],[464,"Queijo, parmesão",453,1.7,35.6,33.5,0.0,6,[["Colher de sopa",15.0],["Colher de café",2.0],["Colher de chá",4.0],["Colher de sobremesa",8.0],["Colher de arroz/servir",30.0],["Porção",30.0],["Pacote",50.0],["Saco",50.0],["Copo americano",74.0]]],[465,"Queijo, pasteurizado",303,5.7,9.4,27.4,0.0,6,[["Fatia",20.0],["Ponta de faca",6.0],["Porção",45.0],["Espetinho",46.0]]],[466,"Queijo, petit suisse, morango",121,18.5,5.8,2.8,0.0,6,[["Fatia",20.0],["Ponta de faca",6.0],["Porção",45.0],["Espetinho",46.0]]],[467,"Queijo, prato",360,1.9,22.7,29.1,0.0,6,[["Fatia",15.0],["Porção",30.0]]],[468,"Queijo, requeijão, cremoso",257,2.4,9.6,23.4,0.0,6,[["Ponta de faca",6.0],["Colher de café",3.8],["Colher de chá",7.5],["Colher de sobremesa",15.0],["Colher de sopa",30.0],["Garfada",30.0],["Porção",45.0],["Colher de arroz/servir",60.0],["Copo médio",240.0]]],[469,"Queijo, ricota",140,3.8,12.6,8.1,0.0,6,[["Fatia",35.0],["Ponta de faca",6.0],["Colher de sopa",44.0],["Porção",100.0]]],[470,"Bebida isotônica, sabores variados",26,6.4,0.0,0.0,0.0,7,[["Copo médio",240.0],["Xícara de chá",200.0],["Garrafa (250 ml)",250.0],["Lata (250 ml)",250.0],["Garrafa (290 ml)",290.0],["Copo grande",300.0],["Garrafa (300 ml)",300.0],["Lata (350 ml)",350.0],["Unidade",500.0]]],[471,"Café, infusão 10%",9,1.5,0.7,0.1,0.0,7,[["Xícara de café",50.0],["Copo de cafezinho",50.0],["Dose",50.0],["Copo americano",150.0],["Taça",150.0],["Xícara de chá",200.0],["Copo de requeijão",240.0],["Copo médio",240.0],["Copo tulipa",290.0],["Caneca",300.0],["Caneco",300.0],["Copo grande",300.0],["Garrafa (350 ml)",350.0],["Garrafa (400 ml)",400.0],["Garrafa (1 l)",1000.0],["Garrafa (n. e.)",1000.0]]],[472,"Cana, aguardente 1",216,0.0,0.0,0.0,0.0,7,[["Dose",50.0],["Copo americano",150.0],["Garrafa (200 ml)",200.0],["Garrafa (250 ml)",250.0],["Lata (350 ml)",350.0],["Garrafa (1,5 l)",1500.0]]],[473,"Cana, caldo de",65,18.2,0.0,0.0,0.1,7,[["Copo médio",240.0],["Concha",50.0],["Copo americano",150.0],["Copo de requeijão",240.0],["Caneca",300.0],["Copo grande",300.0]]],[474,"Cerveja, pilsen 2",41,3.3,0.6,0.0,0.0,7,[["Lata (350 ml)",350.0],["Dose",50.0],["Copo americano",150.0],["Taça",150.0],["Garrafa (200 ml)",200.0],["Copo de requeijão",240.0],["Copo médio",240.0],["Garrafa (250 ml)",250.0],["Lata (250 ml)",250.0],["Garrafa (275 ml)",275.0],["Copo tulipa",290.0],["Garrafa (290 ml)",290.0],["Caneca",300.0],["Copo grande",300.0],["Garrafa (300 ml)",300.0],["Garrafa (320 ml)",320.0],["Garrafa (330 ml)",330.0],["Lata (335 ml)",335.0],["Lata (340 ml)",340.0],["Garrafa (350 ml)",350.0],["Lata (n. e.)",350.0],["Lata (354 ml)",354.0],["Garrafa (355 ml)",355.0],["Garrafa (400 ml)",400.0],["Garrafa (450 ml)",450.0],["Lata (473 ml)",473.0],["Garrafa (500 ml)",500.0],["Garrafa (510 ml)",510.0],["Garrafa (591 ml)",591.0],["Garrafa (600 ml)",600.0],["Garrafa (n. e.)",600.0],["Garrafa (650 ml)",650.0],["Garrafa (900 ml)",900.0],["Garrafa (1 l)",1000.0],["Garrafa (2,25 l)",2250.0]]],[475,"Chá, erva-doce, infusão 5%",1,0.4,0.0,0.0,0.0,7,[["Xícara de chá",200.0],["Copo de cafezinho",50.0],["Xícara de café",50.0],["Copo americano",150.0],["Taça",150.0],["Garrafa (200 ml)",200.0],["Copo de requeijão",240.0],["Copo médio",240.0],["Unidade",240.0],["Copo tulipa",290.0],["Caneca",300.0],["Caneco",300.0],["Copo grande",300.0],["Lata (335 ml)",335.0],["Lata (350 ml)",350.0],["Garrafa (500 ml)",500.0]]],[476,"Chá, mate, infusão 5%",3,0.6,0.0,0.1,0.0,7,[["Xícara de chá",200.0],["Xícara de café",50.0],["Copo americano",150.0],["Copo de requeijão",240.0],["Copo médio",240.0],["Caneca",300.0],["Caneco",300.0],["Copo grande",300.0]]],[477,"Chá, preto, infusão 5%",2,0.6,0.0,0.0,0.0,7,[["Xícara de chá",200.0],["Copo de cafezinho",50.0],["Xícara de café",50.0],["Copo americano",150.0],["Taça",150.0],["Garrafa (200 ml)",200.0],["Copo de requeijão",240.0],["Copo médio",240.0],["Unidade",240.0],["Copo tulipa",290.0],["Caneca",300.0],["Caneco",300.0],["Copo grande",300.0],["Lata (335 ml)",335.0],["Lata (350 ml)",350.0],["Garrafa (500 ml)",500.0]]],[478,"Coco, água de",22,5.3,0.0,0.0,0.1,7,[["Copo médio",240.0],["Copo americano",150.0],["Garrafa (200 ml)",200.0],["Xícara de chá",200.0],["Copo de requeijão",240.0],["Garrafa (250 ml)",250.0],["Copo tulipa",290.0],["Garrafa (290 ml)",290.0],["Copo grande",300.0],["Unidade",340.0],["Lata (350 ml)",350.0],["Garrafa (500 ml)",500.0]]],[479,"Refrigerante, tipo água tônica",31,8.0,0.0,0.0,0.0,7,[["Copo médio",240.0],["Copo de cafezinho",50.0],["Copo americano",150.0],["Taça",150.0],["Unidade pequena",150.0],["Garrafa (200 ml)",200.0],["Xícara de chá",200.0],["Garrafa (237 ml)",237.0],["Copo de requeijão",240.0],["Unidade",240.0],["Garrafa (248 ml)",248.0],["Garrafa (250 ml)",250.0],["Lata (250 ml)",250.0],["Garrafa (275 ml)",275.0],["Garrafa (284 ml)",284.0],["Copo tulipa",290.0],["Garrafa (290 ml)",290.0],["Caneca",300.0],["Caneco",300.0],["Copo grande",300.0],["Garrafa (300 ml)",300.0],["Garrafa (330 ml)",330.0],["Lata (335 ml)",335.0],["Lata (340 ml)",340.0],["Garrafa (350 ml)",350.0],["Lata (350 ml)",350.0],["Lata (n. e.)",350.0],["Garrafa (500 ml)",500.0],["Garrafa (600 ml)",600.0],["Garrafa (n. e.)",600.0],["Garrafa (1 l)",1000.0]]],[480,"Refrigerante, tipo cola",34,8.7,0.0,0.0,0.0,7,[["Copo médio",240.0],["Copo de cafezinho",50.0],["Dose",50.0],["Copo americano",150.0],["Taça",150.0],["Unidade pequena",150.0],["Garrafa (200 ml)",200.0],["Xícara de chá",200.0],["Garrafa (237 ml)",237.0],["Copo de requeijão",240.0],["Unidade",240.0],["Garrafa (248 ml)",248.0],["Garrafa (250 ml)",250.0],["Lata (250 ml)",250.0],["Garrafa (275 ml)",275.0],["Garrafa (284 ml)",284.0],["Copo tulipa",290.0],["Garrafa (290 ml)",290.0],["Caneca",300.0],["Copo grande",300.0],["Garrafa (300 ml)",300.0],["Garrafa (330 ml)",330.0],["Lata (335 ml)",335.0],["Lata (340 ml)",340.0],["Garrafa (350 ml)",350.0],["Lata (350 ml)",350.0],["Lata (n. e.)",350.0],["Lata (354 ml)",354.0],["Garrafa (500 ml)",500.0],["Garrafa (600 ml)",600.0],["Garrafa (n. e.)",600.0],["Garrafa (650 ml)",650.0],["Garrafa (900 ml)",900.0],["Garrafa (980 ml)",980.0],["Garrafa (1 l)",1000.0]]],[481,"Refrigerante, tipo guaraná",39,10.0,0.0,0.0,0.0,7,[["Copo médio",240.0],["Xícara de café",50.0],["Copo americano",150.0],["Unidade pequena",150.0],["Garrafa (200 ml)",200.0],["Garrafa (237 ml)",237.0],["Copo de requeijão",240.0],["Unidade",240.0],["Garrafa (250 ml)",250.0],["Lata (250 ml)",250.0],["Garrafa (275 ml)",275.0],["Garrafa (284 ml)",284.0],["Copo tulipa",290.0],["Garrafa (290 ml)",290.0],["Caneca",300.0],["Caneco",300.0],["Copo grande",300.0],["Garrafa (300 ml)",300.0],["Lata (335 ml)",335.0],["Garrafa (350 ml)",350.0],["Lata (350 ml)",350.0],["Lata (n. e.)",350.0],["Garrafa (500 ml)",500.0],["Garrafa (600 ml)",600.0],["Garrafa (n. e.)",600.0],["Garrafa (650 ml)",650.0],["Garrafa (900 ml)",900.0],["Garrafa (1 l)",1000.0],["Garrafa (2 l)",2000.0]]],[482,"Refrigerante, tipo laranja",46,11.8,0.0,0.0,0.0,7,[["Copo médio",240.0],["Copo de cafezinho",50.0],["Copo americano",150.0],["Taça",150.0],["Unidade pequena",150.0],["Garrafa (200 ml)",200.0],["Xícara de chá",200.0],["Garrafa (237 ml)",237.0],["Copo de requeijão",240.0],["Unidade",240.0],["Garrafa (248 ml)",248.0],["Garrafa (250 ml)",250.0],["Lata (250 ml)",250.0],["Garrafa (275 ml)",275.0],["Garrafa (284 ml)",284.0],["Copo tulipa",290.0],["Garrafa (290 ml)",290.0],["Caneca",300.0],["Caneco",300.0],["Copo grande",300.0],["Garrafa (300 ml)",300.0],["Garrafa (330 ml)",330.0],["Lata (335 ml)",335.0],["Lata (340 ml)",340.0],["Garrafa (350 ml)",350.0],["Lata (350 ml)",350.0],["Lata (n. e.)",350.0],["Garrafa (500 ml)",500.0],["Garrafa (600 ml)",600.0],["Garrafa (n. e.)",600.0],["Garrafa (1 l)",1000.0]]],[483,"Refrigerante, tipo limão",40,10.3,0.0,0.0,0.0,7,[["Copo médio",240.0],["Copo americano",150.0],["Garrafa (200 ml)",200.0],["Copo de requeijão",240.0],["Copo grande",300.0],["Garrafa (300 ml)",300.0],["Garrafa (350 ml)",350.0],["Lata (350 ml)",350.0],["Garrafa (500 ml)",500.0],["Garrafa (600 ml)",600.0],["Garrafa (2,25 l)",2250.0]]],[484,"Omelete, de queijo",268,0.4,15.6,22.0,0.0,8,[["Unidade",65.0],["Colher de sobremesa",7.5],["Fatia",10.0],["Colher de sopa",15.0],["Pedaço",25.0],["Colher de arroz/servir",45.0],["Escumadeira",45.0],["Porção",110.0]]],[485,"Ovo, de codorna, inteiro, cru",177,0.8,13.7,12.7,0.0,8,[["Unidade",10.0]]],[486,"Ovo, de galinha, clara, cozida/10minutos",59,0.0,13.4,0.1,0.0,8,[["Unidade",45.0],["Colher de chá",3.8],["Rodela",10.0],["Colher de sopa",15.0],["Banda",22.5],["Pedaço",22.5],["Colher de arroz/servir",45.0],["Porção",90.0]]],[487,"Ovo, de galinha, gema, cozida/10minutos",353,1.6,15.9,30.8,0.0,8,[["Unidade",45.0],["Colher de chá",3.8],["Rodela",10.0],["Colher de sopa",15.0],["Banda",22.5],["Pedaço",22.5],["Colher de arroz/servir",45.0],["Porção",90.0]]],[488,"Ovo, de galinha, inteiro, cozido/10minutos",146,0.6,13.3,9.5,0.0,8,[["Unidade",45.0],["Colher de chá",3.8],["Rodela",10.0],["Colher de sopa",15.0],["Banda",22.5],["Pedaço",22.5],["Colher de arroz/servir",45.0],["Porção",90.0]]],[489,"Ovo, de galinha, inteiro, cru",143,1.6,13.0,8.9,0.0,8,[["Unidade",45.0],["Metade",22.5]]],[490,"Ovo, de galinha, inteiro, frito",240,1.2,15.6,18.6,0.0,8,[["Unidade",50.0],["Fatia",10.0],["Colher de sopa",15.0],["Metade",25.0],["Pedaço",25.0],["Colher de arroz/servir",45.0],["Escumadeira",45.0],["Porção",50.0]]],[491,"Achocolatado, pó",401,91.2,4.2,2.2,3.9,9,[["Colher de sopa",16.0],["Colher de café",2.0],["Colher de chá",4.0],["Copo de cafezinho",6.7],["Xícara de café",6.7],["Colher de sobremesa",11.0],["Copo americano",20.0],["Porção",20.0],["Garrafa (200 ml)",26.7],["Xícara de chá",26.7],["Colher de arroz/servir",30.0],["Copo de requeijão",32.0],["Copo médio",32.0],["Caneca",40.0],["Caneco",40.0],["Copo grande",40.0]]],[492,"Açúcar, cristal",387,99.6,0.3,0.0,0.0,9,[["Colher de chá",5.0],["Colher de café",2.0],["Colher de sobremesa",16.0],["Colher de sopa",24.0],["Porção",28.0],["Copo americano",160.0],["Copo médio",219.0]]],[493,"Açúcar, mascavo",369,94.5,0.8,0.1,0.0,9,[["Colher de sopa",19.0]]],[494,"Açúcar, refinado",387,99.5,0.3,0.0,0.0,9,[["Colher de chá",5.0],["Colher de café",2.0],["Colher de sobremesa",16.0],["Colher de sopa",24.0],["Porção",28.0],["Copo americano",160.0],["Copo médio",219.0]]],[495,"Chocolate, ao leite",540,59.6,7.2,30.3,2.2,9,[["Barra",170.0],["Colher de sobremesa",6.3],["Pedaço",6.3],["Tablete",6.3],["Porção",25.0],["Unidade",170.0]]],[496,"Chocolate, ao leite, com castanha do Pará",559,55.4,7.4,34.2,2.5,9,[["Barra",170.0],["Colher de sobremesa",6.3],["Pedaço",6.3],["Tablete",6.3],["Porção",25.0],["Unidade",170.0]]],[497,"Chocolate, ao leite, dietético",557,56.3,6.9,33.8,2.8,9,[["Barra",170.0],["Colher de sobremesa",6.3],["Pedaço",6.3],["Tablete",6.3],["Porção",25.0],["Unidade",170.0]]],[498,"Chocolate, meio amargo",475,62.4,4.9,29.9,4.9,9,[["Barra",170.0],["Colher de sobremesa",6.3],["Pedaço",6.3],["Tablete",6.3],["Porção",25.0],["Unidade",170.0]]],[499,"Cocada branca",449,81.4,1.1,13.6,3.6,9,[["Unidade",70.0],["Ponta de faca",12.5],["Colher de sobremesa",30.0],["Colher de sopa",50.0]]],[500,"Doce, de abóbora, cremoso",199,54.6,0.9,0.2,2.3,9,[]],[501,"Doce, de leite, cremoso",306,59.5,5.5,6.0,0.0,9,[["Colher de sopa",40.0],["Colher de café",8.0],["Colher de chá",12.0],["Ponta de faca",12.5],["Colher de sobremesa",25.0],["Porção",50.0],["Copo de cafezinho",73.3],["Xícara de café",73.3],["Colher de arroz/servir",80.0],["Pires",80.0],["Pote",110.0],["Taça",110.0],["Tigela",110.0],["Barra",130.0],["Bisnaga",130.0],["Fatia",130.0],["Pedaço",130.0],["Copo americano",220.0],["Prato de sobremesa",220.0],["Xícara de chá",220.0],["Copo de requeijão",270.0],["Copo grande",270.0],["Copo médio",270.0],["Copo tulipa",270.0]]],[502,"Geléia, mocotó, natural",106,24.2,2.1,0.1,0.0,9,[["Pedaço",34.0],["Porção",20.0],["Copo americano",200.0],["Unidade",200.0]]],[503,"Glicose de milho",292,79.4,0.0,0.0,0.0,9,[]],[504,"Maria mole",301,73.6,3.8,0.2,0.7,9,[["Pedaço",90.0],["Pires",90.0],["Taça",130.0]]],[505,"Maria mole, coco queimado",307,75.1,3.9,0.1,0.6,9,[["Pedaço",90.0],["Pires",90.0],["Taça",130.0]]],[506,"Marmelada",257,70.8,0.4,0.1,4.1,9,[["Pedaço",60.0],["Ponta de faca",12.5],["Porção",45.0],["Fatia",60.0]]],[507,"Mel, de abelha",309,84.0,0.0,0.0,0.0,9,[["Ponta de faca",12.5],["Colher de café",2.0],["Colher de chá",3.0],["Colher de sobremesa",9.0],["Colher de sopa",15.0],["Colher de arroz/servir",30.0],["Porção",37.5],["Xícara de café",50.0],["Prato raso",150.0],["Xícara de chá",200.0],["Copo médio",240.0]]],[508,"Melado",297,76.6,0.0,0.0,0.0,9,[["Ponta de faca",12.5],["Colher de café",2.0],["Colher de chá",3.0],["Colher de sobremesa",9.0],["Colher de sopa",15.0],["Copo americano",150.0]]],[509,"Quindim",411,46.3,4.7,24.4,3.2,9,[["Unidade",35.0],["Unidade pequena",20.0]]],[510,"Rapadura",352,90.8,1.0,0.1,0.0,9,[["Pedaço",55.0],["Porção",27.0]]],[511,"Café, pó, torrado",419,65.8,14.7,11.9,51.2,10,[]],[512,"Capuccino, pó",417,73.6,11.3,8.6,2.4,10,[]],[513,"Fermento em pó, químico",90,43.9,0.5,0.1,0.0,10,[]],[514,"Fermento, biológico, levedura, tablete",90,7.7,17.0,1.5,4.2,10,[]],[515,"Gelatina, sabores variados, pó",380,89.2,8.9,0.0,0.0,10,[]],[516,"Sal, dietético",0,0.0,0.0,0.0,0.0,10,[]],[517,"Sal, grosso",0,0.0,0.0,0.0,0.0,10,[]],[518,"Shoyu",61,11.6,3.3,0.3,0.0,10,[["Colher de sopa",6.0],["Colher de arroz/servir",12.0]]],[519,"Tempero a base de sal",21,2.1,2.7,0.3,0.6,10,[]],[520,"Azeitona, preta, conserva",194,5.5,1.2,20.3,4.6,11,[["Unidade",4.0],["Colher de sobremesa",14.0],["Porção",20.0],["Colher de sopa",25.0],["Punhado",45.0],["Copo americano",132.0],["Pote",132.0],["Saco",132.0],["Tigela",132.0]]],[521,"Azeitona, verde, conserva",137,4.1,0.9,14.2,3.8,11,[["Unidade",4.0],["Colher de sobremesa",14.0],["Porção",20.0],["Colher de sopa",25.0],["Punhado",45.0],["Copo americano",132.0],["Pote",132.0],["Saco",132.0],["Tigela",132.0]]],[522,"Chantilly, spray, com gordura vegetal",315,16.9,0.5,27.3,0.0,11,[["Porção",30.0],["Colher de sopa",25.0]]],[523,"Leite, de coco",166,2.2,1.0,18.4,0.7,11,[["Colher de sopa",20.0],["Colher de chá",5.0],["Xícara de café",50.0],["Concha",80.0],["Copo americano",150.0],["Copo grande",300.0]]],[524,"Maionese, tradicional com ovos",302,7.9,0.6,30.5,0.0,11,[["Ponta de faca",4.0],["Colher de café",3.0],["Porção",4.0],["Colher de chá",6.0],["Bisnaga",8.0],["Sachê",8.0],["Colher de sobremesa",17.0],["Colher de sopa",27.0],["Colher de arroz/servir",50.0]]],[525,"Acarajé",289,19.1,8.3,19.9,9.4,12,[["Unidade",100.0]]],[526,"Arroz carreteiro",154,11.6,10.8,7.1,1.5,12,[["Colher de arroz/servir",60.0],["Colher de sopa",30.0],["Escumadeira",60.0],["Prato raso",100.0],["Concha",120.0],["Porção",180.0],["Prato fundo",200.0]]],[527,"Baião de dois, arroz e feijão-de-corda",136,20.4,6.2,3.2,5.1,12,[["Colher de arroz/servir",55.0],["Colher de chá",5.3],["Colher de sobremesa",10.5],["Colher de sopa",21.0],["Porção",42.0],["Concha",95.0],["Cumbuca",95.0],["Escumadeira",111.0],["Prato raso",111.0],["Prato fundo",222.0]]],[528,"Barreado",165,0.2,18.3,9.5,0.1,12,[]],[529,"Bife à cavalo, com contra filé",291,0.0,23.7,21.1,0.0,12,[]],[530,"Bolinho de arroz",274,41.7,8.0,8.3,2.7,12,[["Unidade",45.0]]],[531,"Camarão à baiana",101,3.2,7.9,6.0,0.4,12,[["Porção",190.0]]],[532,"Charuto, de repolho",78,10.1,6.8,1.1,1.5,12,[["Unidade",30.0]]],[533,"Cuscuz, de milho, cozido com sal",113,25.3,2.2,0.7,2.1,12,[["Fatia",135.0],["Colher de café",1.5],["Colher de chá",3.0],["Colher de sobremesa",6.0],["Colher de sopa",12.0],["Colher de arroz/servir",24.0],["Escumadeira",24.0],["Porção",42.0],["Concha",48.0],["Banda",67.5],["Metade",67.5],["Pedaço",135.0],["Prato de sobremesa",180.0],["Prato fundo",180.0],["Prato raso",180.0]]],[534,"Cuscuz, paulista",142,22.5,2.6,4.6,2.4,12,[["Fatia",150.0],["Colher de sopa",35.0],["Colher de arroz/servir",60.0],["Prato raso",300.0],["Prato fundo",500.0]]],[535,"Cuxá, molho",80,5.7,5.6,3.6,3.0,12,[]],[536,"Dobradinha",125,0.0,19.8,4.4,0.0,12,[["Colher de arroz/servir",70.0],["Porção",200.0]]],[537,"Estrogonofe de carne",173,3.0,15.0,10.8,0.0,12,[["Concha",170.0],["Colher de chá",6.3],["Colher de sopa",25.0],["Pegador",25.0],["Colher de arroz/servir",40.0],["Porção",50.0],["Escumadeira",80.0],["Prato fundo",170.0],["Prato raso",170.0]]],[538,"Estrogonofe de frango",157,2.6,17.6,8.0,0.0,12,[["Concha",170.0],["Colher de chá",6.3],["Colher de sopa",25.0],["Pegador",25.0],["Colher de arroz/servir",40.0],["Porção",50.0],["Escumadeira",80.0],["Prato fundo",170.0],["Prato raso",170.0]]],[539,"Feijão tropeiro mineiro",152,19.6,10.2,6.8,3.6,12,[["Colher de arroz/servir",35.0],["Colher de sopa",17.0],["Escumadeira",70.0],["Caneco",140.0],["Concha",140.0],["Prato raso",140.0],["Prato fundo",280.0]]],[540,"Feijoada",117,11.6,8.7,6.5,5.1,12,[["Concha",225.0],["Colher de sopa",35.0],["Colher de arroz/servir",70.0],["Porção",120.0],["Lata (n. e.)",830.0]]],[541,"Frango, com açafrão",113,4.1,9.7,6.2,0.2,12,[["Pedaço",55.0],["Pescoço",10.0],["Asa",40.0],["Coxa",55.0],["Costela",60.0],["Sobrecoxa",65.0],["Porção",100.0],["Peito",180.0]]],[542,"Macarrão, molho bolognesa",120,22.5,4.9,0.9,0.8,12,[["Pegador",110.0],["Colher de chá",6.3],["Colher de sobremesa",12.5],["Colher de sopa",25.0],["Garfada",30.0],["Colher de arroz/servir",50.0],["Porção",105.0],["Concha",110.0],["Escumadeira",110.0],["Prato de sobremesa",200.0],["Prato raso",320.0],["Prato fundo",400.0]]],[543,"Maniçoba",134,3.4,10.0,8.7,2.2,12,[["Concha",225.0],["Colher de arroz/servir",70.0]]],[544,"Quibebe",86,6.6,8.6,2.7,1.7,12,[["Concha",100.0],["Colher de sobremesa",24.0],["Colher de sopa",35.0],["Colher de arroz/servir",100.0],["Escumadeira",100.0]]],[545,"Salada, de legumes, com maionese",96,8.9,1.1,7.0,2.2,12,[["Colher de sopa",38.0],["Colher de chá",9.5],["Colher de sobremesa",19.0],["Pegador",38.0],["Colher de arroz/servir",70.0],["Porção",76.0],["Concha",90.0],["Escumadeira",90.0],["Prato de sobremesa",90.0],["Prato raso",90.0],["Xícara de chá",90.0]]],[546,"Salada, de legumes, cozida no vapor",35,7.1,2.0,0.3,2.5,12,[["Colher de sopa",20.0],["Colher de café",2.5],["Colher de chá",5.0],["Colher de sobremesa",10.0],["Garfada",20.0],["Pegador",20.0],["Folha",25.0],["Pires",38.0],["Prato de sobremesa",38.0],["Colher de arroz/servir",42.0],["Escumadeira",42.0],["Porção",42.0],["Concha",84.0],["Prato raso",90.0],["Tigela",90.0],["Prato fundo",98.0]]],[547,"Salpicão, de frango",148,4.6,13.9,7.8,0.4,12,[["Colher de arroz/servir",40.0],["Colher de chá",6.3],["Colher de sopa",25.0],["Pegador",25.0],["Concha",50.0],["Escumadeira",50.0],["Porção",50.0],["Prato raso",50.0]]],[548,"Sarapatel",123,1.1,18.5,4.4,0.0,12,[["Colher de arroz/servir",117.0],["Colher de sopa",14.0],["Prato fundo",117.0],["Concha",142.0],["Porção",150.0]]],[549,"Tabule",57,10.6,2.0,1.2,2.1,12,[]],[550,"Tacacá",47,3.4,7.0,0.4,0.2,12,[["Cumbuca",300.0]]],[551,"Tapioca, com manteiga",348,63.6,0.1,10.9,0.0,12,[["Unidade",50.0],["Fatia",12.5],["Pedaço",12.5],["Banda",25.0],["Metade",25.0]]],[552,"Tucupi, com pimenta-de-cheiro",27,4.7,2.1,0.3,0.2,12,[]],[553,"Vaca atolada",145,10.1,5.1,9.3,2.3,12,[["Concha",130.0],["Colher de arroz/servir",40.0],["Prato fundo",520.0]]],[554,"Vatapá",255,9.7,6.0,23.2,1.7,12,[["Colher de sopa",25.0],["Porção",50.0],["Colher de arroz/servir",77.0],["Concha",150.0],["Copo médio",150.0],["Prato raso",150.0],["Prato fundo",300.0]]],[555,"Virado à paulista",307,14.1,10.2,25.6,2.2,12,[]],[556,"Yakisoba",113,18.3,7.5,2.6,1.1,12,[]],[557,"Amendoim, grão, cru",544,20.3,27.2,43.9,8.0,13,[["Pacote",50.0],["Bago",0.8],["Unidade",0.8],["Porção",9.0],["Colher de sopa",17.0],["Punhado",30.0],["Saco",50.0]]],[558,"Amendoim, torrado, salgado",606,18.7,22.5,54.0,7.8,13,[["Pacote",50.0],["Bago",0.8],["Unidade",0.8],["Porção",9.0],["Colher de sopa",17.0],["Punhado",30.0],["Saco",50.0]]],[559,"Ervilha, em vagem",88,14.2,7.5,0.5,9.7,13,[["Colher de sopa",30.0]]],[560,"Ervilha, enlatada, drenada",74,13.4,4.6,0.4,5.1,13,[["Colher de sopa",27.0],["Colher de chá",6.8],["Colher de sobremesa",13.5],["Colher de arroz/servir",38.0],["Porção",72.5]]],[561,"Feijão, carioca, cozido",76,13.6,4.8,0.5,8.5,13,[["Concha",140.0],["Colher de chá",4.3],["Colher de sobremesa",8.5],["Colher de sopa",17.0],["Pegador",17.0],["Colher de arroz/servir",35.0],["Escumadeira",35.0],["Porção",50.0],["Copo americano",140.0],["Cumbuca",140.0],["Prato de sobremesa",140.0],["Prato raso",140.0],["Tigela",140.0],["Xícara de chá",140.0],["Copo médio",280.0],["Prato fundo",280.0]]],[562,"Feijão, carioca, cru",329,61.2,20.0,1.3,18.4,13,[]],[563,"Feijão, fradinho, cozido",78,13.5,5.1,0.6,7.5,13,[["Concha",140.0],["Colher de chá",4.3],["Colher de sobremesa",8.5],["Colher de sopa",17.0],["Pegador",17.0],["Colher de arroz/servir",35.0],["Escumadeira",35.0],["Porção",50.0],["Copo americano",140.0],["Cumbuca",140.0],["Prato de sobremesa",140.0],["Prato raso",140.0],["Tigela",140.0],["Xícara de chá",140.0],["Copo médio",280.0],["Prato fundo",280.0]]],[564,"Feijão, fradinho, cru",339,61.2,20.2,2.4,23.6,13,[]],[565,"Feijão, jalo, cozido",93,16.5,6.1,0.5,13.9,13,[["Concha",140.0],["Colher de chá",4.3],["Colher de sobremesa",8.5],["Colher de sopa",17.0],["Pegador",17.0],["Colher de arroz/servir",35.0],["Escumadeira",35.0],["Porção",50.0],["Copo americano",140.0],["Cumbuca",140.0],["Prato de sobremesa",140.0],["Prato raso",140.0],["Tigela",140.0],["Xícara de chá",140.0],["Copo médio",280.0],["Prato fundo",280.0]]],[566,"Feijão, jalo, cru",328,61.5,20.1,0.9,30.3,13,[]],[567,"Feijão, preto, cozido",77,14.0,4.5,0.5,8.4,13,[["Concha",140.0],["Colher de chá",4.3],["Colher de sobremesa",8.5],["Colher de sopa",17.0],["Pegador",17.0],["Colher de arroz/servir",35.0],["Escumadeira",35.0],["Porção",50.0],["Copo americano",140.0],["Cumbuca",140.0],["Prato de sobremesa",140.0],["Prato raso",140.0],["Tigela",140.0],["Xícara de chá",140.0],["Copo médio",280.0],["Prato fundo",280.0]]],[568,"Feijão, preto, cru",324,58.8,21.3,1.2,21.8,13,[]],[569,"Feijão, rajado, cozido",85,15.3,5.5,0.4,9.3,13,[["Concha",140.0],["Colher de chá",4.3],["Colher de sobremesa",8.5],["Colher de sopa",17.0],["Pegador",17.0],["Colher de arroz/servir",35.0],["Escumadeira",35.0],["Porção",50.0],["Copo americano",140.0],["Cumbuca",140.0],["Prato de sobremesa",140.0],["Prato raso",140.0],["Tigela",140.0],["Xícara de chá",140.0],["Copo médio",280.0],["Prato fundo",280.0]]],[570,"Feijão, rajado, cru",326,62.9,17.3,1.2,24.0,13,[]],[571,"Feijão, rosinha, cozido",68,11.8,4.5,0.5,4.8,13,[["Concha",140.0],["Colher de chá",4.3],["Colher de sobremesa",8.5],["Colher de sopa",17.0],["Pegador",17.0],["Colher de arroz/servir",35.0],["Escumadeira",35.0],["Porção",50.0],["Copo americano",140.0],["Cumbuca",140.0],["Prato de sobremesa",140.0],["Prato raso",140.0],["Tigela",140.0],["Xícara de chá",140.0],["Copo médio",280.0],["Prato fundo",280.0]]],[572,"Feijão, rosinha, cru",337,62.2,20.9,1.3,20.6,13,[]],[573,"Feijão, roxo, cozido",77,12.9,5.7,0.5,11.5,13,[["Concha",140.0],["Colher de chá",4.3],["Colher de sobremesa",8.5],["Colher de sopa",17.0],["Pegador",17.0],["Colher de arroz/servir",35.0],["Escumadeira",35.0],["Porção",50.0],["Copo americano",140.0],["Cumbuca",140.0],["Prato de sobremesa",140.0],["Prato raso",140.0],["Tigela",140.0],["Xícara de chá",140.0],["Copo médio",280.0],["Prato fundo",280.0]]],[574,"Feijão, roxo, cru",331,60.0,22.2,1.2,33.8,13,[]],[575,"Grão-de-bico, cru",355,57.9,21.2,5.4,12.4,13,[]],[576,"Guandu, cru",344,64.0,19.0,2.1,21.3,13,[]],[577,"Lentilha, cozida",93,16.3,6.3,0.5,7.9,13,[["Concha",160.0],["Colher de sopa",18.0],["Colher de arroz/servir",32.0],["Escumadeira",32.0],["Porção",48.0],["Prato raso",160.0],["Tigela",160.0],["Prato fundo",320.0]]],[578,"Lentilha, crua",339,62.0,23.2,0.8,16.9,13,[]],[579,"Paçoca, amendoim",487,52.4,16.0,26.1,7.3,13,[["Unidade",30.0],["Porção",32.0],["Colher de sopa",50.0],["Colher de arroz/servir",100.0]]],[580,"Pé-de-moleque, amendoim",503,54.7,13.2,28.0,3.4,13,[["Unidade",17.0],["Porção",40.0]]],[581,"Soja, farinha",404,38.4,36.0,14.6,20.2,13,[]],[582,"Soja, extrato solúvel, natural, fluido",39,4.3,2.4,1.6,0.4,13,[["Copo médio",240.0],["Xícara de café",50.0],["Copo americano",150.0],["Xícara de chá",200.0],["Copo de requeijão",240.0],["Copo tulipa",290.0],["Caneca",300.0],["Caneco",300.0],["Copo grande",300.0]]],[583,"Soja, extrato solúvel, pó",459,28.5,35.7,26.2,7.3,13,[["Colher de sopa",13.0],["Colher de chá",3.3],["Colher de sobremesa",6.5],["Copo americano",16.3],["Xícara de chá",21.7],["Copo médio",26.0],["Copo grande",32.6]]],[584,"Soja, queijo (tofu)",64,2.1,6.6,4.0,0.8,13,[["Fatia",20.0]]],[585,"Tremoço, cru",381,43.8,33.6,10.3,32.3,13,[]],[586,"Tremoço, em conserva",121,12.4,11.1,3.8,14.4,13,[]],[587,"Amêndoa, torrada, salgada",581,29.5,18.6,47.3,11.6,14,[["Unidade",1.0]]],[588,"Castanha-de-caju, torrada, salgada",570,29.1,18.5,46.3,3.7,14,[["Unidade",2.5],["Porção",10.0],["Concha",40.0],["Copo americano",40.0],["Pacote",40.0],["Punhado",40.0],["Saco",40.0]]],[589,"Castanha-do-Brasil, crua",643,15.1,14.5,63.5,7.9,14,[["Unidade",4.0],["Porção",8.0],["Punhado",40.0]]],[590,"Coco, cru",406,10.4,3.7,42.0,5.4,14,[["Pedaço",40.0],["Unidade",40.0],["Pacote",100.0]]],[591,"Coco,  verde, cru",0,0.0,0.0,0.0,0.0,14,[["Pedaço",40.0],["Unidade",40.0],["Pacote",100.0]]],[592,"Farinha, de mesocarpo de babaçu, crua",329,79.2,1.4,0.2,17.9,14,[]],[593,"Gergelim, semente",584,21.6,21.2,50.4,11.9,14,[]],[594,"Linhaça, semente",495,43.3,14.1,32.3,33.5,14,[["Colher de sopa",13.0],["Colher de café",0.4],["Colher de chá",1.5],["Colher de sobremesa",3.0],["Porção",26.0],["Prato raso",26.0]]],[595,"Pinhão, cozido",174,43.9,3.0,0.7,15.6,14,[["Unidade",4.0]]],[596,"Pupunha, cozida",219,29.6,2.5,12.8,4.3,14,[["Unidade",22.5],["Unidade pequena",16.9],["Porção",45.0]]],[597,"Noz, crua",620,18.4,14.0,59.4,7.2,14,[["Unidade",5.0],["Porção",25.0],["Punhado",40.0]]]]}</script>
+<script>
+(function(){
+"use strict";
+
+/* ---------- utilidades ---------- */
+const $ = (s, el = document) => el.querySelector(s);
+function h(tag, attrs, ...kids){
+  const el = document.createElement(tag);
+  if (attrs) for (const k in attrs){
+    const v = attrs[k];
+    if (v == null || v === false) continue;
+    if (k === "class") el.className = v;
+    else if (k === "html") el.innerHTML = v;
+    else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else if (k === "value") el.value = v;
+    else el.setAttribute(k, v === true ? "" : v);
+  }
+  for (const c of kids.flat()) if (c != null && c !== false) el.append(c.nodeType ? c : document.createTextNode(c));
+  return el;
+}
+const ICON = {
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
+  back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></svg>',
+  edit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4Z"/><path d="m13.5 6.5 4 4"/></svg>',
+  x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+  lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+  backup:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>',
+  mark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 5-14 14-14 0 9-6 14-14 14Z"/><path d="M5 19 13 11"/></svg>'
+};
+const put = (el, ...kids) => el.replaceChildren(...kids.flat(Infinity).filter(x => x != null && x !== false));
+const svg = k => h("span", {html: ICON[k], style:"display:contents"});
+
+function normCh(ch){ return ch.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase(); }
+function norm(s){ let o = ""; for (const ch of s) o += normCh(ch); return o; }
+const words = s => norm(s).split(/[^a-z0-9]+/).filter(Boolean);
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const uid = () => Math.random().toString(36).slice(2, 10);
+
+const nf0 = new Intl.NumberFormat("pt-BR", {maximumFractionDigits: 0});
+const nf1 = new Intl.NumberFormat("pt-BR", {minimumFractionDigits: 1, maximumFractionDigits: 1});
+const nf2 = new Intl.NumberFormat("pt-BR", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+const fq = new Intl.NumberFormat("pt-BR", {maximumFractionDigits: 2});
+const k0 = v => nf0.format(Math.round(v));
+const g1 = v => nf1.format(v);
+
+/* Destaca os prefixos digitados no início das palavras */
+function highlight(text, q){
+  const qt = words(q);
+  if (!qt.length) return esc(text);
+  const chars = [...text], n = chars.map(normCh);
+  const mark = new Array(chars.length).fill(false);
+  let i = 0;
+  while (i < chars.length){
+    if (!/[a-z0-9]/.test(n[i])) { i++; continue; }
+    let j = i; while (j < chars.length && /[a-z0-9]/.test(n[j])) j++;
+    const w = n.slice(i, j).join("");
+    let best = 0; for (const t of qt) if (w.startsWith(t) && t.length > best) best = t.length;
+    for (let k = 0; k < best; k++) mark[i + k] = true;
+    i = j;
+  }
+  let out = "", on = false;
+  chars.forEach((c, k) => {
+    if (mark[k] && !on) { out += "<b>"; on = true; }
+    if (!mark[k] && on) { out += "</b>"; on = false; }
+    out += esc(c);
+  });
+  return out + (on ? "</b>" : "");
+}
+
+function parseQty(s){
+  if (s == null) return null;
+  s = String(s).trim().replace(/½/g, " 1/2").replace(/¼/g, " 1/4").replace(/¾/g, " 3/4").replace(/,/g, ".");
+  if (!s) return null;
+  let total = 0;
+  for (const part of s.split(/\s+/)){
+    if (!part) continue;
+    const m = part.match(/^(\d*\.?\d+)\/(\d*\.?\d+)$/);
+    const v = m ? parseFloat(m[1]) / parseFloat(m[2]) : parseFloat(part);
+    if (!isFinite(v)) return null;
+    total += v;
+  }
+  return total > 0 ? total : null;
+}
+const fmtQty = q => q == null ? "" : fq.format(q);
+
+/* ---------- base de alimentos (TACO + medidas IBGE/POF) ---------- */
+const DATA = JSON.parse($("#food-data").textContent);
+const FOODS = new Map(), FOOD_LIST = [];
+const NO_DATA = new Set([450, 457, 458, 591]);   // valores "em reanálise" (*) na própria TACO
+const COMMON = new Set([3, 1, 561, 567, 488, 490, 53, 52, 410, 408, 182, 179, 226, 225, 222, 7, 448, 449, 461, 463, 467, 468,
+  260, 471, 494, 91, 88, 129, 78, 157, 110, 109, 100, 377, 346, 326, 317, 277, 551, 533, 589, 594, 214, 231, 235, 256, 236, 237, 261, 507, 577]);
+function addFood(raw){
+  const [id, name, kcal, c, p, fat, fib, cat, ms] = raw;
+  const measures = ms.map(([l, g]) => ({l, g}));
+  if (!measures.some(m => m.l === "Grama")) measures.push({l: "Grama", g: 1});
+  const f = {id, name, kcal, c, p, fat, fib, cat: typeof cat === "number" ? DATA.cats[cat] : cat, measures, w: words(name),
+    ibge: ms.length > 0, common: COMMON.has(id), own: id < 0};
+  if (FOODS.has(id)) FOOD_LIST.splice(FOOD_LIST.indexOf(FOODS.get(id)), 1);
+  FOODS.set(id, f); FOOD_LIST.push(f);
+  return f;
+}
+for (const raw of DATA.foods) if (!NO_DATA.has(raw[0])) addFood(raw);
+
+/* ---------- estado e armazenamento ---------- */
+const KEY = "nutripratico.v1";
+const DEFAULT_OBJ = ["Emagrecimento", "Hipertrofia muscular", "Manutenção do peso", "Ganho de peso", "Recomposição corporal",
+  "Performance esportiva", "Controle glicêmico", "Saúde intestinal", "Reeducação alimentar", "Gestação", "Lactação"];
+const DEFAULT_MEALS = ["Café da manhã", "Colação", "Almoço", "Lanche da tarde 1", "Lanche da tarde 2", "Pré-treino", "Pós-treino", "Jantar", "Ceia"];
+let S;
+function blankState(){ return {patients: [], foods: [], prefs: {objectives: DEFAULT_OBJ.slice(), meals: DEFAULT_MEALS.slice(), use: {}, last: {}}}; }
+function load(){
+  try { const raw = localStorage.getItem(KEY); if (raw) S = JSON.parse(raw); } catch (e) {}
+  if (!S) { S = blankState(); seed(); }
+  S.foods = S.foods || [];
+  for (const raw of S.foods) addFood(raw);
+}
+let saveT;
+function save(){
+  clearTimeout(saveT);
+  saveT = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }, 250);
+}
+function touch(p){ p.updated = Date.now(); save(); }
+
+function seed(){
+  const it = (foodId, measure, qty) => ({id: uid(), foodId, measure, qty});
+  S.patients.push({
+    id: uid(), name: "Ana Exemplo", birth: "1992-03-14", sex: "F", example: true, updated: Date.now(),
+    energy: {weight: 62, height: 165, fao: 1, dri: 1},
+    plan: {objective: "Emagrecimento", target: null, meals: [
+      {id: uid(), name: "Café da manhã", items: [it(53, "Unidade", 1), it(488, "Unidade", 2), it(226, "Fatia", 1), it(471, "Xícara de café", 1)]},
+      {id: uid(), name: "Almoço", items: [it(3, "Colher de arroz/servir", 3), it(561, "Concha", 1), it(410, "Filé", 1), it(78, "Folha", 4), it(260, "Colher de chá", 1)]}
+    ]}
+  });
+}
+
+/* ---------- cálculos de necessidade energética ---------- */
+function ageOf(birth){
+  if (!birth) return null;
+  const b = new Date(birth + "T12:00:00"), n = new Date();
+  let a = n.getFullYear() - b.getFullYear();
+  if (n.getMonth() < b.getMonth() || (n.getMonth() === b.getMonth() && n.getDate() < b.getDate())) a--;
+  return a;
+}
+const FAO_LV = ["Muito leve", "Leve", "Moderado", "Intenso"];
+const FAO_FA = {M: [1.30, 1.55, 1.78, 2.10], F: [1.30, 1.56, 1.64, 1.82]};
+function faoTMB(sex, age, W){
+  const T = sex === "M"
+    ? [[3, 60.9, -54], [10, 22.7, 495], [18, 17.5, 651], [30, 15.3, 679], [60, 11.6, 879], [999, 13.5, 487]]
+    : [[3, 61.0, -51], [10, 22.5, 499], [18, 12.2, 746], [30, 14.7, 496], [60, 8.7, 829], [999, 10.5, 596]];
+  const r = T.find(r => age < r[0]);
+  const range = age < 3 ? "0–3" : age < 10 ? "3–10" : age < 18 ? "10–18" : age < 30 ? "18–30" : age < 60 ? "30–60" : "> 60";
+  return {v: r[1] * W + r[2], eq: `${nf1.format(r[1])} × P ${r[2] < 0 ? "−" : "+"} ${Math.abs(r[2])}  (${range} anos)`};
+}
+const DRI_LV = ["Sedentário", "Pouco ativo", "Ativo", "Muito ativo"];
+function driCalc(sex, age, W, Hcm, lv){
+  const H = Hcm / 100;
+  if (age >= 19){
+    const PA = sex === "M" ? [1.00, 1.11, 1.25, 1.48][lv] : [1.00, 1.12, 1.27, 1.45][lv];
+    const get = sex === "M" ? 662 - 9.53 * age + PA * (15.91 * W + 539.6 * H) : 354 - 6.91 * age + PA * (9.36 * W + 726 * H);
+    const tmb = sex === "M" ? 293 - 3.8 * age + 456.4 * H + 10.12 * W : 247 - 2.67 * age + 401.5 * H + 8.60 * W;
+    const eq = sex === "M" ? "662 − 9,53·I + AF·(15,91·P + 539,6·A)" : "354 − 6,91·I + AF·(9,36·P + 726·A)";
+    return {get, tmb, PA, eq};
+  }
+  if (age >= 3){
+    const PA = sex === "M" ? [1.00, 1.13, 1.26, 1.42][lv] : [1.00, 1.16, 1.31, 1.56][lv];
+    const dep = age <= 8 ? 20 : 25;
+    const get = sex === "M" ? 88.5 - 61.9 * age + PA * (26.7 * W + 903 * H) + dep : 135.3 - 30.8 * age + PA * (10.0 * W + 934 * H) + dep;
+    const tmb = sex === "M" ? 68 - 43.3 * age + 712 * H + 19.2 * W : 189 - 17.6 * age + 625 * H + 7.9 * W;
+    const eq = (sex === "M" ? "88,5 − 61,9·I + AF·(26,7·P + 903·A)" : "135,3 − 30,8·I + AF·(10·P + 934·A)") + ` + ${dep}`;
+    return {get, tmb, PA, eq};
+  }
+  return null;
+}
+function energyOf(p){
+  const e = p.energy || {}, age = ageOf(p.birth), W = e.weight, Hc = e.height;
+  if (!(W > 1 && W < 400 && Hc > 40 && Hc < 260) || age == null) return {ok: false, age};
+  const f = faoTMB(p.sex, age, W);
+  const fa = FAO_FA[p.sex][e.fao ?? 1];
+  const fao = {tmb: f.v, fa, get: f.v * fa, eq: f.eq};
+  const dri = driCalc(p.sex, age, W, Hc, e.dri ?? 1);
+  const tmb = dri ? (fao.tmb + dri.tmb) / 2 : fao.tmb;
+  const get = dri ? (fao.get + dri.get) / 2 : fao.get;
+  return {ok: true, age, fao, dri, tmb, get, imc: W / Math.pow(Hc / 100, 2)};
+}
+
+/* ---------- cálculos do plano ---------- */
+function measureOf(f, label){ return f.measures.find(m => m.l === label) || f.measures[0]; }
+function calcItem(it){
+  const f = FOODS.get(it.foodId);
+  if (!f || !it.qty) return null;
+  const m = measureOf(f, it.measure), g = m.g * it.qty, k = g / 100;
+  return {g, kcal: f.kcal * k, c: f.c * k, p: f.p * k, l: f.fat * k};
+}
+function sum(list){
+  const t = {g: 0, kcal: 0, c: 0, p: 0, l: 0};
+  for (const r of list) if (r) for (const k in t) t[k] += r[k];
+  return t;
+}
+const mealTotal = m => sum(m.items.map(calcItem));
+const planTotal = pl => sum(pl.meals.map(mealTotal));
+
+/* ---------- busca de alimentos ---------- */
+function searchFoods(q){
+  const qt = words(q), use = S.prefs.use;
+  if (!qt.length){
+    return Object.entries(use).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([id]) => FOODS.get(+id)).filter(Boolean);
+  }
+  const res = [];
+  for (const f of FOOD_LIST){
+    let score = 0, ok = true;
+    for (let i = 0; i < qt.length; i++){
+      const t = qt[i];
+      const wi = f.w.findIndex(w => w.startsWith(t) || (t.length > 3 && w.length >= 3 && t.startsWith(w)));
+      if (wi < 0) { ok = false; break; }
+      if (i === 0 && wi === 0) score += 40;
+      if (wi === i) score += 6;
+      if (f.w[wi] === t) score += 4;
+    }
+    if (!ok) continue;
+    score += Math.min(use[f.id] || 0, 40) * 5;
+    if (f.ibge) score += 3;
+    if (f.common) score += 14;
+    if (f.own) score += 10;
+    score -= f.name.length * 0.12;
+    res.push([score, f]);
+  }
+  return res.sort((a, b) => b[0] - a[0]).slice(0, 8).map(r => r[1]);
+}
+
+/* ---------- autocompletar ---------- */
+function autocomplete(input, o){
+  const list = h("div", {class: "ac", role: "listbox"}); list.hidden = true;
+  input.parentElement.append(list);
+  input.setAttribute("autocomplete", "off"); input.setAttribute("autocorrect", "off"); input.setAttribute("spellcheck", "false");
+  let items = [], active = 0, nav = false;
+  function render(){
+    items = o.items(input.value);
+    if (!items.length || document.activeElement !== input) { list.hidden = true; return; }
+    active = Math.min(active, items.length - 1);
+    const kids = [];
+    if (o.title && o.title(input.value)) kids.push(h("div", {class: "ac-sec"}, o.title(input.value)));
+    items.forEach((it, i) => {
+      const el = h("div", {class: "ac-item" + (i === active ? " on" : ""), role: "option"},
+        h("span", {class: "ac-l", html: highlight(it.label, o.hl === false ? "" : input.value)}),
+        it.meta ? h("span", {class: "ac-m"}, it.meta) : null,
+        it.removable ? h("button", {class: "ac-x", type: "button", "aria-label": "Remover opção da lista", title: "Remover da lista"}, "×") : null);
+      el.addEventListener("mousedown", e => e.preventDefault());
+      el.addEventListener("click", e => {
+        if (e.target.closest(".ac-x")) { o.onRemove(it); render(); return; }
+        pick(i);
+      });
+      kids.push(el);
+    });
+    list.replaceChildren(...kids);
+    list.hidden = false;
+  }
+  function pick(i){ const it = items[i]; if (!it) return; list.hidden = true; o.onPick(it); }
+  input.addEventListener("input", () => { active = 0; nav = false; render(); });
+  input.addEventListener("focus", () => { active = 0; nav = false; render(); });
+  input.addEventListener("blur", () => { list.hidden = true; o.onBlur && o.onBlur(); });
+  input.addEventListener("keydown", e => {
+    const open = !list.hidden && items.length;
+    if (e.key === "ArrowDown" && open) { e.preventDefault(); nav = true; active = (active + 1) % items.length; render(); }
+    else if (e.key === "ArrowUp" && open) { e.preventDefault(); nav = true; active = (active - 1 + items.length) % items.length; render(); }
+    else if (e.key === "Enter" || (e.key === "Tab" && !e.shiftKey && open && o.tabPicks)) {
+      if (e.isComposing) return;
+      if (open && (nav || (o.enterPicks ? o.enterPicks(input.value) : true))) { e.preventDefault(); pick(active); }
+      else if (o.onEnter) { e.preventDefault(); list.hidden = true; o.onEnter(); }
+    }
+    else if (e.key === "Escape") list.hidden = true;
+  });
+  return {close(){ list.hidden = true; }};
+}
+
+/* Lista de opções editável (objetivos, nomes de refeição) */
+function optionSource(key){
+  return q => {
+    const opts = S.prefs[key], qn = norm(q.trim());
+    const exact = opts.some(o => norm(o) === qn);
+    const qt = words(q);
+    const list = (!qt.length || exact) ? opts : opts.filter(o => { const w = words(o); return qt.every(t => w.some(x => x.startsWith(t))); });
+    return list.map(o => ({label: o, value: o, removable: true}));
+  };
+}
+function rememberOption(key, v){
+  v = (v || "").trim(); if (!v) return;
+  if (!S.prefs[key].some(o => norm(o) === norm(v))) { S.prefs[key].push(v); save(); }
+}
+
+/* ---------- navegação ---------- */
+const app = $("#app"), totalsEl = $("#totals");
+let view = {name: "home", id: null, tab: "plan"};
+function go(v){
+  view = Object.assign({}, view, v);
+  try { sessionStorage.setItem(KEY + ".view", JSON.stringify(view)); } catch (e) {}
+  render(); window.scrollTo(0, 0);
+}
+function render(){
+  totalsEl.hidden = true;
+  if (view.name === "patient" && cur()) renderPatient(); else renderHome();
+}
+const cur = () => S.patients.find(p => p.id === view.id);
+window.addEventListener("scroll", () => { const t = $(".top"); if (t) t.classList.toggle("scrolled", scrollY > 4); }, {passive: true});
+
+function toast(msg){
+  const t = $("#toast"); t.textContent = msg; t.classList.add("on");
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("on"), 1600);
+}
+
+/* ---------- Home ---------- */
+function sexLabel(s){ return s === "M" ? "Masculino" : "Feminino"; }
+function ageLabel(a){ return a == null ? "" : a === 1 ? "1 ano" : `${a} anos`; }
+function initials(n){ const w = n.trim().split(/\s+/); return ((w[0] || "")[0] || "").toUpperCase() + ((w.length > 1 ? w[w.length - 1][0] : "") || "").toUpperCase(); }
+
+function renderHome(){
+  let q = "";
+  const listEl = h("div");
+  const search = h("input", {type: "search", id: "busca", placeholder: "Buscar paciente", "aria-label": "Buscar paciente", enterkeyhint: "search"});
+  function fill(){
+    const qt = words(q);
+    const ps = S.patients.filter(p => { const w = words(p.name); return qt.every(t => w.some(x => x.startsWith(t))); })
+      .sort((a, b) => (b.updated || 0) - (a.updated || 0));
+    if (!S.patients.length){
+      listEl.replaceChildren(h("div", {class: "card empty"},
+        h("div", {style: "font-weight:600;color:var(--ink);font-size:16px;margin-bottom:4px"}, "Nenhum paciente ainda"),
+        h("div", null, "Cadastre o primeiro com nome, data de nascimento e gênero."),
+        h("div", {style: "margin-top:16px"}, h("button", {class: "btn primary", onclick: () => patientSheet()}, svg("plus"), "Novo paciente"))));
+      return;
+    }
+    if (!ps.length){ listEl.replaceChildren(h("div", {class: "card empty"}, `Nenhum paciente encontrado para “${q}”.`)); return; }
+    listEl.replaceChildren(h("div", {class: "plist"}, ps.map(p => {
+      const t = planTotal(p.plan);
+      return h("button", {class: "pitem", onclick: () => go({name: "patient", id: p.id})},
+        h("div", {class: "avatar"}, initials(p.name)),
+        h("div", {class: "pmain"},
+          h("div", {class: "pname", html: highlight(p.name, q) + (p.example ? '<span class="chip">exemplo</span>' : "")}),
+          h("div", {class: "pmeta"}, `${ageLabel(ageOf(p.birth))} · ${sexLabel(p.sex)}`)),
+        t.kcal ? h("div", {class: "pkcal"}, h("b", null, k0(t.kcal)), "kcal") : null);
+    })));
+  }
+  search.addEventListener("input", () => { q = search.value; fill(); });
+  search.addEventListener("keydown", e => {
+    if (e.key === "Enter"){ const first = listEl.querySelector(".pitem"); if (first) first.click(); }
+  });
+  fill();
+  app.replaceChildren(h("div", {class: "view"},
+    h("header", {class: "top"}, h("div", {class: "top-row"},
+      h("div", {class: "brand"}, h("span", {class: "mark", html: ICON.mark}), "Nutri Prático"),
+      h("div", {class: "spacer"}),
+      h("button", {class: "icon-btn", "aria-label": "Backup", title: "Backup", onclick: () => backupSheet(), html: ICON.backup}),
+      h("button", {class: "icon-btn accent", "aria-label": "Novo paciente", title: "Novo paciente", onclick: () => patientSheet(), html: ICON.plus}))),
+    h("h1", null, "Pacientes"),
+    h("div", {class: "sub num"}, S.patients.length === 1 ? "1 paciente" : `${S.patients.length} pacientes`),
+    backupNudge(),
+    h("div", {class: "search"}, h("span", {html: ICON.search, style: "display:contents"}), search),
+    listEl,
+    h("p", {class: "foot-note"}, h("span", {html: ICON.lock, style: "display:contents"}),
+      "Os dados ficam salvos apenas neste aparelho. Nada é enviado para servidores. Use o backup para guardar uma cópia.")
+  ));
+}
+
+/* ---------- Backup ---------- */
+const DAY = 864e5;
+const pl = n => n === 1 ? "1 paciente" : `${n} pacientes`;
+function backupNudge(){
+  const real = S.patients.filter(p => !p.example).length;
+  if (!real || (S.lastBackup && Date.now() - S.lastBackup < 7 * DAY)) return null;
+  return h("div", {class: "nudge"},
+    h("div", null, h("b", null, S.lastBackup ? `Último backup há ${Math.floor((Date.now() - S.lastBackup) / DAY)} dias` : "Você ainda não fez backup"),
+      "Guarde uma cópia dos pacientes fora do celular."),
+    h("button", {class: "btn primary", onclick: () => backupSheet()}, "Fazer"));
+}
+function backupSheet(){
+  const scrim = h("div", {class: "scrim"});
+  const status = h("div", {class: "err", style: "color:var(--muted)"});
+  const file = h("input", {type: "file", accept: "application/json,.json", hidden: true});
+  const confirmBox = h("div");
+  const last = S.lastBackup ? `Último backup: ${new Date(S.lastBackup).toLocaleDateString("pt-BR")}` : "Nenhum backup feito ainda.";
+  async function exportNow(){
+    const stamp = new Date().toISOString().slice(0, 10);
+    const json = JSON.stringify({app: "nutri-pratico", version: 1, exported: new Date().toISOString(), data: S});
+    const name = `nutri-pratico-backup-${stamp}.json`;
+    const blob = new Blob([json], {type: "application/json"});
+    const done = () => { S.lastBackup = Date.now(); save(); status.textContent = "Backup gerado. Guarde o arquivo em Arquivos, iCloud ou e-mail."; };
+    try {
+      const f = new File([blob], name, {type: "application/json"});
+      if (navigator.canShare && navigator.canShare({files: [f]})) { await navigator.share({files: [f], title: "Backup Nutri Prático"}); done(); return; }
+    } catch (e) { if (e && e.name === "AbortError") return; }
+    try {
+      const a = h("a", {href: URL.createObjectURL(blob), download: name}); document.body.append(a); a.click(); a.remove(); done();
+    } catch (e) { status.textContent = "Não foi possível gerar o arquivo neste navegador."; }
+  }
+  file.addEventListener("change", () => {
+    const f = file.files[0]; if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      let b; try { b = JSON.parse(rd.result); } catch (e) {}
+      const d = b && b.data;
+      if (!d || !Array.isArray(d.patients) || !d.prefs) { status.textContent = "Esse arquivo não é um backup do Nutri Prático."; return; }
+      confirmBox.replaceChildren(h("div", {class: "confirm", style: "flex-wrap:wrap"},
+        h("span", {style: "flex:1 1 100%"}, `Substituir ${pl(S.patients.length)} deste aparelho por ${pl(d.patients.length)} do backup de ${new Date(b.exported).toLocaleDateString("pt-BR")}?`),
+        h("button", {class: "btn ghost", type: "button", style: "flex:1", onclick: () => confirmBox.replaceChildren()}, "Cancelar"),
+        h("button", {class: "btn primary", type: "button", style: "flex:1", onclick: () => {
+          S = d; S.foods = S.foods || []; for (const raw of S.foods) addFood(raw);
+          try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+          close(); go({name: "home", id: null}); toast("Backup restaurado");
+        }}, "Restaurar")));
+    };
+    rd.readAsText(f); file.value = "";
+  });
+  const form = h("div", {class: "sheet", role: "dialog", "aria-modal": "true", "aria-label": "Backup"},
+    h("div", {class: "grab"}),
+    h("h2", null, "Backup"),
+    h("div", {class: "bk-meta"}, last),
+    h("div", {class: "bk-row"},
+      h("button", {class: "btn primary block", type: "button", onclick: exportNow}, "Exportar backup"),
+      h("button", {class: "btn ghost block", type: "button", onclick: () => file.click()}, "Restaurar de um arquivo"),
+      file, status, confirmBox,
+      h("button", {class: "btn ghost block", type: "button", onclick: close}, "Fechar")));
+  function close(){ form.classList.remove("on"); scrim.classList.remove("on"); setTimeout(() => { form.remove(); scrim.remove(); }, 260); }
+  scrim.addEventListener("click", close);
+  document.body.append(scrim, form);
+  requestAnimationFrame(() => { scrim.classList.add("on"); form.classList.add("on"); });
+}
+
+/* ---------- Cadastro / edição de paciente ---------- */
+function maskDate(v){
+  const d = v.replace(/\D/g, "").slice(0, 8);
+  return d.length > 4 ? `${d.slice(0, 2)}/${d.slice(2, 4)}/${d.slice(4)}` : d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d;
+}
+function toISO(br){
+  const m = br.match(/^(\d{2})\/(\d{2})\/(\d{4})$/); if (!m) return null;
+  const d = +m[1], mo = +m[2], y = +m[3];
+  const dt = new Date(y, mo - 1, d);
+  if (dt.getFullYear() !== y || dt.getMonth() !== mo - 1 || dt.getDate() !== d) return null;
+  if (dt > new Date() || y < 1900) return null;
+  return `${m[3]}-${m[2]}-${m[1]}`;
+}
+const fromISO = iso => iso ? iso.split("-").reverse().join("/") : "";
+
+function patientSheet(p){
+  const editing = !!p;
+  let sex = p ? p.sex : null;
+  const scrim = h("div", {class: "scrim"});
+  const name = h("input", {class: "input", id: "pac-nome", placeholder: "Nome completo", value: p ? p.name : "", enterkeyhint: "next", autocapitalize: "words", autocomplete: "off"});
+  const birth = h("input", {class: "input num", id: "pac-nasc", placeholder: "dd/mm/aaaa", inputmode: "numeric", value: p ? fromISO(p.birth) : "", autocomplete: "off"});
+  const err = h("div", {class: "err"});
+  const seg = h("div", {class: "seg big", role: "radiogroup", "aria-label": "Gênero"});
+  const ok = h("button", {class: "btn primary block", type: "submit"}, editing ? "Salvar" : "Cadastrar paciente");
+  function paintSeg(){
+    seg.replaceChildren(...[["F", "Feminino"], ["M", "Masculino"]].map(([v, l]) =>
+      h("button", {type: "button", class: sex === v ? "on" : "", role: "radio", "aria-checked": String(sex === v), onclick: () => { sex = v; paintSeg(); check(); }}, l)));
+  }
+  function check(){ ok.disabled = !(name.value.trim() && toISO(birth.value) && sex); }
+  name.addEventListener("input", check);
+  name.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); birth.focus(); } });
+  birth.addEventListener("input", () => {
+    birth.value = maskDate(birth.value);
+    err.textContent = birth.value.length === 10 && !toISO(birth.value) ? "Data inválida. Use dd/mm/aaaa." : "";
+    if (birth.value.length === 10 && toISO(birth.value)) birth.blur();
+    check();
+  });
+  paintSeg(); check();
+  const form = h("form", {class: "sheet", role: "dialog", "aria-modal": "true", "aria-label": editing ? "Editar paciente" : "Novo paciente"},
+    h("div", {class: "grab"}),
+    h("h2", null, editing ? "Editar paciente" : "Novo paciente"),
+    h("div", {class: "field"}, h("label", {for: "pac-nome"}, "Nome"), name),
+    h("div", {class: "field"}, h("label", {for: "pac-nasc"}, "Data de nascimento"), birth, err),
+    h("div", {class: "field"}, h("label", null, "Gênero"), seg),
+    h("div", {class: "row-actions"}, h("button", {class: "btn ghost", type: "button", onclick: close}, "Cancelar"), ok),
+    editing ? delBlock() : null);
+  function delBlock(){
+    const wrap = h("div", {style: "margin-top:18px;padding-top:14px;border-top:1px solid var(--line)"});
+    const ask = () => wrap.replaceChildren(h("div", {class: "confirm"}, h("span", {style: "flex:1"}, `Excluir ${p.name} e todo o plano?`),
+      h("button", {class: "btn ghost", type: "button", style: "height:38px", onclick: idle}, "Não"),
+      h("button", {class: "btn danger", type: "button", style: "height:38px", onclick: () => {
+        S.patients = S.patients.filter(x => x.id !== p.id); save(); close(); go({name: "home", id: null});
+      }}, "Excluir")));
+    const idle = () => wrap.replaceChildren(h("button", {class: "btn danger block", type: "button", onclick: ask}, "Excluir paciente"));
+    idle(); return wrap;
+  }
+  form.addEventListener("submit", e => {
+    e.preventDefault(); check(); if (ok.disabled) return;
+    if (editing){ p.name = name.value.trim(); p.birth = toISO(birth.value); p.sex = sex; touch(p); close(); render(); }
+    else {
+      const np = {id: uid(), name: name.value.trim(), birth: toISO(birth.value), sex, updated: Date.now(),
+        energy: {weight: null, height: null, fao: 1, dri: 1}, plan: {objective: "", target: null, meals: []}};
+      S.patients.push(np); save(); close(); go({name: "patient", id: np.id, tab: "energy"});
+    }
+  });
+  function close(){
+    form.classList.remove("on"); scrim.classList.remove("on");
+    setTimeout(() => { form.remove(); scrim.remove(); }, 260);
+  }
+  scrim.addEventListener("click", close);
+  document.body.append(scrim, form);
+  requestAnimationFrame(() => { scrim.classList.add("on"); form.classList.add("on"); });
+  if (!editing) name.focus();
+}
+
+/* ---------- Alimento próprio ---------- */
+function foodSheet(prefill, done){
+  const scrim = h("div", {class: "scrim"});
+  const nm = h("input", {class: "input", id: "al-nome", value: prefill || "", placeholder: "Ex.: Leite integral (marca)", autocomplete: "off"});
+  const num = (id, ph) => h("input", {class: "input num", id, inputmode: "decimal", placeholder: ph, autocomplete: "off"});
+  const kc = num("al-kcal", "0"), cc = num("al-cho", "0"), pp = num("al-ptn", "0"), ll = num("al-lip", "0");
+  const ml = h("input", {class: "input", id: "al-med", placeholder: "Ex.: Copo médio", autocomplete: "off"});
+  const mg = num("al-medg", "g");
+  const ok = h("button", {class: "btn primary block", type: "submit"}, "Salvar alimento");
+  const v = el => { const x = parseFloat(el.value.replace(",", ".")); return isFinite(x) && x >= 0 ? x : null; };
+  const check = () => { ok.disabled = !(nm.value.trim() && v(kc) != null && v(cc) != null && v(pp) != null && v(ll) != null && (!ml.value.trim() || v(mg) > 0)); };
+  [nm, kc, cc, pp, ll, ml, mg].forEach(el => el.addEventListener("input", check));
+  check();
+  const g2 = (a, b) => h("div", {style: "display:grid;grid-template-columns:1fr 1fr;gap:10px"}, a, b);
+  const fld = (id, l, el) => h("div", {class: "field"}, h("label", {for: id}, l), el);
+  const form = h("form", {class: "sheet", role: "dialog", "aria-modal": "true", "aria-label": "Alimento próprio"},
+    h("div", {class: "grab"}),
+    h("h2", null, "Alimento próprio"),
+    fld("al-nome", "Nome", nm),
+    h("div", {class: "eyebrow", style: "margin:4px 0 10px"}, "Valores por 100 g ou 100 ml"),
+    g2(fld("al-kcal", "Energia (kcal)", kc), fld("al-cho", "Carboidratos (g)", cc)),
+    g2(fld("al-ptn", "Proteínas (g)", pp), fld("al-lip", "Lipídeos (g)", ll)),
+    h("div", {class: "eyebrow", style: "margin:4px 0 10px"}, "Medida caseira mais usada (opcional)"),
+    g2(fld("al-med", "Medida", ml), fld("al-medg", "Gramas na medida", mg)),
+    h("div", {class: "row-actions"}, h("button", {class: "btn ghost", type: "button", onclick: close}, "Cancelar"), ok));
+  form.addEventListener("submit", e => {
+    e.preventDefault(); check(); if (ok.disabled) return;
+    const ms = ml.value.trim() ? [[ml.value.trim(), v(mg)]] : [];
+    const raw = [-Date.now(), nm.value.trim(), Math.round(v(kc)), v(cc), v(pp), v(ll), 0, "Alimento próprio", ms];
+    S.foods.push(raw); save();
+    const f = addFood(raw); f.ibge = false;
+    close(); done && done(f);
+  });
+  function close(){ form.classList.remove("on"); scrim.classList.remove("on"); setTimeout(() => { form.remove(); scrim.remove(); }, 260); }
+  scrim.addEventListener("click", close);
+  document.body.append(scrim, form);
+  requestAnimationFrame(() => { scrim.classList.add("on"); form.classList.add("on"); });
+  (prefill ? kc : nm).focus();
+}
+
+/* ---------- Paciente ---------- */
+function renderPatient(){
+  const p = cur();
+  const body = h("div");
+  const tabs = h("div", {class: "seg", role: "tablist"});
+  function paintTabs(){
+    tabs.replaceChildren(...[["energy", "Necessidade energética"], ["plan", "Plano alimentar"]].map(([v, l]) =>
+      h("button", {class: view.tab === v ? "on" : "", role: "tab", "aria-selected": String(view.tab === v), onclick: () => { view.tab = v; go({}); }}, l)));
+  }
+  paintTabs();
+  app.replaceChildren(h("div", {class: "view"},
+    h("header", {class: "top"}, h("div", {class: "top-row"},
+      h("button", {class: "back", onclick: () => go({name: "home", id: null})}, h("span", {html: ICON.back, style: "display:contents"}), "Pacientes"),
+      h("div", {class: "spacer"}),
+      h("button", {class: "icon-btn", "aria-label": "Editar paciente", title: "Editar paciente", onclick: () => patientSheet(p), html: ICON.edit}))),
+    h("div", {class: "phead"},
+      h("h1", {html: esc(p.name) + (p.example ? '<span class="chip">exemplo</span>' : "")}),
+      h("div", {class: "sub num"}, `${ageLabel(ageOf(p.birth))} · ${sexLabel(p.sex)} · nasc. ${fromISO(p.birth)}`)),
+    h("div", {class: "tabs"}, tabs),
+    body));
+  if (view.tab === "energy") renderEnergy(p, body); else renderPlan(p, body);
+}
+
+/* ---------- Necessidade energética ---------- */
+function renderEnergy(p, body){
+  const e = p.energy;
+  const W = h("input", {class: "input", id: "peso", inputmode: "decimal", placeholder: "0", value: e.weight ? fq.format(e.weight) : "", "aria-label": "Peso em kg", enterkeyhint: "next"});
+  const H = h("input", {class: "input", id: "altura", inputmode: "decimal", placeholder: "0", value: e.height ? fq.format(e.height) : "", "aria-label": "Altura em cm", enterkeyhint: "done"});
+  const out = h("div", {class: "stack"});
+  const num = s => { const v = parseFloat(String(s).replace(",", ".")); return isFinite(v) ? v : null; };
+  W.addEventListener("input", () => { e.weight = num(W.value); touch(p); paint(); });
+  H.addEventListener("input", () => {
+    let v = num(H.value);
+    if (v != null && v < 3) v = v * 100;  // aceita altura em metros (1,65)
+    e.height = v; touch(p); paint();
+  });
+  W.addEventListener("keydown", ev => { if (ev.key === "Enter") { ev.preventDefault(); H.focus(); } });
+  H.addEventListener("keydown", ev => { if (ev.key === "Enter") { ev.preventDefault(); H.blur(); } });
+
+  function segOf(labels, key){
+    const seg = h("div", {class: "seg seg4", role: "radiogroup"});
+    const paintSeg = () => seg.replaceChildren(...labels.map((l, i) => h("button", {class: (e[key] ?? 1) === i ? "on" : "", role: "radio", "aria-checked": String((e[key] ?? 1) === i),
+      onclick: () => { e[key] = i; touch(p); paintSeg(); paint(); }}, l)));
+    paintSeg(); return seg;
+  }
+  const faoSeg = segOf(FAO_LV, "fao"), driSeg = segOf(DRI_LV, "dri");
+  const faoRes = h("div"), driRes = h("div"), hero = h("div");
+
+  function resGrid(tmb, fator, fl, get){
+    return h("div", {class: "res"},
+      h("div", null, h("div", {class: "k"}, "TMB"), h("div", {class: "v"}, tmb == null ? "—" : k0(tmb))),
+      h("div", null, h("div", {class: "k"}, fl), h("div", {class: "v"}, fator == null ? "—" : nf2.format(fator))),
+      h("div", null, h("div", {class: "k"}, "GET"), h("div", {class: "v acc"}, get == null ? "—" : k0(get))));
+  }
+  function paint(){
+    const r = energyOf(p);
+    if (!r.ok){
+      hero.replaceChildren(h("div", {class: "card hero"}, h("div", {class: "eyebrow"}, "Média dos protocolos"),
+        h("div", {class: "hero-grid"},
+          h("div", null, h("div", {class: "lbl"}, "TMB"), h("div", {class: "big"}, "—")),
+          h("div", null, h("div", {class: "lbl"}, "GET"), h("div", {class: "big gold"}, "—"))),
+        h("div", {class: "hero-foot"}, "Informe peso e altura para calcular")));
+      useBtn.disabled = true; useBtn.textContent = "Usar GET no plano alimentar";
+      faoRes.replaceChildren(resGrid(null, FAO_FA[p.sex][e.fao ?? 1], "FA", null));
+      driRes.replaceChildren(resGrid(null, null, "AF", null));
+      return;
+    }
+    hero.replaceChildren(h("div", {class: "card hero"},
+      h("div", {class: "eyebrow"}, r.dri ? "Média FAO/OMS 1985 + DRI 2005" : "FAO/OMS 1985"),
+      h("div", {class: "hero-grid"},
+        h("div", null, h("div", {class: "lbl"}, "TMB"), h("div", {class: "big"}, k0(r.tmb), h("small", null, "kcal"))),
+        h("div", null, h("div", {class: "lbl"}, "GET"), h("div", {class: "big gold"}, k0(r.get), h("small", null, "kcal")))),
+      h("div", {class: "hero-foot"},
+        h("span", null, `IMC ${g1(r.imc)}`),
+        h("span", null, `${ageLabel(r.age)}`),
+        h("span", null, `${fq.format(e.weight)} kg · ${fq.format(e.height)} cm`))));
+    put(faoRes, resGrid(r.fao.tmb, r.fao.fa, "FA", r.fao.get),
+      h("div", {class: "eq"}, `TMB = ${r.fao.eq}`, h("br"), `GET = TMB × ${nf2.format(r.fao.fa)}`),
+      r.age < 18 ? h("div", {class: "note warn"}, "Os fatores de atividade FAO/OMS 1985 foram definidos para adultos.") : null);
+    put(driRes, r.dri
+      ? [resGrid(r.dri.tmb, r.dri.PA, "AF", r.dri.get),
+         h("div", {class: "eq"}, `GET (EER) = ${r.dri.eq}`, h("br"), "I = idade · P = kg · A = m · TMB (BEE) pela DRI 2005")]
+      : [resGrid(null, null, "AF", null), h("div", {class: "note warn"}, "As equações DRI 2005 aqui cobrem pacientes a partir de 3 anos.")]);
+    useBtn.textContent = `Usar ${k0(r.get)} kcal no plano alimentar`;
+    useBtn.disabled = false;
+  }
+  const useBtn = h("button", {class: "btn primary block", disabled: true, onclick: () => {
+    const r = energyOf(p); if (!r.ok) return;
+    p.plan.target = Math.round(r.get); touch(p); go({tab: "plan"}); toast(`Meta de ${k0(r.get)} kcal definida`);
+  }}, "Usar GET no plano alimentar");
+
+  body.append(h("div", {class: "stack"},
+    hero,
+    h("div", {class: "card"},
+      h("div", {class: "measures"},
+        h("div", {class: "field", style: "margin:0"}, h("label", {for: "peso"}, "Peso"), h("div", {class: "mfield"}, W, h("span", null, "kg"))),
+        h("div", {class: "field", style: "margin:0"}, h("label", {for: "altura"}, "Altura"), h("div", {class: "mfield"}, H, h("span", null, "cm")))),
+      h("div", {class: "facts"}, h("span", null, "Idade ", h("b", null, ageLabel(ageOf(p.birth)))), h("span", null, "Gênero ", h("b", null, sexLabel(p.sex))))),
+    h("div", {class: "card"},
+      h("div", {class: "card-h"}, h("div", {class: "card-t"}, "FAO/OMS 1985"), h("div", {class: "eyebrow"}, "Nível de atividade")),
+      faoSeg, faoRes),
+    h("div", {class: "card"},
+      h("div", {class: "card-h"}, h("div", {class: "card-t"}, "DRI 2005"), h("div", {class: "eyebrow"}, "Nível de atividade física")),
+      driSeg, driRes),
+    useBtn));
+  paint();
+  if (!e.weight) setTimeout(() => W.focus(), 60);
+}
+
+/* ---------- Plano alimentar ---------- */
+function renderPlan(p, body){
+  const plan = p.plan;
+  const r = energyOf(p);
+  const target = () => plan.target || (r.ok ? Math.round(r.get) : null);
+
+  /* objetivo */
+  const obj = h("input", {class: "input", id: "objetivo", placeholder: "Objetivo", value: plan.objective || "", enterkeyhint: "next", "aria-label": "Objetivo"});
+  const objW = h("div", {class: "acw"}, obj);
+  autocomplete(obj, {
+    items: optionSource("objectives"),
+    onPick: it => { obj.value = it.value; plan.objective = it.value; touch(p); focusFirstSlot(); },
+    onRemove: it => { S.prefs.objectives = S.prefs.objectives.filter(o => o !== it.value); save(); },
+    enterPicks: v => !!v.trim() && !S.prefs.objectives.some(o => norm(o) === norm(v.trim())) && optionSource("objectives")(v).length > 0,
+    onEnter: () => { plan.objective = obj.value.trim(); rememberOption("objectives", plan.objective); touch(p); focusFirstSlot(); }
+  });
+  obj.addEventListener("input", () => { plan.objective = obj.value; touch(p); });
+  obj.addEventListener("change", () => rememberOption("objectives", obj.value));
+
+  const tgt = h("input", {class: "input num", id: "meta", inputmode: "numeric", placeholder: r.ok ? k0(r.get) : "kcal", value: plan.target ? String(plan.target) : "", "aria-label": "Meta de kcal"});
+  tgt.addEventListener("input", () => { const v = parseInt(tgt.value.replace(/\D/g, ""), 10); plan.target = v > 0 ? v : null; touch(p); updateTotals(); });
+
+  const mealsEl = h("div", {class: "stack"});
+  const refs = new Map();   // id -> {sumEl} / item id -> {row,...}
+
+  function focusFirstSlot(){
+    if (!plan.meals.length) { addMeal(true); return; }
+    const m = plan.meals.find(x => !x.name.trim()) || plan.meals[plan.meals.length - 1];
+    const card = mealsEl.children[plan.meals.indexOf(m)];
+    if (!m.name.trim() && card) card.querySelector(".meal-name").focus();
+    else refs.get(m.items[m.items.length - 1].id)?.food.focus();
+  }
+
+  function nextMealName(){
+    const used = new Set(plan.meals.map(m => norm(m.name)));
+    return DEFAULT_MEALS.find(n => !used.has(norm(n))) || "";
+  }
+  function addMeal(focus){
+    const m = {id: uid(), name: "", items: []};
+    plan.meals.push(m); ensureBlank(m); touch(p);
+    const el = buildMeal(m); mealsEl.append(el);
+    if (focus) { const nm = el.querySelector(".meal-name"); nm.focus(); el.scrollIntoView({block: "start", behavior: "smooth"}); }
+    updateTotals();
+  }
+  function ensureBlank(m){
+    const last = m.items[m.items.length - 1];
+    if (!last || last.foodId) m.items.push({id: uid(), foodId: null, measure: null, qty: null});
+  }
+
+  function buildMeal(m){
+    const name = h("input", {class: "meal-name", placeholder: nextMealName() || "Nome da refeição", value: m.name, enterkeyhint: "next", "aria-label": "Nome da refeição"});
+    const nameW = h("div", {class: "acw"}, name);
+    const rowsEl = h("div", {class: "rows"});
+    const sumEl = h("div", {class: "meal-sum"});
+    const card = h("section", {class: "card meal"});
+    const firstFood = () => refs.get(m.items[0].id).food.focus();
+    autocomplete(name, {
+      items: optionSource("meals"),
+      onPick: it => { name.value = it.value; m.name = it.value; touch(p); firstFood(); },
+      onRemove: it => { S.prefs.meals = S.prefs.meals.filter(o => o !== it.value); save(); },
+      enterPicks: v => !!v.trim() && !S.prefs.meals.some(o => norm(o) === norm(v.trim())) && optionSource("meals")(v).length > 0,
+      onEnter: () => {
+        if (!name.value.trim() && name.placeholder && name.placeholder !== "Nome da refeição") name.value = name.placeholder;
+        m.name = name.value.trim(); rememberOption("meals", m.name); touch(p); firstFood();
+      }
+    });
+    name.addEventListener("input", () => { m.name = name.value; touch(p); });
+    name.addEventListener("change", () => rememberOption("meals", name.value));
+
+    const delWrap = h("div");
+    const delIdle = () => delWrap.replaceChildren(h("button", {class: "x meal-del", "aria-label": "Remover refeição", title: "Remover refeição", html: ICON.x, onclick: delAsk}));
+    function delAsk(){
+      delWrap.replaceChildren(h("button", {class: "btn danger", style: "height:32px;padding:0 10px;font-size:13px", onclick: () => {
+        plan.meals = plan.meals.filter(x => x !== m); touch(p); card.remove(); updateTotals();
+      }}, "Remover"), h("button", {class: "btn ghost", style: "height:32px;padding:0 10px;font-size:13px;margin-left:6px", onclick: delIdle}, "Não"));
+    }
+    delIdle();
+
+    card.append(h("div", {class: "meal-h"}, nameW, delWrap), sumEl, rowsEl);
+    refs.set(m.id, {sumEl});
+    for (const it of m.items) rowsEl.append(buildRow(m, it, rowsEl));
+    paintMealSum(m);
+    return card;
+  }
+
+  function buildRow(m, it, rowsEl){
+    const row = h("div", {class: "item"});
+    const food = h("input", {class: "food", placeholder: "Alimento", "aria-label": "Alimento", enterkeyhint: "next", autocapitalize: "off"});
+    const foodW = h("div", {class: "acw"}, food);
+    const meas = h("input", {class: "cell", "aria-label": "Medida caseira", enterkeyhint: "next", autocapitalize: "off"});
+    const measW = h("div", {class: "acw"}, meas);
+    const qty = h("input", {class: "cell qty", inputmode: "decimal", "aria-label": "Quantidade", placeholder: "1", enterkeyhint: "next"});
+    const kcal = h("div", {class: "kcal"});
+    const l3 = h("div", {class: "item-l3"});
+    const del = h("button", {class: "x", "aria-label": "Remover alimento", title: "Remover alimento", html: ICON.x});
+    const quick = h("div", {class: "quick"});
+    const R = {row, food, meas, qty, kcal, l3};
+    refs.set(it.id, R);
+
+    function syncInputs(){
+      const f = FOODS.get(it.foodId);
+      row.classList.toggle("blank", !f);
+      food.value = f ? f.name : "";
+      meas.value = f ? measureOf(f, it.measure).l : "";
+      qty.value = fmtQty(it.qty);
+      paintRow();
+    }
+    function paintRow(){
+      const f = FOODS.get(it.foodId);
+      const c = calcItem(it);
+      if (!f) return;
+      const m1 = measureOf(f, it.measure);
+      kcal.replaceChildren(c ? k0(c.kcal) : "—", h("small", null, "kcal"));
+      l3.replaceChildren(
+        h("span", {class: "g"}, c ? `${fq.format(Math.round(c.g * 10) / 10)} g` : `${fq.format(m1.g)} g/${m1.l === "Grama" ? "g" : "un"}`),
+        h("span", null, h("i", {class: "dot d-c"}), `C ${c ? g1(c.c) : "—"}`),
+        h("span", null, h("i", {class: "dot d-p"}), `P ${c ? g1(c.p) : "—"}`),
+        h("span", null, h("i", {class: "dot d-g"}), `G ${c ? g1(c.l) : "—"}`));
+    }
+
+    /* alimento */
+    autocomplete(food, {
+      items: q => {
+        if (FOODS.get(it.foodId) && q === FOODS.get(it.foodId).name) return [];
+        const list = searchFoods(q).map(f => ({label: f.name, meta: f.own ? `próprio · ${f.kcal} kcal` : `${f.kcal} kcal`, value: f}));
+        if (q.trim().length >= 2) list.push({label: `+ Cadastrar “${q.trim()}” como alimento próprio`, value: {create: q.trim()}});
+        return list;
+      },
+      enterPicks: v => !!v.trim(),
+      title: q => !words(q).length && Object.keys(S.prefs.use).length ? "Mais usados" : "",
+      onPick: x => x.value.create ? foodSheet(x.value.create, f => setFood(f)) : setFood(x.value),
+      onEnter: () => {
+        if (!food.value.trim() && !it.foodId){ addMeal(true); return; }   // Enter em linha vazia: nova refeição
+        if (it.foodId) { food.value = FOODS.get(it.foodId).name; qty.focus(); }
+      },
+      onBlur: () => { const f = FOODS.get(it.foodId); if (f && food.value !== f.name) food.value = f.name; if (!f) food.value = ""; }
+    });
+    food.addEventListener("focus", () => { setTimeout(() => row.scrollIntoView({block: "start", behavior: "smooth"}), 30); });
+
+    function setFood(f){
+      const changed = it.foodId !== f.id;
+      it.foodId = f.id;
+      if (changed || !it.measure) it.measure = S.prefs.last[f.id] && f.measures.some(m => m.l === S.prefs.last[f.id]) ? S.prefs.last[f.id] : f.measures[0].l;
+      touch(p); syncInputs();
+      ensureBlank(m);
+      const last = m.items[m.items.length - 1];
+      if (!refs.has(last.id)) rowsEl.append(buildRow(m, last, rowsEl));
+      qty.focus(); qty.select();
+      paintMealSum(m); updateTotals();
+    }
+
+    /* medida caseira */
+    autocomplete(meas, {
+      items: q => {
+        const f = FOODS.get(it.foodId); if (!f) return [];
+        const cur = measureOf(f, it.measure).l;
+        const qt = words(q);
+        const all = (q === cur || !qt.length) ? f.measures : f.measures.filter(m1 => { const w = words(m1.l); return qt.every(t => w.some(x => x.startsWith(t))); });
+        return all.map(m1 => ({label: m1.l, meta: `${fq.format(m1.g)} g`, value: m1}));
+      },
+      hl: true,
+      onPick: x => { it.measure = x.value.l; meas.value = x.value.l; touch(p); paintRow(); paintMealSum(m); updateTotals(); qty.focus(); qty.select(); },
+      onBlur: () => { const f = FOODS.get(it.foodId); if (f) meas.value = measureOf(f, it.measure).l; }
+    });
+    meas.addEventListener("focus", () => setTimeout(() => { if (document.activeElement === meas) meas.select(); }, 0));
+
+    /* quantidade */
+    qty.addEventListener("input", () => { it.qty = parseQty(qty.value); touch(p); paintRow(); paintMealSum(m); updateTotals(); });
+    qty.addEventListener("focus", () => { row.classList.add("qfocus"); setTimeout(() => { if (document.activeElement === qty) qty.select(); }, 0); });
+    qty.addEventListener("blur", () => { row.classList.remove("qfocus"); qty.value = fmtQty(it.qty); });
+    qty.addEventListener("keydown", e => { if (e.key === "Enter" || (e.key === "Tab" && !e.shiftKey)) { e.preventDefault(); commit(); } });
+    for (const [lbl, v] of [["¼", .25], ["½", .5], ["¾", .75], ["1", 1], ["1½", 1.5], ["2", 2], ["3", 3], ["4", 4]]){
+      const b = h("button", {type: "button"}, lbl);
+      b.addEventListener("mousedown", e => e.preventDefault());
+      b.addEventListener("click", () => { it.qty = v; qty.value = fmtQty(v); commit(); });
+      quick.append(b);
+    }
+    const nx = h("button", {type: "button", class: "next"}, "Próximo ↵");
+    nx.addEventListener("mousedown", e => e.preventDefault());
+    nx.addEventListener("click", commit);
+    quick.append(nx);
+
+    function commit(){
+      if (!it.qty) { it.qty = 1; qty.value = "1"; }
+      S.prefs.use[it.foodId] = (S.prefs.use[it.foodId] || 0) + 1;
+      S.prefs.last[it.foodId] = it.measure;
+      touch(p); paintRow(); paintMealSum(m); updateTotals();
+      const idx = m.items.indexOf(it);
+      ensureBlank(m);
+      const nxt = m.items[idx + 1];
+      if (!refs.has(nxt.id)) rowsEl.append(buildRow(m, nxt, rowsEl));
+      refs.get(nxt.id).food.focus();
+    }
+
+    del.addEventListener("click", () => {
+      m.items = m.items.filter(x => x !== it); refs.delete(it.id); row.remove();
+      ensureBlank(m); touch(p); paintMealSum(m); updateTotals();
+    });
+
+    row.append(
+      h("div", {class: "item-l1"}, foodW, del),
+      h("div", {class: "item-l2"}, measW, qty, kcal),
+      l3, quick);
+    syncInputs();
+    return row;
+  }
+
+  function paintMealSum(m){
+    const R = refs.get(m.id); if (!R) return;
+    const t = mealTotal(m);
+    R.sumEl.replaceChildren(
+      h("span", {class: "kc"}, `${k0(t.kcal)} kcal`),
+      h("span", null, h("i", {class: "dot d-c"}), `C ${g1(t.c)} g`),
+      h("span", null, h("i", {class: "dot d-p"}), `P ${g1(t.p)} g`),
+      h("span", null, h("i", {class: "dot d-g"}), `G ${g1(t.l)} g`));
+  }
+
+  /* totais do plano */
+  function updateTotals(){
+    const t = planTotal(plan), tg = target();
+    const mk = t.c * 4 + t.p * 4 + t.l * 9 || 1;
+    const pc = v => Math.round(v / mk * 100);
+    const W = p.energy.weight;
+    const pct = tg ? Math.round(t.kcal / tg * 100) : null;
+    totalsEl.hidden = false;
+    totalsEl.replaceChildren(h("div", {class: "tbar"},
+      h("div", {class: "t1"},
+        h("span", {class: "t-kcal"}, k0(t.kcal)),
+        h("span", {class: "t-of"}, tg ? `/ ${k0(tg)} kcal` : "kcal"),
+        h("span", {class: "t-pct"}, pct != null ? `${pct}% da meta` : "sem meta")),
+      h("div", {class: "prog", "aria-hidden": "true"},
+        h("i", {style: `width:${Math.min(100, (t.c * 4) / (tg || mk) * 100)}%;background:var(--carb)`}),
+        h("i", {style: `width:${Math.min(100, (t.p * 4) / (tg || mk) * 100)}%;background:var(--prot)`}),
+        h("i", {style: `width:${Math.min(100, (t.l * 9) / (tg || mk) * 100)}%;background:var(--fat)`})),
+      h("div", {class: "t2"},
+        h("div", null, h("i", {class: "dot d-c"}), `${g1(t.c)} g`, h("span", null, `CHO ${pc(t.c * 4)}%${W ? " · " + g1(t.c / W) + " g/kg" : ""}`)),
+        h("div", null, h("i", {class: "dot d-p"}), `${g1(t.p)} g`, h("span", null, `PTN ${pc(t.p * 4)}%${W ? " · " + g1(t.p / W) + " g/kg" : ""}`)),
+        h("div", null, h("i", {class: "dot d-g"}), `${g1(t.l)} g`, h("span", null, `LIP ${pc(t.l * 9)}%${W ? " · " + g1(t.l / W) + " g/kg" : ""}`)))));
+  }
+
+  /* copiar plano como texto */
+  function copyPlan(){
+    const lines = [`PLANO ALIMENTAR · ${p.name}`];
+    if (plan.objective) lines.push(`Objetivo: ${plan.objective}`);
+    for (const m of plan.meals){
+      const its = m.items.filter(i => i.foodId && i.qty);
+      if (!its.length) continue;
+      lines.push("", `${(m.name || "Refeição").toUpperCase()} (${k0(mealTotal(m).kcal)} kcal)`);
+      for (const i of its){
+        const f = FOODS.get(i.foodId), ms = measureOf(f, i.measure), c = calcItem(i);
+        lines.push(ms.l === "Grama" ? `• ${f.name}: ${fq.format(i.qty)} g` : `• ${f.name}: ${fmtQty(i.qty)} ${ms.l.toLowerCase()} (${fq.format(Math.round(c.g))} g)`);
+      }
+    }
+    const t = planTotal(plan);
+    lines.push("", `Total: ${k0(t.kcal)} kcal · CHO ${g1(t.c)} g · PTN ${g1(t.p)} g · LIP ${g1(t.l)} g`);
+    const text = lines.join("\n");
+    const done = () => toast("Plano copiado");
+    try {
+      navigator.clipboard.writeText(text).then(done, () => fallback(text));
+    } catch (e) { fallback(text); }
+    function fallback(txt){
+      const ta = h("textarea", {style: "position:fixed;top:-1000px"}); ta.value = txt; document.body.append(ta); ta.select();
+      try { document.execCommand("copy"); done(); } catch (e) { toast("Não foi possível copiar"); }
+      ta.remove();
+    }
+  }
+
+  for (const m of plan.meals) { ensureBlank(m); mealsEl.append(buildMeal(m)); }
+  body.append(h("div", {class: "stack"},
+    h("div", {class: "plan-head"},
+      h("div", {class: "field", style: "margin:0"}, h("label", {for: "objetivo"}, "Objetivo"), objW),
+      h("div", {class: "field", style: "margin:0"}, h("label", {for: "meta"}, "Meta (kcal)"), tgt)),
+    mealsEl,
+    h("button", {class: "add-meal", onclick: () => addMeal(true)}, h("span", {html: ICON.plus, style: "display:contents"}), "Adicionar refeição"),
+    h("div", {class: "plan-tools"}, h("button", {class: "btn ghost", onclick: copyPlan}, "Copiar plano em texto")),
+    h("p", {class: "src"}, "Composição: TACO 4ª ed. (NEPA/UNICAMP, 2011). Medidas caseiras: POF 2008–2009, Tabela de Medidas Referidas (IBGE). Atalhos: Enter escolhe o alimento e avança; Enter numa linha vazia cria a próxima refeição.")));
+  updateTotals();
+  if (!plan.meals.length) addMeal(false);
+}
+
+/* No celular, o teclado cobre a barra de totais: ela sai de cena enquanto se digita */
+const coarse = matchMedia("(pointer: coarse)");
+document.addEventListener("focusin", e => { if (coarse.matches && e.target.matches("input")) totalsEl.classList.add("kb"); });
+document.addEventListener("focusout", () => setTimeout(() => { if (!document.activeElement || !document.activeElement.matches("input")) totalsEl.classList.remove("kb"); }, 60));
+
+/* ---------- início ---------- */
+load();
+try { const v = JSON.parse(sessionStorage.getItem(KEY + ".view")); if (v && v.name) view = v; } catch (e) {}
+render();
+})();
+</script>
+
+<script>
+if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+}
+if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+</script>
+</body>
+</html>
