@@ -6,161 +6,119 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
 <style>
-/* Layout: uma coluna de app nativo (máx. 600px) sobre preto quente; cada bloco é um cartão mais claro que o fundo; o cobre marca só o essencial. */
+/* Layout: uma coluna de app nativo (máx. 600px) sobre preto quente, barra de abas no rodapé.
+   Superfícies em grafite separam os blocos; o cobre marca só o essencial; macros em champanhe, pátina, rosé e sálvia. */
 :root{
   --bg:#0A0908; --surface:#191614; --surface-2:#221E1B; --surface-3:#2B2622;
-  --ink:#F4EEE8; --ink-2:#CDC3B9; --muted:#91877D; --line:#2D2824; --line-2:#3B352F;
+  --ink:#F4EEE8; --ink-2:#CDC3B9; --muted:#968B81; --line:#2D2824; --line-2:#3B352F;
   --accent:#E08C4E; --accent-2:#F2A468; --accent-ink:#1C0E05; --accent-soft:#2F1E12; --accent-line:#6B4226;
-  --carb:#E5C07C; --prot:#6FC4BE; --fat:#DE8FA4; --fib:#A8C98B; --danger:#FF7D74; --danger-soft:#33191A;
+  --carb:#E5C07C; --prot:#6FC4BE; --fat:#DE8FA4; --fib:#A8C98B; --danger:#FF7D74; --danger-soft:#33191A; --ok:#8FCB9B;
   --hero-1:#2E1D11; --hero-2:#181513; --scrim:rgba(0,0,0,.62); --shadow:0 14px 36px rgba(0,0,0,.5);
   --font:"Geist",-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
-  --mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,monospace;
-  --r:18px; --r-sm:11px;
+  --r:18px; --tabbar:64px;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
 html,body{background:var(--bg)}
 body{color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.4;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));margin:0}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
 button,input,textarea{font:inherit;color:inherit}
-button{cursor:pointer;border:0;background:none;padding:0}
+button{cursor:pointer;border:0;background:none;padding:0;text-align:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .num{font-variant-numeric:tabular-nums}
-.app{max-width:600px;margin:0 auto;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
-.home{display:flex;flex-direction:column;min-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 20px)}
-.home .datacard{margin-top:auto}
-.home .plist,.home .empty{margin-bottom:40px}
+.app{max-width:600px;margin:0 auto;padding-bottom:calc(var(--tabbar) + 28px + env(safe-area-inset-bottom,0px))}
+.view{animation:in .2s ease-out}
+@keyframes in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
-/* Cabeçalho */
+/* Cabeçalho fixo */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;margin:0 calc(-1 * max(16px,env(safe-area-inset-left,0px)));
   padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));
-  background:color-mix(in srgb,var(--bg) 84%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);
+  background:color-mix(in srgb,var(--bg) 86%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);
   border-bottom:1px solid transparent;transition:border-color .2s}
 .top.scrolled{border-bottom-color:var(--line)}
 .top-row{max-width:600px;margin:0 auto;display:flex;align-items:center;gap:10px;min-height:40px}
 .brand{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:-.01em;font-size:16px}
-.mark{width:28px;height:28px;border-radius:9px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center}
+.mark{width:28px;height:28px;border-radius:9px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;flex:none}
 .mark svg{width:16px;height:16px}
 .spacer{flex:1}
-.icon-btn{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;color:var(--ink);background:var(--surface);border:1px solid var(--line)}
+.who{display:flex;align-items:center;gap:9px;padding:4px 10px 4px 4px;border-radius:999px;background:var(--surface);border:1px solid var(--line);max-width:70%}
+.who .av{width:30px;height:30px;font-size:12px;border-width:1px}
+.who b{font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who svg{width:14px;height:14px;color:var(--muted);flex:none}
+.icon-btn{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;color:var(--ink);background:var(--surface);border:1px solid var(--line);flex:none}
 .icon-btn svg{width:18px;height:18px}
 .icon-btn.accent{background:var(--accent);color:var(--accent-ink);border-color:transparent}
-.back{display:flex;align-items:center;gap:2px;color:var(--accent-2);font-weight:500;margin-left:-6px;padding:6px}
-.back svg{width:20px;height:20px}
 
-h1{font-size:34px;line-height:1.08;letter-spacing:-.035em;font-weight:650;margin:20px 0 4px;text-wrap:balance}
+/* Barra de abas */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:25;background:color-mix(in srgb,var(--bg) 90%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);
+  border-top:1px solid var(--line);padding:6px max(12px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));transition:transform .2s}
+.tabbar-in{max-width:600px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.tab{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0 4px;border-radius:12px;color:var(--muted);font-size:11px;font-weight:600;letter-spacing:.01em}
+.tab svg{width:23px;height:23px}
+.tab.on{color:var(--accent-2)}
+body.typing .tabbar{transform:translateY(110%)}
+
+h1{font-size:32px;line-height:1.08;letter-spacing:-.035em;font-weight:650;margin:16px 0 4px;text-wrap:balance}
+h2.sec{font-size:13px;font-weight:650;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:26px 2px 10px}
 .sub{color:var(--muted);font-size:14px}
-.eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.eyebrow{font-size:11px;font-weight:650;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.stack{display:flex;flex-direction:column;gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.card-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:12px}
+.card-t{font-weight:620;font-size:16.5px;letter-spacing:-.01em}
+.hero{background:linear-gradient(155deg,var(--hero-1),var(--hero-2) 72%);border:1px solid var(--accent-line)}
+.note{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.5}
+.warn{color:var(--accent-2)}
 
-/* Busca */
-.search{position:relative;margin:18px 0 12px}
-.search svg{position:absolute;left:14px;top:50%;width:17px;height:17px;transform:translateY(-50%);color:var(--muted);pointer-events:none}
-.search input{width:100%;height:48px;border-radius:14px;border:1px solid var(--line);background:var(--surface);padding:0 14px 0 42px;font-size:16px;outline:none}
-.search input::placeholder{color:var(--muted)}
-.search input:focus{border-color:var(--accent-line);box-shadow:0 0 0 4px var(--accent-soft)}
-
-/* Lista de pacientes */
-.plist{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
-.pitem{display:flex;align-items:center;gap:14px;padding:14px 16px;text-align:left;width:100%;border-top:1px solid var(--line)}
-.pitem:first-child{border-top:0}
-.pitem:active{background:var(--surface-2)}
-.avatar{width:44px;height:44px;border-radius:50%;background:var(--accent-soft);color:var(--accent-2);border:1px solid var(--accent-line);display:grid;place-items:center;font-weight:600;font-size:15px;flex:none;letter-spacing:-.01em}
-.pmain{flex:1;min-width:0}
-.pname{font-weight:560;font-size:16.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pname b{color:var(--accent-2);font-weight:inherit}
-.pmeta{color:var(--muted);font-size:13.5px;margin-top:1px}
-.pkcal{text-align:right;white-space:nowrap;font-size:12px;color:var(--muted)}
-.pkcal b{display:block;color:var(--ink);font-weight:600;font-size:15px;font-variant-numeric:tabular-nums}
-.chip{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;border-radius:6px;background:var(--surface-2);border:1px solid var(--line);color:var(--muted);vertical-align:2px;margin-left:8px}
-.empty{padding:36px 18px;text-align:center;color:var(--muted)}
-.foot-note{margin:16px 4px 0;color:var(--muted);font-size:12.5px;display:flex;gap:8px;align-items:flex-start}
-.foot-note svg{width:15px;height:15px;flex:none;margin-top:1px}
-.nudge{display:flex;align-items:center;gap:12px;margin-top:22px;padding:14px 16px;border-radius:var(--r);background:var(--surface);border:1px solid var(--accent-line)}
-.nudge div{flex:1;font-size:13.5px;color:var(--ink-2)}
-.nudge b{display:block;font-weight:600;color:var(--ink);font-size:14.5px}
-.nudge .btn{height:38px;padding:0 16px;font-size:14px}
-.bk-row{display:flex;flex-direction:column;gap:10px}
-.bk-meta{font-size:13px;color:var(--muted);margin:-6px 0 16px}
-
-/* Botões */
-.btn{height:48px;padding:0 18px;border-radius:14px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:8px;letter-spacing:-.01em}
+/* Botões e campos */
+.btn{height:48px;padding:0 18px;border-radius:14px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:8px;letter-spacing:-.01em;text-align:center}
+.btn svg{width:18px;height:18px}
 .btn.primary{background:var(--accent);color:var(--accent-ink)}
 .btn.ghost{background:var(--surface-2);border:1px solid var(--line-2)}
 .btn.danger{color:var(--danger);background:var(--danger-soft);border:1px solid transparent}
+.btn.plain{background:transparent;color:var(--muted)}
 .btn.block{width:100%}
-.btn.sm{height:34px;padding:0 12px;font-size:13px;border-radius:10px}
+.btn.sm{height:36px;padding:0 13px;font-size:13.5px;border-radius:11px}
 .btn:active{transform:scale(.985)}
 .btn[disabled]{opacity:.35;pointer-events:none}
+.field{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+.field label{font-size:12.5px;color:var(--muted);font-weight:500}
+.input{height:50px;border-radius:13px;border:1px solid var(--line);background:var(--surface-2);padding:0 14px;font-size:17px;outline:none;width:100%}
+.input::placeholder{color:var(--muted)}
+.input:focus{border-color:var(--accent-line);box-shadow:0 0 0 4px var(--accent-soft)}
+.err{color:var(--danger);font-size:13px;min-height:18px}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:4px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.seg button{height:40px;border-radius:10px;font-weight:550;font-size:14px;color:var(--muted);padding:0 4px;line-height:1.1;text-align:center;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.crit button{font-size:12.5px;letter-spacing:-.01em;padding:0 2px}
+.seg button.on{background:var(--accent);color:var(--accent-ink);font-weight:650}
+.seg.big button{height:46px;font-size:15px}
+.sheet .seg{background:var(--surface-2)}
+.seg4{grid-auto-flow:row;grid-template-columns:repeat(4,1fr)}
+.seg4 button{font-size:13px;height:44px}
+@media (max-width:370px){.seg4{grid-template-columns:repeat(2,1fr)}}
+.row-actions{display:flex;gap:10px;margin-top:8px}
+.row-actions .btn{flex:1}
+.confirm{display:flex;gap:8px;align-items:center;margin-top:14px;font-size:14px;color:var(--ink-2)}
+.ask{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--danger-soft);font-size:14px;color:var(--ink)}
+.ask span{flex:1 1 140px}
+.ask-b{display:flex;gap:8px;flex-wrap:wrap}
 
 /* Sheet */
 .scrim{position:fixed;inset:0;background:var(--scrim);z-index:50;opacity:0;transition:opacity .2s}
 .scrim.on{opacity:1}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:51;background:var(--surface);border:1px solid var(--line);border-bottom:0;border-radius:24px 24px 0 0;max-width:600px;margin:0 auto;
   padding:10px max(18px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px));
-  transform:translateY(100%);transition:transform .26s cubic-bezier(.2,.8,.2,1);box-shadow:var(--shadow);max-height:92%;overflow:auto}
+  transform:translateY(100%);transition:transform .26s cubic-bezier(.2,.8,.2,1);box-shadow:var(--shadow);max-height:92%;overflow:auto;overscroll-behavior:contain}
 .sheet.on{transform:none}
 .grab{width:38px;height:5px;border-radius:3px;background:var(--line-2);margin:0 auto 14px}
-.sheet h2{font-size:22px;letter-spacing:-.02em;margin:0 0 16px;font-weight:650}
-.field{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
-.field label{font-size:12.5px;color:var(--muted);font-weight:500;letter-spacing:.01em}
-.input{height:50px;border-radius:13px;border:1px solid var(--line);background:var(--surface-2);padding:0 14px;font-size:17px;outline:none;width:100%}
-.input::placeholder{color:var(--muted)}
-.input:focus{border-color:var(--accent-line);box-shadow:0 0 0 4px var(--accent-soft)}
-.err{color:var(--danger);font-size:13px;min-height:18px}
-.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
-.seg button{height:40px;border-radius:10px;font-weight:550;font-size:14px;color:var(--muted);padding:0 4px;line-height:1.1}
-.seg button.on{background:var(--accent);color:var(--accent-ink);font-weight:650;box-shadow:0 2px 10px rgba(224,140,78,.18)}
-.seg.big button{height:46px;font-size:15px}
-.sheet .seg{background:var(--surface-2)}
-.row-actions{display:flex;gap:10px;margin-top:8px}
-.row-actions .btn{flex:1}
-.confirm{display:flex;gap:8px;align-items:center;margin-top:14px;font-size:14px;color:var(--ink-2)}
+.sheet h2{font-size:22px;letter-spacing:-.02em;margin:0 0 4px;font-weight:650;text-wrap:balance}
+.sheet .sh-sub{font-size:13.5px;color:var(--muted);margin:0 0 16px}
+.bk-row{display:flex;flex-direction:column;gap:10px}
 
-/* Confirmação de exclusão em linha */
-.ask{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--danger-soft);font-size:14px;color:var(--ink)}
-.ask span{flex:1 1 140px}
-
-/* Paciente */
-.phead{margin:16px 0 14px}
-.phead h1{margin:0 0 4px;font-size:30px}
-.tabs{position:sticky;top:calc(env(safe-area-inset-top,0px) + 61px);z-index:15;padding:6px 0 12px;background:var(--bg)}
-.mini{transition:opacity .18s,transform .18s}
-.mini.off{opacity:0;transform:translateY(-6px);pointer-events:none}
-
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
-.stack{display:flex;flex-direction:column;gap:14px}
-.card-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:12px}
-.card-t{font-weight:620;font-size:16.5px;letter-spacing:-.01em}
-
-/* Energia */
-.hero{background:linear-gradient(155deg,var(--hero-1),var(--hero-2) 70%);border:1px solid var(--accent-line);padding:18px}
-.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
-.big{font-size:40px;font-weight:620;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
-.big small{font-size:14px;font-weight:500;letter-spacing:0;margin-left:4px;color:var(--muted)}
-.hero .lbl{font-size:13px;color:var(--muted);margin-bottom:6px}
-.hero-foot{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px;padding-top:12px;border-top:1px solid var(--line-2);font-size:12.5px;color:var(--ink-2);font-variant-numeric:tabular-nums}
-.hero .gold{color:var(--accent-2)}
-.measures{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.mfield{position:relative}
-.mfield input{height:62px;font-size:26px;font-weight:600;letter-spacing:-.02em;padding-right:44px}
-.mfield span{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none}
-.facts{display:flex;gap:6px 16px;flex-wrap:wrap;margin-top:12px;color:var(--muted);font-size:13px}
-.facts b{color:var(--ink);font-weight:550}
-.res{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
-.res > div{background:var(--surface-2);border-radius:12px;padding:10px 12px}
-.res .k{font-size:10.5px;color:var(--muted);font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase}
-.res .v{font-size:20px;font-weight:600;letter-spacing:-.02em;margin-top:3px;font-variant-numeric:tabular-nums}
-.res .v.acc{color:var(--accent-2)}
-.eq{margin-top:12px;font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.6}
-.seg4{grid-auto-flow:row;grid-template-columns:repeat(4,1fr)}
-.seg4 button{font-size:13px;height:44px}
-@media (max-width:370px){.seg4{grid-template-columns:repeat(2,1fr)}}
-.note{font-size:12.5px;color:var(--muted);margin-top:8px}
-.warn{color:var(--accent-2)}
-
-/* Plano */
-.plan-head{display:grid;grid-template-columns:1fr 124px;gap:10px}
+/* Autocompletar */
 .acw{position:relative}
 .ac{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:40;background:var(--surface-3);border:1px solid var(--line-2);border-radius:14px;box-shadow:var(--shadow);max-height:300px;overflow:auto;padding:4px;overscroll-behavior:contain}
 .ac-item{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer;min-height:44px}
@@ -171,15 +129,33 @@ h1{font-size:34px;line-height:1.08;letter-spacing:-.035em;font-weight:650;margin
 .ac-m{font-size:12px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
 .ac-x{min-width:28px;height:28px;border-radius:8px;color:var(--muted);display:grid;place-items:center;font-size:18px;line-height:1;padding:0 6px}
 .ac-item.pend .ac-x{color:var(--danger);font-size:13px;font-weight:600;background:var(--surface-2)}
-.ac-sec{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:8px 10px 4px}
+.ac-sec{font-size:10px;font-weight:650;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:8px 10px 4px}
 
-/* Totais (plano e refeição): nome do macro colorido, gramas e % na 1ª linha, g/kg na 2ª */
-.tot{padding:14px 16px 12px;background:linear-gradient(155deg,var(--hero-1),var(--hero-2) 72%);border-color:var(--accent-line)}
+/* Avatares e listas */
+.av{width:44px;height:44px;border-radius:50%;background:var(--accent-soft);color:var(--accent-2);border:1px solid var(--accent-line);display:grid;place-items:center;font-weight:600;font-size:15px;flex:none;letter-spacing:-.01em}
+.list{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.li{display:flex;align-items:center;gap:13px;padding:13px 16px;width:100%;border-top:1px solid var(--line);text-align:left;min-height:56px}
+.li:first-child{border-top:0}
+.li:active{background:var(--surface-2)}
+.li-m{flex:1;min-width:0}
+.li-t{font-weight:560;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li-t b{color:var(--accent-2);font-weight:inherit}
+.li-s{color:var(--muted);font-size:13px;margin-top:1px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li-r{text-align:right;white-space:nowrap;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.li-r b{display:block;color:var(--ink);font-weight:600;font-size:15px}
+.check{display:grid;width:22px;height:22px;color:var(--accent-2);flex:none}
+.check svg{width:22px;height:22px}
+.li > svg,.li-go svg{width:18px;height:18px;color:var(--muted);flex:none}
+.av svg{width:20px;height:20px}
+.chip{display:inline-block;font-size:9.5px;font-weight:650;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;border-radius:6px;background:var(--surface-2);border:1px solid var(--line);color:var(--muted);vertical-align:2px;margin-left:8px}
+.empty{padding:28px 18px;text-align:center;color:var(--muted)}
+.empty b{display:block;color:var(--ink);font-size:17px;margin-bottom:6px}
+
+/* Totais: nome do macro colorido, gramas e % na 1ª linha, g/kg na 2ª; fibras numa linha própria */
 .tot-top{display:flex;align-items:center;gap:10px}
 .tot-kcal{display:flex;align-items:baseline;gap:7px;flex:1;min-width:0}
 .tot-kcal b{font-size:34px;font-weight:640;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
 .tot-kcal span{color:var(--muted);font-size:13.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
-.tot .eyebrow{margin-bottom:6px}
 .pill{font-size:12px;font-weight:650;padding:4px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent-2);border:1px solid var(--accent-line);font-variant-numeric:tabular-nums;white-space:nowrap}
 .mwrap{margin-top:12px;padding-top:12px;border-top:1px solid var(--line-2)}
 .mgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
@@ -204,101 +180,183 @@ h1{font-size:34px;line-height:1.08;letter-spacing:-.035em;font-weight:650;margin
 .mwrap.sm .mgrid > div{border-left-color:var(--line)}
 @media (max-width:370px){.mgrid .v{font-size:18px}.mwrap.sm .v{font-size:15px}.mgrid .pc{margin-left:3px}}
 .t-c{color:var(--carb)} .t-p{color:var(--prot)} .t-g{color:var(--fat)} .t-f{color:var(--fib)}
+.miss{margin-top:10px;font-size:12px;color:var(--accent-2)}
 
-/* Faixa fina fixa com o total, abaixo das abas */
-.tabs .mini{position:absolute;left:0;right:0;top:calc(100% - 4px)}
-.mini{display:flex;align-items:center;gap:12px;padding:7px 12px;box-shadow:0 10px 24px rgba(0,0,0,.45);border-radius:12px;background:var(--surface);border:1px solid var(--line-2);font-size:12px;white-space:nowrap;overflow:hidden}
-.mini-k{font-variant-numeric:tabular-nums;color:var(--muted)}
-.mini-k b{color:var(--ink);font-size:15px;font-weight:650}
-.mini-k i{font-style:normal;margin-left:8px;font-size:11px;font-weight:600;color:var(--accent-2);padding:2px 7px;border-radius:999px;background:var(--accent-soft)}
-.mini-m{display:flex;gap:12px;margin-left:auto;color:var(--ink-2);font-variant-numeric:tabular-nums;font-size:13px}
-.mini-m b{font-weight:700}
+/* Resumo fixo do plano, dentro do cabeçalho */
+.sumbar{max-width:600px;margin:8px auto 0;display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:13px;background:var(--surface);border:1px solid var(--line-2);width:100%;font-size:12.5px;font-variant-numeric:tabular-nums}
+.sumbar .k{display:flex;align-items:baseline;gap:4px;white-space:nowrap;color:var(--muted)}
+.sumbar .k b{font-size:16px;color:var(--ink);font-weight:650;letter-spacing:-.02em}
+.sumbar .pc{font-size:11px;font-weight:650;color:var(--accent-2);padding:2px 7px;border-radius:999px;background:var(--accent-soft);margin-left:4px}
+.sumbar .m{display:flex;gap:10px;margin-left:auto;color:var(--ink-2);white-space:nowrap;overflow:hidden}
+.sumbar .m b{font-weight:700;margin-right:2px}
+.sumbar svg{width:14px;height:14px;color:var(--muted);flex:none}
+@media (max-width:370px){.sumbar .m{gap:7px}.sumbar .k span.u{display:none}}
 
-/* Refeição */
-.meals{display:flex;flex-direction:column;gap:22px}
-.meal{padding:0;overflow:visible;border-color:var(--line-2)}
-.meal-h{display:flex;align-items:center;gap:8px;padding:8px 6px 8px 16px;background:var(--surface-2);border-bottom:1px solid var(--line);border-radius:var(--r) var(--r) 0 0}
-.meal-h .acw{flex:0 1 auto;min-width:0}
-.tw{position:relative;flex:none;width:74px;height:32px}
-.tw span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:4px;border:1px dashed var(--line-2);border-radius:9px;font-size:12.5px;color:var(--muted);pointer-events:none}
-.tw span svg{width:13px;height:13px}
+/* Início */
+.hello{margin:18px 0 18px}
+.hello h1{margin:0 0 4px}
+.goal{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.goal span{font-size:12.5px;font-weight:600;padding:5px 11px;border-radius:999px;background:var(--surface);border:1px solid var(--line);color:var(--ink-2)}
+.dmeals .li-t{font-size:15.5px}
+.dmeals .tm{width:46px;font-size:13.5px;font-weight:600;color:var(--accent-2);font-variant-numeric:tabular-nums;flex:none}
+.cta{display:flex;align-items:center;gap:14px}
+.cta .ic{width:42px;height:42px;border-radius:12px;background:var(--accent-soft);color:var(--accent-2);display:grid;place-items:center;flex:none}
+.cta .ic svg{width:20px;height:20px}
+.cta div{flex:1;min-width:0;font-size:13.5px;color:var(--muted)}
+.cta b{display:block;color:var(--ink);font-size:15.5px;font-weight:600;margin-bottom:1px}
+.fam{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding:2px}
+.fam::-webkit-scrollbar{display:none}
+.fam button{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;color:var(--ink-2);width:64px;flex:none;text-align:center}
+.fam button.on .av{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+
+/* Plano */
+.plan-head{display:grid;grid-template-columns:1fr 112px;gap:10px;margin-top:14px}
+.meals{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+.meal{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:visible}
+.meal.open{border-color:var(--line-2)}
+.mh{display:flex;align-items:center;gap:10px;padding:13px 10px 13px 16px;min-height:64px;border-radius:var(--r);cursor:pointer}
+.meal.open .mh{border-radius:var(--r) var(--r) 0 0;background:var(--surface-2);border-bottom:1px solid var(--line);cursor:default}
+.mh-m{flex:1;min-width:0}
+.mh-n{font-size:17px;font-weight:650;letter-spacing:-.015em;color:var(--accent-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mh-n.unnamed{color:var(--muted);font-weight:500}
+.mh-s{font-size:13px;color:var(--muted);margin-top:2px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mh-k{font-size:16px;font-weight:650;white-space:nowrap;font-variant-numeric:tabular-nums}
+.mh-k small{font-size:12px;color:var(--muted);font-weight:500;margin-left:3px}
+.chev{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:var(--muted);flex:none;transition:transform .2s}
+.chev svg{width:18px;height:18px}
+.meal.open .chev{transform:rotate(180deg)}
+.meal-name{width:100%;border:0;background:transparent;font-size:17px;font-weight:650;letter-spacing:-.015em;outline:none;padding:4px 0;color:var(--accent-2);text-overflow:ellipsis}
+.meal-name::placeholder{color:var(--muted);font-weight:500}
+.mtools{display:flex;align-items:center;gap:8px;padding:10px 12px 4px 16px}
+.tw{position:relative;flex:none;width:96px;height:34px}
+.tw span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:5px;border:1px dashed var(--line-2);border-radius:10px;font-size:13px;color:var(--muted);pointer-events:none}
+.tw span svg{width:14px;height:14px}
 .tw.has span{display:none}
-.meal-time{position:absolute;inset:0;width:100%;height:100%;-webkit-appearance:none;appearance:none;border:1px solid var(--line-2);border-radius:9px;background:var(--surface);text-align:center;font-size:16px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink);outline:none;padding:0 4px;margin:0;min-width:0}
+.meal-time{position:absolute;inset:0;width:100%;height:100%;-webkit-appearance:none;appearance:none;border:1px solid var(--line-2);border-radius:10px;background:var(--surface-2);text-align:center;font-size:16px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink);outline:none;padding:0 6px;margin:0;min-width:0}
 .meal-time::-webkit-date-and-time-value{text-align:center}
 .meal-time::-webkit-calendar-picker-indicator{display:none}
 .tw:not(.has) .meal-time{opacity:0}
-.meal-time:focus{border-color:var(--accent-line)}
-.meal-name{width:100%;max-width:100%;border:0;background:transparent;font-size:17px;font-weight:650;letter-spacing:-.015em;outline:none;padding:6px 0;color:var(--accent-2);text-overflow:ellipsis}
-.meal-name::placeholder{color:var(--muted);font-weight:500}
-.meal-name.ruler{position:absolute;left:0;top:0;width:auto;max-width:none;visibility:hidden;white-space:pre;pointer-events:none}
-.meal-kcal{font-size:15px;font-weight:650;white-space:nowrap;font-variant-numeric:tabular-nums;padding-left:4px;margin-left:auto}
-.meal-kcal small{font-size:12px;color:var(--muted);font-weight:500;margin-left:3px}
-.x.more svg{width:18px;height:18px}
+.mtools .btn.sm{height:34px}
 .meal-ask{padding:0 12px}
 .meal-ask:empty{display:none}
-.ask-b{display:flex;gap:8px;flex-wrap:wrap}
-.rows{display:flex;flex-direction:column}
-.item{padding:11px 10px 11px 16px;border-top:1px solid var(--line);scroll-margin-top:140px}
-.item:first-child{border-top:0}
-.item-l1{display:flex;align-items:center;gap:6px}
-.item-l1 .acw{flex:1;min-width:0}
-.food{width:100%;border:0;background:transparent;font-size:16px;outline:none;padding:5px 0;font-weight:540;text-overflow:ellipsis}
-.food::placeholder{color:var(--muted);font-weight:400}
-.x{width:32px;height:32px;border-radius:9px;color:var(--muted);display:grid;place-items:center;flex:none}
-.x svg{width:14px;height:14px}
-.item-l2{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:8px;align-items:center;margin:6px 8px 0 0}
-.cell{height:40px;border-radius:11px;border:1px solid transparent;background:var(--surface-2);padding:0 11px;font-size:16px;outline:none;width:100%;min-width:0;text-overflow:ellipsis}
+
+/* Alimento dentro da refeição */
+.it{border-top:1px solid var(--line)}
+.mbody .it:first-child{border-top:0}
+.it-main{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;align-items:baseline;width:100%;padding:12px 16px;text-align:left}
+.it-name{font-size:15.5px;font-weight:560;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.it-name.gone{color:var(--muted);font-style:italic}
+.it-k{font-size:15px;font-weight:620;font-variant-numeric:tabular-nums;white-space:nowrap}
+.it-k small{font-size:11.5px;color:var(--muted);font-weight:500;margin-left:2px}
+.it-sub{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.it-sub b{color:var(--ink-2);font-weight:600}
+.it.edit{background:var(--bg)}
+.it.edit .it-main{padding-bottom:6px}
+.it-ed{padding:0 16px 14px}
+.ed-l{display:grid;grid-template-columns:62px minmax(0,1fr) auto;gap:8px;align-items:center}
+.cell{height:44px;border-radius:12px;border:1px solid var(--line-2);background:var(--surface-2);padding:0 12px;font-size:16px;outline:none;width:100%;min-width:0;text-overflow:ellipsis}
 .cell:focus{border-color:var(--accent-line);box-shadow:0 0 0 3px var(--accent-soft)}
-.qty{text-align:center;font-weight:650;font-variant-numeric:tabular-nums;padding:0 4px}
-.grams{text-align:right;font-weight:620;font-variant-numeric:tabular-nums;font-size:15px;white-space:nowrap}
-.item-l3{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin:9px 8px 0 0;font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums;align-items:baseline}
-.item-l3 span:not(:first-child){text-align:right}
-.item-l3 span{white-space:nowrap}
-.item-l3 .kc{color:var(--ink);font-weight:620}
-.item-l3 .kc small{color:var(--muted);font-weight:500}
-.item-l3 b{font-weight:700;margin-right:3px}
-.item.blank .item-l2,.item.blank .item-l3,.item.blank .x{display:none}
-.quick{display:none;gap:6px;margin-top:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.qty{text-align:center;font-weight:650;font-variant-numeric:tabular-nums;padding:0 4px;font-size:17px}
+.grams{text-align:right;font-weight:620;font-variant-numeric:tabular-nums;font-size:15px;white-space:nowrap;min-width:44px}
+.ed-m{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin-top:10px;font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.ed-m span{white-space:nowrap}
+.ed-m b{font-weight:700;margin-right:3px}
+.quick{display:flex;gap:6px;margin-top:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
 .quick::-webkit-scrollbar{display:none}
-.item.qfocus .quick{display:flex}
-.quick button{flex:none;height:36px;min-width:44px;padding:0 10px;border-radius:10px;background:var(--surface-3);font-weight:620;font-variant-numeric:tabular-nums}
+.quick button{flex:none;height:36px;min-width:44px;padding:0 10px;border-radius:10px;background:var(--surface-3);font-weight:620;font-variant-numeric:tabular-nums;text-align:center}
 .quick button.next{background:var(--accent);color:var(--accent-ink);margin-left:auto;padding:0 14px}
-.meal-foot{padding:10px 12px 11px;border-top:1px solid var(--line);background:var(--surface-2);border-radius:0 0 var(--r) var(--r)}
-.meal-foot .eyebrow{margin:0 0 8px 4px}
-.add-row{display:flex;flex-direction:column;gap:10px}
+.ed-a{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.ed-a .btn{flex:1 1 auto}
+.add{padding:8px 12px 10px 16px;border-top:1px solid var(--line)}
+.add-in{width:100%;height:44px;border:0;background:transparent;font-size:16px;outline:none;padding:0}
+.add-in::placeholder{color:var(--muted)}
+.add-l{display:flex;align-items:center;gap:8px;color:var(--muted)}
+.add-l svg{width:18px;height:18px;flex:none;color:var(--accent-2)}
+.mfoot{padding:11px 12px 12px;border-top:1px solid var(--line);background:var(--surface-2);border-radius:0 0 var(--r) var(--r)}
+.mfoot .eyebrow{margin:0 0 8px 4px}
+.add-row{display:flex;flex-direction:column;gap:10px;margin-top:14px}
 .add-meal{width:100%;height:54px;border-radius:var(--r);border:1.5px dashed var(--line-2);color:var(--ink-2);font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px}
 .add-meal svg,.paste-new svg{width:18px;height:18px;flex:none}
-.add-meal:hover{border-color:var(--accent-line);color:var(--accent-2)}
 .paste-new{width:100%;min-height:54px;border-radius:var(--r);border:1px solid var(--accent-line);background:var(--accent-soft);color:var(--accent-2);font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;padding:8px 14px;text-align:left}
 .paste-new small{display:block;font-weight:500;font-size:12px;color:var(--ink-2)}
-.plan-tools{display:flex;gap:10px}
-.plan-tools .btn{flex:1;height:44px;font-size:14px}
-.btn.plain{background:transparent;color:var(--muted)}
 
-/* Home: cartão único de dados e backup */
-.datacard{display:flex;align-items:center;gap:12px;margin-top:40px;padding:14px 14px 14px 16px;border-radius:var(--r);background:var(--surface);border:1px solid var(--line)}
+/* Alimentos */
+.search{position:relative;margin:14px 0 12px}
+.search svg{position:absolute;left:14px;top:50%;width:17px;height:17px;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.search input{width:100%;height:50px;border-radius:14px;border:1px solid var(--line);background:var(--surface);padding:0 14px 0 42px;font-size:16px;outline:none}
+.search input::placeholder{color:var(--muted)}
+.search input:focus{border-color:var(--accent-line);box-shadow:0 0 0 4px var(--accent-soft)}
+.star{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:var(--muted);flex:none}
+.star svg{width:19px;height:19px}
+.star.on{color:var(--accent-2)}
+.nut{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;text-align:center;margin-top:12px}
+.nut div{background:var(--surface-2);border-radius:12px;padding:9px 2px}
+.nut .k{font-size:11px;font-weight:650}
+.nut .v{font-size:16px;font-weight:650;margin-top:2px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.nut .v small{font-size:11px;color:var(--muted);font-weight:500;margin-left:1px}
+.mchips{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.mchips button{height:34px;padding:0 12px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line-2);font-size:13.5px;color:var(--ink-2)}
+.mchips button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:650}
+
+/* Substituição */
+.crit{margin:4px 0 12px}
+.subs{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.so{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;padding:11px 12px;border-radius:13px;background:var(--surface-2);border:1px solid transparent;text-align:left;width:100%}
+.so.on{border-color:var(--accent);background:var(--accent-soft)}
+.so-n{font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.so-k{font-weight:620;font-variant-numeric:tabular-nums;white-space:nowrap}
+.so-q{font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.so-d{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
+.up{color:var(--accent-2)} .down{color:var(--prot)}
+.confirmbar{position:sticky;bottom:calc(-18px - env(safe-area-inset-bottom,0px));margin:12px -18px calc(-18px - env(safe-area-inset-bottom,0px));padding:12px 18px calc(14px + env(safe-area-inset-bottom,0px));background:var(--surface);border-top:1px solid var(--line-2)}
+.confirmbar p{margin:0 0 10px;font-size:13.5px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+
+/* Perfil e energia */
+.prof{display:flex;align-items:center;gap:14px}
+.prof .av{width:56px;height:56px;font-size:19px}
+.prof b{display:block;font-size:20px;font-weight:650;letter-spacing:-.02em}
+.measures{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mfield{position:relative}
+.mfield input{height:58px;font-size:24px;font-weight:600;letter-spacing:-.02em;padding-right:44px}
+.mfield span{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.big{font-size:38px;font-weight:620;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+.big small{font-size:14px;font-weight:500;letter-spacing:0;margin-left:4px;color:var(--muted)}
+.lbl{font-size:13px;color:var(--muted);margin-bottom:6px}
+.gold{color:var(--accent-2)}
+.hero-foot{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px;padding-top:12px;border-top:1px solid var(--line-2);font-size:12.5px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.res{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.res > div{background:var(--surface-2);border-radius:12px;padding:10px 12px}
+.res .k{font-size:10.5px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-weight:650}
+.res .v{font-size:20px;font-weight:600;letter-spacing:-.02em;margin-top:3px;font-variant-numeric:tabular-nums}
+.res .v.acc{color:var(--accent-2)}
+.eq{margin-top:12px;font-size:11.5px;color:var(--muted);line-height:1.6;font-variant-numeric:tabular-nums}
+.datacard{display:flex;align-items:center;gap:12px}
 .datacard.due{border-color:var(--accent-line)}
 .dc-ic svg{width:18px;height:18px;color:var(--muted);display:block}
 .dc-t{flex:1;min-width:0;font-size:12.5px;color:var(--muted)}
 .dc-t b{display:block;color:var(--ink);font-size:14px;font-weight:600}
+.prose{font-size:14px;color:var(--ink-2);line-height:1.6}
+.prose h3{font-size:15px;color:var(--ink);margin:18px 0 4px}
+.prose p{margin:0 0 8px}
 
-.toast{position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom,0px));transform:translate(-50%,10px);background:var(--surface-3);border:1px solid var(--line-2);color:var(--ink);padding:10px 16px;border-radius:12px;font-size:14px;font-weight:500;opacity:0;transition:.2s;z-index:60;pointer-events:none;box-shadow:var(--shadow)}
+.toast{position:fixed;left:50%;bottom:calc(var(--tabbar) + 22px + env(safe-area-inset-bottom,0px));transform:translate(-50%,10px);background:var(--surface-3);border:1px solid var(--line-2);color:var(--ink);padding:10px 16px;border-radius:12px;font-size:14px;font-weight:500;opacity:0;transition:.2s;z-index:60;pointer-events:none;box-shadow:var(--shadow);white-space:nowrap}
 .toast.on{opacity:1;transform:translate(-50%,0)}
-.view{animation:in .22s ease-out}
-@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 .src{margin:22px 4px 0;font-size:11.5px;color:var(--muted);line-height:1.55}
 </style>
 
 <div class="app" id="app"></div>
-<div class="toast" id="toast"></div>
+<nav class="tabbar" id="tabbar" aria-label="Navegação principal"></nav>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script type="application/json" id="food-data">__FOODS__</script>
+<script>__CORE__</script>
 <script>
 (function(){
 "use strict";
+const C = window.NutriCore;
 
-/* ---------- utilidades ---------- */
+/* ---------- utilidades de tela ---------- */
 const $ = (s, el = document) => el.querySelector(s);
 function h(tag, attrs, ...kids){
   const el = document.createElement(tag);
@@ -311,52 +369,36 @@ function h(tag, attrs, ...kids){
     else if (k === "value") el.value = v;
     else el.setAttribute(k, v === true ? "" : v);
   }
-  for (const c of kids.flat()) if (c != null && c !== false) el.append(c.nodeType ? c : document.createTextNode(c));
+  for (const c of kids.flat(Infinity)) if (c != null && c !== false) el.append(c.nodeType ? c : document.createTextNode(c));
   return el;
 }
+const put = (el, ...kids) => el.replaceChildren(...kids.flat(Infinity).filter(x => x != null && x !== false));
 const ICON = {
   plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
   search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
-  back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></svg>',
   edit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4Z"/><path d="m13.5 6.5 4 4"/></svg>',
   x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
   lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
-  backup:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>',
   clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>',
   more:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="19" cy="12" r="1.9"/></svg>',
   copy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>',
-  mark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 5-14 14-14 0 9-6 14-14 14Z"/><path d="M5 19 13 11"/></svg>'
+  chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>',
+  right:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
+  star:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m12 3.5 2.6 5.4 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z"/></svg>',
+  starOn:'<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m12 3.5 2.6 5.4 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z"/></svg>',
+  swap:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h12l-3-3M17 17H5l3 3"/></svg>',
+  mark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 5-14 14-14 0 9-6 14-14 14Z"/><path d="M5 19 13 11"/></svg>',
+  home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5h-5v5H5a1 1 0 0 1-1-1z"/></svg>',
+  plan:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="4" width="15" height="16.5" rx="2.5"/><path d="M8.5 9h7M8.5 12.5h7M8.5 16h4.5"/></svg>',
+  food:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 5-14 14-14 0 9-6 14-14 14Z"/><path d="M5 19 13 11"/></svg>',
+  user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1.2-3.6 4-5.5 7.5-5.5s6.3 1.9 7.5 5.5"/></svg>',
+  bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3 5 13.5h6L10 21l8-10.5h-6z"/></svg>'
 };
-const put = (el, ...kids) => el.replaceChildren(...kids.flat(Infinity).filter(x => x != null && x !== false));
-/* Confirmação de exclusão dentro da própria tela */
-function ask(slot, text, actions){
-  const close = () => slot.replaceChildren();
-  slot.replaceChildren(h("div", {class: "ask", role: "alertdialog"}, h("span", null, text),
-    h("div", {class: "ask-b"},
-      h("button", {class: "btn ghost sm", type: "button", onclick: close}, "Cancelar"),
-      actions.map(a => h("button", {class: "btn sm " + (a.cls || "danger"), type: "button", onclick: () => { close(); a.fn(); }}, a.label)))));
-  slot.scrollIntoView({block: "nearest", behavior: "smooth"});
-}
-/* Menu de ações que sobe da parte de baixo da tela */
-function actionSheet(title, sub, actions){
-  const scrim = h("div", {class: "scrim"});
-  const sh = h("div", {class: "sheet", role: "dialog", "aria-modal": "true", "aria-label": title},
-    h("div", {class: "grab"}), h("h2", {style: sub ? "margin-bottom:4px" : null}, title), sub ? h("div", {class: "bk-meta", style: "margin:0 0 16px"}, sub) : null,
-    h("div", {class: "bk-row"},
-      actions.filter(Boolean).map(a => h("button", {class: "btn block " + (a.cls || "ghost"), type: "button", onclick: () => { close(); a.fn(); }}, a.label)),
-      h("button", {class: "btn block plain", type: "button", onclick: close}, "Fechar")));
-  function close(){ sh.classList.remove("on"); scrim.classList.remove("on"); setTimeout(() => { sh.remove(); scrim.remove(); }, 260); }
-  scrim.addEventListener("click", close);
-  document.body.append(scrim, sh);
-  requestAnimationFrame(() => { scrim.classList.add("on"); sh.classList.add("on"); });
-}
-const svg = k => h("span", {html: ICON[k], style:"display:contents"});
-
-function normCh(ch){ return ch.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
-function norm(s){ let o = ""; for (const ch of s) o += normCh(ch); return o; }
-const words = s => norm(s).split(/[^a-z0-9]+/).filter(Boolean);
-const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const ic = k => h("span", {html: ICON[k], style: "display:contents"});
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const uid = () => Math.random().toString(36).slice(2, 10);
+const {norm, normCh, words} = C;
 
 const nf0 = new Intl.NumberFormat("pt-BR", {maximumFractionDigits: 0});
 const nf1 = new Intl.NumberFormat("pt-BR", {minimumFractionDigits: 1, maximumFractionDigits: 1});
@@ -364,8 +406,10 @@ const nf2 = new Intl.NumberFormat("pt-BR", {minimumFractionDigits: 2, maximumFra
 const fq = new Intl.NumberFormat("pt-BR", {maximumFractionDigits: 2});
 const k0 = v => nf0.format(Math.round(v));
 const g1 = v => nf1.format(v);
+const fmtG = v => v < 10 ? g1(v) : k0(v);       // uma casa decimal abaixo de 10 g
+const fmtQty = q => q == null ? "" : fq.format(q);
+const signed = (v, f) => (v > 0.05 ? "+" : v < -0.05 ? "−" : "") + f(Math.abs(v));
 
-/* Destaca os prefixos digitados no início das palavras */
 function highlight(text, q){
   const qt = words(q);
   if (!qt.length) return esc(text);
@@ -388,7 +432,6 @@ function highlight(text, q){
   });
   return out + (on ? "</b>" : "");
 }
-
 function parseQty(s){
   if (s == null) return null;
   s = String(s).trim().replace(/½/g, " 1/2").replace(/¼/g, " 1/4").replace(/¾/g, " 3/4").replace(/,/g, ".");
@@ -403,190 +446,114 @@ function parseQty(s){
   }
   return total > 0 ? total : null;
 }
-const fmtQty = q => q == null ? "" : fq.format(q);
+function toast(msg){
+  const t = $("#toast"); t.textContent = msg; t.classList.add("on");
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("on"), 1700);
+}
+/* Confirmação dentro da própria tela */
+function ask(slot, text, actions){
+  const close = () => slot.replaceChildren();
+  slot.replaceChildren(h("div", {class: "ask", role: "alertdialog"}, h("span", null, text),
+    h("div", {class: "ask-b"},
+      h("button", {class: "btn ghost sm", type: "button", onclick: close}, "Cancelar"),
+      actions.map(a => h("button", {class: "btn sm " + (a.cls || "danger"), type: "button", onclick: () => { close(); a.fn(); }}, a.label)))));
+  slot.scrollIntoView({block: "nearest", behavior: "smooth"});
+}
+/* Folha que sobe da parte de baixo da tela */
+function sheet(label, build){
+  const scrim = h("div", {class: "scrim"});
+  const el = h("div", {class: "sheet", role: "dialog", "aria-modal": "true", "aria-label": label}, h("div", {class: "grab"}));
+  function close(){ el.classList.remove("on"); scrim.classList.remove("on"); setTimeout(() => { el.remove(); scrim.remove(); }, 260); }
+  scrim.addEventListener("click", close);
+  build(el, close);
+  document.body.append(scrim, el);
+  requestAnimationFrame(() => { scrim.classList.add("on"); el.classList.add("on"); });
+  return {el, close};
+}
+function actionSheet(title, sub, actions){
+  sheet(title, (el, close) => el.append(h("h2", null, title), sub ? h("p", {class: "sh-sub"}, sub) : h("div", {style: "height:12px"}),
+    h("div", {class: "bk-row"},
+      actions.filter(Boolean).map(a => h("button", {class: "btn block " + (a.cls || "ghost"), type: "button", onclick: () => { close(); a.fn(); }}, a.label)),
+      h("button", {class: "btn block plain", type: "button", onclick: close}, "Fechar"))));
+}
 
-/* ---------- base de alimentos (TACO + medidas IBGE/POF) ---------- */
+/* ---------- base de alimentos ---------- */
 const DATA = JSON.parse($("#food-data").textContent);
-const FOODS = new Map(), FOOD_LIST = [];
-const NO_DATA = new Set([450, 457, 458, 591]);   // valores "em reanálise" (*) na própria TACO
-const COMMON = new Set([3, 1, 561, 567, 488, 490, 53, 52, 410, 408, 182, 179, 226, 225, 222, 7, 448, 449, 461, 463, 467, 468,
-  260, 471, 494, 91, 88, 129, 78, 157, 110, 109, 100, 377, 346, 326, 317, 277, 551, 533, 589, 594, 214, 231, 235, 256, 236, 237, 261, 507, 577]);
-/* Nomes do dia a dia para os nomes técnicos da TACO (a busca encontra pelos dois) */
-const NAME_FIX = {
-  1: "Arroz integral cozido", 2: "Arroz integral cru", 3: "Arroz branco cozido", 4: "Arroz branco cru", 5: "Arroz branco tipo 2 cozido",
-  6: "Arroz branco tipo 2 cru", 7: "Aveia em flocos", 40: "Macarrão de trigo cru", 41: "Macarrão com ovos cru", 48: "Pão de forma de aveia",
-  50: "Pão de forma de glúten", 51: "Pão de forma de milho", 52: "Pão de forma integral", 53: "Pão francês", 54: "Pão sovado",
-  63: "Torrada de pão francês", 452: "Iogurte sabor pêssego", 453: "Leite condensado", 454: "Leite de cabra", 455: "Leite achocolatado",
-  456: "Leite em pó desnatado", 459: "Leite em pó integral", 461: "Queijo minas frescal", 462: "Queijo minas meia cura",
-  468: "Requeijão cremoso", 471: "Café coado (infusão 10%)", 485: "Ovo de codorna cru", 486: "Clara de ovo cozida",
-  487: "Gema de ovo cozida", 488: "Ovo cozido", 489: "Ovo cru", 490: "Ovo frito", 511: "Café em pó torrado", 384: "Carne seca cozida",
-  385: "Carne seca crua", 338: "Charque cozido", 339: "Charque cru", 21: "Flocos de milho com sal", 22: "Flocos de milho sem sal"
-};
-const BEEF_SUFFIX = {"fígado": "bovino", "língua": "bovina", "bucho": "bovino", "almôndegas": "bovinas", "costela": "bovina", "peito": "bovino"};
-const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
-function friendly(id, name, cat){
-  if (NAME_FIX[id]) return NAME_FIX[id];
-  let [base, ...rest] = name.split(/,\s*/).map(x => x.trim().replace(/\/10minutos$/, "")).filter(Boolean);
-  if (base === "Carne" && rest[0] === "bovina" && rest.length > 1){
-    rest.shift(); const cut = rest.shift();
-    base = cap(cut) + (BEEF_SUFFIX[cut] ? " " + BEEF_SUFFIX[cut] : "");
-  } else if (base === "Frango" && ["peito", "coxa", "sobrecoxa", "asa", "coração", "fígado", "filé"].includes(rest[0])){
-    base = cap(rest.shift()) + " de frango";
-  } else if (base === "Porco" && rest.length){
-    base = cap(rest.shift()) + " de porco";
-  } else if (cat === "Pescados e frutos do mar" && rest[0] === "filé"){
-    rest.shift(); base = "Filé de " + base.charAt(0).toLowerCase() + base.slice(1);
-  }
-  if (cat === "Frutas e derivados") rest = rest.filter(r => !/^crua?s?$/.test(r));
-  return [base, ...rest].join(" ");
-}
-function addFood(raw){
-  const [id, name, kcal, c, p, fat, fib, cat, ms] = raw;
-  const measures = ms.map(([l, g]) => ({l, g}));
-  if (!measures.some(m => m.l === "Grama")) measures.push({l: "Grama", g: 1});
-  const catName = typeof cat === "number" ? DATA.cats[cat] : cat;
-  const dn = id < 0 ? name : friendly(id, name, catName);
-  const f = {id, name, dn, kcal, c, p, fat, fib, cat: catName, measures, w: [...new Set(words(dn).concat(words(name)))],
-    ibge: ms.length > 0, common: COMMON.has(id), own: id < 0};
-  if (FOODS.has(id)) FOOD_LIST.splice(FOOD_LIST.indexOf(FOODS.get(id)), 1);
-  FOODS.set(id, f); FOOD_LIST.push(f);
-  return f;
-}
-for (const raw of DATA.foods) if (!NO_DATA.has(raw[0])) addFood(raw);
+const db = C.createFoodDB(DATA);
+const calcItem = it => C.calcItem(db, it);
+const mealTotal = m => C.mealTotal(db, m);
+const planTotal = pl => C.planTotal(db, pl);
 
-/* ---------- estado e armazenamento ---------- */
-const KEY = "nutripratico.v1";
-const DEFAULT_OBJ = ["Emagrecimento", "Hipertrofia muscular", "Manutenção do peso", "Ganho de peso", "Recomposição corporal",
-  "Performance esportiva", "Controle glicêmico", "Saúde intestinal", "Reeducação alimentar", "Gestação", "Lactação"];
+/* ---------- dados salvos neste aparelho ---------- */
+// Formato preservado da versão anterior (chave "nutripratico.v1"; perfis continuam em "patients").
+// Antes de migrar, guarda uma cópia exata do que estava salvo em KEY + ".antes-da-v2".
+const KEY = "nutripratico.v1", SNAP = KEY + ".antes-da-v2", VERSION = 2;
+const DEFAULT_OBJ = ["Alimentação equilibrada", "Manutenção do peso", "Emagrecimento", "Hipertrofia muscular", "Performance esportiva",
+  "Ganho de peso", "Recomposição corporal", "Controle glicêmico", "Saúde intestinal", "Reeducação alimentar", "Gestação", "Lactação"];
 const DEFAULT_MEALS = ["Café da manhã", "Colação", "Almoço", "Lanche da tarde 1", "Lanche da tarde 2", "Pré-treino", "Pós-treino", "Jantar", "Ceia"];
 let S;
-function blankState(){ return {patients: [], foods: [], prefs: {objectives: DEFAULT_OBJ.slice(), meals: DEFAULT_MEALS.slice(), use: {}, last: {}}}; }
+function blankState(){ return {version: VERSION, patients: [], foods: [], activeId: null, prefs: {objectives: DEFAULT_OBJ.slice(), meals: DEFAULT_MEALS.slice(), use: {}, last: {}, fav: [], recent: []}}; }
 function load(){
-  try { const raw = localStorage.getItem(KEY); if (raw) S = JSON.parse(raw); } catch (e) {}
-  if (!S) { S = blankState(); seed(); }
-  S.foods = S.foods || [];
-  for (const raw of S.foods) addFood(raw);
+  let raw = null;
+  try { raw = localStorage.getItem(KEY); } catch (e) {}
+  if (raw) { try { S = JSON.parse(raw); } catch (e) { S = null; } }
+  if (!S) { S = blankState(); return; }
+  if ((S.version || 1) < VERSION){
+    try { if (!localStorage.getItem(SNAP)) localStorage.setItem(SNAP, raw); } catch (e) {}
+    S.version = VERSION;
+  }
+  S.patients = S.patients || []; S.foods = S.foods || [];
+  S.prefs = Object.assign({objectives: DEFAULT_OBJ.slice(), meals: DEFAULT_MEALS.slice(), use: {}, last: {}}, S.prefs || {});
+  S.prefs.fav = S.prefs.fav || []; S.prefs.recent = S.prefs.recent || [];
+  for (const p of S.patients){
+    p.energy = p.energy || {weight: null, height: null, fao: 1, dri: 1};
+    p.plan = p.plan || {objective: "", target: null, meals: []};
+    for (const m of p.plan.meals){ m.time = m.time || ""; m.items = m.items || []; }
+  }
+  if (!S.patients.some(p => p.id === S.activeId)) S.activeId = (S.patients.find(p => !p.example) || S.patients[0] || {}).id || null;
+  for (const raw2 of S.foods) db.add(raw2);
+  saveNow();
 }
 let saveT;
-function save(){
-  clearTimeout(saveT);
-  saveT = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }, 250);
-}
-function touch(p){ p.updated = Date.now(); save(); }
+function saveNow(){ clearTimeout(saveT); try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+function save(){ clearTimeout(saveT); saveT = setTimeout(saveNow, 250); }
+window.addEventListener("pagehide", saveNow);
+document.addEventListener("visibilitychange", () => { if (document.hidden) saveNow(); });
+function touch(p){ if (p) p.updated = Date.now(); save(); }
+const active = () => S.patients.find(p => p.id === S.activeId) || null;
 
-function seed(){
-  const it = (foodId, measure, qty) => ({id: uid(), foodId, measure, qty});
-  S.patients.push({
-    id: uid(), name: "Ana Exemplo", birth: "1992-03-14", sex: "F", example: true, updated: Date.now(),
-    energy: {weight: 62, height: 165, fao: 1, dri: 1},
-    plan: {objective: "Emagrecimento", target: null, meals: [
-      {id: uid(), name: "Café da manhã", items: [it(53, "Unidade", 1), it(488, "Unidade", 2), it(226, "Fatia", 1), it(471, "Xícara de café", 1)]},
-      {id: uid(), name: "Almoço", items: [it(3, "Colher de arroz/servir", 3), it(561, "Concha", 1), it(410, "Filé", 1), it(78, "Folha", 4), it(260, "Colher de chá", 1)]}
-    ]}
-  });
+function noteUse(foodId){
+  S.prefs.use[foodId] = (S.prefs.use[foodId] || 0) + 1;
+  S.prefs.recent = [foodId, ...S.prefs.recent.filter(x => x !== foodId)].slice(0, 24);
 }
+const isFav = id => S.prefs.fav.includes(id);
+function toggleFav(id){ S.prefs.fav = isFav(id) ? S.prefs.fav.filter(x => x !== id) : [id, ...S.prefs.fav]; save(); return isFav(id); }
+const search = (q, limit) => C.searchFoods(db, q, {use: S.prefs.use, fav: S.prefs.fav, limit});
+const lastMeasure = f => S.prefs.last[f.id] && f.measures.some(x => x.l === S.prefs.last[f.id]) ? S.prefs.last[f.id] : f.measures[0].l;
 
-/* ---------- cálculos de necessidade energética ---------- */
-function ageOf(birth){
-  if (!birth) return null;
-  const b = new Date(birth + "T12:00:00"), n = new Date();
-  let a = n.getFullYear() - b.getFullYear();
-  if (n.getMonth() < b.getMonth() || (n.getMonth() === b.getMonth() && n.getDate() < b.getDate())) a--;
-  return a;
-}
-const FAO_LV = ["Muito leve", "Leve", "Moderado", "Intenso"];
-const FAO_FA = {M: [1.30, 1.55, 1.78, 2.10], F: [1.30, 1.56, 1.64, 1.82]};
-function faoTMB(sex, age, W){
-  const T = sex === "M"
-    ? [[3, 60.9, -54], [10, 22.7, 495], [18, 17.5, 651], [30, 15.3, 679], [60, 11.6, 879], [999, 13.5, 487]]
-    : [[3, 61.0, -51], [10, 22.5, 499], [18, 12.2, 746], [30, 14.7, 496], [60, 8.7, 829], [999, 10.5, 596]];
-  const r = T.find(r => age < r[0]);
-  const range = age < 3 ? "0–3" : age < 10 ? "3–10" : age < 18 ? "10–18" : age < 30 ? "18–30" : age < 60 ? "30–60" : "> 60";
-  return {v: r[1] * W + r[2], eq: `${nf1.format(r[1])} × P ${r[2] < 0 ? "−" : "+"} ${Math.abs(r[2])}  (${range} anos)`};
-}
-const DRI_LV = ["Sedentário", "Pouco ativo", "Ativo", "Muito ativo"];
-function driCalc(sex, age, W, Hcm, lv){
-  const H = Hcm / 100;
-  if (age >= 19){
-    const PA = sex === "M" ? [1.00, 1.11, 1.25, 1.48][lv] : [1.00, 1.12, 1.27, 1.45][lv];
-    const get = sex === "M" ? 662 - 9.53 * age + PA * (15.91 * W + 539.6 * H) : 354 - 6.91 * age + PA * (9.36 * W + 726 * H);
-    const tmb = sex === "M" ? 293 - 3.8 * age + 456.4 * H + 10.12 * W : 247 - 2.67 * age + 401.5 * H + 8.60 * W;
-    const eq = sex === "M" ? "662 − 9,53·I + AF·(15,91·P + 539,6·A)" : "354 − 6,91·I + AF·(9,36·P + 726·A)";
-    return {get, tmb, PA, eq};
-  }
-  if (age >= 3){
-    const PA = sex === "M" ? [1.00, 1.13, 1.26, 1.42][lv] : [1.00, 1.16, 1.31, 1.56][lv];
-    const dep = age <= 8 ? 20 : 25;
-    const get = sex === "M" ? 88.5 - 61.9 * age + PA * (26.7 * W + 903 * H) + dep : 135.3 - 30.8 * age + PA * (10.0 * W + 934 * H) + dep;
-    const tmb = sex === "M" ? 68 - 43.3 * age + 712 * H + 19.2 * W : 189 - 17.6 * age + 625 * H + 7.9 * W;
-    const eq = (sex === "M" ? "88,5 − 61,9·I + AF·(26,7·P + 903·A)" : "135,3 − 30,8·I + AF·(10·P + 934·A)") + ` + ${dep}`;
-    return {get, tmb, PA, eq};
-  }
-  return null;
-}
-function energyOf(p){
-  const e = p.energy || {}, age = ageOf(p.birth), W = e.weight, Hc = e.height;
-  if (!(W > 1 && W < 400 && Hc > 40 && Hc < 260) || age == null) return {ok: false, age};
-  const f = faoTMB(p.sex, age, W);
-  const fa = FAO_FA[p.sex][e.fao ?? 1];
-  const fao = {tmb: f.v, fa, get: f.v * fa, eq: f.eq};
-  const dri = driCalc(p.sex, age, W, Hc, e.dri ?? 1);
-  const tmb = dri ? (fao.tmb + dri.tmb) / 2 : fao.tmb;
-  const get = dri ? (fao.get + dri.get) / 2 : fao.get;
-  return {ok: true, age, fao, dri, tmb, get, imc: W / Math.pow(Hc / 100, 2)};
-}
-
-/* ---------- cálculos do plano ---------- */
-function measureOf(f, label){ return f.measures.find(m => m.l === label) || f.measures[0]; }
-function calcItem(it){
-  const f = FOODS.get(it.foodId);
-  if (!f || !it.qty) return null;
-  const m = measureOf(f, it.measure), g = m.g * it.qty, k = g / 100;
-  return {g, kcal: f.kcal * k, c: f.c * k, p: f.p * k, l: f.fat * k, f: (f.fib || 0) * k};
-}
-function sum(list){
-  const t = {g: 0, kcal: 0, c: 0, p: 0, l: 0, f: 0};
-  for (const r of list) if (r) for (const k in t) t[k] += r[k];
-  return t;
-}
-const mealTotal = m => sum(m.items.map(calcItem));
-const planTotal = pl => sum(pl.meals.map(mealTotal));
-
-/* ---------- busca de alimentos ---------- */
-function searchFoods(q){
-  const qt = words(q), use = S.prefs.use;
-  if (!qt.length){
-    return Object.entries(use).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([id]) => FOODS.get(+id)).filter(Boolean);
-  }
-  const res = [];
-  for (const f of FOOD_LIST){
-    let score = 0, ok = true;
-    for (let i = 0; i < qt.length; i++){
-      const t = qt[i];
-      const wi = f.w.findIndex(w => w.startsWith(t) || (t.length > 3 && w.length >= 3 && t.startsWith(w)));
-      if (wi < 0) { ok = false; break; }
-      if (i === 0 && wi === 0) score += 40;
-      if (wi === i) score += 6;
-      if (f.w[wi] === t) score += 4;
-    }
-    if (!ok) continue;
-    score += Math.min(use[f.id] || 0, 40) * 5;
-    if (f.ibge) score += 3;
-    if (f.common) score += 14;
-    if (f.own) score += 10;
-    score -= f.dn.length * 0.12;
-    res.push([score, f]);
-  }
-  return res.sort((a, b) => b[0] - a[0]).slice(0, 8).map(r => r[1]);
+/* ---------- textos ---------- */
+const sexLabel = s => s === "M" ? "Masculino" : "Feminino";
+const ageLabel = a => a == null ? "" : a === 1 ? "1 ano" : `${a} anos`;
+const firstName = n => (n || "").trim().split(/\s+/)[0] || "";
+function initials(n){ const w = (n || "").trim().split(/\s+/); return ((w[0] || "")[0] || "").toUpperCase() + ((w.length > 1 ? w[w.length - 1][0] : "") || "").toUpperCase(); }
+const avatar = (p, cls = "") => h("span", {class: "av " + cls, "aria-hidden": "true"}, initials(p.name));
+const nItems = n => n === 1 ? "1 alimento" : `${n} alimentos`;
+const filled = m => m.items.filter(i => i.foodId && i.qty);
+function totalOf(name){
+  const n = (name || "").trim();
+  if (!n) return "Total da refeição";
+  const fem = /^(ceia|colação|colacao|merenda|refeição|sobremesa|marmita)\b/i.test(n);
+  return `Total ${fem ? "da" : "do"} ${n.charAt(0).toLowerCase() + n.slice(1)}`;
 }
 
 /* ---------- autocompletar ---------- */
 function autocomplete(input, o){
   const list = h("div", {class: "ac", role: "listbox"}); list.hidden = true;
-  input.parentElement.append(list);
+  const attach = () => { if (list.parentElement !== input.parentElement && input.parentElement) input.parentElement.append(list); };   // o campo pode ainda não estar na tela
   input.setAttribute("autocomplete", "off"); input.setAttribute("autocorrect", "off"); input.setAttribute("spellcheck", "false");
   let items = [], active = 0, nav = false, pend = -1;
   function render(){
+    attach();
     items = o.items(input.value);
     if (!items.length || document.activeElement !== input) { list.hidden = true; return; }
     active = Math.min(active, items.length - 1);
@@ -594,15 +561,12 @@ function autocomplete(input, o){
     if (o.title && o.title(input.value)) kids.push(h("div", {class: "ac-sec"}, o.title(input.value)));
     items.forEach((it, i) => {
       const el = h("div", {class: "ac-item" + (i === active ? " on" : "") + (i === pend ? " pend" : ""), role: "option"},
-        h("span", {class: "ac-l", html: i === pend ? `Remover “${esc(it.label)}” da lista?` : highlight(it.label, o.hl === false ? "" : input.value)}),
+        h("span", {class: "ac-l", html: i === pend ? `Remover “${esc(it.label)}” da lista?` : highlight(it.label, input.value)}),
         it.meta ? h("span", {class: "ac-m"}, it.meta) : null,
-        it.removable ? h("button", {class: "ac-x", type: "button", "aria-label": i === pend ? "Confirmar remoção" : "Remover opção da lista", title: "Remover da lista"}, i === pend ? "Remover" : "×") : null);
+        it.removable ? h("button", {class: "ac-x", type: "button", "aria-label": i === pend ? "Confirmar remoção" : "Remover opção da lista"}, i === pend ? "Remover" : "×") : null);
       el.addEventListener("mousedown", e => e.preventDefault());
       el.addEventListener("click", e => {
-        if (e.target.closest(".ac-x")) {
-          if (pend === i) { pend = -1; o.onRemove(it); } else pend = i;
-          render(); return;
-        }
+        if (e.target.closest(".ac-x")) { if (pend === i) { pend = -1; o.onRemove(it); } else pend = i; render(); return; }
         if (pend === i) { pend = -1; render(); return; }
         pick(i);
       });
@@ -619,7 +583,7 @@ function autocomplete(input, o){
     const open = !list.hidden && items.length;
     if (e.key === "ArrowDown" && open) { e.preventDefault(); nav = true; active = (active + 1) % items.length; render(); }
     else if (e.key === "ArrowUp" && open) { e.preventDefault(); nav = true; active = (active - 1 + items.length) % items.length; render(); }
-    else if (e.key === "Enter" || (e.key === "Tab" && !e.shiftKey && open && o.tabPicks)) {
+    else if (e.key === "Enter") {
       if (e.isComposing) return;
       if (open && (nav || (o.enterPicks ? o.enterPicks(input.value) : true))) { e.preventDefault(); pick(active); }
       else if (o.onEnter) { e.preventDefault(); list.hidden = true; o.onEnter(); }
@@ -628,8 +592,6 @@ function autocomplete(input, o){
   });
   return {close(){ list.hidden = true; }};
 }
-
-/* Lista de opções editável (objetivos, nomes de refeição) */
 function optionSource(key){
   return q => {
     const opts = S.prefs[key], qn = norm(q.trim());
@@ -639,680 +601,469 @@ function optionSource(key){
     return list.map(o => ({label: o, value: o, removable: true}));
   };
 }
+/* Se o texto digitado é uma opção da lista, usa a grafia da lista ("lanche da tarde 1" → "Lanche da tarde 1") */
+const canonical = (key, v) => (S.prefs[key].find(o => norm(o) === norm((v || "").trim())) || (v || "").trim());
 function rememberOption(key, v){
   v = (v || "").trim(); if (!v) return;
   if (!S.prefs[key].some(o => norm(o) === norm(v))) { S.prefs[key].push(v); save(); }
 }
+/* Fonte de alimentos para os campos de busca: favoritos e recentes quando vazio */
+function foodItems(q){
+  const qt = words(q);
+  if (!qt.length){
+    const ids = [...new Set([...S.prefs.fav, ...S.prefs.recent])].slice(0, 8);
+    return ids.map(id => db.get(id)).filter(Boolean).map(f => ({label: f.dn, meta: (isFav(f.id) ? "★ " : "") + `${f.kcal} kcal`, value: f}));
+  }
+  const list = search(q).map(f => ({label: f.dn, meta: f.own ? `próprio · ${f.kcal} kcal` : `${f.kcal} kcal`, value: f}));
+  if (q.trim().length >= 2) list.push({label: `+ Cadastrar “${q.trim()}” como alimento novo`, value: {create: q.trim()}});
+  return list;
+}
+const foodTitle = q => !words(q).length && (S.prefs.fav.length || S.prefs.recent.length) ? "Favoritos e recentes" : "";
 
 /* ---------- navegação ---------- */
-const app = $("#app");
-let view = {name: "home", id: null, tab: "plan"};
-function go(v){
+const app = $("#app"), tabbar = $("#tabbar");
+const TABS = [["inicio", "Início", "home"], ["plano", "Meu plano", "plan"], ["alimentos", "Alimentos", "food"], ["perfil", "Perfil", "user"]];
+let view = {tab: "inicio", open: [], edit: null, focusMeal: null, foodSeg: "fav"};
+function go(v, keepScroll){
   view = Object.assign({}, view, v);
   try { sessionStorage.setItem(KEY + ".view", JSON.stringify(view)); } catch (e) {}
-  render(); window.scrollTo(0, 0);
+  render();
+  if (!keepScroll) window.scrollTo(0, 0);
 }
 function render(){
-  if (view.name === "patient" && cur()) renderPatient(); else renderHome();
+  put(tabbar, h("div", {class: "tabbar-in"}, TABS.map(([id, label, icon]) =>
+    h("button", {class: "tab" + (view.tab === id ? " on" : ""), "aria-current": view.tab === id ? "page" : null, onclick: () => go({tab: id, edit: null})}, ic(icon), label))));
+  const p = active();
+  if (!p) { renderWelcome(); return; }
+  ({inicio: renderHome, plano: renderPlan, alimentos: renderFoods, perfil: renderProfile})[view.tab](p);
 }
-const cur = () => S.patients.find(p => p.id === view.id);
 window.addEventListener("scroll", () => { const t = $(".top"); if (t) t.classList.toggle("scrolled", scrollY > 4); }, {passive: true});
+const coarse = matchMedia("(pointer: coarse)");
+document.addEventListener("focusin", e => { if (coarse.matches && e.target.matches("input:not([type=time]), textarea")) document.body.classList.add("typing"); });
+document.addEventListener("focusout", () => setTimeout(() => { const a = document.activeElement; if (!a || !a.matches("input, textarea")) document.body.classList.remove("typing"); }, 80));
 
-function toast(msg){
-  const t = $("#toast"); t.textContent = msg; t.classList.add("on");
-  clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("on"), 1600);
+function topBar(...right){
+  const p = active();
+  return h("header", {class: "top"}, h("div", {class: "top-row"},
+    p ? h("button", {class: "who", "aria-label": `Perfil ativo: ${p.name}. Trocar de perfil`, onclick: switcher}, avatar(p), h("b", null, firstName(p.name)), ic("chev"))
+      : h("div", {class: "brand"}, h("span", {class: "mark", html: ICON.mark}), "Nutri Prático"),
+    h("div", {class: "spacer"}), right));
 }
-
-/* ---------- Home ---------- */
-function sexLabel(s){ return s === "M" ? "Masculino" : "Feminino"; }
-function ageLabel(a){ return a == null ? "" : a === 1 ? "1 ano" : `${a} anos`; }
-function initials(n){ const w = n.trim().split(/\s+/); return ((w[0] || "")[0] || "").toUpperCase() + ((w.length > 1 ? w[w.length - 1][0] : "") || "").toUpperCase(); }
-
-function renderHome(){
-  let q = "";
-  const listEl = h("div");
-  const search = h("input", {type: "search", id: "busca", placeholder: "Buscar paciente", "aria-label": "Buscar paciente", enterkeyhint: "search"});
-  function fill(){
-    const qt = words(q);
-    const ps = S.patients.filter(p => { const w = words(p.name); return qt.every(t => w.some(x => x.startsWith(t))); })
-      .sort((a, b) => a.name.localeCompare(b.name, "pt-BR", {sensitivity: "base"}));
-    if (!S.patients.length){
-      listEl.replaceChildren(h("div", {class: "card empty"},
-        h("div", {style: "font-weight:600;color:var(--ink);font-size:16px;margin-bottom:4px"}, "Nenhum paciente ainda"),
-        h("div", null, "Cadastre o primeiro com nome, data de nascimento e gênero."),
-        h("div", {style: "margin-top:16px"}, h("button", {class: "btn primary", onclick: () => patientSheet()}, svg("plus"), "Novo paciente"))));
-      return;
-    }
-    if (!ps.length){ listEl.replaceChildren(h("div", {class: "card empty"}, `Nenhum paciente encontrado para “${q}”.`)); return; }
-    listEl.replaceChildren(h("div", {class: "plist"}, ps.map(p => {
-      const t = planTotal(p.plan);
-      return h("button", {class: "pitem", onclick: () => go({name: "patient", id: p.id})},
-        h("div", {class: "avatar"}, initials(p.name)),
-        h("div", {class: "pmain"},
-          h("div", {class: "pname", html: highlight(p.name, q) + (p.example ? '<span class="chip">exemplo</span>' : "")}),
-          h("div", {class: "pmeta"}, `${ageLabel(ageOf(p.birth))} · ${sexLabel(p.sex)}`)),
-        t.kcal ? h("div", {class: "pkcal"}, h("b", null, k0(t.kcal)), "kcal") : null);
-    })));
-  }
-  search.addEventListener("input", () => { q = search.value; fill(); });
-  search.addEventListener("keydown", e => {
-    if (e.key === "Enter"){ const first = listEl.querySelector(".pitem"); if (first) first.click(); }
+function switcher(){
+  sheet("Trocar de perfil", (el, close) => {
+    const ps = [...S.patients].sort((a, b) => a.name.localeCompare(b.name, "pt-BR", {sensitivity: "base"}));
+    el.append(h("h2", null, "Família"), h("p", {class: "sh-sub"}, "Escolha de quem é o plano que você quer ver."),
+      h("div", {class: "list"}, ps.map(p => h("button", {class: "li", onclick: () => { S.activeId = p.id; save(); close(); go({edit: null, open: []}); }},
+        avatar(p), h("div", {class: "li-m"}, h("div", {class: "li-t", html: esc(p.name) + (p.example ? '<span class="chip">exemplo</span>' : "")}),
+          h("div", {class: "li-s"}, `${ageLabel(C.ageOf(p.birth))} · ${sexLabel(p.sex)}`)),
+        p.id === S.activeId ? h("span", {class: "check", html: ICON.check}) : null))),
+      h("div", {style: "height:12px"}),
+      h("button", {class: "btn ghost block", onclick: () => { close(); profileSheet(); }}, ic("plus"), "Adicionar pessoa"));
   });
-  fill();
-  app.replaceChildren(h("div", {class: "view home"},
-    h("header", {class: "top"}, h("div", {class: "top-row"},
-      h("div", {class: "brand"}, h("span", {class: "mark", html: ICON.mark}), "Nutri Prático"),
-      h("div", {class: "spacer"}),
-      h("button", {class: "icon-btn", "aria-label": "Backup", title: "Backup", onclick: () => backupSheet(), html: ICON.backup}),
-      h("button", {class: "icon-btn accent", "aria-label": "Novo paciente", title: "Novo paciente", onclick: () => patientSheet(), html: ICON.plus}))),
-    h("h1", null, "Pacientes"),
-    h("div", {class: "sub num"}, S.patients.length === 1 ? "1 paciente" : `${S.patients.length} pacientes`),
-    h("div", {class: "search"}, h("span", {html: ICON.search, style: "display:contents"}), search),
-    listEl,
-    dataCard()
-  ));
 }
 
-/* ---------- Backup ---------- */
-const DAY = 864e5;
-const pl = n => n === 1 ? "1 paciente" : `${n} pacientes`;
-function dataCard(){
-  const real = S.patients.filter(p => !p.example).length;
-  const days = S.lastBackup ? Math.floor((Date.now() - S.lastBackup) / DAY) : null;
-  const due = real > 0 && (days == null || days >= 7);
-  const when = days == null ? "Nenhum backup feito ainda" : days === 0 ? "Último backup: hoje" : days === 1 ? "Último backup: ontem" : `Último backup: há ${days} dias`;
-  return h("section", {class: "datacard" + (due ? " due" : "")},
-    h("span", {class: "dc-ic", html: ICON.lock}),
-    h("div", {class: "dc-t"}, h("b", null, "Dados salvos só neste aparelho"), h("span", null, when)),
-    h("button", {class: "btn sm " + (due ? "primary" : "ghost"), onclick: () => backupSheet()}, due ? "Fazer backup" : "Backup"));
-}
-function backupSheet(){
-  const scrim = h("div", {class: "scrim"});
-  const status = h("div", {class: "err", style: "color:var(--muted)"});
-  const file = h("input", {type: "file", accept: "application/json,.json", hidden: true});
-  const confirmBox = h("div");
-  const last = S.lastBackup ? `Último backup: ${new Date(S.lastBackup).toLocaleDateString("pt-BR")}` : "Nenhum backup feito ainda.";
-  async function exportNow(){
-    const stamp = new Date().toISOString().slice(0, 10);
-    const json = backupText();
-    const name = `nutri-pratico-backup-${stamp}.json`;
-    const blob = new Blob([json], {type: "application/json"});
-    const done = () => { S.lastBackup = Date.now(); save(); status.textContent = "Backup gerado. Guarde o arquivo em Arquivos, iCloud ou e-mail."; };
-    try {
-      const f = new File([blob], name, {type: "application/json"});
-      if (navigator.canShare && navigator.canShare({files: [f]})) { await navigator.share({files: [f], title: "Backup Nutri Prático"}); done(); return; }
-    } catch (e) { if (e && e.name === "AbortError") return; }
-    try {
-      const a = h("a", {href: URL.createObjectURL(blob), download: name}); document.body.append(a); a.click(); a.remove(); done();
-    } catch (e) { status.textContent = "Não foi possível gerar o arquivo neste navegador."; }
-  }
-  const embedded = window.self !== window.top;   // dentro do Claude não dá para baixar arquivos
-  const backupText = () => JSON.stringify({app: "nutri-pratico", version: 1, exported: new Date().toISOString(), data: S});
-  function copyNow(){
-    const txt = backupText();
-    const ok = () => { S.lastBackup = Date.now(); save(); status.textContent = "Backup copiado. Agora abra o app instalado e use “Colar backup”."; };
-    const fallback = () => {
-      const ta = h("textarea", {style: "position:fixed;top:-1000px"}); ta.value = txt; document.body.append(ta); ta.select();
-      try { document.execCommand("copy") ? ok() : (status.textContent = "Não foi possível copiar."); } catch (e) { status.textContent = "Não foi possível copiar."; }
-      ta.remove();
-    };
-    try { navigator.clipboard.writeText(txt).then(ok, fallback); } catch (e) { fallback(); }
-  }
-  const pasteArea = h("textarea", {class: "input", id: "bk-colar", rows: "4", placeholder: "Toque aqui, segure e escolha Colar", style: "height:auto;padding:12px 14px;font-size:16px;resize:vertical"});
-  const pasteBox = h("div", {class: "bk-row"}, pasteArea,
-    h("button", {class: "btn primary block", type: "button", onclick: () => offerRestore(pasteArea.value)}, "Continuar"));
-  pasteBox.hidden = true;
-  file.addEventListener("change", () => {
-    const f = file.files[0]; if (!f) return;
-    const rd = new FileReader();
-    rd.onload = () => offerRestore(rd.result);
-    rd.readAsText(f); file.value = "";
-  });
-  function offerRestore(text){
-    {
-      let b; try { b = JSON.parse(String(text).trim()); } catch (e) {}
-      const d = b && b.data;
-      if (!d || !Array.isArray(d.patients) || !d.prefs) { status.textContent = "Esse arquivo não é um backup do Nutri Prático."; return; }
-      confirmBox.replaceChildren(h("div", {class: "confirm", style: "flex-wrap:wrap"},
-        h("span", {style: "flex:1 1 100%"}, `Substituir ${pl(S.patients.length)} deste aparelho por ${pl(d.patients.length)} do backup de ${new Date(b.exported).toLocaleDateString("pt-BR")}?`),
-        h("button", {class: "btn ghost", type: "button", style: "flex:1", onclick: () => confirmBox.replaceChildren()}, "Cancelar"),
-        h("button", {class: "btn primary", type: "button", style: "flex:1", onclick: () => {
-          S = d; S.foods = S.foods || []; for (const raw of S.foods) addFood(raw);
-          try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
-          close(); go({name: "home", id: null}); toast("Backup restaurado");
-        }}, "Restaurar")));
-    }
-  }
-  const form = h("div", {class: "sheet", role: "dialog", "aria-modal": "true", "aria-label": "Backup"},
-    h("div", {class: "grab"}),
-    h("h2", null, "Backup"),
-    h("div", {class: "bk-meta"}, last),
-    h("div", {class: "bk-row"},
-      embedded ? null : h("button", {class: "btn primary block", type: "button", onclick: exportNow}, "Exportar backup (arquivo)"),
-      h("button", {class: embedded ? "btn primary block" : "btn ghost block", type: "button", onclick: copyNow}, "Copiar backup"),
-      h("div", {class: "eyebrow", style: "margin-top:8px"}, "Restaurar"),
-      h("button", {class: "btn ghost block", type: "button", onclick: () => { pasteBox.hidden = false; pasteArea.focus(); }}, "Colar backup"),
-      embedded ? null : h("button", {class: "btn ghost block", type: "button", onclick: () => file.click()}, "Restaurar de um arquivo"),
-      pasteBox, file, status, confirmBox,
-      h("button", {class: "btn ghost block", type: "button", onclick: close}, "Fechar")));
-  function close(){ form.classList.remove("on"); scrim.classList.remove("on"); setTimeout(() => { form.remove(); scrim.remove(); }, 260); }
-  scrim.addEventListener("click", close);
-  document.body.append(scrim, form);
-  requestAnimationFrame(() => { scrim.classList.add("on"); form.classList.add("on"); });
+/* ---------- boas-vindas (sem perfis) ---------- */
+function renderWelcome(){
+  put(app, h("div", {class: "view"}, topBar(),
+    h("div", {class: "hello"}, h("h1", null, "Bem-vindo"), h("div", {class: "sub"}, "Organize a sua alimentação e a da sua família com precisão.")),
+    h("section", {class: "card hero stack"},
+      h("div", {class: "cta"}, h("span", {class: "ic", html: ICON.user}), h("div", null, h("b", null, "Comece pelo seu perfil"), "Nome, data de nascimento e sexo. Leva menos de um minuto.")),
+      h("button", {class: "btn primary block", onclick: () => profileSheet()}, "Criar meu perfil")),
+    h("section", {class: "card", style: "margin-top:14px"}, dataRow())));
 }
 
-/* ---------- Cadastro / edição de paciente ---------- */
-function maskDate(v){
-  const d = v.replace(/\D/g, "").slice(0, 8);
-  return d.length > 4 ? `${d.slice(0, 2)}/${d.slice(2, 4)}/${d.slice(4)}` : d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d;
+/* ---------- Início ---------- */
+function renderHome(p){
+  const plan = p.plan, r = C.energyOf(p), tg = plan.target || (r.ok && r.get ? Math.round(r.get) : null);
+  const t = planTotal(plan);
+  const meals = [...plan.meals].filter(m => m.name.trim() || filled(m).length).sort(byTime);
+  const today = (d => d.charAt(0).toUpperCase() + d.slice(1))(new Date().toLocaleDateString("pt-BR", {weekday: "long", day: "numeric", month: "long"}));
+  const fam = S.patients.length > 1 ? h("section", null, h("h2", {class: "sec"}, "Família"),
+    h("div", {class: "fam"}, [...S.patients].sort((a, b) => a.name.localeCompare(b.name, "pt-BR")).map(x =>
+      h("button", {class: x.id === p.id ? "on" : "", onclick: () => { S.activeId = x.id; save(); go({open: [], edit: null}); }}, avatar(x), firstName(x.name))),
+      h("button", {onclick: () => profileSheet()}, h("span", {class: "av", html: ICON.plus, style: "padding:12px"}), "Adicionar"))) : null;
+  put(app, h("div", {class: "view"}, topBar(h("button", {class: "icon-btn", "aria-label": "Buscar alimento", onclick: () => go({tab: "alimentos"})}, ic("search"))),
+    h("div", {class: "hello"},
+      h("div", {class: "sub"}, today),
+      h("h1", null, `Olá, ${firstName(p.name)}`),
+      h("div", {class: "goal"}, plan.objective ? h("span", null, plan.objective) : null, tg ? h("span", null, `Meta ${k0(tg)} kcal`) : null)),
+    totalsCard(t, tg, p, "Planejado"),
+    !r.ok ? h("section", {class: "card", style: "margin-top:14px"}, h("button", {class: "cta", style: "width:100%;text-align:left", onclick: () => go({tab: "perfil"})},
+      h("span", {class: "ic", html: ICON.bolt}), h("div", null, h("b", null, "Calcule sua necessidade energética"), "Com peso e altura, o app sugere a sua meta de calorias."), ic("right"))) : null,
+    h("h2", {class: "sec"}, "Refeições"),
+    meals.length ? h("div", {class: "list dmeals"}, meals.map(m => {
+      const mt = mealTotal(m);
+      return h("button", {class: "li", onclick: () => go({tab: "plano", open: [m.id], focusMeal: m.id, edit: null})},
+        h("span", {class: "tm"}, m.time || "—"),
+        h("div", {class: "li-m"}, h("div", {class: "li-t"}, m.name || "Refeição"), h("div", {class: "li-s"}, nItems(filled(m).length))),
+        h("div", {class: "li-r"}, h("b", null, k0(mt.kcal)), "kcal"));
+    })) : h("div", {class: "card empty"}, h("b", null, "Seu plano está vazio"), "Monte as refeições do dia em poucos toques.",
+      h("div", {style: "margin-top:14px"}, h("button", {class: "btn primary", onclick: () => go({tab: "plano"})}, "Montar meu plano"))),
+    meals.length ? h("div", {style: "margin-top:12px"}, h("button", {class: "btn ghost block", onclick: () => go({tab: "plano"})}, "Abrir meu plano")) : null,
+    fam));
 }
-function toISO(br){
-  const m = br.match(/^(\d{2})\/(\d{2})\/(\d{4})$/); if (!m) return null;
-  const d = +m[1], mo = +m[2], y = +m[3];
-  const dt = new Date(y, mo - 1, d);
-  if (dt.getFullYear() !== y || dt.getMonth() !== mo - 1 || dt.getDate() !== d) return null;
-  if (dt > new Date() || y < 1900) return null;
-  return `${m[3]}-${m[2]}-${m[1]}`;
-}
-const fromISO = iso => iso ? iso.split("-").reverse().join("/") : "";
+const byTime = (a, b) => (a.time || "99") < (b.time || "99") ? -1 : (a.time || "99") > (b.time || "99") ? 1 : 0;
 
-function patientSheet(p){
-  const editing = !!p;
-  let sex = p ? p.sex : null;
-  const scrim = h("div", {class: "scrim"});
-  const name = h("input", {class: "input", id: "pac-nome", placeholder: "Nome completo", value: p ? p.name : "", enterkeyhint: "next", autocapitalize: "words", autocomplete: "off"});
-  const birth = h("input", {class: "input num", id: "pac-nasc", placeholder: "dd/mm/aaaa", inputmode: "numeric", value: p ? fromISO(p.birth) : "", autocomplete: "off"});
-  const err = h("div", {class: "err"});
-  const seg = h("div", {class: "seg big", role: "radiogroup", "aria-label": "Gênero"});
-  const ok = h("button", {class: "btn primary block", type: "submit"}, editing ? "Salvar" : "Cadastrar paciente");
-  function paintSeg(){
-    seg.replaceChildren(...[["F", "Feminino"], ["M", "Masculino"]].map(([v, l]) =>
-      h("button", {type: "button", class: sex === v ? "on" : "", role: "radio", "aria-checked": String(sex === v), onclick: () => { sex = v; paintSeg(); check(); }}, l)));
-  }
-  function check(){ ok.disabled = !(name.value.trim() && toISO(birth.value) && sex); }
-  name.addEventListener("input", check);
-  name.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); birth.focus(); } });
-  birth.addEventListener("input", () => {
-    birth.value = maskDate(birth.value);
-    err.textContent = birth.value.length === 10 && !toISO(birth.value) ? "Data inválida. Use dd/mm/aaaa." : "";
-    if (birth.value.length === 10 && toISO(birth.value)) birth.blur();
-    check();
-  });
-  paintSeg(); check();
-  const form = h("form", {class: "sheet", role: "dialog", "aria-modal": "true", "aria-label": editing ? "Editar paciente" : "Novo paciente"},
-    h("div", {class: "grab"}),
-    h("h2", null, editing ? "Editar paciente" : "Novo paciente"),
-    h("div", {class: "field"}, h("label", {for: "pac-nome"}, "Nome"), name),
-    h("div", {class: "field"}, h("label", {for: "pac-nasc"}, "Data de nascimento"), birth, err),
-    h("div", {class: "field"}, h("label", null, "Gênero"), seg),
-    h("div", {class: "row-actions"}, h("button", {class: "btn ghost", type: "button", onclick: close}, "Cancelar"), ok),
-    editing ? delBlock() : null);
-  function delBlock(){
-    const wrap = h("div", {style: "margin-top:18px;padding-top:14px;border-top:1px solid var(--line)"});
-    const ask = () => wrap.replaceChildren(h("div", {class: "confirm"}, h("span", {style: "flex:1"}, `Excluir ${p.name} e todo o plano?`),
-      h("button", {class: "btn ghost", type: "button", style: "height:38px", onclick: idle}, "Não"),
-      h("button", {class: "btn danger", type: "button", style: "height:38px", onclick: () => {
-        S.patients = S.patients.filter(x => x.id !== p.id); save(); close(); go({name: "home", id: null});
-      }}, "Excluir")));
-    const idle = () => wrap.replaceChildren(h("button", {class: "btn danger block", type: "button", onclick: ask}, "Excluir paciente"));
-    idle(); return wrap;
-  }
-  form.addEventListener("submit", e => {
-    e.preventDefault(); check(); if (ok.disabled) return;
-    if (editing){ p.name = name.value.trim(); p.birth = toISO(birth.value); p.sex = sex; touch(p); close(); render(); }
-    else {
-      const np = {id: uid(), name: name.value.trim(), birth: toISO(birth.value), sex, updated: Date.now(),
-        energy: {weight: null, height: null, fao: 1, dri: 1}, plan: {objective: "", target: null, meals: []}};
-      S.patients.push(np); save(); close(); go({name: "patient", id: np.id, tab: "energy"});
-    }
-  });
-  function close(){
-    form.classList.remove("on"); scrim.classList.remove("on");
-    setTimeout(() => { form.remove(); scrim.remove(); }, 260);
-  }
-  scrim.addEventListener("click", close);
-  document.body.append(scrim, form);
-  requestAnimationFrame(() => { scrim.classList.add("on"); form.classList.add("on"); });
-  if (!editing) name.focus();
+/* Cartão de totais (Início e detalhes do plano) */
+function totalsCard(t, tg, p, label){
+  const pct = tg ? Math.round(t.kcal / tg * 100) : null;
+  return h("section", {class: "card hero", "aria-label": "Total " + label.toLowerCase()},
+    h("div", {class: "eyebrow", style: "margin-bottom:6px"}, label),
+    h("div", {class: "tot-top"},
+      h("div", {class: "tot-kcal"}, h("b", null, k0(t.kcal)), h("span", null, tg ? `de ${k0(tg)} kcal` : "kcal")),
+      h("span", {class: "pill"}, pct != null ? `${pct}% da meta` : "Sem meta")),
+    macroGrid(t, p.energy.weight, false), missNote(t));
+}
+function macroGrid(t, W, small){
+  const s = C.macroSplit(t);
+  const cell = (cls, k, grams, pc) => h("div", null,
+    h("div", {class: "k " + cls}, k),
+    h("div", {class: "v"}, fmtG(grams), h("small", null, "g"), h("span", {class: "pc"}, `${Math.round(pc)}%`)),
+    h("div", {class: "s"}, W ? `${nf2.format(grams / W)} g/kg` : " "));
+  return h("div", {class: "mwrap" + (small ? " sm" : "")},
+    h("div", {class: "mgrid"}, cell("t-c", "Carboidratos", t.c, s.c), cell("t-p", "Proteínas", t.p, s.p), cell("t-g", "Gorduras", t.l, s.l)),
+    h("div", {class: "fib"}, h("span", {class: "t-f"}, "Fibras"), h("b", null, `${fmtG(t.f)} g${t.miss.f ? "*" : ""}`),
+      t.kcal ? h("span", {class: "s"}, `${g1(t.f * 1000 / t.kcal)} g por 1.000 kcal`) : null));
+}
+function missNote(t){
+  const n = Object.values(t.miss || {}).reduce((a, b) => Math.max(a, b), 0);
+  if (!n) return null;
+  return h("div", {class: "miss"}, `* ${n === 1 ? "1 alimento não tem" : n + " alimentos não têm"} esse dado na TACO; o total pode estar subestimado.`);
 }
 
-/* ---------- Alimento próprio ---------- */
-function foodSheet(prefill, done){
-  const scrim = h("div", {class: "scrim"});
-  const nm = h("input", {class: "input", id: "al-nome", value: prefill || "", placeholder: "Ex.: Leite integral (marca)", autocomplete: "off"});
-  const num = (id, ph) => h("input", {class: "input num", id, inputmode: "decimal", placeholder: ph, autocomplete: "off"});
-  const kc = num("al-kcal", "0"), cc = num("al-cho", "0"), pp = num("al-ptn", "0"), ll = num("al-lip", "0"), ff = num("al-fib", "0");
-  const ml = h("input", {class: "input", id: "al-med", placeholder: "Ex.: Copo médio", autocomplete: "off"});
-  const mg = num("al-medg", "g");
-  const ok = h("button", {class: "btn primary block", type: "submit"}, "Salvar alimento");
-  const v = el => { const x = parseFloat(el.value.replace(",", ".")); return isFinite(x) && x >= 0 ? x : null; };
-  const check = () => { ok.disabled = !(nm.value.trim() && v(kc) != null && v(cc) != null && v(pp) != null && v(ll) != null && (!ml.value.trim() || v(mg) > 0)); };
-  [nm, kc, cc, pp, ll, ff, ml, mg].forEach(el => el.addEventListener("input", check));
-  check();
-  const g2 = (a, b) => h("div", {style: "display:grid;grid-template-columns:1fr 1fr;gap:10px"}, a, b);
-  const fld = (id, l, el) => h("div", {class: "field"}, h("label", {for: id}, l), el);
-  const form = h("form", {class: "sheet", role: "dialog", "aria-modal": "true", "aria-label": "Alimento próprio"},
-    h("div", {class: "grab"}),
-    h("h2", null, "Alimento próprio"),
-    fld("al-nome", "Nome", nm),
-    h("div", {class: "eyebrow", style: "margin:4px 0 10px"}, "Valores por 100 g ou 100 ml"),
-    g2(fld("al-kcal", "Energia (kcal)", kc), fld("al-cho", "Carboidratos (g)", cc)),
-    g2(fld("al-ptn", "Proteínas (g)", pp), fld("al-lip", "Lipídeos (g)", ll)),
-    g2(fld("al-fib", "Fibras (g)", ff), h("div")),
-    h("div", {class: "eyebrow", style: "margin:4px 0 10px"}, "Medida caseira mais usada (opcional)"),
-    g2(fld("al-med", "Medida", ml), fld("al-medg", "Gramas na medida", mg)),
-    h("div", {class: "row-actions"}, h("button", {class: "btn ghost", type: "button", onclick: close}, "Cancelar"), ok));
-  form.addEventListener("submit", e => {
-    e.preventDefault(); check(); if (ok.disabled) return;
-    const ms = ml.value.trim() ? [[ml.value.trim(), v(mg)]] : [];
-    const raw = [-Date.now(), nm.value.trim(), Math.round(v(kc)), v(cc), v(pp), v(ll), v(ff) || 0, "Alimento próprio", ms];
-    S.foods.push(raw); save();
-    const f = addFood(raw); f.ibge = false;
-    close(); done && done(f);
-  });
-  function close(){ form.classList.remove("on"); scrim.classList.remove("on"); setTimeout(() => { form.remove(); scrim.remove(); }, 260); }
-  scrim.addEventListener("click", close);
-  document.body.append(scrim, form);
-  requestAnimationFrame(() => { scrim.classList.add("on"); form.classList.add("on"); });
-  (prefill ? kc : nm).focus();
-}
-
-/* ---------- Paciente ---------- */
-function renderPatient(){
-  const p = cur();
-  const body = h("div");
-  const tabs = h("div", {class: "seg", role: "tablist"});
-  const mini = h("div", {class: "mini", "aria-live": "polite"}); mini.hidden = true;
-  function paintTabs(){
-    tabs.replaceChildren(...[["energy", "Necessidade energética"], ["plan", "Plano alimentar"]].map(([v, l]) =>
-      h("button", {class: view.tab === v ? "on" : "", role: "tab", "aria-selected": String(view.tab === v), onclick: () => { view.tab = v; go({}); }}, l)));
-  }
-  paintTabs();
-  app.replaceChildren(h("div", {class: "view"},
-    h("header", {class: "top"}, h("div", {class: "top-row"},
-      h("button", {class: "back", onclick: () => go({name: "home", id: null})}, h("span", {html: ICON.back, style: "display:contents"}), "Pacientes"),
-      h("div", {class: "spacer"}),
-      h("button", {class: "icon-btn", "aria-label": "Editar paciente", title: "Editar paciente", onclick: () => patientSheet(p), html: ICON.edit}))),
-    h("div", {class: "phead"},
-      h("h1", {html: esc(p.name) + (p.example ? '<span class="chip">exemplo</span>' : "")}),
-      h("div", {class: "sub num"}, `${ageLabel(ageOf(p.birth))} · ${sexLabel(p.sex)} · nasc. ${fromISO(p.birth)}`)),
-    h("div", {class: "tabs"}, tabs, mini),
-    body));
-  if (view.tab === "energy") renderEnergy(p, body); else renderPlan(p, body, mini);
-}
-
-/* ---------- Necessidade energética ---------- */
-function renderEnergy(p, body){
-  const e = p.energy;
-  const W = h("input", {class: "input", id: "peso", inputmode: "decimal", placeholder: "0", value: e.weight ? fq.format(e.weight) : "", "aria-label": "Peso em kg", enterkeyhint: "next"});
-  const H = h("input", {class: "input", id: "altura", inputmode: "decimal", placeholder: "0", value: e.height ? fq.format(e.height) : "", "aria-label": "Altura em cm", enterkeyhint: "done"});
-  const out = h("div", {class: "stack"});
-  const num = s => { const v = parseFloat(String(s).replace(",", ".")); return isFinite(v) ? v : null; };
-  W.addEventListener("input", () => { e.weight = num(W.value); touch(p); paint(); });
-  H.addEventListener("input", () => {
-    let v = num(H.value);
-    if (v != null && v < 3) v = v * 100;  // aceita altura em metros (1,65)
-    e.height = v; touch(p); paint();
-  });
-  W.addEventListener("keydown", ev => { if (ev.key === "Enter") { ev.preventDefault(); H.focus(); } });
-  H.addEventListener("keydown", ev => { if (ev.key === "Enter") { ev.preventDefault(); H.blur(); } });
-
-  function segOf(labels, key){
-    const seg = h("div", {class: "seg seg4", role: "radiogroup"});
-    const paintSeg = () => seg.replaceChildren(...labels.map((l, i) => h("button", {class: (e[key] ?? 1) === i ? "on" : "", role: "radio", "aria-checked": String((e[key] ?? 1) === i),
-      onclick: () => { e[key] = i; touch(p); paintSeg(); paint(); }}, l)));
-    paintSeg(); return seg;
-  }
-  const faoSeg = segOf(FAO_LV, "fao"), driSeg = segOf(DRI_LV, "dri");
-  const faoRes = h("div"), driRes = h("div"), hero = h("div");
-
-  function resGrid(tmb, fator, fl, get){
-    return h("div", {class: "res"},
-      h("div", null, h("div", {class: "k"}, "TMB"), h("div", {class: "v"}, tmb == null ? "—" : k0(tmb))),
-      h("div", null, h("div", {class: "k"}, fl), h("div", {class: "v"}, fator == null ? "—" : nf2.format(fator))),
-      h("div", null, h("div", {class: "k"}, "GET"), h("div", {class: "v acc"}, get == null ? "—" : k0(get))));
-  }
-  function paint(){
-    const r = energyOf(p);
-    if (!r.ok){
-      hero.replaceChildren(h("div", {class: "card hero"}, h("div", {class: "eyebrow"}, "Média dos protocolos"),
-        h("div", {class: "hero-grid"},
-          h("div", null, h("div", {class: "lbl"}, "TMB"), h("div", {class: "big"}, "—")),
-          h("div", null, h("div", {class: "lbl"}, "GET"), h("div", {class: "big gold"}, "—"))),
-        h("div", {class: "hero-foot"}, "Informe peso e altura para calcular")));
-      useBtn.disabled = true; useBtn.textContent = "Usar GET no plano alimentar";
-      faoRes.replaceChildren(resGrid(null, FAO_FA[p.sex][e.fao ?? 1], "FA", null));
-      driRes.replaceChildren(resGrid(null, null, "AF", null));
-      return;
-    }
-    hero.replaceChildren(h("div", {class: "card hero"},
-      h("div", {class: "eyebrow"}, r.dri ? "Média FAO/OMS 1985 + DRI 2005" : "FAO/OMS 1985"),
-      h("div", {class: "hero-grid"},
-        h("div", null, h("div", {class: "lbl"}, "TMB"), h("div", {class: "big"}, k0(r.tmb), h("small", null, "kcal"))),
-        h("div", null, h("div", {class: "lbl"}, "GET"), h("div", {class: "big gold"}, k0(r.get), h("small", null, "kcal")))),
-      h("div", {class: "hero-foot"},
-        h("span", null, `IMC ${g1(r.imc)}`),
-        h("span", null, `${ageLabel(r.age)}`),
-        h("span", null, `${fq.format(e.weight)} kg · ${fq.format(e.height)} cm`))));
-    put(faoRes, resGrid(r.fao.tmb, r.fao.fa, "FA", r.fao.get),
-      h("div", {class: "eq"}, `TMB = ${r.fao.eq}`, h("br"), `GET = TMB × ${nf2.format(r.fao.fa)}`),
-      r.age < 18 ? h("div", {class: "note warn"}, "Os fatores de atividade FAO/OMS 1985 foram definidos para adultos.") : null);
-    put(driRes, r.dri
-      ? [resGrid(r.dri.tmb, r.dri.PA, "AF", r.dri.get),
-         h("div", {class: "eq"}, `GET (EER) = ${r.dri.eq}`, h("br"), "I = idade · P = kg · A = m · TMB (BEE) pela DRI 2005")]
-      : [resGrid(null, null, "AF", null), h("div", {class: "note warn"}, "As equações DRI 2005 aqui cobrem pacientes a partir de 3 anos.")]);
-    useBtn.textContent = `Usar ${k0(r.get)} kcal no plano alimentar`;
-    useBtn.disabled = false;
-  }
-  const useBtn = h("button", {class: "btn primary block", disabled: true, onclick: () => {
-    const r = energyOf(p); if (!r.ok) return;
-    p.plan.target = Math.round(r.get); touch(p); go({tab: "plan"}); toast(`Meta de ${k0(r.get)} kcal definida`);
-  }}, "Usar GET no plano alimentar");
-
-  body.append(h("div", {class: "stack"},
-    hero,
-    h("div", {class: "card"},
-      h("div", {class: "measures"},
-        h("div", {class: "field", style: "margin:0"}, h("label", {for: "peso"}, "Peso"), h("div", {class: "mfield"}, W, h("span", null, "kg"))),
-        h("div", {class: "field", style: "margin:0"}, h("label", {for: "altura"}, "Altura"), h("div", {class: "mfield"}, H, h("span", null, "cm")))),
-      h("div", {class: "facts"}, h("span", null, "Idade ", h("b", null, ageLabel(ageOf(p.birth)))), h("span", null, "Gênero ", h("b", null, sexLabel(p.sex))))),
-    h("div", {class: "card"},
-      h("div", {class: "card-h"}, h("div", {class: "card-t"}, "FAO/OMS 1985"), h("div", {class: "eyebrow"}, "Nível de atividade")),
-      faoSeg, faoRes),
-    h("div", {class: "card"},
-      h("div", {class: "card-h"}, h("div", {class: "card-t"}, "DRI 2005"), h("div", {class: "eyebrow"}, "Nível de atividade física")),
-      driSeg, driRes),
-    useBtn));
-  paint();
-  if (!e.weight) setTimeout(() => W.focus(), 60);
-}
-
-/* ---------- Plano alimentar ---------- */
-function renderPlan(p, body, mini){
+/* ---------- Meu plano ---------- */
+function renderPlan(p){
   const plan = p.plan;
-  const r = energyOf(p);
-  const target = () => plan.target || (r.ok ? Math.round(r.get) : null);
-  const W = () => p.energy.weight;
+  const r = C.energyOf(p);
+  const target = () => plan.target || (r.ok && r.get ? Math.round(r.get) : null);
+  const refs = new Map();   // id -> elementos que mudam sem redesenhar a tela
+  const open = new Set(view.open || []);
 
-  /* objetivo */
-  const obj = h("input", {class: "input", id: "objetivo", placeholder: "Objetivo", value: plan.objective || "", enterkeyhint: "next", "aria-label": "Objetivo"});
-  const objW = h("div", {class: "acw"}, obj);
+  /* resumo fixo no cabeçalho; toque abre os detalhes */
+  const sumbar = h("button", {class: "sumbar", "aria-label": "Ver resumo nutricional completo", onclick: summarySheet});
+  function paintSum(){
+    const t = planTotal(plan), tg = target(), pct = tg ? Math.round(t.kcal / tg * 100) : null;
+    put(sumbar,
+      h("span", {class: "k"}, h("b", null, k0(t.kcal)), tg ? ` / ${k0(tg)}` : "", h("span", {class: "u"}, " kcal"), pct != null ? h("span", {class: "pc"}, `${pct}%`) : null),
+      h("span", {class: "m", "aria-label": `Carboidratos ${fmtG(t.c)} g, proteínas ${fmtG(t.p)} g, gorduras ${fmtG(t.l)} g, fibras ${fmtG(t.f)} g`},
+        h("span", null, h("b", {class: "t-c"}, "C"), fmtG(t.c)), h("span", null, h("b", {class: "t-p"}, "P"), fmtG(t.p)),
+        h("span", null, h("b", {class: "t-g"}, "G"), fmtG(t.l)), h("span", null, h("b", {class: "t-f"}, "F"), fmtG(t.f))));
+  }
+  function summarySheet(){
+    sheet("Resumo do plano", (el) => {
+      const t = planTotal(plan), s = C.macroSplit(t);
+      el.append(h("h2", null, "Resumo do plano"), h("p", {class: "sh-sub"}, "Valores planejados para o dia. Não é um registro do que foi consumido."),
+        totalsCard(t, target(), p, "Planejado"),
+        h("div", {class: "note"}, "As porcentagens usam 4 kcal/g para carboidratos e proteínas e 9 kcal/g para gorduras (fatores de Atwater). ",
+          `A energia total vem da TACO, calculada pela fonte com fatores próprios de cada alimento; por isso pode diferir um pouco da soma dos macronutrientes (${k0(s.atwater)} kcal).`),
+        h("div", {style: "height:12px"}),
+        h("button", {class: "btn ghost block", onclick: copyPlan}, ic("copy"), "Copiar plano em texto"));
+    });
+  }
+
+  /* objetivo e meta */
+  const obj = h("input", {class: "input", id: "objetivo", placeholder: "Objetivo", value: plan.objective || "", enterkeyhint: "done", "aria-label": "Objetivo"});
   autocomplete(obj, {
     items: optionSource("objectives"),
-    onPick: it => { obj.value = it.value; plan.objective = it.value; touch(p); focusFirstSlot(); },
+    onPick: it => { obj.value = it.value; plan.objective = it.value; touch(p); obj.blur(); },
     onRemove: it => { S.prefs.objectives = S.prefs.objectives.filter(o => o !== it.value); save(); },
     enterPicks: v => !!v.trim() && !S.prefs.objectives.some(o => norm(o) === norm(v.trim())) && optionSource("objectives")(v).length > 0,
-    onEnter: () => { plan.objective = obj.value.trim(); rememberOption("objectives", plan.objective); touch(p); focusFirstSlot(); }
+    onEnter: () => { plan.objective = canonical("objectives", obj.value); obj.value = plan.objective; rememberOption("objectives", plan.objective); touch(p); obj.blur(); }
   });
   obj.addEventListener("input", () => { plan.objective = obj.value; touch(p); });
   obj.addEventListener("change", () => rememberOption("objectives", obj.value));
-
-  const tgt = h("input", {class: "input num", id: "meta", inputmode: "numeric", placeholder: r.ok ? k0(r.get) : "kcal", value: plan.target ? String(plan.target) : "", "aria-label": "Meta de kcal"});
-  tgt.addEventListener("input", () => { const v = parseInt(tgt.value.replace(/\D/g, ""), 10); plan.target = v > 0 ? v : null; touch(p); updateTotals(); });
+  const tgt = h("input", {class: "input num", id: "meta", inputmode: "numeric", placeholder: r.ok && r.get ? k0(r.get) : "kcal", value: plan.target ? String(plan.target) : "", "aria-label": "Meta de calorias"});
+  tgt.addEventListener("input", () => { const v = parseInt(tgt.value.replace(/\D/g, ""), 10); plan.target = v > 0 ? v : null; touch(p); paintSum(); });
 
   const mealsEl = h("div", {class: "meals"});
-  const totCard = h("section", {class: "card tot", "aria-label": "Total do plano"});
   const pasteNew = h("div");
-  const refs = new Map();   // id da refeição -> {card, kcalEl, footEl, askEl} / id do item -> {row, food, qty}
 
-  function focusFirstSlot(){
-    if (!plan.meals.length) { addMeal(true); return; }
-    const m = plan.meals.find(x => !x.name.trim()) || plan.meals[plan.meals.length - 1];
-    const R = refs.get(m.id);
-    if (!m.name.trim() && R) R.card.querySelector(".meal-name").focus();
-    else refs.get(m.items[m.items.length - 1].id)?.food.focus();
-  }
-
-  function nextMealName(){
-    const used = new Set(plan.meals.map(m => norm(m.name)));
-    return DEFAULT_MEALS.find(n => !used.has(norm(n))) || "";
-  }
-  function addMeal(focus, items){
+  /* ---- refeição ---- */
+  const nextMealName = () => { const used = new Set(plan.meals.map(m => norm(m.name))); return DEFAULT_MEALS.find(n => !used.has(norm(n))) || ""; };
+  function addMeal(items, focusName = true){
     const m = {id: uid(), name: "", time: "", items: items || []};
-    plan.meals.push(m); ensureBlank(m); touch(p);
-    const el = buildMeal(m); mealsEl.append(el);
-    if (focus) { const nm = el.querySelector(".meal-name"); nm.focus(); el.scrollIntoView({block: "start", behavior: "smooth"}); }
-    updateTotals();
-    return m;
+    plan.meals.push(m); touch(p); open.add(m.id); syncOpen();
+    const card = buildMeal(m); mealsEl.append(card);
+    if (focusName) { card.querySelector(".meal-name").focus(); card.scrollIntoView({block: "start", behavior: "smooth"}); }
+    paintSum(); return m;
   }
-  function ensureBlank(m){
-    const last = m.items[m.items.length - 1];
-    if (!last || last.foodId) m.items.push({id: uid(), foodId: null, measure: null, qty: null});
+  function syncOpen(){ view.open = [...open]; try { sessionStorage.setItem(KEY + ".view", JSON.stringify(view)); } catch (e) {} }
+  function rebuild(m, focus){
+    const old = refs.get(m.id)?.card, el = buildMeal(m);
+    if (old) old.replaceWith(el); else mealsEl.append(el);
+    paintSum();
+    if (focus) focus();
+    return el;
   }
+  function toggle(m){ if (open.has(m.id)) { open.delete(m.id); if (view.edit && m.items.some(i => i.id === view.edit)) view.edit = null; } else open.add(m.id); syncOpen(); rebuild(m); }
 
-  /* ---- copiar e colar refeição (a cópia vale também para outros pacientes) ---- */
+  /* copiar, colar, duplicar e mover */
   const clip = () => S.prefs.clip;
-  const filled = m => m.items.filter(i => i.foodId && i.qty);
-  const clipLabel = () => { const c = clip(); return c ? `${c.name || "Refeição"} · ${c.items.length} ${c.items.length === 1 ? "alimento" : "alimentos"}` : ""; };
+  const clipLabel = () => { const c = clip(); return c ? `${c.name || "Refeição"} · ${nItems(c.items.length)}` : ""; };
+  const cloneItems = items => items.filter(i => db.has(i.foodId)).map(i => ({id: uid(), foodId: i.foodId, measure: i.measure, qty: i.qty}));
   function copyMeal(m){
     S.prefs.clip = {name: m.name.trim(), items: filled(m).map(i => ({foodId: i.foodId, measure: i.measure, qty: i.qty}))};
     save(); paintPasteNew(); toast(`${m.name.trim() || "Refeição"} copiada`);
   }
-  const clipItems = () => clip().items.filter(i => FOODS.has(i.foodId)).map(i => ({id: uid(), foodId: i.foodId, measure: i.measure, qty: i.qty}));
   function pasteInto(m, mode){
-    const keep = mode === "add" ? filled(m) : [];
-    m.items = keep.concat(clipItems()); ensureBlank(m); touch(p);
-    const old = refs.get(m.id).card, el = buildMeal(m);
-    old.replaceWith(el); updateTotals(); toast("Refeição colada");
+    m.items = (mode === "add" ? filled(m) : []).concat(cloneItems(clip().items));
+    touch(p); open.add(m.id); syncOpen(); rebuild(m); toast("Refeição colada");
   }
   function askPaste(m){
-    const R = refs.get(m.id);
     if (!filled(m).length) { pasteInto(m, "replace"); return; }
-    ask(R.askEl, `${m.name.trim() || "Esta refeição"} já tem ${filled(m).length} ${filled(m).length === 1 ? "alimento" : "alimentos"}. Colar ${clip().name || "a refeição copiada"}:`, [
+    ask(refs.get(m.id).askEl, `${m.name.trim() || "Esta refeição"} já tem ${nItems(filled(m).length)}. Colar ${clip().name || "a refeição copiada"}:`, [
       {label: "Somar", cls: "ghost", fn: () => pasteInto(m, "add")},
       {label: "Substituir", cls: "primary", fn: () => pasteInto(m, "replace")}]);
   }
+  function duplicateMeal(m){
+    const i = plan.meals.indexOf(m);
+    const c = {id: uid(), name: m.name.trim() ? `${m.name.trim()} (cópia)` : "", time: "", items: cloneItems(filled(m))};
+    plan.meals.splice(i + 1, 0, c); touch(p); open.add(c.id); syncOpen();
+    const el = buildMeal(c); refs.get(m.id).card.after(el); paintSum(); toast("Refeição duplicada");
+    el.scrollIntoView({block: "start", behavior: "smooth"});
+  }
+  function moveMeal(m, dir){
+    const i = plan.meals.indexOf(m), j = i + dir;
+    if (j < 0 || j >= plan.meals.length) return;
+    [plan.meals[i], plan.meals[j]] = [plan.meals[j], plan.meals[i]]; touch(p);
+    const a = refs.get(m.id).card, b = refs.get(plan.meals[i].id).card;
+    if (dir < 0) b.before(a); else b.after(a);
+    a.scrollIntoView({block: "nearest", behavior: "smooth"});
+  }
   function paintPasteNew(){
-    put(pasteNew, clip() && clip().items.length ? h("button", {class: "paste-new", type: "button", onclick: () => {
-      const m = addMeal(true, clipItems()); toast("Refeição colada");
-    }}, h("span", {html: ICON.copy, style: "display:contents"}), h("span", null, "Colar como nova refeição", h("small", null, clipLabel()))) : null);
+    put(pasteNew, clip() && clip().items.length ? h("button", {class: "paste-new", type: "button", onclick: () => { addMeal(cloneItems(clip().items)); toast("Refeição colada"); }},
+      ic("copy"), h("span", null, "Colar como nova refeição", h("small", null, clipLabel()))) : null);
   }
   function mealMenu(m){
-    actionSheet(m.name.trim() || "Refeição", filled(m).length ? `${filled(m).length} ${filled(m).length === 1 ? "alimento" : "alimentos"} · ${k0(mealTotal(m).kcal)} kcal` : "Sem alimentos", [
-      filled(m).length ? {label: "Copiar refeição", cls: "primary", fn: () => copyMeal(m)} : null,
-      clip() && clip().items.length ? {label: `Colar aqui: ${clipLabel()}`, cls: filled(m).length ? "ghost" : "primary", fn: () => askPaste(m)} : null,
+    const i = plan.meals.indexOf(m), n = filled(m).length;
+    actionSheet(m.name.trim() || "Refeição", n ? `${nItems(n)} · ${k0(mealTotal(m).kcal)} kcal` : "Sem alimentos", [
+      n ? {label: "Copiar refeição", cls: "primary", fn: () => copyMeal(m)} : null,
+      clip() && clip().items.length ? {label: `Colar aqui: ${clipLabel()}`, fn: () => askPaste(m)} : null,
+      n ? {label: "Duplicar refeição", fn: () => duplicateMeal(m)} : null,
+      i > 0 ? {label: "Mover para cima", fn: () => moveMeal(m, -1)} : null,
+      i < plan.meals.length - 1 ? {label: "Mover para baixo", fn: () => moveMeal(m, 1)} : null,
       {label: "Excluir refeição", cls: "danger", fn: () => {
-        const R = refs.get(m.id);
-        ask(R.askEl, `Excluir ${m.name.trim() ? "“" + m.name.trim() + "”" : "esta refeição"} e todos os alimentos dela?`, [{label: "Excluir", fn: () => {
-          plan.meals = plan.meals.filter(x => x !== m); touch(p); R.card.remove(); refs.delete(m.id); updateTotals();
+        open.add(m.id); syncOpen(); const el = rebuild(m);
+        ask(refs.get(m.id).askEl, `Excluir ${m.name.trim() ? "“" + m.name.trim() + "”" : "esta refeição"} e ${n ? "os " + nItems(n) : "ela"}?`, [{label: "Excluir", fn: () => {
+          plan.meals = plan.meals.filter(x => x !== m); touch(p); el.remove(); refs.delete(m.id); paintSum();
         }}]);
       }}]);
   }
 
   function buildMeal(m){
-    /* horário: toque abre a roda de horas do iPhone */
-    const time = h("input", {class: "meal-time", type: "time", value: m.time || "", "aria-label": "Horário da refeição"});
-    const tw = h("label", {class: "tw" + (m.time ? " has" : ""), title: "Horário"}, h("span", {html: ICON.clock + "Horário"}), time);
-    const setTime = () => { m.time = time.value || ""; tw.classList.toggle("has", !!m.time); touch(p); };
-    time.addEventListener("input", setTime); time.addEventListener("change", setTime); time.addEventListener("blur", setTime);
-    const name = h("input", {class: "meal-name", placeholder: nextMealName() || "Nome da refeição", value: m.name, enterkeyhint: "next", "aria-label": "Nome da refeição"});
-    const nameW = h("div", {class: "acw"}, name);
-    const kcalEl = h("div", {class: "meal-kcal"});
-    const askEl = h("div", {class: "meal-ask"});
-    const rowsEl = h("div", {class: "rows"});
-    const footEl = h("div", {class: "meal-foot"});
-    const card = h("section", {class: "card meal"});
-    const firstFood = () => refs.get(m.items[0].id).food.focus();
-    autocomplete(name, {
-      items: optionSource("meals"),
-      onPick: it => { name.value = it.value; m.name = it.value; touch(p); fitName(name); paintMealSum(m); firstFood(); },
-      onRemove: it => { S.prefs.meals = S.prefs.meals.filter(o => o !== it.value); save(); },
-      enterPicks: v => !!v.trim() && !S.prefs.meals.some(o => norm(o) === norm(v.trim())) && optionSource("meals")(v).length > 0,
-      onEnter: () => {
-        if (!name.value.trim() && name.placeholder && name.placeholder !== "Nome da refeição") name.value = name.placeholder;
-        m.name = name.value.trim(); rememberOption("meals", m.name); touch(p); fitName(name); paintMealSum(m); firstFood();
-      }
-    });
-    name.addEventListener("input", () => { m.name = name.value; touch(p); fitName(name); paintMealSum(m); });
-    name.addEventListener("change", () => rememberOption("meals", name.value));
-    requestAnimationFrame(() => fitName(name));
-    const menu = h("button", {class: "x more", type: "button", "aria-label": "Ações da refeição: copiar, colar, excluir", title: "Copiar, colar ou excluir", html: ICON.more, onclick: () => mealMenu(m)});
-
-    card.append(h("div", {class: "meal-h"}, nameW, tw, kcalEl, menu), askEl, rowsEl, footEl);
-    refs.set(m.id, {card, kcalEl, footEl, askEl});
-    for (const it of m.items) rowsEl.append(buildRow(m, it, rowsEl));
-    paintMealSum(m);
+    const isOpen = open.has(m.id);
+    const card = h("section", {class: "meal" + (isOpen ? " open" : ""), "data-id": m.id});
+    const kcalEl = h("div", {class: "mh-k"}), subEl = h("div", {class: "mh-s"});
+    const askEl = h("div", {class: "meal-ask"}), footEl = h("div", {class: "mfoot"});
+    refs.set(m.id, {card, kcalEl, subEl, footEl, askEl});
+    const chev = h("button", {class: "chev", type: "button", "aria-label": isOpen ? "Recolher refeição" : "Abrir refeição", "aria-expanded": String(isOpen), html: ICON.chev, onclick: e => { e.stopPropagation(); toggle(m); }});
+    let nameEl;
+    if (isOpen){
+      nameEl = h("input", {class: "meal-name", placeholder: nextMealName() || "Nome da refeição", value: m.name, enterkeyhint: "next", "aria-label": "Nome da refeição"});
+      autocomplete(nameEl, {
+        items: optionSource("meals"),
+        onPick: it => { nameEl.value = it.value; m.name = it.value; touch(p); paintMeal(m); addIn.focus(); },
+        onRemove: it => { S.prefs.meals = S.prefs.meals.filter(o => o !== it.value); save(); },
+        enterPicks: v => !!v.trim() && !S.prefs.meals.some(o => norm(o) === norm(v.trim())) && optionSource("meals")(v).length > 0,
+        onEnter: () => {
+          if (!nameEl.value.trim() && nameEl.placeholder !== "Nome da refeição") nameEl.value = nameEl.placeholder;
+          m.name = canonical("meals", nameEl.value); nameEl.value = m.name; rememberOption("meals", m.name); touch(p); paintMeal(m); addIn.focus();
+        }
+      });
+      nameEl.addEventListener("input", () => { m.name = nameEl.value; touch(p); paintMeal(m); });
+      nameEl.addEventListener("change", () => rememberOption("meals", nameEl.value));
+    } else {
+      nameEl = h("div", {class: "mh-n" + (m.name.trim() ? "" : " unnamed")}, m.name.trim() || "Refeição sem nome");
+    }
+    const head = h("div", {class: "mh", role: isOpen ? null : "button", tabindex: isOpen ? null : "0", "aria-expanded": String(isOpen)},
+      h("div", {class: "mh-m"}, isOpen ? h("div", {class: "acw"}, nameEl) : nameEl, subEl), kcalEl, chev);
+    if (!isOpen){
+      head.addEventListener("click", () => toggle(m));
+      head.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(m); } });
+    }
+    card.append(head);
+    let addIn = null;
+    if (isOpen){
+      const time = h("input", {class: "meal-time", type: "time", value: m.time || "", "aria-label": "Horário da refeição"});
+      const tw = h("label", {class: "tw" + (m.time ? " has" : "")}, h("span", {html: ICON.clock + "Horário"}), time);
+      const setTime = () => { m.time = time.value || ""; tw.classList.toggle("has", !!m.time); touch(p); paintMeal(m); };
+      time.addEventListener("input", setTime); time.addEventListener("change", setTime); time.addEventListener("blur", setTime);
+      const body = h("div", {class: "mbody"});
+      for (const it of m.items) if (it.foodId) body.append(buildItem(m, it));
+      addIn = h("input", {class: "add-in", placeholder: "Adicionar alimento", "aria-label": "Adicionar alimento à refeição", enterkeyhint: "search", autocapitalize: "off"});
+      autocomplete(addIn, {
+        items: foodItems, title: foodTitle, enterPicks: v => !!v.trim(),
+        onPick: x => x.value.create ? foodSheet({prefill: x.value.create}, f => addFood(m, f)) : addFood(m, x.value),
+        onEnter: () => { if (!addIn.value.trim()) addMeal(); }
+      });
+      addIn.addEventListener("focus", () => setTimeout(() => addIn.scrollIntoView({block: "center", behavior: "smooth"}), 40));
+      card.append(
+        h("div", {class: "mtools"}, tw, h("div", {class: "spacer"}),
+          h("button", {class: "btn ghost sm", type: "button", onclick: () => mealMenu(m), "aria-label": "Mais ações da refeição"}, ic("more"), "Ações")),
+        askEl, body,
+        h("div", {class: "add"}, h("label", {class: "add-l"}, ic("plus"), h("div", {class: "acw", style: "flex:1"}, addIn))),
+        footEl);
+      refs.get(m.id).addIn = addIn;
+    }
+    paintMeal(m);
     return card;
   }
+  function paintMeal(m){
+    const R = refs.get(m.id); if (!R) return;
+    const t = mealTotal(m), n = filled(m).length;
+    R.kcalEl.replaceChildren(k0(t.kcal), h("small", null, "kcal"));
+    R.subEl.textContent = [m.time, nItems(n)].filter(Boolean).join(" · ");
+    R.footEl.hidden = !t.kcal;
+    put(R.footEl, h("div", {class: "eyebrow"}, totalOf(m.name)), macroGrid(t, p.energy.weight, true), missNote(t));
+  }
 
-  function buildRow(m, it, rowsEl){
-    const row = h("div", {class: "item"});
-    const food = h("input", {class: "food", placeholder: "Alimento", "aria-label": "Alimento", enterkeyhint: "next", autocapitalize: "off"});
-    const foodW = h("div", {class: "acw"}, food);
-    const qty = h("input", {class: "cell qty", inputmode: "decimal", "aria-label": "Quantidade da medida caseira", placeholder: "1", enterkeyhint: "next"});
-    const meas = h("input", {class: "cell", "aria-label": "Medida caseira", enterkeyhint: "next", autocapitalize: "off"});
-    const measW = h("div", {class: "acw meas"}, meas);
-    const grams = h("div", {class: "grams"});
-    const l3 = h("div", {class: "item-l3"});
-    const askEl = h("div");
-    const del = h("button", {class: "x", "aria-label": "Excluir alimento", title: "Excluir alimento", html: ICON.x});
-    const quick = h("div", {class: "quick"});
-    refs.set(it.id, {row, food, qty});
-
-    function syncInputs(){
-      const f = FOODS.get(it.foodId);
-      row.classList.toggle("blank", !f);
-      food.value = f ? f.dn : "";
-      meas.value = f ? measureOf(f, it.measure).l : "";
-      qty.value = fmtQty(it.qty);
-      paintRow();
-    }
-    function paintRow(){
-      const f = FOODS.get(it.foodId);
-      if (!f) return;
-      const c = calcItem(it), m1 = measureOf(f, it.measure);
-      grams.textContent = c ? `${fq.format(Math.round(c.g * 10) / 10)} g` : `${fq.format(m1.g)} g/un`;
-      put(l3,
-        h("span", {class: "kc"}, c ? k0(c.kcal) : "—", h("small", null, " kcal")),
-        h("span", null, h("b", {class: "t-c"}, "C"), c ? ` ${fmtG(c.c)} g` : " —"),
-        h("span", null, h("b", {class: "t-p"}, "P"), c ? ` ${fmtG(c.p)} g` : " —"),
-        h("span", null, h("b", {class: "t-g"}, "G"), c ? ` ${fmtG(c.l)} g` : " —"));
-    }
-    const refresh = () => { paintRow(); paintMealSum(m); updateTotals(); };
-
-
-    /* alimento */
-    autocomplete(food, {
-      items: q => {
-        if (FOODS.get(it.foodId) && q === FOODS.get(it.foodId).dn) return [];
-        const list = searchFoods(q).map(f => ({label: f.dn, meta: f.own ? `próprio · ${f.kcal} kcal` : `${f.kcal} kcal`, value: f}));
-        if (q.trim().length >= 2) list.push({label: `+ Cadastrar “${q.trim()}” como alimento próprio`, value: {create: q.trim()}});
-        return list;
-      },
-      enterPicks: v => !!v.trim(),
-      title: q => !words(q).length && Object.keys(S.prefs.use).length ? "Mais usados" : "",
-      onPick: x => x.value.create ? foodSheet(x.value.create, f => setFood(f)) : setFood(x.value),
-      onEnter: () => {
-        if (!food.value.trim() && !it.foodId){ addMeal(true); return; }   // Enter em linha vazia: nova refeição
-        if (it.foodId) { food.value = FOODS.get(it.foodId).dn; qty.focus(); }
-      },
-      onBlur: () => { const f = FOODS.get(it.foodId); if (f && food.value !== f.dn) food.value = f.dn; if (!f) food.value = ""; }
+  /* ---- alimento ---- */
+  function addFood(m, f){
+    m.items = m.items.filter(i => i.foodId);
+    const it = {id: uid(), foodId: f.id, measure: lastMeasure(f), qty: null};
+    m.items.push(it); touch(p); view.edit = it.id;
+    rebuild(m, () => { const R = refs.get(it.id); R && R.qty.focus(); });
+  }
+  function closeEdit(m, it, next){
+    if (it && !it.qty) { it.qty = 1; }
+    if (it && it.foodId){ noteUse(it.foodId); S.prefs.last[it.foodId] = it.measure; }
+    view.edit = null; touch(p);
+    rebuild(m, next === "add" ? () => refs.get(m.id).addIn.focus() : null);
+  }
+  function buildItem(m, it){
+    const f = db.get(it.foodId);
+    const editing = view.edit === it.id;
+    const row = h("div", {class: "it" + (editing ? " edit" : "")});
+    const kEl = h("span", {class: "it-k"}), subEl = h("span", {class: "it-sub"});
+    const main = h("button", {class: "it-main", type: "button", "aria-expanded": String(editing), "aria-label": f ? `${f.dn}: editar` : "Alimento removido"},
+      h("span", {class: "it-name" + (f ? "" : " gone")}, f ? f.dn : "Alimento removido da base"), kEl, subEl);
+    main.addEventListener("click", () => {
+      if (editing) closeEdit(m, it); else { view.edit = it.id; rebuild(m, () => { const R = refs.get(it.id); R && R.qty.focus(); }); }
     });
-    food.addEventListener("focus", () => { setTimeout(() => row.scrollIntoView({block: "start", behavior: "smooth"}), 30); });
-
-    /* escolheu o alimento: medida mais provável já preenchida e foco direto no número */
-    function setFood(f){
-      const changed = it.foodId !== f.id;
-      it.foodId = f.id;
-      if (changed || !it.measure) it.measure = S.prefs.last[f.id] && f.measures.some(x => x.l === S.prefs.last[f.id]) ? S.prefs.last[f.id] : f.measures[0].l;
-      touch(p); syncInputs();
-      ensureBlank(m);
-      const last = m.items[m.items.length - 1];
-      if (!refs.has(last.id)) rowsEl.append(buildRow(m, last, rowsEl));
-      qty.focus(); qty.select();
-      paintMealSum(m); updateTotals();
+    row.append(main);
+    const R = {row, kEl, subEl};
+    refs.set(it.id, R);
+    function paint(){
+      const c = calcItem(it), ms = f ? C.measureOf(f, it.measure) : null;
+      kEl.replaceChildren(c ? k0(c.kcal) : "—", h("small", null, "kcal"));
+      put(subEl, f ? [h("b", null, it.qty ? `${fmtQty(it.qty)} × ${ms.l}` : ms.l), c ? ` · ${fq.format(Math.round(c.g * 10) / 10)} g` : ` · ${fq.format(ms.g)} g cada`] : "Substitua ou remova");
+      if (R.grams) R.grams.textContent = c ? `${fq.format(Math.round(c.g * 10) / 10)} g` : `${fq.format(ms.g)} g`;
+      if (R.mac) put(R.mac,
+        h("span", null, h("b", {class: "t-c"}, "C"), c ? `${fmtG(c.c)} g` : "—"),
+        h("span", null, h("b", {class: "t-p"}, "P"), c ? `${fmtG(c.p)} g` : "—"),
+        h("span", null, h("b", {class: "t-g"}, "G"), c ? `${fmtG(c.l)} g` : "—"),
+        h("span", null, h("b", {class: "t-f"}, "F"), c ? (c.miss.f ? "s/ dado" : `${fmtG(c.f)} g`) : "—"));
     }
-
-    /* medida caseira */
-    autocomplete(meas, {
-      items: q => {
-        const f = FOODS.get(it.foodId); if (!f) return [];
-        const cur = measureOf(f, it.measure).l;
-        const qt = words(q);
-        const all = (q === cur || !qt.length) ? f.measures : f.measures.filter(m1 => { const w = words(m1.l); return qt.every(t => w.some(x => x.startsWith(t))); });
-        return all.map(m1 => ({label: m1.l, meta: `${fq.format(m1.g)} g`, value: m1}));
-      },
-      onPick: x => { it.measure = x.value.l; meas.value = x.value.l; touch(p); refresh(); qty.focus(); qty.select(); },
-      onBlur: () => { const f = FOODS.get(it.foodId); if (f) meas.value = measureOf(f, it.measure).l; }
-    });
-    meas.addEventListener("focus", () => setTimeout(() => { if (document.activeElement === meas) meas.select(); }, 0));
-
-    /* número da medida: um toque num atalho conclui o alimento e já vai para o próximo */
-    qty.addEventListener("input", () => { it.qty = parseQty(qty.value); touch(p); refresh(); });
-    qty.addEventListener("focus", () => { row.classList.add("qfocus"); setTimeout(() => { if (document.activeElement === qty) qty.select(); }, 0); });
-    qty.addEventListener("blur", () => { row.classList.remove("qfocus"); qty.value = fmtQty(it.qty); });
-    qty.addEventListener("keydown", e => { if (e.key === "Enter" || (e.key === "Tab" && !e.shiftKey)) { e.preventDefault(); commit(); } });
-    for (const [lbl, v] of [["¼", .25], ["½", .5], ["¾", .75], ["1", 1], ["1½", 1.5], ["2", 2], ["3", 3], ["4", 4], ["5", 5]]){
-      const b = h("button", {type: "button"}, lbl);
-      b.addEventListener("mousedown", e => e.preventDefault());
-      b.addEventListener("click", () => { it.qty = v; qty.value = fmtQty(v); commit(); });
-      quick.append(b);
+    R.paint = paint;
+    if (editing && f){
+      const qty = h("input", {class: "cell qty", inputmode: "decimal", "aria-label": "Quantidade", placeholder: "1", value: fmtQty(it.qty), enterkeyhint: "done"});
+      const meas = h("input", {class: "cell", "aria-label": "Medida caseira", value: C.measureOf(f, it.measure).l, autocapitalize: "off"});
+      R.qty = qty; R.grams = h("div", {class: "grams"}); R.mac = h("div", {class: "ed-m"});
+      const live = () => { paint(); paintMeal(m); paintSum(); };
+      qty.addEventListener("input", () => { it.qty = parseQty(qty.value); touch(p); live(); });
+      qty.addEventListener("focus", () => setTimeout(() => { if (document.activeElement === qty) qty.select(); }, 0));
+      qty.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); closeEdit(m, it, "add"); } });
+      autocomplete(meas, {
+        items: q => {
+          const cur = C.measureOf(f, it.measure).l, qt = words(q);
+          const all = (q === cur || !qt.length) ? f.measures : f.measures.filter(x => { const w = words(x.l); return qt.every(t => w.some(y => y.startsWith(t))); });
+          return all.map(x => ({label: x.l, meta: `${fq.format(x.g)} g`, value: x}));
+        },
+        onPick: x => { it.measure = x.value.l; meas.value = x.value.l; touch(p); live(); qty.focus(); },
+        onBlur: () => { meas.value = C.measureOf(f, it.measure).l; }
+      });
+      meas.addEventListener("focus", () => setTimeout(() => { if (document.activeElement === meas) meas.select(); }, 0));
+      const quick = h("div", {class: "quick"});
+      for (const [lbl, v] of [["¼", .25], ["½", .5], ["¾", .75], ["1", 1], ["1½", 1.5], ["2", 2], ["3", 3], ["4", 4], ["5", 5]]){
+        const b = h("button", {type: "button", "aria-label": `Quantidade ${lbl}`}, lbl);
+        b.addEventListener("mousedown", e => e.preventDefault());
+        b.addEventListener("click", () => { it.qty = v; closeEdit(m, it, "add"); });
+        quick.append(b);
+      }
+      const done = h("button", {type: "button", class: "next"}, "Pronto");
+      done.addEventListener("mousedown", e => e.preventDefault());
+      done.addEventListener("click", () => closeEdit(m, it, "add"));
+      quick.append(done);
+      const askEl = h("div");
+      row.append(h("div", {class: "it-ed"},
+        h("div", {class: "ed-l"}, qty, h("div", {class: "acw"}, meas), R.grams), R.mac, quick,
+        h("div", {class: "ed-a"},
+          h("button", {class: "btn ghost sm", type: "button", onclick: () => swapSheet(m, it)}, ic("swap"), "Substituir"),
+          h("button", {class: "btn ghost sm", type: "button", onclick: () => {
+            const c = {id: uid(), foodId: it.foodId, measure: it.measure, qty: it.qty || 1};
+            m.items.splice(m.items.indexOf(it) + 1, 0, c); view.edit = null; touch(p); rebuild(m); toast("Alimento duplicado");
+          }}, ic("copy"), "Duplicar"),
+          h("button", {class: "btn danger sm", type: "button", onclick: () => ask(askEl, `Excluir ${f.dn}?`, [{label: "Excluir", fn: () => {
+            m.items = m.items.filter(x => x !== it); view.edit = null; touch(p); rebuild(m);
+          }}])}, ic("x"), "Remover")),
+        askEl));
+    } else if (editing){
+      const askEl = h("div");
+      row.append(h("div", {class: "it-ed"}, h("div", {class: "ed-a"},
+        h("button", {class: "btn ghost sm", type: "button", onclick: () => swapSheet(m, it)}, ic("swap"), "Substituir"),
+        h("button", {class: "btn danger sm", type: "button", onclick: () => { m.items = m.items.filter(x => x !== it); view.edit = null; touch(p); rebuild(m); }}, ic("x"), "Remover")), askEl));
     }
-    const nx = h("button", {type: "button", class: "next"}, "Próximo ↵");
-    nx.addEventListener("mousedown", e => e.preventDefault());
-    nx.addEventListener("click", commit);
-    quick.append(nx);
-
-    function commit(){
-      if (!it.qty) { it.qty = 1; qty.value = "1"; }
-      S.prefs.use[it.foodId] = (S.prefs.use[it.foodId] || 0) + 1;
-      S.prefs.last[it.foodId] = it.measure;
-      touch(p); refresh();
-      const idx = m.items.indexOf(it);
-      ensureBlank(m);
-      const nxt = m.items[idx + 1];
-      if (!refs.has(nxt.id)) rowsEl.append(buildRow(m, nxt, rowsEl));
-      refs.get(nxt.id).food.focus();
-    }
-
-    del.addEventListener("click", () => {
-      const f = FOODS.get(it.foodId);
-      ask(askEl, `Excluir ${f ? f.dn : "este alimento"}?`, [{label: "Excluir", fn: () => {
-        m.items = m.items.filter(x => x !== it); refs.delete(it.id); row.remove();
-        ensureBlank(m); touch(p); paintMealSum(m); updateTotals();
-      }}]);
-    });
-
-    row.append(
-      h("div", {class: "item-l1"}, foodW, del),
-      h("div", {class: "item-l2"}, qty, measW, grams),
-      l3, quick, askEl);
-    syncInputs();
+    paint();
     return row;
   }
 
-  function paintMealSum(m){
-    const R = refs.get(m.id); if (!R) return;
-    const t = mealTotal(m);
-    R.kcalEl.replaceChildren(k0(t.kcal), h("small", null, "kcal"));
-    R.footEl.hidden = !t.kcal;
-    put(R.footEl, h("div", {class: "eyebrow"}, totalOf(m.name)), macroGrid(t, W(), true));
+  /* ---- substituição inteligente ---- */
+  function swapSheet(m, it){
+    const orig = db.get(it.foodId);
+    let crit = "kcal", picked = null, q = "";
+    const CRIT = [["kcal", "Energia"], ["c", "Carboidratos"], ["p", "Proteínas"], ["free", "Livre"]];
+    const base = calcItem(it);
+    sheet("Substituir alimento", (el, close) => {
+      const seg = h("div", {class: "seg crit", role: "radiogroup", "aria-label": "Critério da substituição"});
+      const listEl = h("div", {class: "subs"}), noteEl = h("p", {class: "note"}), bar = h("div", {class: "confirmbar"});
+      const sIn = h("input", {type: "search", placeholder: "Ou busque qualquer alimento", "aria-label": "Buscar alimento para a troca", enterkeyhint: "search"});
+      sIn.addEventListener("input", () => { q = sIn.value; picked = null; paint(); });
+      function options(){
+        const qOpt = {use: S.prefs.use, last: S.prefs.last, limit: 12};
+        if (words(q).length){
+          return search(q, 12).filter(f => !orig || f.id !== orig.id).map(f => crit === "free" || !base ? freeOpt(f) : (C.equivalent(db, it, f, crit, S.prefs.last[f.id]) || freeOpt(f)));
+        }
+        if (!base) return [];
+        if (crit === "free") return C.substitutes(db, it, "kcal", qOpt).map(o => freeOpt(o.food));
+        return C.substitutes(db, it, crit, qOpt);
+      }
+      function freeOpt(f){
+        const ms = C.measureOf(f, lastMeasure(f)), x = {foodId: f.id, measure: ms.l, qty: 1}, c = calcItem(x);
+        const b0 = base || {kcal: 0, c: 0, p: 0, l: 0};
+        return {food: f, measure: ms, qty: 1, calc: c, free: true, delta: {kcal: c.kcal - b0.kcal, c: c.c - b0.c, p: c.p - b0.p, l: c.l - b0.l}};
+      }
+      function paint(){
+        put(seg, CRIT.map(([k, l]) => h("button", {type: "button", class: crit === k ? "on" : "", role: "radio", "aria-checked": String(crit === k), onclick: () => { crit = k; picked = null; paint(); }}, l)));
+        noteEl.textContent = crit === "kcal" ? "Quantidades com a mesma energia. Proteínas, fibras, vitaminas e minerais podem ser diferentes."
+          : crit === "c" ? "Quantidades com a mesma quantidade de carboidratos. A energia e os outros nutrientes podem mudar."
+          : crit === "p" ? "Quantidades com a mesma quantidade de proteínas. A energia e os outros nutrientes podem mudar."
+          : "Troca livre: escolha o alimento e ajuste a quantidade depois.";
+        const opts = options();
+        put(listEl, opts.length ? opts.map(o => {
+          const d = o.delta, main = crit === "c" ? d.c : crit === "p" ? d.p : d.kcal;
+          return h("button", {class: "so" + (picked && picked.food.id === o.food.id ? " on" : ""), type: "button", onclick: () => { picked = o; paint(); }},
+            h("span", {class: "so-n"}, o.food.dn), h("span", {class: "so-k"}, `${k0(o.calc.kcal)} kcal`),
+            h("span", {class: "so-q"}, `${fmtQty(o.qty)} × ${o.measure.l} · ${k0(o.calc.g)} g`),
+            h("span", {class: "so-d"}, crit === "kcal" || crit === "free" ? `${signed(d.kcal, k0)} kcal` : crit === "c" ? `C ${signed(d.c, fmtG)} g · ${signed(d.kcal, k0)} kcal` : `P ${signed(d.p, fmtG)} g · ${signed(d.kcal, k0)} kcal`));
+        }) : h("div", {class: "empty"}, "Nenhuma alternativa com esse critério. Tente outro critério ou busque um alimento."));
+        if (picked){
+          const before = planTotal(plan).kcal, after = before + picked.delta.kcal;
+          bar.hidden = false;
+          put(bar, h("p", null, `${orig ? orig.dn : "Alimento removido"} → `, h("b", null, picked.food.dn), ` (${fmtQty(picked.qty)} × ${picked.measure.l}). Plano: ${k0(before)} → ${k0(after)} kcal.`),
+            h("button", {class: "btn primary block", type: "button", onclick: () => {
+              it.foodId = picked.food.id; it.measure = picked.measure.l; it.qty = picked.qty;
+              noteUse(it.foodId); touch(p); view.edit = it.id; close(); rebuild(m); toast("Alimento substituído");
+            }}, "Confirmar troca"));
+        } else bar.hidden = true;
+      }
+      el.append(h("h2", null, `Substituir ${orig ? orig.dn : "alimento"}`),
+        h("p", {class: "sh-sub"}, base ? `${fmtQty(it.qty)} × ${C.measureOf(orig, it.measure).l} · ${k0(base.g)} g · ${k0(base.kcal)} kcal` : ""),
+        seg, h("div", {class: "search", style: "margin:12px 0 4px"}, ic("search"), sIn), noteEl, listEl, bar);
+      paint();
+    });
   }
 
-  /* total do plano logo abaixo do objetivo, e uma faixa fina fixa quando ele sai da tela */
-  function updateTotals(){
-    const t = planTotal(plan), tg = target();
-    const pct = tg ? Math.round(t.kcal / tg * 100) : null;
-    put(totCard,
-      h("div", {class: "eyebrow"}, "Total do plano"),
-      h("div", {class: "tot-top"},
-        h("div", {class: "tot-kcal"}, h("b", null, k0(t.kcal)), h("span", null, tg ? `de ${k0(tg)} kcal` : "kcal")),
-        h("span", {class: "pill"}, pct != null ? `${pct}% da meta` : "Sem meta")),
-      macroGrid(t, W(), false));
-    put(mini,
-      h("div", {class: "mini-k"}, h("b", null, k0(t.kcal)), h("span", null, " kcal"), pct != null ? h("i", null, `${pct}%`) : null),
-      h("div", {class: "mini-m"},
-        h("span", null, h("b", {class: "t-c"}, "C"), ` ${fmtG(t.c)}g`),
-        h("span", null, h("b", {class: "t-p"}, "P"), ` ${fmtG(t.p)}g`),
-        h("span", null, h("b", {class: "t-g"}, "G"), ` ${fmtG(t.l)}g`)));
-  }
-  mini.hidden = false; mini.classList.add("off");
-  if ("IntersectionObserver" in window){
-    new IntersectionObserver(([e]) => { mini.classList.toggle("off", e.isIntersecting || e.boundingClientRect.top > 0); },
-      {rootMargin: "-150px 0px 0px 0px"}).observe(totCard);
-  }
-
-  /* copiar plano como texto */
+  /* ---- copiar plano como texto ---- */
   function copyPlan(){
     const lines = [`PLANO ALIMENTAR · ${p.name}`];
     if (plan.objective) lines.push(`Objetivo: ${plan.objective}`);
@@ -1321,75 +1072,409 @@ function renderPlan(p, body, mini){
       if (!its.length) continue;
       lines.push("", `${m.time ? m.time + " · " : ""}${(m.name || "Refeição").toUpperCase()} (${k0(mealTotal(m).kcal)} kcal)`);
       for (const i of its){
-        const f = FOODS.get(i.foodId), ms = measureOf(f, i.measure), c = calcItem(i);
+        const f = db.get(i.foodId); if (!f) continue;
+        const ms = C.measureOf(f, i.measure), c = calcItem(i);
         lines.push(ms.l === "Grama" ? `• ${f.dn}: ${fq.format(i.qty)} g` : `• ${f.dn}: ${fmtQty(i.qty)} ${ms.l.toLowerCase()} (${fq.format(Math.round(c.g))} g)`);
       }
     }
     const t = planTotal(plan);
-    lines.push("", `Total: ${k0(t.kcal)} kcal · CHO ${fmtG(t.c)} g · PTN ${fmtG(t.p)} g · LIP ${fmtG(t.l)} g · Fibras ${fmtG(t.f)} g`);
-    const text = lines.join("\n");
-    const done = () => toast("Plano copiado");
-    try {
-      navigator.clipboard.writeText(text).then(done, () => fallback(text));
-    } catch (e) { fallback(text); }
-    function fallback(txt){
-      const ta = h("textarea", {style: "position:fixed;top:-1000px"}); ta.value = txt; document.body.append(ta); ta.select();
-      try { document.execCommand("copy"); done(); } catch (e) { toast("Não foi possível copiar"); }
-      ta.remove();
-    }
+    lines.push("", `Total planejado: ${k0(t.kcal)} kcal · Carboidratos ${fmtG(t.c)} g · Proteínas ${fmtG(t.p)} g · Gorduras ${fmtG(t.l)} g · Fibras ${fmtG(t.f)} g`);
+    copyText(lines.join("\n"), "Plano copiado");
   }
 
-  for (const m of plan.meals) { ensureBlank(m); mealsEl.append(buildMeal(m)); }
+  for (const m of plan.meals) mealsEl.append(buildMeal(m));
   paintPasteNew();
-  body.append(h("div", {class: "stack"},
+  put(app, h("div", {class: "view"},
+    h("header", {class: "top"}, h("div", {class: "top-row"},
+      h("button", {class: "who", "aria-label": `Perfil ativo: ${p.name}. Trocar de perfil`, onclick: switcher}, avatar(p), h("b", null, firstName(p.name)), ic("chev")),
+      h("div", {class: "spacer"}),
+      h("button", {class: "icon-btn", "aria-label": "Copiar plano em texto", onclick: copyPlan}, ic("copy"))), sumbar),
     h("div", {class: "plan-head"},
-      h("div", {class: "field", style: "margin:0"}, h("label", {for: "objetivo"}, "Objetivo"), objW),
+      h("div", {class: "field", style: "margin:0"}, h("label", {for: "objetivo"}, "Objetivo"), h("div", {class: "acw"}, obj)),
       h("div", {class: "field", style: "margin:0"}, h("label", {for: "meta"}, "Meta (kcal)"), tgt)),
-    totCard,
-    h("div", {style: "height:4px"}),
+    C.energyOf(p).child ? h("p", {class: "note warn"}, "Para crianças e adolescentes, a meta considera o crescimento. Evite déficit calórico sem acompanhamento profissional.") : null,
     mealsEl,
-    h("div", {class: "add-row"}, h("button", {class: "add-meal", onclick: () => addMeal(true)}, h("span", {html: ICON.plus, style: "display:contents"}), "Adicionar refeição"), pasteNew),
-    h("div", {class: "plan-tools"}, h("button", {class: "btn ghost", onclick: copyPlan}, "Copiar plano em texto")),
-    h("p", {class: "src"}, "Composição: TACO 4ª ed. (NEPA/UNICAMP, 2011). Medidas caseiras: POF 2008–2009, Tabela de Medidas Referidas (IBGE). Atalhos: Enter escolhe o alimento e avança; Enter numa linha vazia cria a próxima refeição. Use ⋯ na refeição para copiar e colar.")));
-  updateTotals();
-  if (!plan.meals.length) addMeal(false);
+    h("div", {class: "add-row"}, h("button", {class: "add-meal", onclick: () => addMeal()}, ic("plus"), "Adicionar refeição"), pasteNew),
+    h("p", {class: "src"}, "Valores planejados. Composição: TACO 4ª ed. (NEPA/UNICAMP, 2011). Medidas caseiras: POF 2008–2009 (IBGE).")));
+  paintSum();
+  if (!plan.meals.length) addMeal(null, false);
+  if (view.focusMeal){
+    const R = refs.get(view.focusMeal); view.focusMeal = null;
+    if (R) setTimeout(() => R.card.scrollIntoView({block: "start", behavior: "smooth"}), 60);
+  }
 }
 
-/* Ajusta a largura do nome da refeição ao texto, para o horário ficar colado nele */
-function fitName(input){
-  let ruler = input.parentElement.querySelector(".ruler");
-  if (!ruler) { ruler = h("span", {class: "meal-name ruler", "aria-hidden": "true"}); input.parentElement.append(ruler); }
-  ruler.textContent = input.value || input.placeholder;
-  input.style.width = Math.ceil(ruler.getBoundingClientRect().width + 2) + "px";
+function copyText(text, okMsg){
+  const done = () => toast(okMsg);
+  const fallback = () => {
+    const ta = h("textarea", {style: "position:fixed;top:-1000px"}); ta.value = text; document.body.append(ta); ta.select();
+    try { document.execCommand("copy") ? done() : toast("Não foi possível copiar"); } catch (e) { toast("Não foi possível copiar"); }
+    ta.remove();
+  };
+  try { navigator.clipboard.writeText(text).then(done, fallback); } catch (e) { fallback(); }
 }
-if (document.fonts) document.fonts.ready.then(() => document.querySelectorAll(".meal-name").forEach(fitName));
 
-/* Gramas: uma casa decimal abaixo de 10 g, inteiro a partir disso */
-const fmtG = v => v < 10 ? g1(v) : k0(v);
-
-/* Bloco de macros: gramas e % das calorias na primeira linha, g/kg na segunda; fibras em gramas */
-function macroGrid(t, W, small){
-  const mk = t.c * 4 + t.p * 4 + t.l * 9 || 1;
-  const cell = (cls, k, grams, kcal) => h("div", null,
-    h("div", {class: "k " + cls}, k),
-    h("div", {class: "v"}, fmtG(grams), h("small", null, "g"), h("span", {class: "pc"}, `${Math.round(kcal / mk * 100)}%`)),
-    h("div", {class: "s"}, W ? `${nf2.format(grams / W)} g/kg` : "\u00a0"));
-  return h("div", {class: "mwrap" + (small ? " sm" : "")},
-    h("div", {class: "mgrid"}, cell("t-c", "Carboidratos", t.c, t.c * 4), cell("t-p", "Proteínas", t.p, t.p * 4), cell("t-g", "Gorduras", t.l, t.l * 9)),
-    h("div", {class: "fib"}, h("span", {class: "t-f"}, "Fibras"), h("b", null, `${fmtG(t.f)} g`),
-      t.kcal ? h("span", {class: "s"}, `${g1(t.f * 1000 / t.kcal)} g por 1.000 kcal`) : null));
+/* ---------- Alimentos ---------- */
+function renderFoods(p){
+  let q = view.foodQ || "";
+  const listEl = h("div");
+  const inp = h("input", {type: "search", id: "busca-alimento", placeholder: "Buscar alimento", value: q, "aria-label": "Buscar alimento", enterkeyhint: "search", autocomplete: "off", autocorrect: "off", spellcheck: "false"});
+  const seg = h("div", {class: "seg", role: "tablist"});
+  inp.addEventListener("input", () => { q = inp.value; view.foodQ = q; fill(); });
+  function row(f){
+    const ms = C.measureOf(f, lastMeasure(f));
+    const star = h("button", {class: "star" + (isFav(f.id) ? " on" : ""), "aria-label": isFav(f.id) ? "Tirar dos favoritos" : "Favoritar", "aria-pressed": String(isFav(f.id)), html: isFav(f.id) ? ICON.starOn : ICON.star});
+    star.addEventListener("click", e => { e.stopPropagation(); const on = toggleFav(f.id); star.classList.toggle("on", on); star.innerHTML = on ? ICON.starOn : ICON.star; star.setAttribute("aria-pressed", String(on)); });
+    return h("div", {class: "li", role: "button", tabindex: "0", onclick: () => foodDetail(f, fill), onkeydown: e => { if (e.key === "Enter") foodDetail(f, fill); }},
+      h("div", {class: "li-m"}, h("div", {class: "li-t", html: highlight(f.dn, q)}),
+        h("div", {class: "li-s"}, `${f.kcal} kcal em 100 g${ms.l !== "Grama" ? ` · ${ms.l} = ${fq.format(ms.g)} g` : ""}${f.own ? " · seu alimento" : ""}`)), star);
+  }
+  function fill(){
+    put(seg, [["fav", "Favoritos"], ["rec", "Recentes"], ["meus", "Meus alimentos"]].map(([k, l]) =>
+      h("button", {class: view.foodSeg === k ? "on" : "", role: "tab", "aria-selected": String(view.foodSeg === k), onclick: () => { view.foodSeg = k; fill(); }}, l)));
+    seg.hidden = !!words(q).length;
+    let foods, empty;
+    if (words(q).length){ foods = search(q, 30); empty = `Nada encontrado para “${q}”.`; }
+    else if (view.foodSeg === "fav"){ foods = S.prefs.fav.map(id => db.get(id)).filter(Boolean); empty = "Toque na estrela de um alimento para guardá-lo aqui."; }
+    else if (view.foodSeg === "rec"){ foods = S.prefs.recent.map(id => db.get(id)).filter(Boolean); empty = "Os alimentos que você lançar no plano aparecem aqui."; }
+    else { foods = db.list.filter(f => f.own).sort((a, b) => a.dn.localeCompare(b.dn, "pt-BR")); empty = "Cadastre alimentos que não estão na TACO, como produtos de marca."; }
+    put(listEl, foods.length ? h("div", {class: "list"}, foods.map(row)) : h("div", {class: "card empty"}, empty),
+      words(q).length ? h("div", {style: "margin-top:12px"}, h("button", {class: "btn ghost block", onclick: () => foodSheet({prefill: q.trim()}, () => fill())}, ic("plus"), `Cadastrar “${q.trim()}”`)) : null);
+  }
+  fill();
+  put(app, h("div", {class: "view"}, topBar(h("button", {class: "icon-btn accent", "aria-label": "Cadastrar alimento", onclick: () => foodSheet({}, () => { view.foodSeg = "meus"; fill(); })}, ic("plus"))),
+    h("h1", null, "Alimentos"), h("div", {class: "sub"}, `${db.list.length} alimentos da TACO e seus`),
+    h("div", {class: "search"}, ic("search"), inp), seg, h("div", {style: "height:12px"}), listEl,
+    h("p", {class: "src"}, "Composição: TACO 4ª ed. (NEPA/UNICAMP, 2011). Medidas caseiras: POF 2008–2009, Tabela de Medidas Referidas (IBGE). Leite integral, leite desnatado UHT, iogurte sabor abacaxi e coco verde estão em reanálise na própria TACO e não aparecem.")));
 }
-/* "Total do almoço", "Total da ceia" */
-function totalOf(name){
-  const n = (name || "").trim();
-  if (!n) return "Total da refeição";
-  const fem = /^(ceia|colação|colacao|merenda|refeição|sobremesa|marmita)\b/i.test(n);
-  return `Total ${fem ? "da" : "do"} ${n.charAt(0).toLowerCase() + n.slice(1)}`;
+
+function foodDetail(f, after){
+  const p = active();
+  let mlabel = lastMeasure(f);
+  sheet(f.dn, (el, close) => {
+    const body = h("div");
+    const star = h("button", {class: "btn ghost sm", type: "button"});
+    const paintStar = () => put(star, h("span", {html: isFav(f.id) ? ICON.starOn : ICON.star, style: "display:contents"}), isFav(f.id) ? "Favorito" : "Favoritar");
+    star.addEventListener("click", () => { toggleFav(f.id); paintStar(); after && after(); });
+    paintStar();
+    function paint(){
+      const ms = C.measureOf(f, mlabel), c = C.calcItem(db, {foodId: f.id, measure: ms.l, qty: ms.l === "Grama" ? 100 : 1});
+      const v = (x, miss) => miss ? "—" : fmtG(x);
+      put(body,
+        h("div", {class: "eyebrow", style: "margin-top:14px"}, ms.l === "Grama" ? "Em 100 g" : `Em 1 ${ms.l.toLowerCase()} (${fq.format(ms.g)} g)`),
+        h("div", {class: "nut"},
+          h("div", null, h("div", {class: "k"}, "kcal"), h("div", {class: "v"}, k0(c.kcal))),
+          h("div", null, h("div", {class: "k t-c"}, "Carb."), h("div", {class: "v"}, v(c.c, c.miss.c), h("small", null, "g"))),
+          h("div", null, h("div", {class: "k t-p"}, "Prot."), h("div", {class: "v"}, v(c.p, c.miss.p), h("small", null, "g"))),
+          h("div", null, h("div", {class: "k t-g"}, "Gord."), h("div", {class: "v"}, v(c.l, c.miss.l), h("small", null, "g"))),
+          h("div", null, h("div", {class: "k t-f"}, "Fibras"), h("div", {class: "v"}, v(c.f, c.miss.f), h("small", null, "g")))),
+        Object.keys(c.miss).length ? h("p", {class: "note warn"}, "— = dado em reanálise na TACO.") : null,
+        h("div", {class: "mchips", role: "radiogroup", "aria-label": "Medida"}, f.measures.map(x =>
+          h("button", {type: "button", class: x.l === ms.l ? "on" : "", role: "radio", "aria-checked": String(x.l === ms.l), onclick: () => { mlabel = x.l; paint(); }}, x.l === "Grama" ? "100 g" : `${x.l} · ${fq.format(x.g)} g`))));
+    }
+    paint();
+    const actions = h("div", {class: "bk-row", style: "margin-top:18px"},
+      p ? h("button", {class: "btn primary block", type: "button", onclick: () => { close(); pickMeal(f, mlabel); }}, ic("plus"), "Adicionar ao meu plano") : null,
+      f.own ? h("button", {class: "btn ghost block", type: "button", onclick: () => { close(); foodSheet({food: f}, after); }}, ic("edit"), "Editar alimento") : null);
+    const askEl = h("div");
+    if (f.own){
+      const uses = S.patients.reduce((n, x) => n + x.plan.meals.reduce((k, m) => k + m.items.filter(i => i.foodId === f.id).length, 0), 0);
+      actions.append(h("button", {class: "btn danger block", type: "button", onclick: () => ask(askEl,
+        uses ? `${f.dn} está em ${uses} ${uses === 1 ? "item de plano" : "itens de planos"}. Excluir mesmo assim? Esses itens ficam marcados para substituir.` : `Excluir ${f.dn}?`,
+        [{label: "Excluir", fn: () => { S.foods = S.foods.filter(r => r[0] !== f.id); S.prefs.fav = S.prefs.fav.filter(x => x !== f.id); db.remove(f.id); save(); close(); toast("Alimento excluído"); after && after(); }}])}, ic("x"), "Excluir alimento"), askEl);
+    }
+    el.append(h("div", {style: "display:flex;align-items:flex-start;gap:10px"}, h("div", {style: "flex:1;min-width:0"}, h("h2", null, f.dn),
+      h("p", {class: "sh-sub", style: "margin:0"}, f.own ? "Alimento cadastrado por você" : `TACO: ${f.name}${f.cat ? " · " + f.cat : ""}`)), star), body, actions);
+  });
+}
+function pickMeal(f, mlabel){
+  const p = active(), plan = p.plan;
+  const go2 = m => {
+    m.items = m.items.filter(i => i.foodId);
+    const it = {id: uid(), foodId: f.id, measure: mlabel, qty: null};
+    m.items.push(it); touch(p);
+    go({tab: "plano", open: [...new Set([...(view.open || []), m.id])], edit: it.id, focusMeal: m.id});
+    setTimeout(() => { const q = document.querySelector(".it.edit .qty"); if (q) q.focus(); }, 80);
+  };
+  actionSheet("Adicionar em qual refeição?", f.dn, [
+    ...plan.meals.map(m => ({label: `${m.time ? m.time + " · " : ""}${m.name.trim() || "Refeição sem nome"}`, fn: () => go2(m)})),
+    {label: "Nova refeição", cls: "primary", fn: () => { const m = {id: uid(), name: "", time: "", items: []}; plan.meals.push(m); go2(m); }}]);
+}
+
+/* ---------- cadastro e edição de alimento ---------- */
+function foodSheet(opt, done){
+  const f = opt.food;
+  sheet(f ? "Editar alimento" : "Novo alimento", (el, close) => {
+    const nm = h("input", {class: "input", id: "al-nome", value: f ? f.dn : (opt.prefill || ""), placeholder: "Ex.: Leite integral (marca)", autocomplete: "off"});
+    const num = (id, ph, v) => h("input", {class: "input num", id, inputmode: "decimal", placeholder: ph, autocomplete: "off", value: v == null ? "" : fq.format(v)});
+    const kc = num("al-kcal", "0", f && f.kcal), cc = num("al-cho", "0", f && f.c), pp = num("al-ptn", "0", f && f.p), ll = num("al-lip", "0", f && f.fat), ff = num("al-fib", "opcional", f && f.fib);
+    const m0 = f && f.measures.find(x => x.l !== "Grama");
+    const ml = h("input", {class: "input", id: "al-med", placeholder: "Ex.: Copo médio", autocomplete: "off", value: m0 ? m0.l : ""});
+    const mg = num("al-medg", "g", m0 && m0.g);
+    const ok = h("button", {class: "btn primary block", type: "submit"}, f ? "Salvar" : "Salvar alimento");
+    const v = x => { const n = parseFloat(x.value.replace(",", ".")); return isFinite(n) && n >= 0 ? n : null; };
+    const check = () => { ok.disabled = !(nm.value.trim() && v(kc) != null && v(cc) != null && v(pp) != null && v(ll) != null && (!ml.value.trim() || v(mg) > 0)); };
+    [nm, kc, cc, pp, ll, ff, ml, mg].forEach(x => x.addEventListener("input", check));
+    check();
+    const g2 = (a, b) => h("div", {style: "display:grid;grid-template-columns:1fr 1fr;gap:10px"}, a, b);
+    const fld = (id, l, x) => h("div", {class: "field"}, h("label", {for: id}, l), x);
+    const form = h("form", null,
+      h("h2", null, f ? "Editar alimento" : "Novo alimento"), h("p", {class: "sh-sub"}, "Use os valores do rótulo ou de uma tabela confiável."),
+      fld("al-nome", "Nome", nm),
+      h("div", {class: "eyebrow", style: "margin:4px 0 10px"}, "Valores em 100 g ou 100 ml"),
+      g2(fld("al-kcal", "Energia (kcal)", kc), fld("al-cho", "Carboidratos (g)", cc)),
+      g2(fld("al-ptn", "Proteínas (g)", pp), fld("al-lip", "Gorduras (g)", ll)),
+      g2(fld("al-fib", "Fibras (g)", ff), h("div")),
+      h("div", {class: "eyebrow", style: "margin:4px 0 10px"}, "Porção usual (opcional)"),
+      g2(fld("al-med", "Medida", ml), fld("al-medg", "Gramas na medida", mg)),
+      h("div", {class: "row-actions"}, h("button", {class: "btn ghost", type: "button", onclick: close}, "Cancelar"), ok));
+    form.addEventListener("submit", e => {
+      e.preventDefault(); check(); if (ok.disabled) return;
+      const ms = ml.value.trim() ? [[ml.value.trim(), v(mg)]] : [];
+      const raw = [f ? f.id : -Date.now(), nm.value.trim(), Math.round(v(kc)), v(cc), v(pp), v(ll), ff.value.trim() ? v(ff) : null, "Alimento próprio", ms];
+      S.foods = S.foods.filter(r => r[0] !== raw[0]).concat([raw]); save();
+      const nf = db.add(raw);
+      close(); toast(f ? "Alimento atualizado" : "Alimento cadastrado"); done && done(nf);
+    });
+    el.append(form);
+    setTimeout(() => (opt.prefill && !f ? kc : nm).focus(), 60);
+  });
+}
+
+/* ---------- Perfil ---------- */
+function renderProfile(p){
+  const body = h("div", {class: "stack"});
+  put(app, h("div", {class: "view"}, topBar(),
+    h("section", {class: "card", style: "margin-top:14px"},
+      h("div", {class: "prof"}, avatar(p), h("div", {style: "flex:1;min-width:0"}, h("b", null, p.name),
+        h("div", {class: "sub"}, `${ageLabel(C.ageOf(p.birth))} · ${sexLabel(p.sex)} · nasc. ${fromISO(p.birth)}`)),
+        h("button", {class: "icon-btn", "aria-label": "Editar perfil", onclick: () => profileSheet(p)}, ic("edit")))),
+    h("h2", {class: "sec"}, "Necessidade energética"), body,
+    h("h2", {class: "sec"}, "Família"),
+    h("div", {class: "list"}, [...S.patients].sort((a, b) => a.name.localeCompare(b.name, "pt-BR")).map(x => h("button", {class: "li", onclick: () => { S.activeId = x.id; save(); go({open: [], edit: null}); }},
+      avatar(x), h("div", {class: "li-m"}, h("div", {class: "li-t", html: esc(x.name) + (x.example ? '<span class="chip">exemplo</span>' : "")}), h("div", {class: "li-s"}, `${ageLabel(C.ageOf(x.birth))} · ${sexLabel(x.sex)}`)),
+      x.id === p.id ? h("span", {class: "check", html: ICON.check}) : null)),
+      h("button", {class: "li", style: "color:var(--accent-2)", onclick: () => profileSheet()}, h("span", {class: "av", html: ICON.plus, style: "padding:12px"}), h("div", {class: "li-m"}, h("div", {class: "li-t"}, "Adicionar pessoa")))),
+    h("h2", {class: "sec"}, "Seus dados"), h("section", {class: "card"}, dataRow()),
+    h("h2", {class: "sec"}, "Sobre os cálculos"),
+    h("div", {class: "list"}, h("button", {class: "li", onclick: methodSheet}, h("div", {class: "li-m"}, h("div", {class: "li-t"}, "Como o Nutri Prático calcula"), h("div", {class: "li-s"}, "Equações, fontes e limitações")), ic("right")))));
+  renderEnergy(p, body);
+}
+function methodSheet(){
+  sheet("Como o Nutri Prático calcula", el => el.append(h("h2", null, "Como o Nutri Prático calcula"), h("div", {class: "prose"},
+    h("h3", null, "Gasto energético"),
+    h("p", null, "Adultos: média entre FAO/OMS 1985 (taxa metabólica basal de Schofield × fator de atividade) e DRI 2005 (IOM), que estima o gasto total pela idade, peso, altura e nível de atividade."),
+    h("p", null, "Crianças e adolescentes (3 a 18 anos): DRI 2005, que inclui a energia para o crescimento. Os fatores de atividade da FAO/OMS 1985 foram definidos para adultos, então não entram na média. O app não aplica déficit calórico automático."),
+    h("p", null, "Abaixo de 3 anos o app mostra só a taxa basal, porque as equações de gasto total dessa faixa dependem de outras informações."),
+    h("h3", null, "Composição dos alimentos"),
+    h("p", null, "TACO 4ª edição (NEPA/UNICAMP, 2011). Quando a TACO marca um valor como “em reanálise”, o app não usa zero: avisa que o total pode estar subestimado. “Traço” e “não se aplica” valem zero."),
+    h("p", null, "Medidas caseiras: Tabela de Medidas Referidas da POF 2008–2009 (IBGE)."),
+    h("h3", null, "Porcentagens dos macronutrientes"),
+    h("p", null, "Usam 4 kcal/g para carboidratos e proteínas e 9 kcal/g para gorduras. A energia total vem da própria TACO; por isso ela pode diferir um pouco da soma dos macronutrientes."),
+    h("h3", null, "Substituições"),
+    h("p", null, "Sugere alimentos com o mesmo papel principal (fonte de carboidrato, proteína ou gordura) e calcula a quantidade com a mesma energia, carboidratos ou proteínas. Alimentos equivalentes nesse critério não são nutricionalmente idênticos."),
+    h("p", null, "Este app organiza o planejamento. Ele não substitui orientação de nutricionista ou médico, especialmente para crianças, gestantes e pessoas com doenças."))));
+}
+
+/* ---------- Necessidade energética ---------- */
+function renderEnergy(p, body){
+  const e = p.energy;
+  const W = h("input", {class: "input", id: "peso", inputmode: "decimal", placeholder: "0", value: e.weight ? fq.format(e.weight) : "", "aria-label": "Peso em kg", enterkeyhint: "next"});
+  const H = h("input", {class: "input", id: "altura", inputmode: "decimal", placeholder: "0", value: e.height ? fq.format(e.height) : "", "aria-label": "Altura em cm", enterkeyhint: "done"});
+  const num = s => { const v = parseFloat(String(s).replace(",", ".")); return isFinite(v) ? v : null; };
+  W.addEventListener("input", () => { e.weight = num(W.value); touch(p); paint(); });
+  H.addEventListener("input", () => { let v = num(H.value); if (v != null && v < 3) v = v * 100; e.height = v; touch(p); paint(); });   // aceita 1,65 m
+  W.addEventListener("keydown", ev => { if (ev.key === "Enter") { ev.preventDefault(); H.focus(); } });
+  H.addEventListener("keydown", ev => { if (ev.key === "Enter") { ev.preventDefault(); H.blur(); } });
+  function segOf(labels, key){
+    const seg = h("div", {class: "seg seg4", role: "radiogroup"});
+    const paintSeg = () => seg.replaceChildren(...labels.map((l, i) => h("button", {class: (e[key] ?? 1) === i ? "on" : "", role: "radio", "aria-checked": String((e[key] ?? 1) === i),
+      onclick: () => { e[key] = i; touch(p); paintSeg(); paint(); }}, l)));
+    paintSeg(); return seg;
+  }
+  const faoSeg = segOf(C.FAO_LV, "fao"), driSeg = segOf(C.DRI_LV, "dri");
+  const faoRes = h("div"), driRes = h("div"), hero = h("div");
+  const resGrid = (tmb, fator, fl, get) => h("div", {class: "res"},
+    h("div", null, h("div", {class: "k"}, "TMB"), h("div", {class: "v"}, tmb == null ? "—" : k0(tmb))),
+    h("div", null, h("div", {class: "k"}, fl), h("div", {class: "v"}, fator == null ? "—" : nf2.format(fator))),
+    h("div", null, h("div", {class: "k"}, "GET"), h("div", {class: "v acc"}, get == null ? "—" : k0(get))));
+  const useBtn = h("button", {class: "btn primary block", disabled: true, onclick: () => {
+    const r = C.energyOf(p); if (!r.ok || !r.get) return;
+    p.plan.target = Math.round(r.get); touch(p); toast(`Meta de ${k0(r.get)} kcal definida`); go({tab: "plano"});
+  }}, "Usar como meta do plano");
+  function paint(){
+    const r = C.energyOf(p);
+    if (!r.ok){
+      put(hero, h("div", {class: "card hero"}, h("div", {class: "eyebrow"}, "Gasto energético estimado"),
+        h("div", {class: "hero-grid"}, h("div", null, h("div", {class: "lbl"}, "TMB"), h("div", {class: "big"}, "—")), h("div", null, h("div", {class: "lbl"}, "GET"), h("div", {class: "big gold"}, "—"))),
+        h("div", {class: "hero-foot"}, "Informe peso e altura para calcular")));
+      useBtn.disabled = true; useBtn.textContent = "Usar como meta do plano";
+      put(faoRes, resGrid(null, C.FAO_FA[p.sex][e.fao ?? 1], "FA", null)); put(driRes, resGrid(null, null, "AF", null));
+      return;
+    }
+    const label = r.method === "media" ? "Média FAO/OMS 1985 + DRI 2005" : r.method === "dri" ? "DRI 2005 · inclui crescimento" : "FAO/OMS 1985 · só taxa basal";
+    put(hero, h("div", {class: "card hero"}, h("div", {class: "eyebrow"}, label),
+      h("div", {class: "hero-grid"},
+        h("div", null, h("div", {class: "lbl"}, "TMB"), h("div", {class: "big"}, k0(r.tmb), h("small", null, "kcal"))),
+        h("div", null, h("div", {class: "lbl"}, "GET"), h("div", {class: "big gold"}, r.get ? k0(r.get) : "—", r.get ? h("small", null, "kcal") : null))),
+      h("div", {class: "hero-foot"}, h("span", null, `IMC ${g1(r.imc)}`), h("span", null, ageLabel(r.age)), h("span", null, `${fq.format(e.weight)} kg · ${fq.format(e.height)} cm`)),
+      r.child ? h("p", {class: "note warn"}, "Para crianças e adolescentes vale a DRI 2005, que inclui a energia do crescimento. O IMC precisa ser avaliado pelas curvas de crescimento, não pelos pontos de corte de adultos.") : null));
+    put(faoRes, resGrid(r.fao.tmb, r.fao.fa, "FA", r.child ? null : r.fao.get),
+      h("div", {class: "eq"}, `TMB = ${nf1.format(r.fao.coef)} × P ${r.fao.cons < 0 ? "−" : "+"} ${Math.abs(r.fao.cons)} (${r.fao.range} anos)`, h("br"),
+        r.child ? "Fatores de atividade definidos para adultos: não usados abaixo de 18 anos." : `GET = TMB × ${nf2.format(r.fao.fa)}`));
+    put(driRes, r.dri ? [resGrid(r.dri.tmb, r.dri.PA, "AF", r.dri.get), h("div", {class: "eq"}, `GET (EER) = ${r.dri.eq}`, h("br"), "I = idade · P = kg · A = m · TMB pela equação BEE da DRI 2005")]
+      : [resGrid(null, null, "AF", null), h("div", {class: "note warn"}, "As equações DRI 2005 deste app cobrem a partir de 3 anos.")]);
+    useBtn.disabled = !r.get; useBtn.textContent = r.get ? `Usar ${k0(r.get)} kcal como meta do plano` : "Usar como meta do plano";
+  }
+  body.append(hero,
+    h("div", {class: "card"},
+      h("div", {class: "measures"},
+        h("div", {class: "field", style: "margin:0"}, h("label", {for: "peso"}, "Peso"), h("div", {class: "mfield"}, W, h("span", null, "kg"))),
+        h("div", {class: "field", style: "margin:0"}, h("label", {for: "altura"}, "Altura"), h("div", {class: "mfield"}, H, h("span", null, "cm"))))),
+    h("div", {class: "card"}, h("div", {class: "card-h"}, h("div", {class: "card-t"}, "FAO/OMS 1985"), h("div", {class: "eyebrow"}, "Atividade")), faoSeg, faoRes),
+    h("div", {class: "card"}, h("div", {class: "card-h"}, h("div", {class: "card-t"}, "DRI 2005"), h("div", {class: "eyebrow"}, "Atividade física")), driSeg, driRes),
+    useBtn);
+  paint();
+}
+
+/* ---------- cadastro e edição de perfil ---------- */
+function maskDate(v){ const d = v.replace(/\D/g, "").slice(0, 8); return d.length > 4 ? `${d.slice(0, 2)}/${d.slice(2, 4)}/${d.slice(4)}` : d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d; }
+function toISO(br){
+  const m = br.match(/^(\d{2})\/(\d{2})\/(\d{4})$/); if (!m) return null;
+  const d = +m[1], mo = +m[2], y = +m[3], dt = new Date(y, mo - 1, d);
+  if (dt.getFullYear() !== y || dt.getMonth() !== mo - 1 || dt.getDate() !== d || dt > new Date() || y < 1900) return null;
+  return `${m[3]}-${m[2]}-${m[1]}`;
+}
+const fromISO = iso => iso ? iso.split("-").reverse().join("/") : "";
+function profileSheet(p){
+  const editing = !!p;
+  let sex = p ? p.sex : null;
+  sheet(editing ? "Editar perfil" : "Novo perfil", (el, close) => {
+    const name = h("input", {class: "input", id: "pf-nome", placeholder: "Nome", value: p ? p.name : "", enterkeyhint: "next", autocapitalize: "words", autocomplete: "off"});
+    const birth = h("input", {class: "input num", id: "pf-nasc", placeholder: "dd/mm/aaaa", inputmode: "numeric", value: p ? fromISO(p.birth) : "", autocomplete: "off"});
+    const err = h("div", {class: "err"});
+    const seg = h("div", {class: "seg big", role: "radiogroup", "aria-label": "Sexo"});
+    const ok = h("button", {class: "btn primary block", type: "submit"}, editing ? "Salvar" : "Criar perfil");
+    const paintSeg = () => seg.replaceChildren(...[["F", "Feminino"], ["M", "Masculino"]].map(([v, l]) =>
+      h("button", {type: "button", class: sex === v ? "on" : "", role: "radio", "aria-checked": String(sex === v), onclick: () => { sex = v; paintSeg(); check(); }}, l)));
+    const check = () => { ok.disabled = !(name.value.trim() && toISO(birth.value) && sex); };
+    name.addEventListener("input", check);
+    name.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); birth.focus(); } });
+    birth.addEventListener("input", () => {
+      birth.value = maskDate(birth.value);
+      err.textContent = birth.value.length === 10 && !toISO(birth.value) ? "Data inválida. Use dd/mm/aaaa." : "";
+      if (birth.value.length === 10 && toISO(birth.value)) birth.blur();
+      check();
+    });
+    paintSeg(); check();
+    const delWrap = h("div", {style: "margin-top:18px;padding-top:14px;border-top:1px solid var(--line)"});
+    const idle = () => delWrap.replaceChildren(h("button", {class: "btn danger block", type: "button", onclick: () => ask(delWrap, `Excluir o perfil de ${p.name} e todo o plano dele? Isso não pode ser desfeito.`, [{label: "Excluir", fn: () => {
+      S.patients = S.patients.filter(x => x.id !== p.id);
+      if (S.activeId === p.id) S.activeId = (S.patients[0] || {}).id || null;
+      saveNow(); close(); go({tab: "inicio", open: [], edit: null}); toast("Perfil excluído");
+    }}])}, "Excluir perfil"));
+    if (editing) idle();
+    const form = h("form", null,
+      h("h2", null, editing ? "Editar perfil" : "Novo perfil"), h("p", {class: "sh-sub"}, editing ? "" : "Você pode cadastrar cada pessoa da família."),
+      h("div", {class: "field"}, h("label", {for: "pf-nome"}, "Nome"), name),
+      h("div", {class: "field"}, h("label", {for: "pf-nasc"}, "Data de nascimento"), birth, err),
+      h("div", {class: "field"}, h("label", null, "Sexo (usado nas equações de energia)"), seg),
+      h("div", {class: "row-actions"}, h("button", {class: "btn ghost", type: "button", onclick: close}, "Cancelar"), ok),
+      editing ? delWrap : null);
+    form.addEventListener("submit", e => {
+      e.preventDefault(); check(); if (ok.disabled) return;
+      if (editing){ p.name = name.value.trim(); p.birth = toISO(birth.value); p.sex = sex; touch(p); close(); render(); return; }
+      const np = {id: uid(), name: name.value.trim(), birth: toISO(birth.value), sex, updated: Date.now(),
+        energy: {weight: null, height: null, fao: 1, dri: 1}, plan: {objective: "", target: null, meals: []}};
+      S.patients.push(np); S.activeId = np.id; saveNow(); close(); go({tab: "perfil", open: [], edit: null}); toast(`Perfil de ${firstName(np.name)} criado`);
+      setTimeout(() => { const w = $("#peso"); if (w) w.focus(); }, 300);
+    });
+    el.append(form);
+    if (!editing) setTimeout(() => name.focus(), 60);
+  });
+}
+
+/* ---------- dados e backup ---------- */
+const DAY = 864e5;
+const nPeople = n => n === 1 ? "1 perfil" : `${n} perfis`;
+function dataRow(){
+  const real = S.patients.filter(p => !p.example).length;
+  const days = S.lastBackup ? Math.floor((Date.now() - S.lastBackup) / DAY) : null;
+  const due = real > 0 && (days == null || days >= 7);
+  const when = days == null ? "Nenhum backup feito ainda" : days === 0 ? "Último backup: hoje" : days === 1 ? "Último backup: ontem" : `Último backup: há ${days} dias`;
+  return h("div", {class: "datacard" + (due ? " due" : "")},
+    h("span", {class: "dc-ic", html: ICON.lock}),
+    h("div", {class: "dc-t"}, h("b", null, "Salvos só neste aparelho"), h("span", null, when)),
+    h("button", {class: "btn sm " + (due ? "primary" : "ghost"), onclick: backupSheet}, due ? "Fazer backup" : "Backup"));
+}
+function backupSheet(){
+  const embedded = window.self !== window.top;   // dentro do Claude não dá para baixar arquivos
+  const backupText = () => JSON.stringify({app: "nutri-pratico", version: VERSION, exported: new Date().toISOString(), data: S});
+  sheet("Backup", (el, close) => {
+    const status = h("div", {class: "err", style: "color:var(--muted)"});
+    const file = h("input", {type: "file", accept: "application/json,.json", hidden: true});
+    const confirmBox = h("div");
+    const marked = () => { S.lastBackup = Date.now(); saveNow(); };
+    async function exportNow(){
+      const name = `nutri-pratico-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      const blob = new Blob([backupText()], {type: "application/json"});
+      const done = () => { marked(); status.textContent = "Backup gerado. Guarde o arquivo em Arquivos, iCloud ou e-mail."; };
+      try {
+        const f = new File([blob], name, {type: "application/json"});
+        if (navigator.canShare && navigator.canShare({files: [f]})) { await navigator.share({files: [f], title: "Backup Nutri Prático"}); done(); return; }
+      } catch (e) { if (e && e.name === "AbortError") return; }
+      try { const a = h("a", {href: URL.createObjectURL(blob), download: name}); document.body.append(a); a.click(); a.remove(); done(); }
+      catch (e) { status.textContent = "Não foi possível gerar o arquivo neste navegador."; }
+    }
+    function copyNow(){
+      const txt = backupText();
+      const ok = () => { marked(); status.textContent = "Backup copiado. Cole em “Colar backup” no app instalado."; };
+      const fallback = () => {
+        const ta = h("textarea", {style: "position:fixed;top:-1000px"}); ta.value = txt; document.body.append(ta); ta.select();
+        try { document.execCommand("copy") ? ok() : (status.textContent = "Não foi possível copiar."); } catch (e) { status.textContent = "Não foi possível copiar."; }
+        ta.remove();
+      };
+      try { navigator.clipboard.writeText(txt).then(ok, fallback); } catch (e) { fallback(); }
+    }
+    const pasteArea = h("textarea", {class: "input", id: "bk-colar", rows: "4", placeholder: "Toque aqui, segure e escolha Colar", style: "height:auto;padding:12px 14px;font-size:16px;resize:vertical"});
+    const pasteBox = h("div", {class: "bk-row"}, pasteArea, h("button", {class: "btn primary block", type: "button", onclick: () => offerRestore(pasteArea.value)}, "Continuar"));
+    pasteBox.hidden = true;
+    file.addEventListener("change", () => {
+      const f = file.files[0]; if (!f) return;
+      const rd = new FileReader(); rd.onload = () => offerRestore(rd.result); rd.readAsText(f); file.value = "";
+    });
+    function offerRestore(text, label){
+      let b; try { b = JSON.parse(String(text).trim()); } catch (e) {}
+      const d = b && (b.data || (Array.isArray(b.patients) ? b : null));
+      if (!d || !Array.isArray(d.patients) || !d.prefs) { status.textContent = "Esse conteúdo não é um backup do Nutri Prático."; return; }
+      put(confirmBox, h("div", {class: "confirm", style: "flex-wrap:wrap"},
+        h("span", {style: "flex:1 1 100%"}, `Substituir ${nPeople(S.patients.length)} deste aparelho por ${nPeople(d.patients.length)} ${label || (b.exported ? "do backup de " + new Date(b.exported).toLocaleDateString("pt-BR") : "do backup")}?`),
+        h("button", {class: "btn ghost", type: "button", style: "flex:1", onclick: () => confirmBox.replaceChildren()}, "Cancelar"),
+        h("button", {class: "btn primary", type: "button", style: "flex:1", onclick: () => {
+          try { localStorage.setItem(KEY + ".antes-de-restaurar", JSON.stringify(S)); } catch (e) {}
+          for (const f of db.list.filter(x => x.own)) db.remove(f.id);
+          try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (e) {}
+          S = null; load(); close(); go({tab: "inicio", open: [], edit: null}); toast("Backup restaurado");
+        }}, "Restaurar")));
+    }
+    let snap = null; try { snap = localStorage.getItem(SNAP); } catch (e) {}
+    el.append(h("h2", null, "Backup"),
+      h("p", {class: "sh-sub"}, S.lastBackup ? `Último backup: ${new Date(S.lastBackup).toLocaleDateString("pt-BR")}` : "Nenhum backup feito ainda."),
+      h("div", {class: "bk-row"},
+        embedded ? null : h("button", {class: "btn primary block", type: "button", onclick: exportNow}, "Exportar backup (arquivo)"),
+        h("button", {class: embedded ? "btn primary block" : "btn ghost block", type: "button", onclick: copyNow}, "Copiar backup"),
+        h("div", {class: "eyebrow", style: "margin-top:8px"}, "Restaurar"),
+        h("button", {class: "btn ghost block", type: "button", onclick: () => { pasteBox.hidden = false; pasteArea.focus(); }}, "Colar backup"),
+        embedded ? null : h("button", {class: "btn ghost block", type: "button", onclick: () => file.click()}, "Restaurar de um arquivo"),
+        snap ? h("button", {class: "btn ghost block", type: "button", onclick: () => offerRestore(snap, "da cópia automática feita antes da atualização")}, "Voltar à cópia de antes da atualização") : null,
+        pasteBox, file, status, confirmBox,
+        h("button", {class: "btn plain block", type: "button", onclick: close}, "Fechar")));
+  });
 }
 
 /* ---------- início ---------- */
 load();
-try { const v = JSON.parse(sessionStorage.getItem(KEY + ".view")); if (v && v.name) view = v; } catch (e) {}
+try { const v = JSON.parse(sessionStorage.getItem(KEY + ".view")); if (v && TABS.some(t => t[0] === v.tab)) view = Object.assign(view, v, {edit: null}); } catch (e) {}
 render();
 })();
 </script>

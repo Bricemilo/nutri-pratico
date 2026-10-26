@@ -56,6 +56,7 @@ for (code, prep), e in pof.items():
     main, _, alt = e["desc"].partition("(")
     pof_foods.setdefault(code, {"desc": e["desc"], "toks": toks(main), "alt": set(toks(alt)), "preps": {}})["preps"][prep] = e
 
+STATUS = json.load(open(sys.argv[4], encoding="utf-8")) if len(sys.argv) > 4 else {}
 overrides = json.load(open(sys.argv[3], encoding="utf-8")) if len(sys.argv) > 3 else {}
 
 
@@ -113,7 +114,14 @@ report = []
 for t in taco:
     if t["categoria"] not in cats:
         cats.append(t["categoria"])
-    num = lambda k: round(float(t[k]), 1) if t[k] not in ("", None) else 0.0
+    # Na TACO: "Tr" (traço) e "NA" (não se aplica) valem 0; "*" (em reanálise) é dado ausente (None).
+    st = STATUS.get(str(int(t["numero_alimento"])), {})
+    FIELD = {"carboidrato_g": "carb", "proteina_g": "prot", "lipideos_g": "lip", "fibra_g": "fib"}
+    def num(k):
+        if t[k] not in ("", None):
+            return round(float(t[k]), 1)
+        mark = st.get(FIELD[k])
+        return 0.0 if mark in ("NA", "Tr") else None
     fid = int(t["numero_alimento"])
     ov = overrides.get(str(fid))
     code = prep = None
