@@ -186,57 +186,79 @@ h1{font-size:34px;line-height:1.08;letter-spacing:-.035em;font-weight:650;margin
 .ac-item.pend .ac-x{color:var(--danger);font-size:13px;font-weight:600;background:var(--surface-2)}
 .ac-sec{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:8px 10px 4px}
 
-/* Totais (plano e refeição) */
-.tot{padding:16px}
+/* Totais (plano e refeição): nome do macro colorido, gramas e % na 1ª linha, g/kg na 2ª */
+.tot{padding:16px 16px 14px}
 .tot-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.pill{font-size:12px;font-weight:600;padding:4px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent-2);border:1px solid var(--accent-line);font-variant-numeric:tabular-nums}
-.tot-kcal{display:flex;align-items:baseline;gap:8px;margin-top:8px}
+.pill{font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent-2);border:1px solid var(--accent-line);font-variant-numeric:tabular-nums}
+.tot-kcal{display:flex;align-items:baseline;gap:8px;margin:8px 0 14px}
 .tot-kcal b{font-size:38px;font-weight:620;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
 .tot-kcal span{color:var(--muted);font-size:14px;font-variant-numeric:tabular-nums}
-.prog{height:6px;border-radius:4px;background:var(--surface-3);margin:14px 0 14px;overflow:hidden;display:flex;gap:2px}
-.prog i{display:block;height:100%}
-.mgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.mgrid > div{background:var(--surface-2);border-radius:12px;padding:9px 10px;min-width:0}
-.mgrid .k{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;font-weight:600}
-.mgrid .v{font-size:17px;font-weight:620;letter-spacing:-.02em;margin-top:4px;font-variant-numeric:tabular-nums;white-space:nowrap}
-.mgrid .s{font-size:11.5px;color:var(--muted);margin-top:2px;font-variant-numeric:tabular-nums;line-height:1.35}
-.mgrid.sm > div{background:transparent;padding:0}
-.mgrid.sm .v{font-size:14.5px;margin-top:3px}
+.mgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;padding-top:12px;border-top:1px solid var(--line)}
+.mgrid > div{min-width:0;padding-left:10px;border-left:1px solid var(--line)}
+.mgrid > div:first-child{padding-left:0;border-left:0}
+.mgrid .k{font-size:11px;letter-spacing:.08em;font-weight:650}
+.mgrid .v{font-size:16px;font-weight:620;letter-spacing:-.02em;margin-top:3px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.mgrid .pc{font-size:11.5px;font-weight:500;color:var(--muted);margin-left:5px;letter-spacing:0}
+.mgrid .s{font-size:11.5px;color:var(--muted);margin-top:1px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.mgrid.sm{padding-top:0;border-top:0}
+.mgrid.sm .v{font-size:14px}
+.mgrid.sm .pc{font-size:11px;margin-left:4px}
 .mgrid.sm .s{font-size:11px}
-@media (max-width:380px){.mgrid .v{font-size:15.5px}.mgrid.sm .v{font-size:13.5px}}
-.dot{display:inline-block;width:7px;height:7px;border-radius:50%;flex:none}
-.d-c{background:var(--carb)} .d-p{background:var(--prot)} .d-g{background:var(--fat)} .d-f{background:var(--fib)}
+@media (max-width:380px){.mgrid .v{font-size:14.5px}.mgrid .pc{display:block;margin:1px 0 0}.mgrid.sm .v{font-size:13px}}
+.t-c{color:var(--carb)} .t-p{color:var(--prot)} .t-g{color:var(--fat)} .t-f{color:var(--fib)}
+
+/* Faixa fina fixa com o total, abaixo das abas */
+.mini{display:flex;align-items:center;gap:12px;margin-top:8px;padding:7px 12px;border-radius:12px;background:var(--surface);border:1px solid var(--line-2);font-size:12px;white-space:nowrap;overflow:hidden}
+.mini-k{font-variant-numeric:tabular-nums;color:var(--muted)}
+.mini-k b{color:var(--ink);font-size:15px;font-weight:650}
+.mini-k i{font-style:normal;margin-left:8px;font-size:11px;font-weight:600;color:var(--accent-2);padding:2px 7px;border-radius:999px;background:var(--accent-soft)}
+.mini-m{display:flex;gap:12px;margin-left:auto;color:var(--ink-2);font-variant-numeric:tabular-nums;font-size:13px}
+.mini-m b{font-weight:700}
 
 /* Refeição */
-.meals{display:flex;flex-direction:column;gap:20px}
+.meals{display:flex;flex-direction:column;gap:22px}
 .meal{padding:0;overflow:visible;border-color:var(--line-2)}
-.meal-h{display:flex;align-items:center;gap:8px;padding:10px 10px 10px 16px;background:var(--surface-2);border-bottom:1px solid var(--line);border-radius:var(--r) var(--r) 0 0}
+.meal-h{display:flex;align-items:center;gap:8px;padding:8px 8px 8px 12px;background:var(--surface-2);border-bottom:1px solid var(--line);border-radius:var(--r) var(--r) 0 0}
 .meal-h .acw{flex:1;min-width:0}
-.meal-name{width:100%;border:0;background:transparent;font-size:17.5px;font-weight:650;letter-spacing:-.015em;outline:none;padding:6px 0;color:var(--accent-2)}
+.meal-time{width:54px;flex:none;height:30px;border:1px solid var(--line-2);border-radius:9px;background:var(--surface);text-align:center;font-size:16px;font-variant-numeric:tabular-nums;color:var(--ink-2);outline:none;padding:0}
+.meal-time::placeholder{color:var(--muted)}
+.meal-time:focus{border-color:var(--accent-line)}
+.meal-name{width:100%;border:0;background:transparent;font-size:17px;font-weight:650;letter-spacing:-.015em;outline:none;padding:6px 0;color:var(--accent-2);text-overflow:ellipsis}
 .meal-name::placeholder{color:var(--muted);font-weight:500}
-.meal-kcal{font-size:15px;font-weight:650;white-space:nowrap;font-variant-numeric:tabular-nums}
+.meal-kcal{font-size:15px;font-weight:650;white-space:nowrap;font-variant-numeric:tabular-nums;padding-left:4px}
 .meal-kcal small{font-size:12px;color:var(--muted);font-weight:500;margin-left:3px}
-.meal-ask{padding:0 12px 4px}
+.x.more svg{width:18px;height:18px}
+.meal-ask{padding:0 12px}
 .meal-ask:empty{display:none}
+.ask-b{display:flex;gap:8px;flex-wrap:wrap}
 .rows{display:flex;flex-direction:column}
-.item{padding:12px 12px 12px 16px;border-top:1px solid var(--line);scroll-margin-top:130px}
+.item{padding:11px 10px 11px 16px;border-top:1px solid var(--line);scroll-margin-top:140px}
 .item:first-child{border-top:0}
 .item-l1{display:flex;align-items:center;gap:6px}
 .item-l1 .acw{flex:1;min-width:0}
-.food{width:100%;border:0;background:transparent;font-size:16px;outline:none;padding:6px 0;font-weight:520;text-overflow:ellipsis}
+.food{width:100%;border:0;background:transparent;font-size:16px;outline:none;padding:5px 0;font-weight:540;text-overflow:ellipsis}
 .food::placeholder{color:var(--muted);font-weight:400}
-.x{width:30px;height:30px;border-radius:9px;color:var(--muted);display:grid;place-items:center;flex:none}
+.x{width:32px;height:32px;border-radius:9px;color:var(--muted);display:grid;place-items:center;flex:none}
 .x svg{width:14px;height:14px}
-.item-l2{display:grid;grid-template-columns:58px minmax(0,1fr) 74px;gap:8px;align-items:center;margin-top:6px}
-.cell{height:40px;border-radius:11px;border:1px solid transparent;background:var(--surface-2);padding:0 11px;font-size:16px;outline:none;width:100%;min-width:0}
+.item-l2{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:8px;align-items:center;margin:6px 6px 0 0}
+.cell{height:40px;border-radius:11px;border:1px solid transparent;background:var(--surface-2);padding:0 11px;font-size:16px;outline:none;width:100%;min-width:0;text-overflow:ellipsis}
 .cell:focus{border-color:var(--accent-line);box-shadow:0 0 0 3px var(--accent-soft)}
 .qty{text-align:center;font-weight:650;font-variant-numeric:tabular-nums;padding:0 4px}
-.kcal{text-align:right;font-weight:620;font-variant-numeric:tabular-nums;font-size:15.5px;white-space:nowrap}
-.kcal small{color:var(--muted);font-weight:500;font-size:11px;margin-left:2px}
-.item-l3{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
-.item-l3 span{display:inline-flex;align-items:center;gap:5px}
-.item-l3 .g{color:var(--ink-2)}
+.grams{text-align:right;font-weight:600;font-variant-numeric:tabular-nums;font-size:15px;white-space:nowrap;min-width:52px}
+.msum{display:none;text-align:left;font-size:14px;color:var(--ink-2);padding:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item-l3{display:grid;grid-template-columns:1.25fr 1fr 1fr 1fr;gap:6px;margin:8px 6px 0 0;font-size:12.5px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.item-l3 span{white-space:nowrap}
+.item-l3 .kc{color:var(--ink);font-weight:620}
+.item-l3 .kc small{color:var(--muted);font-weight:500}
+.item-l3 b{font-weight:700}
 .item.blank .item-l2,.item.blank .item-l3,.item.blank .x{display:none}
+/* Alimento já lançado: duas linhas sem caixas; um toque abre para editar */
+.item.compact{cursor:pointer}
+.item.compact .item-l2{grid-template-columns:minmax(0,1fr) auto;margin-top:2px}
+.item.compact .qty,.item.compact .meas{display:none}
+.item.compact .msum{display:block}
+.item.compact .grams{font-size:14px;color:var(--ink-2);font-weight:550}
+.item.compact .item-l3{margin-top:6px}
 .quick{display:none;gap:6px;margin-top:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
 .quick::-webkit-scrollbar{display:none}
 .item.qfocus .quick{display:flex}
@@ -244,11 +266,22 @@ h1{font-size:34px;line-height:1.08;letter-spacing:-.035em;font-weight:650;margin
 .quick button.next{background:var(--accent);color:var(--accent-ink);margin-left:auto;padding:0 14px}
 .meal-foot{padding:12px 16px 14px;border-top:1px solid var(--line);background:var(--surface-2);border-radius:0 0 var(--r) var(--r)}
 .meal-foot .eyebrow{margin-bottom:8px}
+.add-row{display:flex;flex-direction:column;gap:10px}
 .add-meal{width:100%;height:54px;border-radius:var(--r);border:1.5px dashed var(--line-2);color:var(--ink-2);font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px}
-.add-meal svg{width:18px;height:18px}
+.add-meal svg,.paste-new svg{width:18px;height:18px;flex:none}
 .add-meal:hover{border-color:var(--accent-line);color:var(--accent-2)}
+.paste-new{width:100%;min-height:54px;border-radius:var(--r);border:1px solid var(--accent-line);background:var(--accent-soft);color:var(--accent-2);font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;padding:8px 14px;text-align:left}
+.paste-new small{display:block;font-weight:500;font-size:12px;color:var(--ink-2)}
 .plan-tools{display:flex;gap:10px}
 .plan-tools .btn{flex:1;height:44px;font-size:14px}
+.btn.plain{background:transparent;color:var(--muted)}
+
+/* Home: cartão único de dados e backup */
+.datacard{display:flex;align-items:center;gap:12px;margin-top:40px;padding:14px 14px 14px 16px;border-radius:var(--r);background:var(--surface);border:1px solid var(--line)}
+.datacard.due{border-color:var(--accent-line)}
+.dc-ic svg{width:18px;height:18px;color:var(--muted);display:block}
+.dc-t{flex:1;min-width:0;font-size:12.5px;color:var(--muted)}
+.dc-t b{display:block;color:var(--ink);font-size:14px;font-weight:600}
 
 .toast{position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom,0px));transform:translate(-50%,10px);background:var(--surface-3);border:1px solid var(--line-2);color:var(--ink);padding:10px 16px;border-radius:12px;font-size:14px;font-weight:500;opacity:0;transition:.2s;z-index:60;pointer-events:none;box-shadow:var(--shadow)}
 .toast.on{opacity:1;transform:translate(-50%,0)}
@@ -292,15 +325,32 @@ const ICON = {
   x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
   lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
   backup:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>',
+  more:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="19" cy="12" r="1.9"/></svg>',
+  copy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>',
   mark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 5-14 14-14 0 9-6 14-14 14Z"/><path d="M5 19 13 11"/></svg>'
 };
 const put = (el, ...kids) => el.replaceChildren(...kids.flat(Infinity).filter(x => x != null && x !== false));
 /* Confirmação de exclusão dentro da própria tela */
-function ask(slot, text, yes, onYes){
+function ask(slot, text, actions){
   const close = () => slot.replaceChildren();
   slot.replaceChildren(h("div", {class: "ask", role: "alertdialog"}, h("span", null, text),
-    h("button", {class: "btn ghost sm", type: "button", onclick: close}, "Cancelar"),
-    h("button", {class: "btn danger sm", type: "button", onclick: () => { close(); onYes(); }}, yes)));
+    h("div", {class: "ask-b"},
+      h("button", {class: "btn ghost sm", type: "button", onclick: close}, "Cancelar"),
+      actions.map(a => h("button", {class: "btn sm " + (a.cls || "danger"), type: "button", onclick: () => { close(); a.fn(); }}, a.label)))));
+  slot.scrollIntoView({block: "nearest", behavior: "smooth"});
+}
+/* Menu de ações que sobe da parte de baixo da tela */
+function actionSheet(title, sub, actions){
+  const scrim = h("div", {class: "scrim"});
+  const sh = h("div", {class: "sheet", role: "dialog", "aria-modal": "true", "aria-label": title},
+    h("div", {class: "grab"}), h("h2", {style: sub ? "margin-bottom:4px" : null}, title), sub ? h("div", {class: "bk-meta", style: "margin:0 0 16px"}, sub) : null,
+    h("div", {class: "bk-row"},
+      actions.filter(Boolean).map(a => h("button", {class: "btn block " + (a.cls || "ghost"), type: "button", onclick: () => { close(); a.fn(); }}, a.label)),
+      h("button", {class: "btn block plain", type: "button", onclick: close}, "Fechar")));
+  function close(){ sh.classList.remove("on"); scrim.classList.remove("on"); setTimeout(() => { sh.remove(); scrim.remove(); }, 260); }
+  scrim.addEventListener("click", close);
+  document.body.append(scrim, sh);
+  requestAnimationFrame(() => { scrim.classList.add("on"); sh.classList.add("on"); });
 }
 const svg = k => h("span", {html: ICON[k], style:"display:contents"});
 
@@ -363,11 +413,42 @@ const FOODS = new Map(), FOOD_LIST = [];
 const NO_DATA = new Set([450, 457, 458, 591]);   // valores "em reanálise" (*) na própria TACO
 const COMMON = new Set([3, 1, 561, 567, 488, 490, 53, 52, 410, 408, 182, 179, 226, 225, 222, 7, 448, 449, 461, 463, 467, 468,
   260, 471, 494, 91, 88, 129, 78, 157, 110, 109, 100, 377, 346, 326, 317, 277, 551, 533, 589, 594, 214, 231, 235, 256, 236, 237, 261, 507, 577]);
+/* Nomes do dia a dia para os nomes técnicos da TACO (a busca encontra pelos dois) */
+const NAME_FIX = {
+  1: "Arroz integral cozido", 2: "Arroz integral cru", 3: "Arroz branco cozido", 4: "Arroz branco cru", 5: "Arroz branco tipo 2 cozido",
+  6: "Arroz branco tipo 2 cru", 7: "Aveia em flocos", 40: "Macarrão de trigo cru", 41: "Macarrão com ovos cru", 48: "Pão de forma de aveia",
+  50: "Pão de forma de glúten", 51: "Pão de forma de milho", 52: "Pão de forma integral", 53: "Pão francês", 54: "Pão sovado",
+  63: "Torrada de pão francês", 452: "Iogurte sabor pêssego", 453: "Leite condensado", 454: "Leite de cabra", 455: "Leite achocolatado",
+  456: "Leite em pó desnatado", 459: "Leite em pó integral", 461: "Queijo minas frescal", 462: "Queijo minas meia cura",
+  468: "Requeijão cremoso", 471: "Café coado (infusão 10%)", 485: "Ovo de codorna cru", 486: "Clara de ovo cozida",
+  487: "Gema de ovo cozida", 488: "Ovo cozido", 489: "Ovo cru", 490: "Ovo frito", 511: "Café em pó torrado", 384: "Carne seca cozida",
+  385: "Carne seca crua", 338: "Charque cozido", 339: "Charque cru", 21: "Flocos de milho com sal", 22: "Flocos de milho sem sal"
+};
+const BEEF_SUFFIX = {"fígado": "bovino", "língua": "bovina", "bucho": "bovino", "almôndegas": "bovinas", "costela": "bovina", "peito": "bovino"};
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+function friendly(id, name, cat){
+  if (NAME_FIX[id]) return NAME_FIX[id];
+  let [base, ...rest] = name.split(/,\s*/).map(x => x.trim().replace(/\/10minutos$/, "")).filter(Boolean);
+  if (base === "Carne" && rest[0] === "bovina" && rest.length > 1){
+    rest.shift(); const cut = rest.shift();
+    base = cap(cut) + (BEEF_SUFFIX[cut] ? " " + BEEF_SUFFIX[cut] : "");
+  } else if (base === "Frango" && ["peito", "coxa", "sobrecoxa", "asa", "coração", "fígado", "filé"].includes(rest[0])){
+    base = cap(rest.shift()) + " de frango";
+  } else if (base === "Porco" && rest.length){
+    base = cap(rest.shift()) + " de porco";
+  } else if (cat === "Pescados e frutos do mar" && rest[0] === "filé"){
+    rest.shift(); base = "Filé de " + base.charAt(0).toLowerCase() + base.slice(1);
+  }
+  if (cat === "Frutas e derivados") rest = rest.filter(r => !/^crua?s?$/.test(r));
+  return [base, ...rest].join(" ");
+}
 function addFood(raw){
   const [id, name, kcal, c, p, fat, fib, cat, ms] = raw;
   const measures = ms.map(([l, g]) => ({l, g}));
   if (!measures.some(m => m.l === "Grama")) measures.push({l: "Grama", g: 1});
-  const f = {id, name, kcal, c, p, fat, fib, cat: typeof cat === "number" ? DATA.cats[cat] : cat, measures, w: words(name),
+  const catName = typeof cat === "number" ? DATA.cats[cat] : cat;
+  const dn = id < 0 ? name : friendly(id, name, catName);
+  const f = {id, name, dn, kcal, c, p, fat, fib, cat: catName, measures, w: [...new Set(words(dn).concat(words(name)))],
     ibge: ms.length > 0, common: COMMON.has(id), own: id < 0};
   if (FOODS.has(id)) FOOD_LIST.splice(FOOD_LIST.indexOf(FOODS.get(id)), 1);
   FOODS.set(id, f); FOOD_LIST.push(f);
@@ -495,7 +576,7 @@ function searchFoods(q){
     if (f.ibge) score += 3;
     if (f.common) score += 14;
     if (f.own) score += 10;
-    score -= f.name.length * 0.12;
+    score -= f.dn.length * 0.12;
     res.push([score, f]);
   }
   return res.sort((a, b) => b[0] - a[0]).slice(0, 8).map(r => r[1]);
@@ -630,22 +711,22 @@ function renderHome(){
     h("div", {class: "sub num"}, S.patients.length === 1 ? "1 paciente" : `${S.patients.length} pacientes`),
     h("div", {class: "search"}, h("span", {html: ICON.search, style: "display:contents"}), search),
     listEl,
-    backupNudge(),
-    h("p", {class: "foot-note"}, h("span", {html: ICON.lock, style: "display:contents"}),
-      "Os dados ficam salvos apenas neste aparelho. Nada é enviado para servidores. Use o backup para guardar uma cópia.")
+    dataCard()
   ));
 }
 
 /* ---------- Backup ---------- */
 const DAY = 864e5;
 const pl = n => n === 1 ? "1 paciente" : `${n} pacientes`;
-function backupNudge(){
+function dataCard(){
   const real = S.patients.filter(p => !p.example).length;
-  if (!real || (S.lastBackup && Date.now() - S.lastBackup < 7 * DAY)) return null;
-  return h("div", {class: "nudge"},
-    h("div", null, h("b", null, S.lastBackup ? `Último backup há ${Math.floor((Date.now() - S.lastBackup) / DAY)} dias` : "Você ainda não fez backup"),
-      "Guarde uma cópia dos pacientes fora do celular."),
-    h("button", {class: "btn primary", onclick: () => backupSheet()}, "Fazer"));
+  const days = S.lastBackup ? Math.floor((Date.now() - S.lastBackup) / DAY) : null;
+  const due = real > 0 && (days == null || days >= 7);
+  const when = days == null ? "Nenhum backup feito ainda" : days === 0 ? "Último backup: hoje" : days === 1 ? "Último backup: ontem" : `Último backup: há ${days} dias`;
+  return h("section", {class: "datacard" + (due ? " due" : "")},
+    h("span", {class: "dc-ic", html: ICON.lock}),
+    h("div", {class: "dc-t"}, h("b", null, "Dados salvos só neste aparelho"), h("span", null, when)),
+    h("button", {class: "btn sm " + (due ? "primary" : "ghost"), onclick: () => backupSheet()}, due ? "Fazer backup" : "Backup"));
 }
 function backupSheet(){
   const scrim = h("div", {class: "scrim"});
@@ -843,6 +924,7 @@ function renderPatient(){
   const p = cur();
   const body = h("div");
   const tabs = h("div", {class: "seg", role: "tablist"});
+  const mini = h("div", {class: "mini", "aria-live": "polite"}); mini.hidden = true;
   function paintTabs(){
     tabs.replaceChildren(...[["energy", "Necessidade energética"], ["plan", "Plano alimentar"]].map(([v, l]) =>
       h("button", {class: view.tab === v ? "on" : "", role: "tab", "aria-selected": String(view.tab === v), onclick: () => { view.tab = v; go({}); }}, l)));
@@ -856,9 +938,9 @@ function renderPatient(){
     h("div", {class: "phead"},
       h("h1", {html: esc(p.name) + (p.example ? '<span class="chip">exemplo</span>' : "")}),
       h("div", {class: "sub num"}, `${ageLabel(ageOf(p.birth))} · ${sexLabel(p.sex)} · nasc. ${fromISO(p.birth)}`)),
-    h("div", {class: "tabs"}, tabs),
+    h("div", {class: "tabs"}, tabs, mini),
     body));
-  if (view.tab === "energy") renderEnergy(p, body); else renderPlan(p, body);
+  if (view.tab === "energy") renderEnergy(p, body); else renderPlan(p, body, mini);
 }
 
 /* ---------- Necessidade energética ---------- */
@@ -948,10 +1030,11 @@ function renderEnergy(p, body){
 }
 
 /* ---------- Plano alimentar ---------- */
-function renderPlan(p, body){
+function renderPlan(p, body, mini){
   const plan = p.plan;
   const r = energyOf(p);
   const target = () => plan.target || (r.ok ? Math.round(r.get) : null);
+  const W = () => p.energy.weight;
 
   /* objetivo */
   const obj = h("input", {class: "input", id: "objetivo", placeholder: "Objetivo", value: plan.objective || "", enterkeyhint: "next", "aria-label": "Objetivo"});
@@ -971,13 +1054,14 @@ function renderPlan(p, body){
 
   const mealsEl = h("div", {class: "meals"});
   const totCard = h("section", {class: "card tot", "aria-label": "Total do plano"});
-  const refs = new Map();   // id da refeição -> {kcalEl, footEl} / id do item -> {row, food, meas, qty, ...}
+  const pasteNew = h("div");
+  const refs = new Map();   // id da refeição -> {card, kcalEl, footEl, askEl} / id do item -> {row, food, qty}
 
   function focusFirstSlot(){
     if (!plan.meals.length) { addMeal(true); return; }
     const m = plan.meals.find(x => !x.name.trim()) || plan.meals[plan.meals.length - 1];
-    const card = mealsEl.children[plan.meals.indexOf(m)];
-    if (!m.name.trim() && card) card.querySelector(".meal-name").focus();
+    const R = refs.get(m.id);
+    if (!m.name.trim() && R) R.card.querySelector(".meal-name").focus();
     else refs.get(m.items[m.items.length - 1].id)?.food.focus();
   }
 
@@ -985,19 +1069,72 @@ function renderPlan(p, body){
     const used = new Set(plan.meals.map(m => norm(m.name)));
     return DEFAULT_MEALS.find(n => !used.has(norm(n))) || "";
   }
-  function addMeal(focus){
-    const m = {id: uid(), name: "", items: []};
+  function addMeal(focus, items){
+    const m = {id: uid(), name: "", time: "", items: items || []};
     plan.meals.push(m); ensureBlank(m); touch(p);
     const el = buildMeal(m); mealsEl.append(el);
     if (focus) { const nm = el.querySelector(".meal-name"); nm.focus(); el.scrollIntoView({block: "start", behavior: "smooth"}); }
     updateTotals();
+    return m;
   }
   function ensureBlank(m){
     const last = m.items[m.items.length - 1];
     if (!last || last.foodId) m.items.push({id: uid(), foodId: null, measure: null, qty: null});
   }
 
+  /* ---- copiar e colar refeição (a cópia vale também para outros pacientes) ---- */
+  const clip = () => S.prefs.clip;
+  const filled = m => m.items.filter(i => i.foodId && i.qty);
+  const clipLabel = () => { const c = clip(); return c ? `${c.name || "Refeição"} · ${c.items.length} ${c.items.length === 1 ? "alimento" : "alimentos"}` : ""; };
+  function copyMeal(m){
+    S.prefs.clip = {name: m.name.trim(), items: filled(m).map(i => ({foodId: i.foodId, measure: i.measure, qty: i.qty}))};
+    save(); paintPasteNew(); toast(`${m.name.trim() || "Refeição"} copiada`);
+  }
+  const clipItems = () => clip().items.filter(i => FOODS.has(i.foodId)).map(i => ({id: uid(), foodId: i.foodId, measure: i.measure, qty: i.qty}));
+  function pasteInto(m, mode){
+    const keep = mode === "add" ? filled(m) : [];
+    m.items = keep.concat(clipItems()); ensureBlank(m); touch(p);
+    const old = refs.get(m.id).card, el = buildMeal(m);
+    old.replaceWith(el); updateTotals(); toast("Refeição colada");
+  }
+  function askPaste(m){
+    const R = refs.get(m.id);
+    if (!filled(m).length) { pasteInto(m, "replace"); return; }
+    ask(R.askEl, `${m.name.trim() || "Esta refeição"} já tem ${filled(m).length} ${filled(m).length === 1 ? "alimento" : "alimentos"}. Colar ${clip().name || "a refeição copiada"}:`, [
+      {label: "Somar", cls: "ghost", fn: () => pasteInto(m, "add")},
+      {label: "Substituir", cls: "primary", fn: () => pasteInto(m, "replace")}]);
+  }
+  function paintPasteNew(){
+    put(pasteNew, clip() && clip().items.length ? h("button", {class: "paste-new", type: "button", onclick: () => {
+      const m = addMeal(true, clipItems()); toast("Refeição colada");
+    }}, h("span", {html: ICON.copy, style: "display:contents"}), h("span", null, "Colar como nova refeição", h("small", null, clipLabel()))) : null);
+  }
+  function mealMenu(m){
+    actionSheet(m.name.trim() || "Refeição", filled(m).length ? `${filled(m).length} ${filled(m).length === 1 ? "alimento" : "alimentos"} · ${k0(mealTotal(m).kcal)} kcal` : "Sem alimentos", [
+      filled(m).length ? {label: "Copiar refeição", cls: "primary", fn: () => copyMeal(m)} : null,
+      clip() && clip().items.length ? {label: `Colar aqui: ${clipLabel()}`, cls: filled(m).length ? "ghost" : "primary", fn: () => askPaste(m)} : null,
+      {label: "Excluir refeição", cls: "danger", fn: () => {
+        const R = refs.get(m.id);
+        ask(R.askEl, `Excluir ${m.name.trim() ? "“" + m.name.trim() + "”" : "esta refeição"} e todos os alimentos dela?`, [{label: "Excluir", fn: () => {
+          plan.meals = plan.meals.filter(x => x !== m); touch(p); R.card.remove(); refs.delete(m.id); updateTotals();
+        }}]);
+      }}]);
+  }
+
+  /* horário: 730 vira 07:30, 7 vira 07:00 */
+  function fmtTime(v){
+    const d = v.replace(/\D/g, "").slice(0, 4);
+    if (!d) return "";
+    let hh, mm;
+    if (d.length <= 2) { hh = +d; mm = 0; } else if (d.length === 3) { hh = +d[0]; mm = +d.slice(1); } else { hh = +d.slice(0, 2); mm = +d.slice(2); }
+    if (hh > 23 || mm > 59) return "";
+    return `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`;
+  }
+
   function buildMeal(m){
+    const time = h("input", {class: "meal-time", inputmode: "numeric", placeholder: "--:--", value: m.time || "", "aria-label": "Horário da refeição", maxlength: "5"});
+    time.addEventListener("input", () => { const d = time.value.replace(/\D/g, "").slice(0, 4); time.value = d.length > 2 ? d.slice(0, d.length - 2) + ":" + d.slice(-2) : d; });
+    time.addEventListener("blur", () => { m.time = fmtTime(time.value); time.value = m.time; touch(p); });
     const name = h("input", {class: "meal-name", placeholder: nextMealName() || "Nome da refeição", value: m.name, enterkeyhint: "next", "aria-label": "Nome da refeição"});
     const nameW = h("div", {class: "acw"}, name);
     const kcalEl = h("div", {class: "meal-kcal"});
@@ -1018,14 +1155,10 @@ function renderPlan(p, body){
     });
     name.addEventListener("input", () => { m.name = name.value; touch(p); });
     name.addEventListener("change", () => rememberOption("meals", name.value));
+    const menu = h("button", {class: "x more", type: "button", "aria-label": "Ações da refeição: copiar, colar, excluir", title: "Copiar, colar ou excluir", html: ICON.more, onclick: () => mealMenu(m)});
 
-    const del = h("button", {class: "x", "aria-label": "Excluir refeição", title: "Excluir refeição", html: ICON.x, onclick: () =>
-      ask(askEl, `Excluir ${m.name.trim() ? "“" + m.name.trim() + "”" : "esta refeição"} e todos os alimentos dela?`, "Excluir", () => {
-        plan.meals = plan.meals.filter(x => x !== m); touch(p); card.remove(); updateTotals();
-      })});
-
-    card.append(h("div", {class: "meal-h"}, nameW, kcalEl, del), askEl, rowsEl, footEl);
-    refs.set(m.id, {kcalEl, footEl});
+    card.append(h("div", {class: "meal-h"}, time, nameW, kcalEl, menu), askEl, rowsEl, footEl);
+    refs.set(m.id, {card, kcalEl, footEl, askEl});
     for (const it of m.items) rowsEl.append(buildRow(m, it, rowsEl));
     paintMealSum(m);
     return card;
@@ -1037,18 +1170,21 @@ function renderPlan(p, body){
     const foodW = h("div", {class: "acw"}, food);
     const qty = h("input", {class: "cell qty", inputmode: "decimal", "aria-label": "Quantidade da medida caseira", placeholder: "1", enterkeyhint: "next"});
     const meas = h("input", {class: "cell", "aria-label": "Medida caseira", enterkeyhint: "next", autocapitalize: "off"});
-    const measW = h("div", {class: "acw"}, meas);
-    const kcal = h("div", {class: "kcal"});
+    const measW = h("div", {class: "acw meas"}, meas);
+    const msum = h("button", {class: "msum", type: "button", "aria-label": "Editar quantidade"});
+    const grams = h("div", {class: "grams"});
     const l3 = h("div", {class: "item-l3"});
     const askEl = h("div");
     const del = h("button", {class: "x", "aria-label": "Excluir alimento", title: "Excluir alimento", html: ICON.x});
     const quick = h("div", {class: "quick"});
-    refs.set(it.id, {row, food, meas, qty});
+    refs.set(it.id, {row, food, qty});
 
+    const complete = () => !!(it.foodId && it.qty);
     function syncInputs(){
       const f = FOODS.get(it.foodId);
       row.classList.toggle("blank", !f);
-      food.value = f ? f.name : "";
+      row.classList.toggle("compact", complete() && !row.contains(document.activeElement));
+      food.value = f ? f.dn : "";
       meas.value = f ? measureOf(f, it.measure).l : "";
       qty.value = fmtQty(it.qty);
       paintRow();
@@ -1057,20 +1193,30 @@ function renderPlan(p, body){
       const f = FOODS.get(it.foodId);
       if (!f) return;
       const c = calcItem(it), m1 = measureOf(f, it.measure);
-      kcal.replaceChildren(c ? k0(c.kcal) : "—", h("small", null, "kcal"));
-      l3.replaceChildren(
-        h("span", {class: "g"}, c ? `${fq.format(Math.round(c.g * 10) / 10)} g` : `${fq.format(m1.g)} g por ${m1.l === "Grama" ? "grama" : "unidade"}`),
-        h("span", null, h("i", {class: "dot d-c"}), `C ${c ? g1(c.c) : "—"}`),
-        h("span", null, h("i", {class: "dot d-p"}), `P ${c ? g1(c.p) : "—"}`),
-        h("span", null, h("i", {class: "dot d-g"}), `G ${c ? g1(c.l) : "—"}`));
+      msum.textContent = `${fmtQty(it.qty) || "—"} × ${m1.l}`;
+      grams.textContent = c ? `${fq.format(Math.round(c.g * 10) / 10)} g` : `${fq.format(m1.g)} g/un`;
+      put(l3,
+        h("span", {class: "kc"}, c ? k0(c.kcal) : "—", h("small", null, " kcal")),
+        h("span", null, h("b", {class: "t-c"}, "C"), c ? ` ${fmtG(c.c)} g` : " —"),
+        h("span", null, h("b", {class: "t-p"}, "P"), c ? ` ${fmtG(c.p)} g` : " —"),
+        h("span", null, h("b", {class: "t-g"}, "G"), c ? ` ${fmtG(c.l)} g` : " —"));
     }
     const refresh = () => { paintRow(); paintMealSum(m); updateTotals(); };
+
+    /* fica compacto quando o alimento está completo e o foco sai da linha */
+    row.addEventListener("focusin", e => { if (e.target !== msum) row.classList.remove("compact"); });
+    row.addEventListener("focusout", e => { if (!row.contains(e.relatedTarget)) setTimeout(() => { if (!row.contains(document.activeElement)) row.classList.toggle("compact", complete()); }, 0); });
+    msum.addEventListener("mousedown", e => e.preventDefault());
+    row.addEventListener("click", e => {
+      if (!row.classList.contains("compact") || e.target.closest(".food, .x, .ask")) return;
+      row.classList.remove("compact"); qty.focus(); qty.select();
+    });
 
     /* alimento */
     autocomplete(food, {
       items: q => {
-        if (FOODS.get(it.foodId) && q === FOODS.get(it.foodId).name) return [];
-        const list = searchFoods(q).map(f => ({label: f.name, meta: f.own ? `próprio · ${f.kcal} kcal` : `${f.kcal} kcal`, value: f}));
+        if (FOODS.get(it.foodId) && q === FOODS.get(it.foodId).dn) return [];
+        const list = searchFoods(q).map(f => ({label: f.dn, meta: f.own ? `próprio · ${f.kcal} kcal` : `${f.kcal} kcal`, value: f}));
         if (q.trim().length >= 2) list.push({label: `+ Cadastrar “${q.trim()}” como alimento próprio`, value: {create: q.trim()}});
         return list;
       },
@@ -1079,17 +1225,17 @@ function renderPlan(p, body){
       onPick: x => x.value.create ? foodSheet(x.value.create, f => setFood(f)) : setFood(x.value),
       onEnter: () => {
         if (!food.value.trim() && !it.foodId){ addMeal(true); return; }   // Enter em linha vazia: nova refeição
-        if (it.foodId) { food.value = FOODS.get(it.foodId).name; qty.focus(); }
+        if (it.foodId) { food.value = FOODS.get(it.foodId).dn; qty.focus(); }
       },
-      onBlur: () => { const f = FOODS.get(it.foodId); if (f && food.value !== f.name) food.value = f.name; if (!f) food.value = ""; }
+      onBlur: () => { const f = FOODS.get(it.foodId); if (f && food.value !== f.dn) food.value = f.dn; if (!f) food.value = ""; }
     });
     food.addEventListener("focus", () => { setTimeout(() => row.scrollIntoView({block: "start", behavior: "smooth"}), 30); });
 
-    /* Escolheu o alimento: medida mais provável já preenchida e foco direto na quantidade */
+    /* escolheu o alimento: medida mais provável já preenchida e foco direto no número */
     function setFood(f){
       const changed = it.foodId !== f.id;
       it.foodId = f.id;
-      if (changed || !it.measure) it.measure = S.prefs.last[f.id] && f.measures.some(m => m.l === S.prefs.last[f.id]) ? S.prefs.last[f.id] : f.measures[0].l;
+      if (changed || !it.measure) it.measure = S.prefs.last[f.id] && f.measures.some(x => x.l === S.prefs.last[f.id]) ? S.prefs.last[f.id] : f.measures[0].l;
       touch(p); syncInputs();
       ensureBlank(m);
       const last = m.items[m.items.length - 1];
@@ -1112,7 +1258,7 @@ function renderPlan(p, body){
     });
     meas.addEventListener("focus", () => setTimeout(() => { if (document.activeElement === meas) meas.select(); }, 0));
 
-    /* quantidade: um toque num atalho conclui o alimento e já vai para o próximo */
+    /* número da medida: um toque num atalho conclui o alimento e já vai para o próximo */
     qty.addEventListener("input", () => { it.qty = parseQty(qty.value); touch(p); refresh(); });
     qty.addEventListener("focus", () => { row.classList.add("qfocus"); setTimeout(() => { if (document.activeElement === qty) qty.select(); }, 0); });
     qty.addEventListener("blur", () => { row.classList.remove("qfocus"); qty.value = fmtQty(it.qty); });
@@ -1142,15 +1288,15 @@ function renderPlan(p, body){
 
     del.addEventListener("click", () => {
       const f = FOODS.get(it.foodId);
-      ask(askEl, `Excluir ${f ? f.name : "este alimento"}?`, "Excluir", () => {
+      ask(askEl, `Excluir ${f ? f.dn : "este alimento"}?`, [{label: "Excluir", fn: () => {
         m.items = m.items.filter(x => x !== it); refs.delete(it.id); row.remove();
         ensureBlank(m); touch(p); paintMealSum(m); updateTotals();
-      });
+      }}]);
     });
 
     row.append(
       h("div", {class: "item-l1"}, foodW, del),
-      h("div", {class: "item-l2"}, qty, measW, kcal),
+      h("div", {class: "item-l2"}, qty, measW, msum, grams),
       l3, quick, askEl);
     syncInputs();
     return row;
@@ -1161,24 +1307,28 @@ function renderPlan(p, body){
     const t = mealTotal(m);
     R.kcalEl.replaceChildren(k0(t.kcal), h("small", null, "kcal"));
     R.footEl.hidden = !t.kcal;
-    put(R.footEl, h("div", {class: "eyebrow"}, "Total da refeição"), macroGrid(t, p.energy.weight, true));
+    put(R.footEl, h("div", {class: "eyebrow"}, "Total da refeição"), macroGrid(t, W(), true));
   }
 
-  /* totais do plano, logo abaixo do objetivo */
+  /* total do plano logo abaixo do objetivo, e uma faixa fina fixa quando ele sai da tela */
   function updateTotals(){
     const t = planTotal(plan), tg = target();
-    const mk = t.c * 4 + t.p * 4 + t.l * 9;
-    const base = Math.max(tg || 0, mk) || 1;
     const pct = tg ? Math.round(t.kcal / tg * 100) : null;
     put(totCard,
       h("div", {class: "tot-top"}, h("div", {class: "eyebrow"}, "Total do plano"),
         h("span", {class: "pill"}, pct != null ? `${pct}% da meta` : "Sem meta definida")),
       h("div", {class: "tot-kcal"}, h("b", null, k0(t.kcal)), h("span", null, tg ? `de ${k0(tg)} kcal` : "kcal")),
-      h("div", {class: "prog", "aria-hidden": "true"},
-        h("i", {style: `width:${(t.c * 4) / base * 100}%;background:var(--carb)`}),
-        h("i", {style: `width:${(t.p * 4) / base * 100}%;background:var(--prot)`}),
-        h("i", {style: `width:${(t.l * 9) / base * 100}%;background:var(--fat)`})),
-      macroGrid(t, p.energy.weight, false));
+      macroGrid(t, W(), false));
+    put(mini,
+      h("div", {class: "mini-k"}, h("b", null, k0(t.kcal)), h("span", null, " kcal"), pct != null ? h("i", null, `${pct}%`) : null),
+      h("div", {class: "mini-m"},
+        h("span", null, h("b", {class: "t-c"}, "C"), ` ${fmtG(t.c)}g`),
+        h("span", null, h("b", {class: "t-p"}, "P"), ` ${fmtG(t.p)}g`),
+        h("span", null, h("b", {class: "t-g"}, "G"), ` ${fmtG(t.l)}g`)));
+  }
+  if ("IntersectionObserver" in window){
+    new IntersectionObserver(([e]) => { mini.hidden = e.isIntersecting || e.boundingClientRect.top > 0; },
+      {rootMargin: "-150px 0px 0px 0px"}).observe(totCard);
   }
 
   /* copiar plano como texto */
@@ -1186,16 +1336,16 @@ function renderPlan(p, body){
     const lines = [`PLANO ALIMENTAR · ${p.name}`];
     if (plan.objective) lines.push(`Objetivo: ${plan.objective}`);
     for (const m of plan.meals){
-      const its = m.items.filter(i => i.foodId && i.qty);
+      const its = filled(m);
       if (!its.length) continue;
-      lines.push("", `${(m.name || "Refeição").toUpperCase()} (${k0(mealTotal(m).kcal)} kcal)`);
+      lines.push("", `${m.time ? m.time + " · " : ""}${(m.name || "Refeição").toUpperCase()} (${k0(mealTotal(m).kcal)} kcal)`);
       for (const i of its){
         const f = FOODS.get(i.foodId), ms = measureOf(f, i.measure), c = calcItem(i);
-        lines.push(ms.l === "Grama" ? `• ${f.name}: ${fq.format(i.qty)} g` : `• ${f.name}: ${fmtQty(i.qty)} ${ms.l.toLowerCase()} (${fq.format(Math.round(c.g))} g)`);
+        lines.push(ms.l === "Grama" ? `• ${f.dn}: ${fq.format(i.qty)} g` : `• ${f.dn}: ${fmtQty(i.qty)} ${ms.l.toLowerCase()} (${fq.format(Math.round(c.g))} g)`);
       }
     }
     const t = planTotal(plan);
-    lines.push("", `Total: ${k0(t.kcal)} kcal · CHO ${g1(t.c)} g · PTN ${g1(t.p)} g · LIP ${g1(t.l)} g · Fibras ${g1(t.f)} g`);
+    lines.push("", `Total: ${k0(t.kcal)} kcal · CHO ${fmtG(t.c)} g · PTN ${fmtG(t.p)} g · LIP ${fmtG(t.l)} g · Fibras ${fmtG(t.f)} g`);
     const text = lines.join("\n");
     const done = () => toast("Plano copiado");
     try {
@@ -1209,29 +1359,33 @@ function renderPlan(p, body){
   }
 
   for (const m of plan.meals) { ensureBlank(m); mealsEl.append(buildMeal(m)); }
+  paintPasteNew();
   body.append(h("div", {class: "stack"},
     h("div", {class: "plan-head"},
       h("div", {class: "field", style: "margin:0"}, h("label", {for: "objetivo"}, "Objetivo"), objW),
       h("div", {class: "field", style: "margin:0"}, h("label", {for: "meta"}, "Meta (kcal)"), tgt)),
     totCard,
-    h("div", {style: "height:6px"}),
+    h("div", {style: "height:4px"}),
     mealsEl,
-    h("button", {class: "add-meal", onclick: () => addMeal(true)}, h("span", {html: ICON.plus, style: "display:contents"}), "Adicionar refeição"),
+    h("div", {class: "add-row"}, h("button", {class: "add-meal", onclick: () => addMeal(true)}, h("span", {html: ICON.plus, style: "display:contents"}), "Adicionar refeição"), pasteNew),
     h("div", {class: "plan-tools"}, h("button", {class: "btn ghost", onclick: copyPlan}, "Copiar plano em texto")),
-    h("p", {class: "src"}, "Composição: TACO 4ª ed. (NEPA/UNICAMP, 2011). Medidas caseiras: POF 2008–2009, Tabela de Medidas Referidas (IBGE). Atalhos: Enter escolhe o alimento e avança; Enter numa linha vazia cria a próxima refeição.")));
+    h("p", {class: "src"}, "Composição: TACO 4ª ed. (NEPA/UNICAMP, 2011). Medidas caseiras: POF 2008–2009, Tabela de Medidas Referidas (IBGE). Atalhos: Enter escolhe o alimento e avança; Enter numa linha vazia cria a próxima refeição. Use ⋯ na refeição para copiar e colar.")));
   updateTotals();
   if (!plan.meals.length) addMeal(false);
 }
 
-/* Bloco de macros: gramas, % das calorias e g/kg; fibras em gramas */
+/* Gramas: uma casa decimal abaixo de 10 g, inteiro a partir disso */
+const fmtG = v => v < 10 ? g1(v) : k0(v);
+
+/* Bloco de macros: gramas e % das calorias na primeira linha, g/kg na segunda; fibras em gramas */
 function macroGrid(t, W, small){
   const mk = t.c * 4 + t.p * 4 + t.l * 9 || 1;
   const cell = (cls, k, grams, kcal) => h("div", null,
-    h("div", {class: "k"}, h("i", {class: "dot " + cls}), k),
-    h("div", {class: "v"}, `${g1(grams)} g`),
-    h("div", {class: "s"}, kcal == null ? "fibras" : `${Math.round(kcal / mk * 100)}%`, kcal != null && W ? [h("br"), `${nf2.format(grams / W)} g/kg`] : null));
+    h("div", {class: "k " + cls}, k),
+    h("div", {class: "v"}, `${fmtG(grams)} g`, kcal != null ? h("span", {class: "pc"}, `${Math.round(kcal / mk * 100)}%`) : null),
+    h("div", {class: "s"}, kcal != null && W ? `${nf2.format(grams / W)} g/kg` : kcal == null ? "fibras" : " "));
   return h("div", {class: "mgrid" + (small ? " sm" : "")},
-    cell("d-c", "CHO", t.c, t.c * 4), cell("d-p", "PTN", t.p, t.p * 4), cell("d-g", "LIP", t.l, t.l * 9), cell("d-f", "FIB", t.f, null));
+    cell("t-c", "CHO", t.c, t.c * 4), cell("t-p", "PTN", t.p, t.p * 4), cell("t-g", "LIP", t.l, t.l * 9), cell("t-f", "FIB", t.f, null));
 }
 
 /* ---------- início ---------- */

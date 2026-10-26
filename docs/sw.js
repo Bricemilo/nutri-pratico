@@ -1,5 +1,5 @@
 // Guarda o app no aparelho para abrir rápido e funcionar sem internet.
-const VERSION = "fdeb3461cc";
+const VERSION = "e81223b5ce";
 const CACHE = "nutri-pratico-" + VERSION;
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icons/apple-touch-icon.png", "./icons/icon-192.png", "./icons/icon-512.png"];
 
