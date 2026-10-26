@@ -29,7 +29,7 @@ html{-webkit-text-size-adjust:100%}
   --bg:#0A0908; --surface:#191614; --surface-2:#221E1B; --surface-3:#2B2622;
   --ink:#F4EEE8; --ink-2:#CDC3B9; --muted:#91877D; --line:#2D2824; --line-2:#3B352F;
   --accent:#E08C4E; --accent-2:#F2A468; --accent-ink:#1C0E05; --accent-soft:#2F1E12; --accent-line:#6B4226;
-  --carb:#80B1E2; --prot:#B7A1FF; --fat:#EC819B; --fib:#8FC99E; --danger:#FF7D74; --danger-soft:#33191A;
+  --carb:#E5C07C; --prot:#6FC4BE; --fat:#DE8FA4; --fib:#A8C98B; --danger:#FF7D74; --danger-soft:#33191A;
   --hero-1:#2E1D11; --hero-2:#181513; --scrim:rgba(0,0,0,.62); --shadow:0 14px 36px rgba(0,0,0,.5);
   --font:"Geist",-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
   --mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,monospace;
@@ -45,7 +45,10 @@ button,input,textarea{font:inherit;color:inherit}
 button{cursor:pointer;border:0;background:none;padding:0}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .num{font-variant-numeric:tabular-nums}
-.app{max-width:600px;margin:0 auto;padding-bottom:calc(48px + env(safe-area-inset-bottom,0px))}
+.app{max-width:600px;margin:0 auto;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+.home{display:flex;flex-direction:column;min-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 20px)}
+.home .datacard{margin-top:auto}
+.home .plist,.home .empty{margin-bottom:40px}
 
 /* Cabeçalho */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;margin:0 calc(-1 * max(16px,env(safe-area-inset-left,0px)));
@@ -189,25 +192,35 @@ h1{font-size:34px;line-height:1.08;letter-spacing:-.035em;font-weight:650;margin
 .ac-sec{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:8px 10px 4px}
 
 /* Totais (plano e refeição): nome do macro colorido, gramas e % na 1ª linha, g/kg na 2ª */
-.tot{padding:12px 14px 12px}
+.tot{padding:14px 16px 12px;background:linear-gradient(155deg,var(--hero-1),var(--hero-2) 72%);border-color:var(--accent-line)}
 .tot-top{display:flex;align-items:center;gap:10px}
 .tot-kcal{display:flex;align-items:baseline;gap:7px;flex:1;min-width:0}
 .tot-kcal b{font-size:34px;font-weight:640;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
 .tot-kcal span{color:var(--muted);font-size:13.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
 .tot .eyebrow{margin-bottom:6px}
 .pill{font-size:12px;font-weight:650;padding:4px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent-2);border:1px solid var(--accent-line);font-variant-numeric:tabular-nums;white-space:nowrap}
-.mgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
-.mgrid > div{min-width:0;text-align:center;border-left:1px solid var(--line);padding:0 2px}
+.mwrap{margin-top:12px;padding-top:12px;border-top:1px solid var(--line-2)}
+.mgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.mgrid > div{min-width:0;text-align:center;border-left:1px solid var(--line-2);padding:0 4px}
 .mgrid > div:first-child{border-left:0}
-.mgrid .k{font-size:11px;letter-spacing:.08em;font-weight:700}
-.mgrid .v{font-size:18px;font-weight:640;letter-spacing:-.025em;margin-top:2px;font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1.2}
-.mgrid .pc{font-size:11.5px;font-weight:550;color:var(--muted);margin-left:3px;letter-spacing:0}
-.mgrid .s{font-size:12px;color:var(--muted);margin-top:1px;font-variant-numeric:tabular-nums;white-space:nowrap}
-.mgrid.sm{margin-top:0;padding-top:0;border-top:0}
-.mgrid.sm .v{font-size:15.5px}
-.mgrid.sm .pc{font-size:11px}
-.mgrid.sm .s{font-size:11.5px}
-@media (max-width:380px){.mgrid .v{font-size:16px}.mgrid.sm .v{font-size:14px}.mgrid .pc{font-size:10.5px;margin-left:2px}}
+.mgrid .k{font-size:12.5px;font-weight:650;letter-spacing:.01em}
+.mgrid .v{font-size:21px;font-weight:650;letter-spacing:-.03em;margin-top:3px;font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1.15}
+.mgrid .v small{font-size:13px;font-weight:550;color:var(--ink-2);letter-spacing:0;margin-left:2px}
+.mgrid .pc{font-size:12.5px;font-weight:600;color:var(--muted);margin-left:5px;letter-spacing:0}
+.mgrid .s{font-size:12px;color:var(--muted);margin-top:2px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.fib{display:flex;align-items:baseline;gap:8px;margin-top:11px;padding-top:9px;border-top:1px solid var(--line-2);font-size:13px;font-variant-numeric:tabular-nums}
+.fib .t-f{font-weight:650}
+.fib b{font-weight:650;font-size:15px}
+.fib .s{margin-left:auto;color:var(--muted);font-size:12px}
+.mwrap.sm{margin-top:0;padding-top:0;border-top:0}
+.mwrap.sm .k{font-size:12px}
+.mwrap.sm .v{font-size:17px}
+.mwrap.sm .v small{font-size:12px}
+.mwrap.sm .pc{font-size:11.5px}
+.mwrap.sm .s{font-size:11.5px}
+.mwrap.sm .fib{margin-top:9px;padding-top:8px;border-top-color:var(--line)}
+.mwrap.sm .mgrid > div{border-left-color:var(--line)}
+@media (max-width:370px){.mgrid .v{font-size:18px}.mwrap.sm .v{font-size:15px}.mgrid .pc{margin-left:3px}}
 .t-c{color:var(--carb)} .t-p{color:var(--prot)} .t-g{color:var(--fat)} .t-f{color:var(--fib)}
 
 /* Faixa fina fixa com o total, abaixo das abas */
@@ -223,7 +236,7 @@ h1{font-size:34px;line-height:1.08;letter-spacing:-.035em;font-weight:650;margin
 .meals{display:flex;flex-direction:column;gap:22px}
 .meal{padding:0;overflow:visible;border-color:var(--line-2)}
 .meal-h{display:flex;align-items:center;gap:8px;padding:8px 6px 8px 16px;background:var(--surface-2);border-bottom:1px solid var(--line);border-radius:var(--r) var(--r) 0 0}
-.meal-h .acw{flex:1;min-width:0}
+.meal-h .acw{flex:0 1 auto;min-width:0}
 .tw{position:relative;flex:none;width:74px;height:32px}
 .tw span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:4px;border:1px dashed var(--line-2);border-radius:9px;font-size:12.5px;color:var(--muted);pointer-events:none}
 .tw span svg{width:13px;height:13px}
@@ -233,9 +246,10 @@ h1{font-size:34px;line-height:1.08;letter-spacing:-.035em;font-weight:650;margin
 .meal-time::-webkit-calendar-picker-indicator{display:none}
 .tw:not(.has) .meal-time{opacity:0}
 .meal-time:focus{border-color:var(--accent-line)}
-.meal-name{width:100%;border:0;background:transparent;font-size:17px;font-weight:650;letter-spacing:-.015em;outline:none;padding:6px 0;color:var(--accent-2);text-overflow:ellipsis}
+.meal-name{width:100%;max-width:100%;border:0;background:transparent;font-size:17px;font-weight:650;letter-spacing:-.015em;outline:none;padding:6px 0;color:var(--accent-2);text-overflow:ellipsis}
 .meal-name::placeholder{color:var(--muted);font-weight:500}
-.meal-kcal{font-size:15px;font-weight:650;white-space:nowrap;font-variant-numeric:tabular-nums;padding-left:4px}
+.meal-name.ruler{position:absolute;left:0;top:0;width:auto;max-width:none;visibility:hidden;white-space:pre;pointer-events:none}
+.meal-kcal{font-size:15px;font-weight:650;white-space:nowrap;font-variant-numeric:tabular-nums;padding-left:4px;margin-left:auto}
 .meal-kcal small{font-size:12px;color:var(--muted);font-weight:500;margin-left:3px}
 .x.more svg{width:18px;height:18px}
 .meal-ask{padding:0 12px}
@@ -250,16 +264,17 @@ h1{font-size:34px;line-height:1.08;letter-spacing:-.035em;font-weight:650;margin
 .food::placeholder{color:var(--muted);font-weight:400}
 .x{width:32px;height:32px;border-radius:9px;color:var(--muted);display:grid;place-items:center;flex:none}
 .x svg{width:14px;height:14px}
-.item-l2{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:8px;align-items:center;margin:6px 6px 0 0}
+.item-l2{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:8px;align-items:center;margin:6px 8px 0 0}
 .cell{height:40px;border-radius:11px;border:1px solid transparent;background:var(--surface-2);padding:0 11px;font-size:16px;outline:none;width:100%;min-width:0;text-overflow:ellipsis}
 .cell:focus{border-color:var(--accent-line);box-shadow:0 0 0 3px var(--accent-soft)}
 .qty{text-align:center;font-weight:650;font-variant-numeric:tabular-nums;padding:0 4px}
-.grams{text-align:right;font-weight:600;font-variant-numeric:tabular-nums;font-size:15px;white-space:nowrap;min-width:52px}
-.item-l3{display:grid;grid-template-columns:1.25fr 1fr 1fr 1fr;gap:6px;margin:8px 6px 0 0;font-size:12.5px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.grams{text-align:right;font-weight:620;font-variant-numeric:tabular-nums;font-size:15px;white-space:nowrap}
+.item-l3{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin:9px 8px 0 0;font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums;align-items:baseline}
+.item-l3 span:not(:first-child){text-align:right}
 .item-l3 span{white-space:nowrap}
 .item-l3 .kc{color:var(--ink);font-weight:620}
 .item-l3 .kc small{color:var(--muted);font-weight:500}
-.item-l3 b{font-weight:700}
+.item-l3 b{font-weight:700;margin-right:3px}
 .item.blank .item-l2,.item.blank .item-l3,.item.blank .x{display:none}
 .quick{display:none;gap:6px;margin-top:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
 .quick::-webkit-scrollbar{display:none}
@@ -267,7 +282,7 @@ h1{font-size:34px;line-height:1.08;letter-spacing:-.035em;font-weight:650;margin
 .quick button{flex:none;height:36px;min-width:44px;padding:0 10px;border-radius:10px;background:var(--surface-3);font-weight:620;font-variant-numeric:tabular-nums}
 .quick button.next{background:var(--accent);color:var(--accent-ink);margin-left:auto;padding:0 14px}
 .meal-foot{padding:10px 12px 11px;border-top:1px solid var(--line);background:var(--surface-2);border-radius:0 0 var(--r) var(--r)}
-.meal-foot .eyebrow{margin:0 0 6px 4px}
+.meal-foot .eyebrow{margin:0 0 8px 4px}
 .add-row{display:flex;flex-direction:column;gap:10px}
 .add-meal{width:100%;height:54px;border-radius:var(--r);border:1.5px dashed var(--line-2);color:var(--ink-2);font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px}
 .add-meal svg,.paste-new svg{width:18px;height:18px;flex:none}
@@ -704,7 +719,7 @@ function renderHome(){
     if (e.key === "Enter"){ const first = listEl.querySelector(".pitem"); if (first) first.click(); }
   });
   fill();
-  app.replaceChildren(h("div", {class: "view"},
+  app.replaceChildren(h("div", {class: "view home"},
     h("header", {class: "top"}, h("div", {class: "top-row"},
       h("div", {class: "brand"}, h("span", {class: "mark", html: ICON.mark}), "Nutri Prático"),
       h("div", {class: "spacer"}),
@@ -1140,16 +1155,17 @@ function renderPlan(p, body, mini){
     const firstFood = () => refs.get(m.items[0].id).food.focus();
     autocomplete(name, {
       items: optionSource("meals"),
-      onPick: it => { name.value = it.value; m.name = it.value; touch(p); firstFood(); },
+      onPick: it => { name.value = it.value; m.name = it.value; touch(p); fitName(name); paintMealSum(m); firstFood(); },
       onRemove: it => { S.prefs.meals = S.prefs.meals.filter(o => o !== it.value); save(); },
       enterPicks: v => !!v.trim() && !S.prefs.meals.some(o => norm(o) === norm(v.trim())) && optionSource("meals")(v).length > 0,
       onEnter: () => {
         if (!name.value.trim() && name.placeholder && name.placeholder !== "Nome da refeição") name.value = name.placeholder;
-        m.name = name.value.trim(); rememberOption("meals", m.name); touch(p); firstFood();
+        m.name = name.value.trim(); rememberOption("meals", m.name); touch(p); fitName(name); paintMealSum(m); firstFood();
       }
     });
-    name.addEventListener("input", () => { m.name = name.value; touch(p); });
+    name.addEventListener("input", () => { m.name = name.value; touch(p); fitName(name); paintMealSum(m); });
     name.addEventListener("change", () => rememberOption("meals", name.value));
+    requestAnimationFrame(() => fitName(name));
     const menu = h("button", {class: "x more", type: "button", "aria-label": "Ações da refeição: copiar, colar, excluir", title: "Copiar, colar ou excluir", html: ICON.more, onclick: () => mealMenu(m)});
 
     card.append(h("div", {class: "meal-h"}, nameW, tw, kcalEl, menu), askEl, rowsEl, footEl);
@@ -1290,7 +1306,7 @@ function renderPlan(p, body, mini){
     const t = mealTotal(m);
     R.kcalEl.replaceChildren(k0(t.kcal), h("small", null, "kcal"));
     R.footEl.hidden = !t.kcal;
-    put(R.footEl, h("div", {class: "eyebrow"}, "Total da refeição"), macroGrid(t, W(), true));
+    put(R.footEl, h("div", {class: "eyebrow"}, totalOf(m.name)), macroGrid(t, W(), true));
   }
 
   /* total do plano logo abaixo do objetivo, e uma faixa fina fixa quando ele sai da tela */
@@ -1359,6 +1375,15 @@ function renderPlan(p, body, mini){
   if (!plan.meals.length) addMeal(false);
 }
 
+/* Ajusta a largura do nome da refeição ao texto, para o horário ficar colado nele */
+function fitName(input){
+  let ruler = input.parentElement.querySelector(".ruler");
+  if (!ruler) { ruler = h("span", {class: "meal-name ruler", "aria-hidden": "true"}); input.parentElement.append(ruler); }
+  ruler.textContent = input.value || input.placeholder;
+  input.style.width = Math.ceil(ruler.getBoundingClientRect().width + 2) + "px";
+}
+if (document.fonts) document.fonts.ready.then(() => document.querySelectorAll(".meal-name").forEach(fitName));
+
 /* Gramas: uma casa decimal abaixo de 10 g, inteiro a partir disso */
 const fmtG = v => v < 10 ? g1(v) : k0(v);
 
@@ -1367,10 +1392,19 @@ function macroGrid(t, W, small){
   const mk = t.c * 4 + t.p * 4 + t.l * 9 || 1;
   const cell = (cls, k, grams, kcal) => h("div", null,
     h("div", {class: "k " + cls}, k),
-    h("div", {class: "v"}, `${fmtG(grams)} g`, kcal != null ? h("span", {class: "pc"}, `${Math.round(kcal / mk * 100)}%`) : null),
-    h("div", {class: "s"}, kcal != null && W ? `${nf2.format(grams / W)} g/kg` : kcal == null ? "fibras" : " "));
-  return h("div", {class: "mgrid" + (small ? " sm" : "")},
-    cell("t-c", "CHO", t.c, t.c * 4), cell("t-p", "PTN", t.p, t.p * 4), cell("t-g", "LIP", t.l, t.l * 9), cell("t-f", "FIB", t.f, null));
+    h("div", {class: "v"}, fmtG(grams), h("small", null, "g"), h("span", {class: "pc"}, `${Math.round(kcal / mk * 100)}%`)),
+    h("div", {class: "s"}, W ? `${nf2.format(grams / W)} g/kg` : "\u00a0"));
+  return h("div", {class: "mwrap" + (small ? " sm" : "")},
+    h("div", {class: "mgrid"}, cell("t-c", "Carboidratos", t.c, t.c * 4), cell("t-p", "Proteínas", t.p, t.p * 4), cell("t-g", "Gorduras", t.l, t.l * 9)),
+    h("div", {class: "fib"}, h("span", {class: "t-f"}, "Fibras"), h("b", null, `${fmtG(t.f)} g`),
+      t.kcal ? h("span", {class: "s"}, `${g1(t.f * 1000 / t.kcal)} g por 1.000 kcal`) : null));
+}
+/* "Total do almoço", "Total da ceia" */
+function totalOf(name){
+  const n = (name || "").trim();
+  if (!n) return "Total da refeição";
+  const fem = /^(ceia|colação|colacao|merenda|refeição|sobremesa|marmita)\b/i.test(n);
+  return `Total ${fem ? "da" : "do"} ${n.charAt(0).toLowerCase() + n.slice(1)}`;
 }
 
 /* ---------- início ---------- */
