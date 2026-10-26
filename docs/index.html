@@ -290,7 +290,7 @@ const ICON = {
 const put = (el, ...kids) => el.replaceChildren(...kids.flat(Infinity).filter(x => x != null && x !== false));
 const svg = k => h("span", {html: ICON[k], style:"display:contents"});
 
-function normCh(ch){ return ch.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase(); }
+function normCh(ch){ return ch.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
 function norm(s){ let o = ""; for (const ch of s) o += normCh(ch); return o; }
 const words = s => norm(s).split(/[^a-z0-9]+/).filter(Boolean);
 const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -638,7 +638,7 @@ function backupSheet(){
   const last = S.lastBackup ? `Último backup: ${new Date(S.lastBackup).toLocaleDateString("pt-BR")}` : "Nenhum backup feito ainda.";
   async function exportNow(){
     const stamp = new Date().toISOString().slice(0, 10);
-    const json = JSON.stringify({app: "nutri-pratico", version: 1, exported: new Date().toISOString(), data: S});
+    const json = backupText();
     const name = `nutri-pratico-backup-${stamp}.json`;
     const blob = new Blob([json], {type: "application/json"});
     const done = () => { S.lastBackup = Date.now(); save(); status.textContent = "Backup gerado. Guarde o arquivo em Arquivos, iCloud ou e-mail."; };
@@ -650,11 +650,31 @@ function backupSheet(){
       const a = h("a", {href: URL.createObjectURL(blob), download: name}); document.body.append(a); a.click(); a.remove(); done();
     } catch (e) { status.textContent = "Não foi possível gerar o arquivo neste navegador."; }
   }
+  const embedded = window.self !== window.top;   // dentro do Claude não dá para baixar arquivos
+  const backupText = () => JSON.stringify({app: "nutri-pratico", version: 1, exported: new Date().toISOString(), data: S});
+  function copyNow(){
+    const txt = backupText();
+    const ok = () => { S.lastBackup = Date.now(); save(); status.textContent = "Backup copiado. Agora abra o app instalado e use “Colar backup”."; };
+    const fallback = () => {
+      const ta = h("textarea", {style: "position:fixed;top:-1000px"}); ta.value = txt; document.body.append(ta); ta.select();
+      try { document.execCommand("copy") ? ok() : (status.textContent = "Não foi possível copiar."); } catch (e) { status.textContent = "Não foi possível copiar."; }
+      ta.remove();
+    };
+    try { navigator.clipboard.writeText(txt).then(ok, fallback); } catch (e) { fallback(); }
+  }
+  const pasteArea = h("textarea", {class: "input", id: "bk-colar", rows: "4", placeholder: "Toque aqui, segure e escolha Colar", style: "height:auto;padding:12px 14px;font-size:16px;resize:vertical"});
+  const pasteBox = h("div", {class: "bk-row"}, pasteArea,
+    h("button", {class: "btn primary block", type: "button", onclick: () => offerRestore(pasteArea.value)}, "Continuar"));
+  pasteBox.hidden = true;
   file.addEventListener("change", () => {
     const f = file.files[0]; if (!f) return;
     const rd = new FileReader();
-    rd.onload = () => {
-      let b; try { b = JSON.parse(rd.result); } catch (e) {}
+    rd.onload = () => offerRestore(rd.result);
+    rd.readAsText(f); file.value = "";
+  });
+  function offerRestore(text){
+    {
+      let b; try { b = JSON.parse(String(text).trim()); } catch (e) {}
       const d = b && b.data;
       if (!d || !Array.isArray(d.patients) || !d.prefs) { status.textContent = "Esse arquivo não é um backup do Nutri Prático."; return; }
       confirmBox.replaceChildren(h("div", {class: "confirm", style: "flex-wrap:wrap"},
@@ -665,17 +685,19 @@ function backupSheet(){
           try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
           close(); go({name: "home", id: null}); toast("Backup restaurado");
         }}, "Restaurar")));
-    };
-    rd.readAsText(f); file.value = "";
-  });
+    }
+  }
   const form = h("div", {class: "sheet", role: "dialog", "aria-modal": "true", "aria-label": "Backup"},
     h("div", {class: "grab"}),
     h("h2", null, "Backup"),
     h("div", {class: "bk-meta"}, last),
     h("div", {class: "bk-row"},
-      h("button", {class: "btn primary block", type: "button", onclick: exportNow}, "Exportar backup"),
-      h("button", {class: "btn ghost block", type: "button", onclick: () => file.click()}, "Restaurar de um arquivo"),
-      file, status, confirmBox,
+      embedded ? null : h("button", {class: "btn primary block", type: "button", onclick: exportNow}, "Exportar backup (arquivo)"),
+      h("button", {class: embedded ? "btn primary block" : "btn ghost block", type: "button", onclick: copyNow}, "Copiar backup"),
+      h("div", {class: "eyebrow", style: "margin-top:8px"}, "Restaurar"),
+      h("button", {class: "btn ghost block", type: "button", onclick: () => { pasteBox.hidden = false; pasteArea.focus(); }}, "Colar backup"),
+      embedded ? null : h("button", {class: "btn ghost block", type: "button", onclick: () => file.click()}, "Restaurar de um arquivo"),
+      pasteBox, file, status, confirmBox,
       h("button", {class: "btn ghost block", type: "button", onclick: close}, "Fechar")));
   function close(){ form.classList.remove("on"); scrim.classList.remove("on"); setTimeout(() => { form.remove(); scrim.remove(); }, 260); }
   scrim.addEventListener("click", close);
