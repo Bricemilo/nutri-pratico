@@ -10,9 +10,9 @@
 :root{
   --bg:#0A0908; --surface:#191614; --surface-2:#221E1B; --surface-3:#2B2622;
   --ink:#F4EEE8; --ink-2:#CDC3B9; --muted:#91877D; --line:#2D2824; --line-2:#3B352F;
-  --accent:#D2925F; --accent-2:#E5B48C; --accent-ink:#1A0F08; --accent-soft:#2B1F16; --accent-line:#5B4130;
+  --accent:#E08C4E; --accent-2:#F2A468; --accent-ink:#1C0E05; --accent-soft:#2F1E12; --accent-line:#6B4226;
   --carb:#80B1E2; --prot:#B7A1FF; --fat:#EC819B; --fib:#8FC99E; --danger:#FF7D74; --danger-soft:#33191A;
-  --hero-1:#2A1D14; --hero-2:#181513; --scrim:rgba(0,0,0,.62); --shadow:0 14px 36px rgba(0,0,0,.5);
+  --hero-1:#2E1D11; --hero-2:#181513; --scrim:rgba(0,0,0,.62); --shadow:0 14px 36px rgba(0,0,0,.5);
   --font:"Geist",-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
   --mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,monospace;
   --r:18px; --r-sm:11px;
@@ -107,7 +107,7 @@ h1{font-size:34px;line-height:1.08;letter-spacing:-.035em;font-weight:650;margin
 .err{color:var(--danger);font-size:13px;min-height:18px}
 .seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
 .seg button{height:40px;border-radius:10px;font-weight:550;font-size:14px;color:var(--muted);padding:0 4px;line-height:1.1}
-.seg button.on{background:var(--surface-3);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line-2)}
+.seg button.on{background:var(--accent);color:var(--accent-ink);font-weight:650;box-shadow:0 2px 10px rgba(224,140,78,.18)}
 .seg.big button{height:46px;font-size:15px}
 .sheet .seg{background:var(--surface-2)}
 .row-actions{display:flex;gap:10px;margin-top:8px}
@@ -122,6 +122,8 @@ h1{font-size:34px;line-height:1.08;letter-spacing:-.035em;font-weight:650;margin
 .phead{margin:16px 0 14px}
 .phead h1{margin:0 0 4px;font-size:30px}
 .tabs{position:sticky;top:calc(env(safe-area-inset-top,0px) + 61px);z-index:15;padding:6px 0 12px;background:var(--bg)}
+.mini{transition:opacity .18s,transform .18s}
+.mini.off{opacity:0;transform:translateY(-6px);pointer-events:none}
 
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
 .stack{display:flex;flex-direction:column;gap:14px}
@@ -169,28 +171,30 @@ h1{font-size:34px;line-height:1.08;letter-spacing:-.035em;font-weight:650;margin
 .ac-sec{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:8px 10px 4px}
 
 /* Totais (plano e refeição): nome do macro colorido, gramas e % na 1ª linha, g/kg na 2ª */
-.tot{padding:16px 16px 14px}
-.tot-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.pill{font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent-2);border:1px solid var(--accent-line);font-variant-numeric:tabular-nums}
-.tot-kcal{display:flex;align-items:baseline;gap:8px;margin:8px 0 14px}
-.tot-kcal b{font-size:38px;font-weight:620;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
-.tot-kcal span{color:var(--muted);font-size:14px;font-variant-numeric:tabular-nums}
-.mgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;padding-top:12px;border-top:1px solid var(--line)}
-.mgrid > div{min-width:0;padding-left:10px;border-left:1px solid var(--line)}
-.mgrid > div:first-child{padding-left:0;border-left:0}
-.mgrid .k{font-size:11px;letter-spacing:.08em;font-weight:650}
-.mgrid .v{font-size:16px;font-weight:620;letter-spacing:-.02em;margin-top:3px;font-variant-numeric:tabular-nums;white-space:nowrap}
-.mgrid .pc{font-size:11.5px;font-weight:500;color:var(--muted);margin-left:5px;letter-spacing:0}
-.mgrid .s{font-size:11.5px;color:var(--muted);margin-top:1px;font-variant-numeric:tabular-nums;white-space:nowrap}
-.mgrid.sm{padding-top:0;border-top:0}
-.mgrid.sm .v{font-size:14px}
-.mgrid.sm .pc{font-size:11px;margin-left:4px}
-.mgrid.sm .s{font-size:11px}
-@media (max-width:380px){.mgrid .v{font-size:14.5px}.mgrid .pc{display:block;margin:1px 0 0}.mgrid.sm .v{font-size:13px}}
+.tot{padding:12px 14px 12px}
+.tot-top{display:flex;align-items:center;gap:10px}
+.tot-kcal{display:flex;align-items:baseline;gap:7px;flex:1;min-width:0}
+.tot-kcal b{font-size:34px;font-weight:640;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+.tot-kcal span{color:var(--muted);font-size:13.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tot .eyebrow{margin-bottom:6px}
+.pill{font-size:12px;font-weight:650;padding:4px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent-2);border:1px solid var(--accent-line);font-variant-numeric:tabular-nums;white-space:nowrap}
+.mgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.mgrid > div{min-width:0;text-align:center;border-left:1px solid var(--line);padding:0 2px}
+.mgrid > div:first-child{border-left:0}
+.mgrid .k{font-size:11px;letter-spacing:.08em;font-weight:700}
+.mgrid .v{font-size:18px;font-weight:640;letter-spacing:-.025em;margin-top:2px;font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1.2}
+.mgrid .pc{font-size:11.5px;font-weight:550;color:var(--muted);margin-left:3px;letter-spacing:0}
+.mgrid .s{font-size:12px;color:var(--muted);margin-top:1px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.mgrid.sm{margin-top:0;padding-top:0;border-top:0}
+.mgrid.sm .v{font-size:15.5px}
+.mgrid.sm .pc{font-size:11px}
+.mgrid.sm .s{font-size:11.5px}
+@media (max-width:380px){.mgrid .v{font-size:16px}.mgrid.sm .v{font-size:14px}.mgrid .pc{font-size:10.5px;margin-left:2px}}
 .t-c{color:var(--carb)} .t-p{color:var(--prot)} .t-g{color:var(--fat)} .t-f{color:var(--fib)}
 
 /* Faixa fina fixa com o total, abaixo das abas */
-.mini{display:flex;align-items:center;gap:12px;margin-top:8px;padding:7px 12px;border-radius:12px;background:var(--surface);border:1px solid var(--line-2);font-size:12px;white-space:nowrap;overflow:hidden}
+.tabs .mini{position:absolute;left:0;right:0;top:calc(100% - 4px)}
+.mini{display:flex;align-items:center;gap:12px;padding:7px 12px;box-shadow:0 10px 24px rgba(0,0,0,.45);border-radius:12px;background:var(--surface);border:1px solid var(--line-2);font-size:12px;white-space:nowrap;overflow:hidden}
 .mini-k{font-variant-numeric:tabular-nums;color:var(--muted)}
 .mini-k b{color:var(--ink);font-size:15px;font-weight:650}
 .mini-k i{font-style:normal;margin-left:8px;font-size:11px;font-weight:600;color:var(--accent-2);padding:2px 7px;border-radius:999px;background:var(--accent-soft)}
@@ -200,10 +204,16 @@ h1{font-size:34px;line-height:1.08;letter-spacing:-.035em;font-weight:650;margin
 /* Refeição */
 .meals{display:flex;flex-direction:column;gap:22px}
 .meal{padding:0;overflow:visible;border-color:var(--line-2)}
-.meal-h{display:flex;align-items:center;gap:8px;padding:8px 8px 8px 12px;background:var(--surface-2);border-bottom:1px solid var(--line);border-radius:var(--r) var(--r) 0 0}
+.meal-h{display:flex;align-items:center;gap:8px;padding:8px 6px 8px 16px;background:var(--surface-2);border-bottom:1px solid var(--line);border-radius:var(--r) var(--r) 0 0}
 .meal-h .acw{flex:1;min-width:0}
-.meal-time{width:54px;flex:none;height:30px;border:1px solid var(--line-2);border-radius:9px;background:var(--surface);text-align:center;font-size:16px;font-variant-numeric:tabular-nums;color:var(--ink-2);outline:none;padding:0}
-.meal-time::placeholder{color:var(--muted)}
+.tw{position:relative;flex:none;width:74px;height:32px}
+.tw span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:4px;border:1px dashed var(--line-2);border-radius:9px;font-size:12.5px;color:var(--muted);pointer-events:none}
+.tw span svg{width:13px;height:13px}
+.tw.has span{display:none}
+.meal-time{position:absolute;inset:0;width:100%;height:100%;-webkit-appearance:none;appearance:none;border:1px solid var(--line-2);border-radius:9px;background:var(--surface);text-align:center;font-size:16px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink);outline:none;padding:0 4px;margin:0;min-width:0}
+.meal-time::-webkit-date-and-time-value{text-align:center}
+.meal-time::-webkit-calendar-picker-indicator{display:none}
+.tw:not(.has) .meal-time{opacity:0}
 .meal-time:focus{border-color:var(--accent-line)}
 .meal-name{width:100%;border:0;background:transparent;font-size:17px;font-weight:650;letter-spacing:-.015em;outline:none;padding:6px 0;color:var(--accent-2);text-overflow:ellipsis}
 .meal-name::placeholder{color:var(--muted);font-weight:500}
@@ -227,27 +237,19 @@ h1{font-size:34px;line-height:1.08;letter-spacing:-.035em;font-weight:650;margin
 .cell:focus{border-color:var(--accent-line);box-shadow:0 0 0 3px var(--accent-soft)}
 .qty{text-align:center;font-weight:650;font-variant-numeric:tabular-nums;padding:0 4px}
 .grams{text-align:right;font-weight:600;font-variant-numeric:tabular-nums;font-size:15px;white-space:nowrap;min-width:52px}
-.msum{display:none;text-align:left;font-size:14px;color:var(--ink-2);padding:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .item-l3{display:grid;grid-template-columns:1.25fr 1fr 1fr 1fr;gap:6px;margin:8px 6px 0 0;font-size:12.5px;color:var(--ink-2);font-variant-numeric:tabular-nums}
 .item-l3 span{white-space:nowrap}
 .item-l3 .kc{color:var(--ink);font-weight:620}
 .item-l3 .kc small{color:var(--muted);font-weight:500}
 .item-l3 b{font-weight:700}
 .item.blank .item-l2,.item.blank .item-l3,.item.blank .x{display:none}
-/* Alimento já lançado: duas linhas sem caixas; um toque abre para editar */
-.item.compact{cursor:pointer}
-.item.compact .item-l2{grid-template-columns:minmax(0,1fr) auto;margin-top:2px}
-.item.compact .qty,.item.compact .meas{display:none}
-.item.compact .msum{display:block}
-.item.compact .grams{font-size:14px;color:var(--ink-2);font-weight:550}
-.item.compact .item-l3{margin-top:6px}
 .quick{display:none;gap:6px;margin-top:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
 .quick::-webkit-scrollbar{display:none}
 .item.qfocus .quick{display:flex}
 .quick button{flex:none;height:36px;min-width:44px;padding:0 10px;border-radius:10px;background:var(--surface-3);font-weight:620;font-variant-numeric:tabular-nums}
 .quick button.next{background:var(--accent);color:var(--accent-ink);margin-left:auto;padding:0 14px}
-.meal-foot{padding:12px 16px 14px;border-top:1px solid var(--line);background:var(--surface-2);border-radius:0 0 var(--r) var(--r)}
-.meal-foot .eyebrow{margin-bottom:8px}
+.meal-foot{padding:10px 12px 11px;border-top:1px solid var(--line);background:var(--surface-2);border-radius:0 0 var(--r) var(--r)}
+.meal-foot .eyebrow{margin:0 0 6px 4px}
 .add-row{display:flex;flex-direction:column;gap:10px}
 .add-meal{width:100%;height:54px;border-radius:var(--r);border:1.5px dashed var(--line-2);color:var(--ink-2);font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px}
 .add-meal svg,.paste-new svg{width:18px;height:18px;flex:none}
@@ -305,6 +307,7 @@ const ICON = {
   x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
   lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
   backup:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>',
   more:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="19" cy="12" r="1.9"/></svg>',
   copy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>',
   mark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 5-14 14-14 0 9-6 14-14 14Z"/><path d="M5 19 13 11"/></svg>'
@@ -1101,20 +1104,12 @@ function renderPlan(p, body, mini){
       }}]);
   }
 
-  /* horário: 730 vira 07:30, 7 vira 07:00 */
-  function fmtTime(v){
-    const d = v.replace(/\D/g, "").slice(0, 4);
-    if (!d) return "";
-    let hh, mm;
-    if (d.length <= 2) { hh = +d; mm = 0; } else if (d.length === 3) { hh = +d[0]; mm = +d.slice(1); } else { hh = +d.slice(0, 2); mm = +d.slice(2); }
-    if (hh > 23 || mm > 59) return "";
-    return `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`;
-  }
-
   function buildMeal(m){
-    const time = h("input", {class: "meal-time", inputmode: "numeric", placeholder: "--:--", value: m.time || "", "aria-label": "Horário da refeição", maxlength: "5"});
-    time.addEventListener("input", () => { const d = time.value.replace(/\D/g, "").slice(0, 4); time.value = d.length > 2 ? d.slice(0, d.length - 2) + ":" + d.slice(-2) : d; });
-    time.addEventListener("blur", () => { m.time = fmtTime(time.value); time.value = m.time; touch(p); });
+    /* horário: toque abre a roda de horas do iPhone */
+    const time = h("input", {class: "meal-time", type: "time", value: m.time || "", "aria-label": "Horário da refeição"});
+    const tw = h("label", {class: "tw" + (m.time ? " has" : ""), title: "Horário"}, h("span", {html: ICON.clock + "Horário"}), time);
+    const setTime = () => { m.time = time.value || ""; tw.classList.toggle("has", !!m.time); touch(p); };
+    time.addEventListener("input", setTime); time.addEventListener("change", setTime); time.addEventListener("blur", setTime);
     const name = h("input", {class: "meal-name", placeholder: nextMealName() || "Nome da refeição", value: m.name, enterkeyhint: "next", "aria-label": "Nome da refeição"});
     const nameW = h("div", {class: "acw"}, name);
     const kcalEl = h("div", {class: "meal-kcal"});
@@ -1137,7 +1132,7 @@ function renderPlan(p, body, mini){
     name.addEventListener("change", () => rememberOption("meals", name.value));
     const menu = h("button", {class: "x more", type: "button", "aria-label": "Ações da refeição: copiar, colar, excluir", title: "Copiar, colar ou excluir", html: ICON.more, onclick: () => mealMenu(m)});
 
-    card.append(h("div", {class: "meal-h"}, time, nameW, kcalEl, menu), askEl, rowsEl, footEl);
+    card.append(h("div", {class: "meal-h"}, nameW, tw, kcalEl, menu), askEl, rowsEl, footEl);
     refs.set(m.id, {card, kcalEl, footEl, askEl});
     for (const it of m.items) rowsEl.append(buildRow(m, it, rowsEl));
     paintMealSum(m);
@@ -1151,7 +1146,6 @@ function renderPlan(p, body, mini){
     const qty = h("input", {class: "cell qty", inputmode: "decimal", "aria-label": "Quantidade da medida caseira", placeholder: "1", enterkeyhint: "next"});
     const meas = h("input", {class: "cell", "aria-label": "Medida caseira", enterkeyhint: "next", autocapitalize: "off"});
     const measW = h("div", {class: "acw meas"}, meas);
-    const msum = h("button", {class: "msum", type: "button", "aria-label": "Editar quantidade"});
     const grams = h("div", {class: "grams"});
     const l3 = h("div", {class: "item-l3"});
     const askEl = h("div");
@@ -1159,11 +1153,9 @@ function renderPlan(p, body, mini){
     const quick = h("div", {class: "quick"});
     refs.set(it.id, {row, food, qty});
 
-    const complete = () => !!(it.foodId && it.qty);
     function syncInputs(){
       const f = FOODS.get(it.foodId);
       row.classList.toggle("blank", !f);
-      row.classList.toggle("compact", complete() && !row.contains(document.activeElement));
       food.value = f ? f.dn : "";
       meas.value = f ? measureOf(f, it.measure).l : "";
       qty.value = fmtQty(it.qty);
@@ -1173,7 +1165,6 @@ function renderPlan(p, body, mini){
       const f = FOODS.get(it.foodId);
       if (!f) return;
       const c = calcItem(it), m1 = measureOf(f, it.measure);
-      msum.textContent = `${fmtQty(it.qty) || "—"} × ${m1.l}`;
       grams.textContent = c ? `${fq.format(Math.round(c.g * 10) / 10)} g` : `${fq.format(m1.g)} g/un`;
       put(l3,
         h("span", {class: "kc"}, c ? k0(c.kcal) : "—", h("small", null, " kcal")),
@@ -1183,14 +1174,6 @@ function renderPlan(p, body, mini){
     }
     const refresh = () => { paintRow(); paintMealSum(m); updateTotals(); };
 
-    /* fica compacto quando o alimento está completo e o foco sai da linha */
-    row.addEventListener("focusin", e => { if (e.target !== msum) row.classList.remove("compact"); });
-    row.addEventListener("focusout", e => { if (!row.contains(e.relatedTarget)) setTimeout(() => { if (!row.contains(document.activeElement)) row.classList.toggle("compact", complete()); }, 0); });
-    msum.addEventListener("mousedown", e => e.preventDefault());
-    row.addEventListener("click", e => {
-      if (!row.classList.contains("compact") || e.target.closest(".food, .x, .ask")) return;
-      row.classList.remove("compact"); qty.focus(); qty.select();
-    });
 
     /* alimento */
     autocomplete(food, {
@@ -1276,7 +1259,7 @@ function renderPlan(p, body, mini){
 
     row.append(
       h("div", {class: "item-l1"}, foodW, del),
-      h("div", {class: "item-l2"}, qty, measW, msum, grams),
+      h("div", {class: "item-l2"}, qty, measW, grams),
       l3, quick, askEl);
     syncInputs();
     return row;
@@ -1295,9 +1278,10 @@ function renderPlan(p, body, mini){
     const t = planTotal(plan), tg = target();
     const pct = tg ? Math.round(t.kcal / tg * 100) : null;
     put(totCard,
-      h("div", {class: "tot-top"}, h("div", {class: "eyebrow"}, "Total do plano"),
-        h("span", {class: "pill"}, pct != null ? `${pct}% da meta` : "Sem meta definida")),
-      h("div", {class: "tot-kcal"}, h("b", null, k0(t.kcal)), h("span", null, tg ? `de ${k0(tg)} kcal` : "kcal")),
+      h("div", {class: "eyebrow"}, "Total do plano"),
+      h("div", {class: "tot-top"},
+        h("div", {class: "tot-kcal"}, h("b", null, k0(t.kcal)), h("span", null, tg ? `de ${k0(tg)} kcal` : "kcal")),
+        h("span", {class: "pill"}, pct != null ? `${pct}% da meta` : "Sem meta")),
       macroGrid(t, W(), false));
     put(mini,
       h("div", {class: "mini-k"}, h("b", null, k0(t.kcal)), h("span", null, " kcal"), pct != null ? h("i", null, `${pct}%`) : null),
@@ -1306,8 +1290,9 @@ function renderPlan(p, body, mini){
         h("span", null, h("b", {class: "t-p"}, "P"), ` ${fmtG(t.p)}g`),
         h("span", null, h("b", {class: "t-g"}, "G"), ` ${fmtG(t.l)}g`)));
   }
+  mini.hidden = false; mini.classList.add("off");
   if ("IntersectionObserver" in window){
-    new IntersectionObserver(([e]) => { mini.hidden = e.isIntersecting || e.boundingClientRect.top > 0; },
+    new IntersectionObserver(([e]) => { mini.classList.toggle("off", e.isIntersecting || e.boundingClientRect.top > 0); },
       {rootMargin: "-150px 0px 0px 0px"}).observe(totCard);
   }
 
