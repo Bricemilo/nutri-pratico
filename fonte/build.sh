@@ -18,8 +18,7 @@ pwa_head = """<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#F2F4F3" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0B0E0D" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#0A0908">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
