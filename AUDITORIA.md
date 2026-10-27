@@ -1,4 +1,4 @@
-# Nutri Prático: auditoria técnica e evolução v2
+# Nutri Prático: auditoria técnica (v3)
 
 Documento de referência da evolução para o planejador alimentar pessoal e familiar.
 
@@ -8,6 +8,7 @@ Documento de referência da evolução para o planejador alimentar pessoal e fam
 |---|---|---|
 | Núcleo de cálculo | `fonte/core.js` | Funções puras: base de alimentos, busca, energia, totais, substituições. Sem tela. Roda no app e nos testes. |
 | Tela | `fonte/app.html` | Interface (HTML, CSS e JavaScript sem bibliotecas externas). |
+| Leitor de rótulos | `docs/vendor/tesseract/` | tesseract.js 6.0.1 + modelo de português, hospedados com o app e carregados só ao escanear. |
 | Base de alimentos | `fonte/foods.json` | TACO 4ª ed. com medidas caseiras da POF 2008–2009, gerada por `fonte/match.py`. |
 | Marcações da TACO | `fonte/taco_status.json` | Quais valores são "NA" (não se aplica), "Tr" (traço) ou "*" (em reanálise), lidas do PDF oficial. |
 | Montagem | `fonte/build.sh` | Junta tudo em `index.html` (link do Claude) e `docs/index.html` (app instalável no GitHub Pages). |
@@ -21,7 +22,23 @@ O app funciona sem internet (service worker em `docs/sw.js`) e não depende de s
 - **Migração:** ao abrir a v2 pela primeira vez, uma cópia exata do conteúdo anterior é guardada em `nutripratico.v1.antes-da-v2`. O botão Backup oferece "Voltar à cópia de antes da atualização".
 - **Antes de restaurar um backup:** o estado atual é guardado em `nutripratico.v1.antes-de-restaurar`.
 - **Gravação:** ocorre a cada alteração (com intervalo de 250 ms), ao sair da página e ao trocar de app.
-- **Backups aceitos:** os da v1 e os da v2.
+- **Backups aceitos:** os da v1, v2 e v3.
+- **v3 sem migração:** a v3 lê os dados da v2 sem alterá-los (testado: mesmos perfis, alimentos e totais). Campos novos são opcionais:
+  - `energy.method` (`media`, `fao` ou `dri`): protocolo escolhido para adultos;
+  - posição 9 de um alimento próprio: `{brand, portion:{amount, unit, label}, extra:{sugar, addedSugar, satFat, transFat, sodium}, source:"manual"|"rotulo"}`.
+
+### Leitura da tabela nutricional por foto
+- **No aparelho:** a foto é lida pelo tesseract.js (WebAssembly) dentro do navegador. Nada é enviado a servidores, não há chave de API.
+- **Descarte:** a foto vira um bitmap reduzido em tons de cinza só em memória; depois da leitura, o bitmap é fechado, o canvas é zerado, o campo de arquivo é limpo e removido e o leitor é encerrado. Nenhuma imagem ou miniatura vai para o `localStorage`, IndexedDB ou cache (verificado nos testes). O iOS pode manter cópias temporárias próprias da câmera, fora do controle do app.
+- **Só dados estruturados:** nome, marca, porção, valores por 100 g/ml e nutrientes extras.
+- **Conferência obrigatória:** a leitura abre a tela de cadastro preenchida; nada é salvo sem o toque em "Salvar".
+- **Sinalização (`core.parseLabel`):**
+  - valor ausente fica vazio, nunca é presumido;
+  - coluna "por porção" é convertida para 100 g só quando a porção é lida; o app sempre mostra a base usada;
+  - colunas 100 g × porção que não batem pelas regras de arredondamento do rótulo, erros típicos de leitura corrigidos (ex.: "9,49" → "9,4"), energia incoerente com 4/4/9, açúcares > carboidratos, saturadas > totais e confiança baixa ficam destacados com o motivo.
+- **Duplicados:** mesmo nome e marca de um alimento já cadastrado pede "Atualizar o existente" ou "Salvar como novo".
+- **Download único:** na primeira leitura o app baixa ~5,5 MB (leitor + modelo), guardados em um cache próprio que sobrevive às atualizações. No link do Claude a leitura fica desativada (o ambiente bloqueia o leitor).
+- **Líquidos:** valores por 100 ml são tratados como 100 g no planejamento (1 ml ≈ 1 g), com aviso na tela.
 
 ## 3. Cálculos e referências
 
@@ -33,9 +50,10 @@ O app funciona sem internet (service worker em `docs/sw.js`) e não depende de s
   - EER e BEE para adultos (19 anos ou mais).
   - EER para 3–18 anos, com energia de crescimento: +20 kcal (3–8 anos) e +25 kcal (9–18 anos).
 - **Resultado exibido:**
-  - **Adultos:** média dos dois protocolos (comportamento preservado da v1).
+  - **Adultos:** média dos dois protocolos (padrão, comportamento preservado da v1). Na v3 é possível escolher usar só FAO/OMS 1985 ou só DRI 2005; as equações não mudaram.
   - **Menores de 18 anos (mudança justificada):** só a DRI 2005. Os fatores de atividade da FAO/OMS 1985 foram definidos para adultos, e a DRI inclui a energia de crescimento. A v1 fazia a média também para crianças.
   - **Menores de 3 anos:** só a TMB, sem GET.
+- **Meta do plano:** o botão "Usar X kcal como meta do plano" copia o GET do protocolo escolhido; a meta pode ser editada no plano.
 - **Sem déficit automático:** o app nunca aplica déficit calórico. Para crianças, exibe orientação de acompanhamento profissional e lembra que o IMC infantil se avalia por curvas de crescimento.
 
 ### Composição e totais
@@ -43,6 +61,10 @@ O app funciona sem internet (service worker em `docs/sw.js`) e não depende de s
 - O total da refeição é a soma dos itens; o total do plano é a soma das refeições (verificado nos testes).
 - **% dos macronutrientes:** fatores de Atwater (4/4/9), somando 100%. A energia total é a da TACO, que usa fatores específicos por alimento, então pode diferir um pouco de 4C+4P+9G. O app explica isso na tela.
 - **g/kg:** gramas ÷ peso do perfil.
+- **Painel circular (Início e resumo do plano):**
+  - anel externo: energia planejada ÷ meta, de 0 a 100% (50 marcas de 2%); acima da meta o anel fica cheio e o excesso aparece no centro em % e kcal;
+  - anel interno: participação de carboidratos, proteínas e gorduras na energia (Atwater), proporcional aos mesmos % das chaves;
+  - toque em um macronutriente: gramas, % da energia, g/kg e kcal; sem seleção: fibras e g por 1.000 kcal.
 - **Densidade de fibras:** g por 1.000 kcal.
 
 ### Dados ausentes
@@ -67,7 +89,7 @@ Ficam em `core.substitutes` e `core.equivalent`.
 - **Arredondamento:** frações de ¼ na medida caseira, ou múltiplos de 5 g. Quando a medida ficaria abaixo de ½, usa gramas.
 - **Antes de confirmar:** o app mostra a quantidade e o impacto no plano (kcal antes e depois), com um aviso de que equivalência em um critério não significa equivalência nutricional.
 
-## 4. Testes automatizados (14, todos passando)
+## 4. Testes automatizados (21, todos passando)
 
 1. Idade completa com a data de aniversário.
 2. TMB e GET da FAO/OMS 1985 para adultos.
@@ -83,18 +105,24 @@ Ficam em `core.substitutes` e `core.equivalent`.
 12. Substituição por energia (inclui volume realista e exclui verduras no lugar do arroz).
 13. Substituição por proteína mantém o papel do alimento.
 14. Nomes do dia a dia.
+15. Rótulo no modelo novo (100 g + porção) lido corretamente.
+16. Erro de leitura de dígito (7,3 lido como 7,8) é sinalizado pela incoerência entre colunas.
+17. Rótulo antigo (só por porção) convertido para 100 g/ml.
+18. Foto real do rótulo dá o mesmo resultado do arquivo digital.
+19. Nada é inventado: campo ausente fica vazio e sinalizado.
+20. Energia incoerente com 4/4/9 é sinalizada.
+21. Escolha do protocolo de energia (média, FAO ou DRI; crianças sempre DRI).
 
-Também foram feitos testes de ponta a ponta no navegador (simulação de iPhone 13):
-- **Migração:** dados criados na v1 aparecem na v2 com os mesmos totais, e a cópia automática é idêntica ao conteúdo original.
-- **Plano:**
-  - adicionar alimento e usar os atalhos de quantidade;
-  - editar a quantidade;
-  - substituir um alimento (o total muda exatamente o previsto);
-  - copiar, colar, duplicar e mover refeições.
-- **Alimentos:** busca com erro de digitação, favoritos e recentes.
-- **Perfis:** criar o perfil de uma criança.
-- **Backup:** copiar e restaurar.
-- **Tela:** sem rolagem horizontal e sem erros de JavaScript.
+Testes de ponta a ponta no navegador (iPhone 13 e iPhone SE simulados):
+- **Dados da v2 na v3:** mesmos perfis, alimentos e totais, sem alteração no conteúdo salvo.
+- **Painel:** anel externo igual a planejado ÷ meta; arcos internos iguais aos % de Atwater; toque em cada macro; estado acima da meta.
+- **Família:** troca pelo seletor do topo; edição e inclusão no Perfil; criança sem seletor de protocolo.
+- **Plano:** copiar refeição, barra "Colar como nova", descartar; ordenação automática por horário.
+- **Alimentos:** busca com erro de digitação, favoritos, recentes, meus alimentos com origem; cadastro manual por porção (conversão para 100 g conferida); aviso de duplicado e atualização mantendo as medidas.
+- **Foto da tabela:** três rótulos (digital novo, antigo e foto real) lidos em ~3 s cada; valores e sinalizações conferidos; nenhum canvas, imagem ou campo de arquivo sobra na tela; nada de imagem no armazenamento.
+- **Perfil:** os três protocolos batem com o núcleo; aplicar a meta.
+- **Backup:** colar e restaurar, com cópia do estado anterior; dados mantidos após recarregar.
+- **Tela:** sem rolagem horizontal no iPhone SE (320 px); sem erros de JavaScript; leitura desativada no link do Claude.
 
 ## 5. Limitações e riscos
 
@@ -108,7 +136,11 @@ Também foram feitos testes de ponta a ponta no navegador (simulação de iPhone
   - as medidas caseiras foram ligadas automaticamente e revisadas à mão só nos alimentos mais comuns.
 - **Interface só em português:** os textos ainda estão no código. A internacionalização exige extrair os textos para um dicionário (próximo passo).
 - **Desempenho:** a busca percorre ~600 alimentos em memória, o que é instantâneo nesse volume. Com uma base 10× maior, será preciso um índice.
-- **Não verificado em aparelho real:** os testes rodam em navegador simulado. O seletor de horário, o teclado e a área segura do iPhone precisam de confirmação no aparelho.
+- **Não verificado em aparelho real:** os testes rodam em navegador simulado (Chromium). Precisam de confirmação no iPhone:
+  - seletor de horário, teclado e área segura;
+  - câmera/galeria pelo campo de arquivo e o tempo de leitura no aparelho (o download de ~5,5 MB acontece na primeira vez);
+  - fotos tortas, com reflexo ou pouca luz: a leitura pode falhar ou sinalizar muitos campos. Nesses casos o app oferece outra foto ou a digitação.
+- **Leitura de rótulos:** cobre a tabela nutricional brasileira (modelo novo da RDC 429/2020 e o antigo). Rótulos em outros formatos podem precisar de digitação.
 
 ## 6. Próximos passos para o modelo por assinatura
 

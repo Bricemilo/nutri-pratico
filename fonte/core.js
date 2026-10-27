@@ -10,7 +10,7 @@
   "use strict";
 
   /* ---------- texto ---------- */
-  function normCh(ch){ return ch.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase(); }
+  function normCh(ch){ return ch.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
   function norm(s){ let o = ""; for (const ch of String(s)) o += normCh(ch); return o; }
   const words = s => norm(s).split(/[^a-z0-9]+/).filter(Boolean);
   const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
@@ -61,7 +61,9 @@
       const catName = typeof cat === "number" ? data.cats[cat] : cat;
       const own = id < 0;
       const dn = own ? name : friendly(id, name, catName);
-      const f = {id, name, dn, kcal, c, p, fat, fib, cat: catName, measures, w: [...new Set(words(dn).concat(words(name)))],
+      const meta = raw[9] || {};
+      const f = {id, name, dn, kcal, c, p, fat, fib, cat: catName, measures, brand: meta.brand || "", meta,
+        w: [...new Set(words(dn).concat(words(name), words(meta.brand || "")))],
         ibge: !own && (ms || []).length > 0, common: COMMON.has(id), own};
       if (byId.has(id)) list.splice(list.indexOf(byId.get(id)), 1);
       byId.set(id, f); list.push(f);
@@ -105,7 +107,7 @@
         let best = 0, wi = -1;
         f.w.forEach((w, k) => { const m = matchWord(t, w); if (m > best) { best = m; wi = k; } });
         if (!best) { ok = false; break; }
-        score += best * 4;
+        score += best * 4 + (best >= 3 ? 16 : 0);   // começo exato da palavra vale mais que um erro de digitação ("maca": maçã antes de mamão)
         if (i === 0 && wi === 0) score += 40;
         if (wi === i) score += 6;
         if (f.w[wi] === t) score += 4;
@@ -200,6 +202,7 @@
   }
   // Média dos dois protocolos para adultos. Abaixo de 18 anos os fatores de atividade FAO/OMS 1985
   // (definidos para adultos) não entram na média: vale a DRI 2005, que inclui a energia de crescimento.
+  const METHODS = ["media", "fao", "dri"];
   function energyOf(profile, now){
     const e = profile.energy || {}, age = ageOf(profile.birth, now), W = e.weight, Hc = e.height;
     if (!(W > 1 && W < 400 && Hc > 40 && Hc < 260) || age == null || !FAO_TMB[profile.sex]) return {ok: false, age};
@@ -207,8 +210,12 @@
     const fa = FAO_FA[profile.sex][e.fao ?? 1];
     const fao = {tmb: f.v, fa, get: f.v * fa, coef: f.coef, cons: f.cons, range: f.range, adultOnly: age < 18};
     const dri = driCalc(profile.sex, age, W, Hc, e.dri ?? 1);
+    // Adultos escolhem: média (padrão), só FAO/OMS 1985 ou só DRI 2005.
     let tmb, get, method;
+    const pick = METHODS.includes(e.method) ? e.method : "media";
     if (age < 18 && dri) { tmb = dri.tmb; get = dri.get; method = "dri"; }
+    else if (dri && pick === "fao") { tmb = fao.tmb; get = fao.get; method = "fao"; }
+    else if (dri && pick === "dri") { tmb = dri.tmb; get = dri.get; method = "dri"; }
     else if (dri) { tmb = (fao.tmb + dri.tmb) / 2; get = (fao.get + dri.get) / 2; method = "media"; }
     else { tmb = fao.tmb; get = null; method = "fao-tmb"; }
     return {ok: true, age, child: age < 18, fao, dri, tmb, get, method, imc: W / Math.pow(Hc / 100, 2)};
@@ -283,6 +290,99 @@
     return out;
   }
 
-  return {norm, normCh, words, friendly, createFoodDB, searchFoods, within1, measureOf, calcItem, sum, mealTotal, planTotal, macroSplit,
+  /* ---------- leitura de tabela nutricional (texto vindo do OCR) ---------- */
+  // Rótulos brasileiros: formato RDC 429/2020 (colunas 100 g | porção | %VD) e formato antigo (só porção | %VD).
+  // Nunca inventa valor: o que não for lido fica ausente e marcado para conferência.
+  const LABEL_FIELDS = [
+    ["kcal", /valor\s*energ/], ["addedSugar", /acucares?\s*adicionad/], ["sugar", /acucares?\s*(totais|total)?/],
+    ["satFat", /saturad/], ["transFat", /\btrans\b/], ["fat", /gorduras?\s*totais|gordura\s*total|lipideos|gorduras?\b/],
+    ["c", /carboidrat/], ["p", /protein/], ["fib", /fibra/], ["sodium", /sodio/]
+  ];
+  const num = s => parseFloat(String(s).replace(",", "."));
+  function cleanOCR(text){
+    return String(text)
+      .replace(/\((9|q)\)/g, "(g)")                       // "(9)" lido no lugar de "(g)"
+      .replace(/(^|\s)[oO](?=\s|$|g\b|%)/gm, "$10")        // "o" lido no lugar de zero
+      .replace(/(^|\s)[oO]g\b/gm, "$10 g")
+      .replace(/(\d)\s*[.,]\s*(\d)/g, "$1,$2");
+  }
+  function lineNumbers(rest){
+    // números da linha depois do nome do nutriente; ignora %VD e kJ
+    const out = [];
+    const re = /(\d+(?:,\d+)?)\s*(%|kj|kcal|mg|g)?/gi;
+    let m;
+    while ((m = re.exec(rest))){
+      const unit = (m[2] || "").toLowerCase();
+      if (unit === "%" || unit === "kj") continue;
+      out.push({raw: m[1], v: num(m[1]), unit});
+    }
+    return out;
+  }
+  function parseLabel(text, opt = {}){
+    const t = cleanOCR(text);
+    const lines = t.split(/\n+/).map(x => x.trim()).filter(Boolean);
+    const flags = {}, found = {};
+    const flag = (k, why) => { (flags[k] = flags[k] || []).push(why); };
+    // porção declarada: "Porção: 30 g", "Porção de 200 ml"
+    let portion = null;
+    for (const ln of lines){
+      const n = norm(ln);
+      if (/porcoes?\s*por\s*embalagem/.test(n)) continue;
+      const m = n.match(/porcao[^0-9]{0,20}?(\d+(?:,\d+)?)\s*(g|ml)\b/);
+      if (m) { portion = {amount: num(m[1]), unit: m[2]}; break; }
+    }
+    const has100 = lines.some(ln => /\b100\s*(g|ml)\b/.test(norm(ln)) && !/porcao/.test(norm(ln)));
+    const basis = has100 ? "100" : "porcao";
+    for (const ln of lines){
+      const n = norm(ln);
+      const hit = LABEL_FIELDS.find(([, re]) => re.test(n));
+      if (!hit || found[hit[0]]) continue;
+      const key = hit[0];
+      const label = n.match(hit[1]);
+      let rest = cleanOCR(ln.slice(label.index + label[0].length)).replace(/\((kcal|g|mg|ml|kj)\)/gi, " ");
+      let nums = lineNumbers(rest);
+      if (key === "kcal"){
+        const withK = nums.filter(x => x.unit === "kcal");
+        if (withK.length) nums = withK;
+      }
+      if (!nums.length) continue;
+      // "9,4 g" lido como "9,49": rótulos usam no máximo uma casa decimal em gramas
+      for (const x of nums) if (/,\d9$/.test(x.raw) && !x.unit && key !== "sodium") { x.v = num(x.raw.slice(0, -1)); x.fixed = true; }
+      found[key] = {per100: basis === "100" ? nums[0].v : null, portion: basis === "100" ? (nums[1] ? nums[1].v : null) : nums[0].v,
+        fixed: nums.slice(0, 2).some(x => x.fixed)};
+      if (found[key].fixed) flag(key, "leitura corrigida: confira");
+    }
+    // valores por 100 g (ou 100 ml)
+    const per100 = {};
+    for (const [key] of LABEL_FIELDS){
+      const f = found[key];
+      if (!f) { per100[key] = null; continue; }
+      if (f.per100 != null) per100[key] = f.per100;
+      else if (f.portion != null && portion && portion.amount > 0) per100[key] = Math.round(f.portion * 100 / portion.amount * 10) / 10;
+      else { per100[key] = null; flag(key, "sem porção para converter"); }
+      // coerência entre as colunas 100 g e porção
+      if (f.per100 != null && f.portion != null && portion && portion.amount > 0){
+        // Rótulos arredondam para uma casa abaixo de 10 e para inteiro acima: a diferença tolerada é a soma desses arredondamentos.
+        const ratio = portion.amount / 100, expected = f.per100 * ratio;
+        const half = v => key === "kcal" || key === "sodium" || v >= 10 ? 0.5 : 0.05;
+        const tol = half(f.portion) + half(f.per100) * ratio + 0.02;
+        const tiny = f.portion === 0 && expected < 0.5;   // "não significativo" declarado como zero
+        if (!tiny && Math.abs(f.portion - expected) > tol) flag(key, "colunas 100 g e porção não batem: confira");
+      }
+    }
+    for (const k of ["kcal", "c", "p", "fat"]) if (per100[k] == null) flag(k, "não encontrado");
+    // energia coerente com os macronutrientes (Atwater 4/4/9, tolerância de 15%)
+    if (per100.kcal != null && per100.c != null && per100.p != null && per100.fat != null && per100.kcal > 0){
+      const atw = 4 * per100.c + 4 * per100.p + 9 * per100.fat;
+      if (Math.abs(atw - per100.kcal) / per100.kcal > 0.15 && Math.abs(atw - per100.kcal) > 15) flag("kcal", "energia não bate com os macronutrientes");
+    }
+    if (per100.sugar != null && per100.c != null && per100.sugar > per100.c + 0.1) flag("sugar", "maior que os carboidratos");
+    if (per100.satFat != null && per100.fat != null && per100.satFat > per100.fat + 0.1) flag("satFat", "maior que as gorduras totais");
+    if (!portion && basis === "porcao") flag("portion", "porção não encontrada");
+    if (opt.confidence != null && opt.confidence < 70) flag("geral", "foto pouco nítida: confira todos os valores");
+    return {basis, portion, per100, found, flags, unitMl: !!(portion && portion.unit === "ml")};
+  }
+
+  return {norm, normCh, words, parseLabel, friendly, createFoodDB, searchFoods, within1, measureOf, calcItem, sum, mealTotal, planTotal, macroSplit,
     ageOf, FAO_LV, FAO_FA, faoTMB, DRI_LV, driCalc, energyOf, roleOf, roundQty, equivalent, substitutes, CRITERIA, NO_DATA};
 });

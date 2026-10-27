@@ -130,3 +130,71 @@ test("nomes do dia a dia", () => {
   assert.equal(db.get(410).dn, "Peito de frango sem pele grelhado");
   assert.equal(db.get(377).dn, "Patinho sem gordura grelhado");
 });
+
+/* ---------- leitura de tabela nutricional: textos reais saídos do OCR (tesseract.js 6, por) ---------- */
+const fs = require("node:fs");
+const ocr = n => fs.readFileSync(path.join(__dirname, "ocr", `label-${n}.png.txt`), "utf8");
+
+test("rótulo novo (100 g | porção): usa a coluna de 100 g e a porção declarada", () => {
+  const r = C.parseLabel(ocr("novo"));
+  assert.equal(r.basis, "100");
+  assert.deepEqual(r.portion, {amount: 30, unit: "g"});
+  assert.equal(r.per100.kcal, 380);
+  assert.equal(r.per100.c, 67);
+  assert.equal(r.per100.p, 14);
+  assert.equal(r.per100.fib, 9.7);
+  assert.equal(r.per100.sugar, 1.2);
+  assert.equal(r.per100.addedSugar, 0);   // "o" lido no lugar de zero
+  assert.equal(r.per100.sodium, 4);
+});
+
+test("rótulo novo: dígito trocado pelo OCR (7,3 lido como 7,8) é sinalizado", () => {
+  const r = C.parseLabel(ocr("novo"));
+  assert.equal(r.per100.fat, 7.8);
+  assert.ok(r.flags.fat && r.flags.fat.length, "gorduras precisam de conferência");
+  assert.equal(r.flags.c, undefined);
+  assert.equal(r.flags.p, undefined);
+});
+
+test("rótulo antigo (só porção): converte para 100 ml e corrige '9,4 g' lido como '9,49'", () => {
+  const r = C.parseLabel(ocr("antigo"));
+  assert.equal(r.basis, "porcao");
+  assert.deepEqual(r.portion, {amount: 200, unit: "ml"});
+  assert.equal(r.unitMl, true);
+  assert.equal(r.per100.kcal, 61);      // 122 kcal / 200 ml (ignora 512 kJ e 6% VD)
+  assert.equal(r.per100.c, 4.7);
+  assert.equal(r.per100.p, 3.1);
+  assert.equal(r.per100.fat, 3.3);
+  assert.equal(r.per100.sodium, 65);
+  assert.ok(r.flags.c && r.flags.p, "correções ficam marcadas para conferência");
+});
+
+test("foto inclinada e desfocada gera os mesmos valores", () => {
+  assert.deepEqual(C.parseLabel(ocr("foto")).per100, C.parseLabel(ocr("novo")).per100);
+});
+
+test("rótulo sem informação não inventa valores", () => {
+  const r = C.parseLabel("INFORMAÇÃO NUTRICIONAL\nPorção: 25 g\nValor energético (kcal) 120\nProteínas (g)");
+  assert.equal(r.per100.kcal, 480);
+  assert.equal(r.per100.p, null);
+  assert.equal(r.per100.c, null);
+  assert.ok(r.flags.c.includes("não encontrado"));
+  assert.ok(r.flags.p.includes("não encontrado"));
+});
+
+test("energia incoerente com os macronutrientes é sinalizada", () => {
+  const r = C.parseLabel("Porção: 100 g\n100 g 100 g %VD\nValor energético (kcal) 900 900 45\nCarboidratos (g) 20 20 7\nProteínas (g) 5 5 7\nGorduras totais (g) 2 2 3");
+  assert.ok(r.flags.kcal.some(x => /não bate/.test(x)));
+});
+
+test("método de energia escolhido para adultos; crianças sempre DRI", () => {
+  const base = {sex: "M", birth: "1994-06-15", energy: {weight: 70, height: 175, fao: 1, dri: 1}};
+  const media = C.energyOf(base, NOW);
+  const fao = C.energyOf({...base, energy: {...base.energy, method: "fao"}}, NOW);
+  const dri = C.energyOf({...base, energy: {...base.energy, method: "dri"}}, NOW);
+  assert.equal(fao.method, "fao"); near(fao.get, media.fao.get); near(fao.tmb, media.fao.tmb);
+  assert.equal(dri.method, "dri"); near(dri.get, media.dri.get);
+  near(media.get, (fao.get + dri.get) / 2);
+  const kid = C.energyOf({sex: "F", birth: "2019-05-05", energy: {weight: 24, height: 122, method: "fao"}}, NOW);
+  assert.equal(kid.method, "dri");
+});
