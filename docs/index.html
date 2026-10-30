@@ -654,8 +654,8 @@ h1.pg{font-size:1.765rem;margin:6px 2px 2px}
   .home .mods .mod{padding:7px 10px 8px}.home .mods .mod b{font-size:1.05rem;margin-top:1px}.home .mods .mod-l{font-size:var(--t-cap)}
   .np .dial-wrap.mini.gx{width:100px}.np .dial-wrap.mini.gx .dial-c{inset:15%}.np .dial-wrap.mini.gx .dial-k{font-size:1.3rem}.np .dial-wrap.mini.gx .dial-m{font-size:.55rem}
   .np .dial-wrap.mini.gx .arc{stroke-width:22}.nl b small{display:none}}
-@media (max-height:600px){.fig small{display:none}}
-html.big-text .fig small{display:none}
+
+
 @media (max-height:600px){.home .hi-h .today{display:none}.home .hi-h h1{font-size:1.45rem}.np-h{font-size:var(--t-body)}.nl b{line-height:1.15}.np-l{gap:4px}
   .np .dial-wrap.mini.gx .dial-m{font-size:.6rem}.home .mods .mod{padding:8px 10px 9px}}
 @media (max-height:700px){.home .hi-h{margin:0 2px var(--s3)}.np{margin-top:var(--s2);padding:var(--s3) var(--s4)}.np-b{margin-top:var(--s2)}.figs{margin-top:var(--s3);padding-top:var(--s2)}}
@@ -804,6 +804,105 @@ details.hd .hist{border-top:0}
 .toast .undo{color:var(--accent-2);font-weight:650;padding:6px 10px;border-radius:9px}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 .src{margin:22px 4px 0;font-size:0.676rem;color:var(--muted);line-height:1.55}
+
+/* ===== v8: refinamento ===== */
+/* Hoje — pilares compactos (4 colunas); 2×2 só no iPhone SE e com texto ampliado */
+@media (min-width:371px){
+  html:not(.big-text) .home .mods{gap:var(--s2)}
+  html:not(.big-text) .home .mods .mod{padding:10px 9px 10px;border-radius:var(--r-m);gap:0}
+  html:not(.big-text) .home .mod-i svg{width:17px;height:17px}
+  html:not(.big-text) .home .mod-l{margin-top:7px;font-size:var(--t-cap)}
+  html:not(.big-text) .home .mod b{font-size:1.06rem;margin-top:1px;line-height:1.2}
+  html:not(.big-text) .home .mod b.long{font-size:var(--t-body);white-space:normal;line-height:1.15}
+  html:not(.big-text) .home .mod-s{white-space:nowrap;line-height:1.3}
+}
+.home .mod b.nr{font-size:var(--t-sm);margin:3px 0 1px;line-height:1.2}
+/* Painel do plano: título discreto, anel menor, legenda em uma linha por macro, números com unidade */
+.np{padding:var(--s4) var(--s4) var(--s3)}
+.np-h{font-size:var(--t-body);font-weight:600}
+.np-b{margin-top:var(--s3);gap:var(--s4)}
+.np .dial-wrap.mini.gx{width:clamp(104px,29vw,124px)}
+.np .dial-wrap.mini.gx .dial-c{inset:20%}
+.np .dial-wrap.mini.gx .dial-k{font-size:clamp(1.25rem,5.6vw,1.5rem)}
+.np .dial-wrap.mini.gx .arc{stroke-width:20}
+.np-l{gap:var(--s2)}
+.nl{grid-template-columns:8px minmax(0,1fr) auto 2.4em;grid-template-rows:auto;column-gap:var(--s2);align-items:baseline}
+.nl .sw{grid-row:1;width:8px;height:8px;margin:0;align-self:center}
+.nl span{font-size:var(--t-sm);color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nl b{font-size:var(--t-sm);font-weight:620}
+.nl > small{font-size:var(--t-cap);color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+.figs{margin-top:var(--s3);padding-top:var(--s3);gap:var(--s3)}
+.fig b{font-size:var(--t-h);line-height:1.25;white-space:nowrap}
+.fig b small{font-size:var(--t-cap);font-weight:500;color:var(--muted);letter-spacing:0}
+.fig b.nr{font-size:var(--t-sm);font-weight:550;color:var(--muted)}
+@media (max-width:370px){.nl{grid-template-columns:8px minmax(0,1fr) auto}.nl > small{display:none}.np .dial-wrap.mini.gx{width:96px}}
+html.big-text .nl{grid-template-columns:8px minmax(0,1fr) auto}
+html.big-text .nl > small{display:none}
+html.big-text .figs.n3{grid-template-columns:repeat(2,minmax(0,1fr))}
+
+/* Nutrição — cartão de resumo: planejado, macros e objetivo/meta numa só superfície */
+.sumcard{padding:0;overflow:hidden}
+.sc-btn{display:block;width:100%;padding:var(--s3) var(--s4) var(--s3);text-align:left}
+.sc-top{gap:var(--s3)}
+.sc-top .dial-wrap.mini{width:52px}
+.sc-k b{font-size:1.35rem}
+.sc-k span{font-size:var(--t-sm);color:var(--muted)}
+.sc-p{font-size:var(--t-cap);color:var(--muted);margin-top:1px}
+.sc-m{grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s2);margin-top:var(--s3);padding-top:var(--s3);font-weight:500}
+.sc-m > span{display:flex;flex-direction:column;gap:1px;min-width:0}
+.sc-m i{font-style:normal;font-size:var(--t-cap);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sc-m b{font-size:var(--t-body);font-weight:620;color:var(--ink)}
+.sc-m small{font-size:var(--t-cap);margin:0;min-height:1.2em}
+.sumcard .goalrow{margin:0;border-radius:0;background:transparent;border-top:1px solid var(--line);padding:var(--s3) var(--s4);min-height:44px}
+.sumcard .plan-head{margin:0;padding:var(--s3) var(--s4) var(--s4);border-top:1px solid var(--line)}
+@media (max-width:370px){.sc-m{grid-template-columns:repeat(4,minmax(0,1fr))}.sc-m > span:last-child{display:flex}.sc-m i{font-size:.6rem}}
+.add-row.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s2)}
+.add-row.two:has(> :only-child){grid-template-columns:1fr}
+.add-row .add-meal{height:48px;border:0;border-radius:var(--r-m);background:var(--surface);color:var(--ink);font-size:var(--t-body)}
+.add-row .add-meal svg{color:var(--accent-2)}
+.add-meal.fav-b{padding:0 var(--s3);color:var(--ink)}
+/* Fontes dos dados: por expansão */
+details.src{margin:var(--s5) 4px 0}
+details.src summary{font-size:var(--t-cap);color:var(--muted);cursor:pointer;list-style:none;padding:var(--s2) 0;display:inline-flex;align-items:center;gap:6px}
+details.src summary::-webkit-details-marker{display:none}
+details.src summary::after{content:"";width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-2px)}
+details.src[open] summary::after{transform:rotate(-135deg) translateY(-1px)}
+details.src p{margin:0;font-size:var(--t-cap);color:var(--muted);line-height:1.55}
+/* Alimentos: busca e cadastro na mesma linha */
+.srow{display:flex;gap:var(--s2);align-items:center;margin:var(--s3) 0}
+.srow .search{flex:1;margin:0}
+.srow .icon-btn{width:50px;height:50px;border-radius:14px}
+
+/* v8 — anel do painel: número e unidade numa linha, "planejadas" abaixo; arco mais fino para o texto respirar */
+.np .dial-wrap.mini.gx{width:clamp(108px,7.3rem,140px)}
+.np .dial-wrap.mini.gx .arc{stroke-width:15}
+.np .dial-wrap.mini.gx .dial-c{inset:14%}
+.np .dial-wrap.mini.gx .dial-k{font-size:1.22rem;line-height:1.05;white-space:nowrap}
+.np .dial-wrap.mini.gx .dial-k small{font-size:var(--t-cap);font-weight:500;color:var(--muted);letter-spacing:0}
+.np .dial-wrap.mini.gx .dial-m{font-size:var(--t-cap);margin-top:3px;max-width:none}
+@media (max-width:370px){.np .dial-wrap.mini.gx{width:102px}.np .dial-wrap.mini.gx .dial-k{font-size:.95rem}.np-b{gap:var(--s3)}.np .dial-wrap.mini.gx .dial-m{font-size:.6rem}.fig .opt{display:none}}
+html.big-text .fig .opt{display:none}
+html.big-text .np .dial-wrap.mini.gx{width:clamp(108px,7.2rem,150px)}
+html.big-text .np .dial-wrap.mini.gx .dial-k{font-size:1.12rem}
+html.big-text .nl span{font-size:var(--t-cap)}
+html.big-text .home .mods .mod{align-content:flex-start}
+/* v8 — pilares em 2×2 (SE e texto ampliado): valor e período na mesma linha, quebrando só se precisar */
+@media (max-width:370px){
+  .home .mods .mod{display:flex;flex-direction:row;flex-wrap:wrap;align-items:baseline;align-content:flex-start;column-gap:6px;row-gap:2px;padding:9px 11px 10px}
+  .home .mods .mod-i{align-self:center}.home .mods .mod-l{flex:1 1 calc(100% - 30px);margin:0;align-self:center}
+  .home .mods .mod b,.home .mods .mod b.nr{margin:0}.home .mods .mod-s{white-space:nowrap}
+}
+html.big-text .home .mods .mod{display:flex;flex-direction:row;flex-wrap:wrap;align-items:baseline;column-gap:6px;row-gap:2px}
+html.big-text .home .mods .mod-i{align-self:center}
+html.big-text .home .mods .mod-l{flex:1 1 calc(100% - 32px);margin:0;align-self:center}
+html.big-text .home .mods .mod b,html.big-text .home .mods .mod b.nr{margin:0}
+@media (min-width:371px){html:not(.big-text) .home .mods .mod b.nr{font-size:var(--t-sm);font-weight:550;white-space:normal;line-height:1.2;margin:3px 0 1px}}
+/* segmento secundário (dentro de uma aba): neutro, para não competir com a navegação principal */
+.seg.seg-2{background:transparent;border-color:var(--line)}
+.seg.seg-2 button{height:34px}
+.seg.seg-2 button.on{background:var(--surface-3);color:var(--ink);font-weight:620}
+/* SE: rótulo curto no resumo ("Carbo") e nome da refeição em até duas linhas, sem reticências */
+@media (max-width:370px){.sc-m i span.opt{display:none}.mh-n{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.2}}
 </style>
 
 </head>
@@ -1610,7 +1709,7 @@ function render(){
     h("button", {class: "tab" + (view.tab === id ? " on" : ""), "aria-current": view.tab === id ? "page" : null, onclick: () => go({tab: id, edit: null})}, ic(icon), label))));
   const p = active();
   if (!p) { renderWelcome(); return; }
-  ({hoje: renderHome, alimentacao: view.sub === "alimentos" ? renderFoods : view.sub === "favoritos" ? renderFavorites : renderPlan, saude: renderHealth, perfil: renderProfile})[view.tab](p);
+  ({hoje: renderHome, alimentacao: view.sub === "alimentos" ? renderFoods : renderPlan, saude: renderHealth, perfil: renderProfile})[view.tab](p);
 }
 window.addEventListener("scroll", () => {
   const t = $(".top"); if (!t) return;
@@ -1728,26 +1827,28 @@ function renderHome(p){
   const mod = (cls, icon, label, value, period, fn) => h("button", {class: "mod " + cls + (value == null ? " empty" : ""), type: "button", onclick: fn,
       "aria-label": `${label}, ${period}: ${value == null ? "não registrado" : value}`},
     h("span", {class: "mod-i", html: ICON[icon]}), h("span", {class: "mod-l"}, label),
-    value == null ? h("b", {class: "nr"}, cls === "food" ? "Sem plano" : "Não registrado") : h("b", null, value), h("span", {class: "mod-s"}, period));
+    value == null ? h("b", {class: "nr"}, cls === "food" ? "Sem plano" : "Não registrado") : h("b", {class: cls === "wb" && value.length > 6 ? "long" : null}, value), h("span", {class: "mod-s"}, period));
   const mods = h("div", {class: "mods" + (adult ? "" : " three")},
-    mod("food", "food", "Nutrição", meals.length ? `${k0(t.kcal)}` : null, meals.length ? "kcal planejadas" : "plano do dia", openPlan),
-    mod("move", "walk", "Exercício", wk > 0 ? fmtDur(wk) : null, "nesta semana", () => wk > 0 ? go({tab: "saude", hsub: "movimento"}) : moveSheet(p)),
+    mod("food", "food", "Nutrição", meals.length ? String(meals.length) : null, meals.length === 1 ? "refeição" : meals.length ? "refeições" : "hoje", openPlan),
+    mod("move", "walk", "Exercício", wk > 0 ? fmtDur(wk) : null, "na semana", () => wk > 0 ? go({tab: "saude", hsub: "movimento"}) : moveSheet(p)),
     mod("sleep", "moon", "Sono", lastNight ? fmtDur(lastNight.min) : null, "última noite", () => lastNight ? go({tab: "saude", hsub: "sono"}) : sleepSheet(p)),
     adult ? mod("wb", "smile", "Emocional", moodToday ? MOODS[moodToday.mood - 1] : null, "hoje", () => moodToday ? go({tab: "saude", hsub: "bem-estar"}) : moodSheet(p)) : null);
   // plano nutricional: anel compacto (planejado no centro; macros no anel) + legenda; abaixo, os três conceitos que não se confundem
-  const fig = (label, value, note, cls) => h("div", {class: "fig" + (cls ? " " + cls : "")}, h("span", null, label), h("b", null, value), note ? h("small", null, note) : null);
+  // Meta, necessidade e consumo: rótulo e valor com unidade; o protocolo da estimativa vai junto do valor
+  const fig = (label, value, unit, none = "Não registrado") => h("div", {class: "fig"}, h("span", null, label), value == null ? h("b", {class: "nr"}, none) : h("b", null, value, h("small", null, unit)));
   const getTxt = r.ok && r.get ? k0(r.get) : null, metaIsGet = getTxt && plan.target && Math.round(r.get) === plan.target;
+  const proto = {media: "média", fao: "FAO/OMS", dri: "DRI"}[r.method] || "";
   const figs = [
-    fig("Meta", tg ? k0(tg) : "—", plan.target ? (metaIsGet ? "= necessidade estimada" : "definida por você") : tg ? "sugerida pela estimativa" : "não definida"),
-    getTxt && !metaIsGet ? fig("Necessidade estimada", getTxt, {media: "média dos protocolos", fao: "FAO/OMS 1985", dri: "DRI 2005"}[r.method] || "") : null,
-    tracks(p) || eaten.t.kcal > 0 ? fig("Consumido", eaten.t.kcal > 0 ? k0(eaten.t.kcal) : "—", eaten.t.kcal > 0 ? `${eaten.count} ${eaten.count === 1 ? "refeição registrada" : "refeições registradas"}` : "não registrado") : null].filter(Boolean);
+    tg ? fig(plan.target ? (metaIsGet ? "Meta = necessidade" : "Meta") : "Meta sugerida", k0(tg), plan.target && !metaIsGet ? " kcal" : ` kcal · ${proto}`) : fig("Meta", null, "", "Não definida"),
+    getTxt && plan.target && !metaIsGet ? fig(["Necessidade", h("span", {class: "opt"}, " estimada")], getTxt, ` kcal · ${proto}`) : null,
+    tracks(p) || eaten.t.kcal > 0 ? fig("Consumido", eaten.t.kcal > 0 ? k0(eaten.t.kcal) : null, " kcal") : null].filter(Boolean);
   const plano = meals.length ? h("section", {class: "np"},
-    h("button", {class: "np-h", type: "button", onclick: () => nutritionSheet(p)}, h("span", null, "Plano nutricional do dia"), h("span", {class: "li-go", html: ICON.right})),
+    h("button", {class: "np-h", type: "button", onclick: () => nutritionSheet(p)}, h("span", null, "Plano do dia"), h("span", {class: "li-go", html: ICON.right})),
     h("button", {class: "np-b", type: "button", "aria-label": "Ver o detalhe nutricional", onclick: () => nutritionSheet(p)},
       dial(t, tg, p.energy.weight, {mini: true, big: true, eaten: eaten.t.kcal > 0 ? eaten.t.kcal : null}),
       h("div", {class: "np-l"}, [["c", "Carboidratos", t.c, sp.c], ["p", "Proteínas", t.p, sp.p], ["g", "Gorduras", t.l, sp.l]].map(([k, n, g, pc]) =>
-          h("div", {class: "nl"}, h("i", {class: "sw " + k}), h("span", null, n), h("b", null, `${fmtG(g)} g`, h("small", null, ` · ${Math.round(pc)}%`)))),
-        h("div", {class: "nl"}, h("i", {class: "sw f"}), h("span", null, "Fibras"), h("b", null, `${fmtG(t.f)} g`)))),
+          h("div", {class: "nl"}, h("i", {class: "sw " + k}), h("span", null, n), h("b", null, `${fmtG(g)} g`), h("small", null, `${Math.round(pc)}%`))),
+        h("div", {class: "nl"}, h("i", {class: "sw f"}), h("span", null, "Fibras"), h("b", null, `${fmtG(t.f)} g`), h("small", null, "")))),
     h("div", {class: "figs n" + figs.length}, figs))
     : h("button", {class: "np np-empty", type: "button", onclick: openPlan}, h("span", {class: "qa-i", html: ICON.food}),
         h("div", null, h("b", null, "Monte o plano do dia"), h("span", null, "Refeições, energia e macronutrientes em poucos toques.")), h("span", {class: "li-go", html: ICON.right}));
@@ -2024,7 +2125,7 @@ function dial(t, tg, W, o = {}){
   }));
   const label = `Planejado ${k0(t.kcal)} kcal${tg ? ` de ${k0(tg)}, ${Math.round(pct)}% da meta` : ""}.${hasEat ? ` Consumido ${k0(o.eaten)} kcal.` : ""} Carboidratos ${fmtG(t.c)} g, ${Math.round(s.c)}%. Proteínas ${fmtG(t.p)} g, ${Math.round(s.p)}%. Gorduras ${fmtG(t.l)} g, ${Math.round(s.l)}%.`;
   if (o.mini){
-    put(center, h("div", {class: "dial-k"}, k0(t.kcal)), h("div", {class: "dial-m"}, "kcal planejadas"));
+    put(center, h("div", {class: "dial-k"}, k0(t.kcal), h("small", null, " kcal")), h("div", {class: "dial-m"}, "planejadas"));
     return h("div", {class: "dial-wrap mini" + (o.big ? " gx" : ""), role: "img", "aria-label": label}, svg, center);
   }
   const ringKey = hasEat ? h("div", {class: "ringkey"}, h("span", null, h("i", {class: "rk-p"}), `Planejado ${k0(t.kcal)}`), h("span", null, h("i", {class: "rk-e"}), `Consumido ${k0(o.eaten)}`), h("span", null, `Meta ${k0(tg)} kcal`)) : null;
@@ -2051,10 +2152,11 @@ function missNote(t){
 
 /* Alimentação: plano do dia e banco de alimentos lado a lado, sem nível extra de navegação */
 function foodHead(p, ...right){
-  return [topBar(...right), h("h1", {class: "pg"}, "Nutrição"), h("p", {class: "pg-s"}, "Planeje e reutilize. Registrar o que comeu é opcional."), foodNav()];
+  return [topBar(...right), h("h1", {class: "pg"}, "Nutrição"), foodNav()];
 }
+const srcNote = (...txt) => h("details", {class: "src"}, h("summary", null, "Fontes dos dados"), h("p", null, ...txt));
 function foodNav(){
-  return h("div", {class: "seg subnav", role: "tablist", "aria-label": "Nutrição"}, [["plano", "Plano do dia"], ["alimentos", "Alimentos"], ["favoritos", "Favoritos"]].map(([k, l]) =>
+  return h("div", {class: "seg subnav", role: "tablist", "aria-label": "Nutrição"}, [["plano", "Plano do dia"], ["alimentos", "Alimentos"]].map(([k, l]) =>
     h("button", {type: "button", role: "tab", class: view.sub === k ? "on" : "", "aria-selected": String(view.sub === k), onclick: () => { if (view.sub !== k) go({sub: k, edit: null}); }}, l)));
 }
 
@@ -2068,20 +2170,20 @@ function renderPlan(p){
 
   /* resumo fixo no cabeçalho; toque abre os detalhes */
   const sumbar = h("button", {class: "sumbar", "aria-label": "Ver resumo nutricional completo", onclick: summarySheet});
-  const sumCard = h("button", {class: "panel sumcard", type: "button", "aria-label": "Ver resumo nutricional completo", onclick: summarySheet});
+  const sumBtn = h("button", {class: "sc-btn", type: "button", "aria-label": "Ver resumo nutricional completo", onclick: summarySheet});
   function paintSum(){
-    const t = planTotal(plan), tg = target(), pct = tg ? Math.round(t.kcal / tg * 100) : null;
+    const t = planTotal(plan), tg = target();
     const e = C.eatenDay(logsOf(p).eaten, today()), sp = C.macroSplit(t);
-    put(sumCard,
+    const over = tg && t.kcal > tg ? t.kcal - tg : 0;
+    const note = [over ? `${k0(over)} kcal acima da meta` : "", e.t.kcal > 0 ? `${k0(e.t.kcal)} kcal consumidas` : ""].filter(Boolean).join(" · ");
+    put(sumBtn,
       h("div", {class: "sc-top"}, dial(t, tg, p.energy.weight, {mini: true, eaten: e.t.kcal > 0 ? e.t.kcal : null}),
-        h("div", {class: "sc-k"}, h("div", null, h("b", null, k0(t.kcal)), h("span", null, tg ? ` / ${k0(tg)} kcal` : " kcal")),
-          h("div", {class: "sc-p"}, pct != null ? `plano cobre ${pct}% da meta` : "sem meta", e.t.kcal > 0 ? ` · ${k0(e.t.kcal)} consumidas` : "")),
+        h("div", {class: "sc-k"}, h("div", null, h("b", null, k0(t.kcal)), h("span", null, " kcal planejadas")), note ? h("div", {class: "sc-p"}, note) : null),
         h("span", {class: "li-go", html: ICON.right})),
-      h("div", {class: "sc-m"}, [["t-c", "C", t.c, sp.c], ["t-p", "P", t.p, sp.p], ["t-g", "G", t.l, sp.l]].map(([c, k, g, pc]) =>
-          h("span", null, h("b", {class: c}, k), ` ${fmtG(g)} g`, h("small", null, `${Math.round(pc)}%`))),
-        h("span", null, h("b", {class: "t-f"}, "Fibras"), ` ${fmtG(t.f)} g`, h("small", null, " "))));
+      h("div", {class: "sc-m"}, [["t-c", "Carboidratos", t.c, sp.c], ["t-p", "Proteínas", t.p, sp.p], ["t-g", "Gorduras", t.l, sp.l], ["t-f", "Fibras", t.f, null]].map(([c, k, g, pc]) =>
+          h("span", null, h("i", {class: c}, k === "Carboidratos" ? ["Carbo", h("span", {class: "opt"}, "idratos")] : k), h("b", null, `${fmtG(g)} g`), h("small", null, pc == null ? "" : `${Math.round(pc)}%`)))));
     put(sumbar,
-      h("span", {class: "k"}, h("b", null, k0(t.kcal)), tg ? ` / ${k0(tg)}` : "", h("span", {class: "u"}, " kcal"), pct != null ? h("span", {class: "pc"}, `${pct}%`) : null),
+      h("span", {class: "k"}, h("b", null, k0(t.kcal)), tg ? ` / ${k0(tg)}` : "", h("span", {class: "u"}, " kcal")),
       h("span", {class: "m", "aria-label": `Carboidratos ${fmtG(t.c)} g, proteínas ${fmtG(t.p)} g, gorduras ${fmtG(t.l)} g, fibras ${fmtG(t.f)} g`},
         h("span", null, h("b", {class: "t-c"}, "C"), fmtG(t.c)), h("span", null, h("b", {class: "t-p"}, "P"), fmtG(t.p)),
         h("span", null, h("b", {class: "t-g"}, "G"), fmtG(t.l)), h("span", null, h("b", {class: "t-f"}, "F"), fmtG(t.f))));
@@ -2114,15 +2216,7 @@ function renderPlan(p){
   setGoalOpen(!plan.objective && !plan.target);
 
   const mealsEl = h("div", {class: "meals"});
-  const pasteNew = h("div"), favEl = h("div");
-  // refeições favoritas: um toque cria a refeição pronta (nome, horário e alimentos)
-  function paintFavs(){
-    const list = favMeals();
-    put(favEl, list.length ? h("div", {class: "favs"},
-      h("div", {class: "favs-h"}, h("span", {class: "eyebrow"}, "Refeições favoritas"), h("button", {class: "link", type: "button", onclick: manageFavs}, "Editar")),
-      h("div", {class: "favs-l"}, [...list].sort(byTime).map(f => h("button", {class: "fav", type: "button", "aria-label": `Adicionar ${f.name} ao plano, ${k0(favKcal(f))} kcal`, onclick: () => useFav(f)},
-        ic("plus"), h("span", {class: "nm"}, f.name), h("span", {class: "kc"}, k0(favKcal(f))))))) : null);
-  }
+  const pasteNew = h("div");
   function useFav(f){
     const empty = plan.meals.find(x => !filled(x).length && !x.name.trim());
     const m = empty || {id: uid(), name: "", time: "", items: []};
@@ -2132,18 +2226,19 @@ function renderPlan(p){
     toast(`${f.name} adicionada`, () => { if (empty){ empty.items = []; empty.name = ""; empty.time = ""; } else plan.meals = plan.meals.filter(x => x !== m); touch(p); render(); });
     setTimeout(() => { const R = refs.get(m.id); if (R) R.card.scrollIntoView({block: "start", behavior: "smooth"}); }, 60);
   }
-  function manageFavs(){
+  function favSheet(){
     sheet("Refeições favoritas", (el, close) => {
       const listEl = h("div");
-      const paint = () => put(listEl, favMeals().length ? h("div", {class: "list"}, favMeals().map(f => h("div", {class: "li"},
-        h("div", {class: "li-m"}, h("div", {class: "li-t"}, f.name), h("div", {class: "li-s"}, `${nItems(f.items.length)} · ${k0(favKcal(f))} kcal${f.time ? " · " + f.time : ""}`)),
-        h("button", {class: "icon-btn", type: "button", "aria-label": `Tirar ${f.name} das favoritas`, onclick: () => {
-          const i = favMeals().indexOf(f); favMeals().splice(i, 1); save(); paint(); paintFavs();
-          toast(`${f.name} removida`, () => { favMeals().splice(i, 0, f); save(); paint(); paintFavs(); });
-        }}, ic("x"))))) : h("p", {class: "sh-sub"}, "Nenhuma favorita."));
+      const paint = () => put(listEl, favMeals().length ? h("div", {class: "mlist"}, [...favMeals()].sort(byTime).map(f => h("div", {class: "mrow"},
+        h("button", {class: "mrow-b", type: "button", "aria-label": `Adicionar ${f.name} ao plano, ${k0(favKcal(f))} kcal`, onclick: () => { close(); useFav(f); }},
+          h("span", {class: "tm"}, f.time || "—"), h("span", {class: "nm"}, h("b", null, f.name), h("small", null, nItems(f.items.length))), h("span", {class: "kc"}, k0(favKcal(f)), h("small", null, " kcal"))),
+        h("button", {class: "tool", type: "button", "aria-label": `Tirar ${f.name} das favoritas`, html: ICON.x, onclick: () => {
+          const i = favMeals().indexOf(f); favMeals().splice(i, 1); save(); paint();
+          toast(`${f.name} removida`, () => { favMeals().splice(i, 0, f); save(); paint(); render(); });
+          if (!favMeals().length) { close(); render(); }
+        }})))) : h("p", {class: "sh-sub"}, "Nenhuma favorita."));
       paint();
-      el.append(h("h2", null, "Refeições favoritas"), h("p", {class: "sh-sub"}, "Servem para todas as pessoas da família. Para criar ou atualizar, use Ações → Salvar como favorita em uma refeição."), listEl,
-        h("div", {style: "height:12px"}), h("button", {class: "btn plain block", type: "button", onclick: close}, "Fechar"));
+      el.append(h("h2", null, "Refeições favoritas"), h("p", {class: "sh-sub"}, "Toque para pôr no plano. Valem para toda a família. Para guardar outra: ⋯ na refeição → Salvar como favorita."), listEl);
     });
   }
 
@@ -2482,15 +2577,14 @@ function renderPlan(p){
       h("div", {class: "spacer"}),
       h("button", {class: "icon-btn", "aria-label": "Copiar plano em texto", onclick: copyPlan}, ic("share")), quickBtn(p, "alimentacao")), sumbar);
   put(app, h("div", {class: "view"},
-    head, h("h1", {class: "pg"}, "Nutrição"), h("p", {class: "pg-s"}, "Planeje e reutilize. Registrar o que comeu é opcional."), foodNav(),
-    sumCard, goalRow, goalEd,
+    head, h("h1", {class: "pg"}, "Nutrição"), foodNav(),
+    h("section", {class: "panel sumcard"}, sumBtn, goalRow, goalEd),
     C.energyOf(p).child ? h("p", {class: "note warn"}, "Para crianças e adolescentes, a meta considera o crescimento. Evite déficit calórico sem acompanhamento profissional.") : null,
     pasteNew,
     mealsEl,
     h("div", {class: "add-row two"}, h("button", {class: "add-meal", onclick: () => addMeal()}, ic("plus"), "Adicionar refeição"),
-      favMeals().length ? h("button", {class: "add-meal fav-b", type: "button", "aria-label": "Usar uma refeição favorita", onclick: () => actionSheet("Usar uma refeição favorita", "Entra no plano com nome, horário e alimentos.",
-        [...favMeals()].sort(byTime).map(f => ({label: `${f.time ? f.time + " · " : ""}${f.name} · ${k0(favKcal(f))} kcal`, fn: () => useFav(f)})))}, h("span", {html: ICON.starOn, style: "display:contents"}), "Favorita") : null),
-    h("p", {class: "src"}, "Valores planejados. Composição: TACO 4ª ed. (NEPA/UNICAMP, 2011). Medidas caseiras: POF 2008–2009 (IBGE).")));
+      favMeals().length ? h("button", {class: "add-meal fav-b", type: "button", "aria-label": `Refeições favoritas (${favMeals().length})`, onclick: favSheet}, h("span", {html: ICON.starOn, style: "display:contents"}), "Favoritas") : null),
+    srcNote("Valores planejados. Composição: TACO 4ª ed. (NEPA/UNICAMP, 2011). Medidas caseiras: POF 2008–2009 (IBGE).")));
   paintSum();
   if (!plan.meals.length) addMeal(null, false);
   if (view.focusMeal){
@@ -2518,7 +2612,7 @@ function renderFoods(p){
   let q = view.foodQ || "";
   const listEl = h("div");
   const inp = h("input", {type: "search", id: "busca-alimento", placeholder: "Buscar alimento ou marca", value: q, "aria-label": "Buscar alimento", enterkeyhint: "search", autocomplete: "off", autocorrect: "off", spellcheck: "false"});
-  const seg = h("div", {class: "seg", role: "tablist"});
+  const seg = h("div", {class: "seg seg-2", role: "tablist", "aria-label": "Listas de alimentos"});
   inp.addEventListener("input", () => { q = inp.value; view.foodQ = q; fill(); });
   function row(f){
     const ms = C.measureOf(f, lastMeasure(f)), one = ms.l === "Grama" ? 100 : 1;
@@ -2536,7 +2630,7 @@ function renderFoods(p){
       star, add);
   }
   function fill(){
-    put(seg, [["fav", "Favoritos"], ["rec", "Recentes"], ["meus", "Meus alimentos"]].map(([k, l]) =>
+    put(seg, [["fav", "Favoritos"], ["rec", "Recentes"], ["meus", "Meus"]].map(([k, l]) =>
       h("button", {class: view.foodSeg === k ? "on" : "", role: "tab", "aria-selected": String(view.foodSeg === k), onclick: () => { view.foodSeg = k; fill(); }}, l)));
     seg.hidden = !!words(q).length;
     let foods, empty;
@@ -2548,37 +2642,13 @@ function renderFoods(p){
       words(q).length ? h("div", {style: "margin-top:12px"}, h("button", {class: "btn ghost block", onclick: () => addFoodChooser(q.trim(), () => fill())}, ic("plus"), `Cadastrar “${q.trim()}”`)) : null);
   }
   fill();
-  put(app, h("div", {class: "view"}, ...foodHead(p, h("button", {class: "icon-btn accent", "aria-label": "Cadastrar alimento", onclick: () => addFoodChooser("", () => { view.foodSeg = "meus"; fill(); })}, ic("plus"))),
-    h("div", {class: "search"}, ic("search"), inp), seg, h("div", {style: "height:12px"}), listEl,
-    h("p", {class: "src"}, `${db.list.filter(f => !f.own).length} alimentos da TACO 4ª ed. (NEPA/UNICAMP, 2011), com medidas caseiras da POF 2008–2009 (IBGE). Leite integral, leite desnatado UHT, iogurte sabor abacaxi e coco verde estão em reanálise na própria TACO e não aparecem.`)));
+  put(app, h("div", {class: "view"}, ...foodHead(p, quickBtn(p, "alimentacao")),
+    h("div", {class: "srow"}, h("div", {class: "search"}, ic("search"), inp),
+      h("button", {class: "icon-btn", type: "button", "aria-label": "Cadastrar alimento", onclick: () => addFoodChooser("", () => { view.foodSeg = "meus"; fill(); })}, ic(embedded ? "plus" : "camera"))),
+    seg, h("div", {style: "height:12px"}), listEl,
+    srcNote(`${db.list.filter(f => !f.own).length} alimentos da TACO 4ª ed. (NEPA/UNICAMP, 2011), com medidas caseiras da POF 2008–2009 (IBGE). Leite integral, leite desnatado UHT, iogurte sabor abacaxi e coco verde estão em reanálise na própria TACO e não aparecem.`)));
 }
 
-function renderFavorites(p){
-  const plan = p.plan, list = favMeals(), foods = S.prefs.fav.map(id => db.get(id)).filter(Boolean);
-  const useFav = f => {
-    const empty = plan.meals.find(x => !filled(x).length && !x.name.trim());
-    const m = empty || {id: uid(), name: "", time: "", items: []};
-    m.name = f.name; m.time = f.time || m.time; m.items = f.items.filter(i => db.has(i.foodId)).map(i => ({id: uid(), foodId: i.foodId, measure: i.measure, qty: i.qty}));
-    if (!empty) plan.meals.push(m);
-    plan.meals.sort(byTime); touch(p);
-    toast(`${f.name} no plano de ${firstName(p.name)}`, () => { if (empty){ empty.items = []; empty.name = ""; empty.time = ""; } else plan.meals = plan.meals.filter(x => x !== m); touch(p); render(); });
-    render();
-  };
-  const removeFav = f => { const i = list.indexOf(f); list.splice(i, 1); save(); render(); toast(`${f.name} removida`, () => { list.splice(i, 0, f); save(); render(); }); };
-  put(app, h("div", {class: "view"}, ...foodHead(p, quickBtn(p, "alimentacao")),
-    h("section", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Refeições favoritas"), h("span", {class: "sec-n"}, list.length ? String(list.length) : "")),
-      list.length ? h("div", {class: "mlist"}, [...list].sort(byTime).map(f => h("div", {class: "mrow"},
-        h("button", {class: "mrow-b", type: "button", onclick: () => useFav(f), "aria-label": `Adicionar ${f.name} ao plano de ${firstName(p.name)}`},
-          h("span", {class: "tm"}, f.time || "—"), h("span", {class: "nm"}, h("b", null, f.name), h("small", null, `${nItems(f.items.length)} · toque para usar`)), h("span", {class: "kc"}, k0(favKcal(f)), h("small", null, " kcal"))),
-        h("button", {class: "tool", type: "button", "aria-label": `Tirar ${f.name} das favoritas`, html: ICON.x, onclick: () => removeFav(f)}))))
-      : h("p", {class: "hc-e"}, "No plano, toque na ★ de uma refeição para guardá-la aqui. As favoritas servem para toda a família.")),
-    h("section", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Alimentos favoritos"), h("button", {class: "link", type: "button", onclick: () => go({sub: "alimentos"})}, "Buscar")),
-      foods.length ? h("div", {class: "mlist"}, foods.map(f => { const ms = C.measureOf(f, lastMeasure(f)), c = C.calcItem(db, {foodId: f.id, measure: ms.l, qty: ms.l === "Grama" ? 100 : 1});
-        return h("div", {class: "mrow"}, h("button", {class: "mrow-b", type: "button", onclick: () => foodDetail(f, render)},
-          h("span", {class: "nm"}, h("b", null, f.dn), h("small", null, measureText(f, ms))), h("span", {class: "kc"}, k0(c.kcal), h("small", null, " kcal"))),
-          h("button", {class: "tool", type: "button", "aria-label": `Adicionar ${f.dn} ao plano`, html: ICON.plus, onclick: () => pickMeal(f, ms.l)})); }))
-      : h("p", {class: "hc-e"}, "Toque na estrela de um alimento para guardá-lo aqui."))));
-}
 function foodDetail(f, after){
   const p = active();
   let mlabel = lastMeasure(f);
@@ -3130,7 +3200,7 @@ function backupSheet(){
   document.documentElement.classList.toggle("big-text", px >= 19);   // texto ampliado: layouts de 4 colunas viram 2×2
 })();
 load();
-try { const v = JSON.parse(sessionStorage.getItem(KEY + ".view")); if (v && TABS.some(t => t[0] === v.tab)) view = Object.assign(view, v, {edit: null}); } catch (e) {}
+try { const v = JSON.parse(sessionStorage.getItem(KEY + ".view")); if (v && TABS.some(t => t[0] === v.tab)) view = Object.assign(view, v, {edit: null}); if (view.sub === "favoritos") view.sub = "plano"; } catch (e) {}
 render();
 })();
 </script>

@@ -542,3 +542,29 @@ Seriam funções simuladas (regra 9):
 - As capturas foram feitas em navegador simulado com a fonte Inter; no iPhone a fonte é SF Pro.
 - Ainda falta validar em aparelho real: Dynamic Type, VoiceOver e desempenho.
 - Itens da referência não implementados por serem simulações: fotos de pratos, sino de notificações, cartão de Apple Saúde, engrenagem de configurações.
+
+## 17. v8 — Refinamento premium, etapa 2 (Home e navegação de Nutrição)
+
+### Problemas reais encontrados nas telas
+| Tela | Problema | Correção |
+|---|---|---|
+| Hoje | Pilares altos (124 px) e períodos quebrando em duas linhas ("kcal / planejadas", "nesta / semana") | Pilares com 100 px; períodos curtos em uma linha ("na semana", "última noite") |
+| Hoje | Calorias planejadas repetidas 2× (pilar e anel) | O pilar Nutrição mostra as refeições do plano; as calorias aparecem só no anel |
+| Hoje | Legenda de macros em 2 linhas por item; notas abaixo da meta ("definida por você") | Legenda em uma linha (nome · g · %); Meta e Necessidade com unidade e protocolo junto do valor |
+| Hoje | "kcal planejadas" encostava no arco | "875 kcal" numa linha e "planejadas" abaixo; arco mais fino; folga medida contra o círculo interno |
+| Nutrição | "plano cobre 34% da meta" em cobre como manchete | Removido; o anel mostra a proporção. Aparece só "X kcal acima da meta" (neutro) quando ultrapassa |
+| Nutrição | Meta repetida no resumo e na linha de objetivo (dois cartões) | Uma superfície: planejado, macros e objetivo/meta |
+| Nutrição | Favoritos em dois lugares (aba Favoritos e Alimentos › Favoritos) | Aba removida. Alimentos favoritos ficam em Alimentos; refeições favoritas abrem pelo botão "Favoritas" do plano (usar e remover) |
+| Nutrição | Dois segmentos laranja empilhados em Alimentos; "Meus alimentos" quebrando | Segmento interno neutro; "Meus" |
+| Nutrição | "+" do topo mudava de função em Alimentos | "+" universal em todas as telas; cadastrar alimento ao lado da busca |
+| Nutrição | Subtítulo e notas de fonte ocupando a tela | Subtítulo removido; fontes em "Fontes dos dados" (expansão) |
+| SE | Nome de refeição cortado com reticências | Até duas linhas |
+
+### Medidas da Home (fim do conteúdo / topo da barra, px)
+iPhone 13 app 494/716 · Safari 482/600 · SE 485/504 · Pro Max 494/806 · texto ampliado 625/712 · sem registros 507/716 · perfil vazio 440/716. Nenhum texto cortado, nada além da largura, centro do anel com desvio 0.
+
+### Preservado
+Cálculos (GET 2.730 kcal no fixture), dados, favoritas (uso com 2 toques, remoção com desfazer), meta e objetivo (edição no próprio cartão, 2 toques), registro opcional, leitura de rótulo (1,8 s).
+
+### Próximas etapas (aguardando avaliação)
+Saúde (gráficos adaptados à quantidade de registros; ciência por expansão) → Perfil (calculadora energética compacta e expansível) → revisão geral de consistência.
