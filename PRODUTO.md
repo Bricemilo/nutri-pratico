@@ -612,3 +612,19 @@ A opção "Média" continua disponível como antes; a decisão sobre mantê-la s
 - Divisórias recuadas, sem cartões extras; a necessidade energética abre dentro do próprio grupo.
 
 **Auditoria**: iPhone SE, 13 (app e Safari), Pro Max e texto ampliado — sem texto cortado nem estouro de largura em nenhuma tela; contraste de texto ≥ 4,97:1 sobre os cartões. Cálculos inalterados (GET 2.730 kcal), 25/25 testes, regressão completa sem erros.
+
+## 20. v11 — Redesign premium (referência visual das quatro telas)
+
+**Sistema tipográfico** (rem; acompanha o tamanho de texto do iPhone): título de página 32 px, título de seção 19 px, corpo 16 px, apoio 14 px, auxiliar mínimo 13 px, indicadores 26 e 40 px. 164 tamanhos fixos antigos convertidos nesses tokens; nada no app fica abaixo de 13 px. O encolhimento automático de texto foi removido: quando falta espaço o layout se adapta (quebra de linha, 2 × 2), a fonte não diminui.
+
+**Home**: pilares 2 × 2 com ícone, rótulo, valor (26 px) e contexto; anel dos macronutrientes com 160 px (iPhone 13) e só a divisão de energia — o anel externo, sem legenda na Home, saiu; legenda em duas linhas (nome; gramas · %); faixa Meta diária | Necessidade estimada com origem da meta ("definida por você") e método ("FAO/OMS 1985", "DRI 2005", "média FAO/OMS e DRI"); consumido em linha própria quando registrado; "Próximo passo" só quando core.nextAction tem sugestão real. Cabe sem rolar no iPhone 13 (app instalado); no SE e com texto ampliado a página rola em vez de diminuir a fonte.
+
+**Nutrição**: resumo (kcal planejadas para hoje + macros em colunas com divisórias, % embaixo); objetivo e meta em cartão próprio com edição no lugar; refeições em lista agrupada; "Favoritas" ao lado do título "Refeições"; "Adicionar refeição" em botão contornado de largura total. Sem fotos de alimentos (o app não tem esses dados).
+
+**Saúde**: cartões tingidos na cor do pilar; dias "Seg … Dom"; valores em 40 px; botões de registro de 44 px; "Sobre estes dados" como cartão expansível. Só dados reais nos gráficos.
+
+**Perfil**: títulos de seção de 19 px; ícones de 40 px; subtítulos em 14 px sem corte (o alerta de backup aparece inteiro).
+
+**Acessibilidade**: alvos de toque ≥ 44 px em telas e folhas (chips, abas, segmentos, ícones, campos); contraste de texto ≥ 4,5:1 inclusive sobre os fundos tingidos; rótulos de VoiceOver do anel e do resumo agora leem os valores.
+
+Divergências intencionais da referência: sem subtítulos de página e sem a aba Favoritos (removidos antes a pedido, por redundância); sem fotos de refeições; sem barras "fantasma" em dias sem registro; "+" mantido no Perfil (a referência mostra engrenagem, que não tem função hoje).
