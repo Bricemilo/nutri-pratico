@@ -584,3 +584,31 @@ Saúde (gráficos adaptados à quantidade de registros; ciência por expansão) 
 
 Preservado: cálculos (GET 2.730 kcal na média, 2.696 kcal na DRI 2005), escolha de protocolo, "Usar como meta" (só com toque, nunca automático), registros, apagar com desfazer, fluxo infantil.
 A opção "Média" continua disponível como antes; a decisão sobre mantê-la só como comparação segue em aberto.
+
+## 19. v10 — Refinamento visual premium 3.0
+
+**Home**
+- Anel do "Plano do dia" com diâmetro visível 20–22% maior (108 → 132 px no iPhone 13; 145 px no Pro Max), sem aumentar a altura do cartão: o recorte do desenho elimina a margem das marcas externas.
+- Centro do anel: só o número e "kcal planejadas", centralizado no eixo horizontal e vertical (desvio medido: 0 px).
+- Anéis mais finos (externo 7, interno 13) e afastados; o anel externo (planejado ÷ meta) passou a tom neutro claro, porque o laranja agora identifica os carboidratos.
+- Paleta dos macronutrientes: carboidratos #E58D4D, proteínas #AE625C (texto #CB8078, contraste 5,9:1), gorduras #E9C56F, fibras #86AB91.
+- Legenda em quatro linhas alinhadas: nome, gramas (alinhadas à direita) e %.
+- Meta e necessidade estimada numa faixa inferior discreta; com o registro ativo, "Consumido" entra na mesma faixa.
+- Pilares sem ícone (o rótulo colorido já identifica): 100 → 81 px de altura; sem registro aparece "—" no lugar do número, nunca zero.
+- CSS da Home consolidado num bloco único (208 seletores antigos sobrepostos removidos).
+
+**Nutrição**
+- Correção: "Carboidratos" aparecia em duas cores no resumo.
+- Resumo mais compacto: gramas e % na mesma linha; objetivo e meta em linha discreta.
+- Título de seção "Refeições" separa o resumo da lista; botões de adicionar e Favoritas mais leves.
+
+**Saúde**
+- Os três cartões do resumo com a mesma altura; área de gráfico igual para barras, pontos e linha.
+- Dias da semana maiores e mais legíveis; o dia atual em destaque; os pontos do emocional alinhados às colunas das barras.
+- Cartão de sugestão sem contorno, como os demais.
+
+**Perfil**
+- Três grupos com títulos discretos: Você (Objetivos e metas, Dados corporais, Família), Planejamento (Necessidade energética, Preferências), Aplicativo (Backup e segurança, Como o Nutri Prático calcula).
+- Divisórias recuadas, sem cartões extras; a necessidade energética abre dentro do próprio grupo.
+
+**Auditoria**: iPhone SE, 13 (app e Safari), Pro Max e texto ampliado — sem texto cortado nem estouro de largura em nenhuma tela; contraste de texto ≥ 4,97:1 sobre os cartões. Cálculos inalterados (GET 2.730 kcal), 25/25 testes, regressão completa sem erros.
