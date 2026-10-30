@@ -433,6 +433,14 @@
     return {lo: r[0] * 60, hi: r[1] * 60, text: `National Sleep Foundation (2015): ${r[0]} a ${r[1]} horas por noite nessa idade.`};
   }
 
+  // Consumo do dia: refeições marcadas como feitas. Cada marcação guarda uma cópia dos valores daquele momento,
+  // então mudar o plano depois não altera o que já foi registrado.
+  function eatenDay(list, date){
+    const day = (list || []).filter(e => e.date === date), t = {kcal: 0, c: 0, p: 0, l: 0, f: 0};
+    for (const e of day) for (const k in t) t[k] += (e.t && e.t[k]) || 0;
+    return {count: day.length, mealIds: day.map(e => e.mealId), t};
+  }
+
   /* Próxima ação: no máximo uma sugestão, só com dados suficientes, nunca diagnóstico.
      Pilares de movimento e sono só geram sugestão para quem já começou a registrá-los, e só para adultos. */
   function nextAction(c){
@@ -451,7 +459,7 @@
     return null;
   }
 
-  return {dayKey, addDays, weekKeys, moveWeek, moveRef, sleepMinutes, sleepStats, sleepRef, nextAction,
+  return {eatenDay, dayKey, addDays, weekKeys, moveWeek, moveRef, sleepMinutes, sleepStats, sleepRef, nextAction,
     norm, normCh, words, parseLabel, friendly, createFoodDB, searchFoods, within1, measureOf, calcItem, sum, mealTotal, planTotal, macroSplit,
     ageOf, FAO_LV, FAO_FA, faoTMB, DRI_LV, driCalc, energyOf, roleOf, roundQty, equivalent, substitutes, CRITERIA, NO_DATA};
 });

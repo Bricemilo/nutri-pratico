@@ -113,9 +113,13 @@ Ficam em `core.substitutes` e `core.equivalent`.
   - regularidade = desvio padrão do horário de deitar (contado a partir do meio-dia), com 3 noites ou mais;
   - referência por idade: National Sleep Foundation, 2015.
 - **Bem-estar:** escala de 5 pontos, sem cálculo nem inferência.
+- **Consumido (`eatenDay`):**
+  - soma das refeições marcadas como feitas no dia;
+  - cada marcação guarda uma cópia dos valores daquele momento, então o histórico não muda se o plano mudar;
+  - o painel circular continua mostrando só o planejado.
 - **Próxima ação:** regras fixas em `nextAction`, documentadas em `PRODUTO.md`. No máximo uma; nunca para pilar não usado nem para crianças.
 
-## 4. Testes automatizados (24, todos passando)
+## 4. Testes automatizados (25, todos passando)
 
 1. Idade completa com a data de aniversário.
 2. TMB e GET da FAO/OMS 1985 para adultos.
@@ -141,6 +145,13 @@ Ficam em `core.substitutes` e `core.equivalent`.
 22. Semana de movimento (segunda a domingo, atividade leve fora da referência) e referências por idade.
 23. Sono: duração atravessando a meia-noite, regularidade, poucas noites sem conclusão, referências por idade.
 24. Próxima ação: uma por vez, só com dados, nenhuma para pilar não usado nem para crianças.
+25. Consumo do dia: soma só as refeições feitas naquele dia, com os valores guardados.
+
+Testes de ponta a ponta da v4.1:
+- **Refeição feita:** marcar na tela Hoje e no plano, com Desfazer.
+- **Consumo:** não muda quando o plano é alterado depois; zera no dia seguinte e mantém o histórico.
+- **Favoritas:** salvar, aplicar em outra pessoa da família, desfazer, remover e restaurar.
+- **Persistência:** tudo continua depois de recarregar.
 
 Testes de ponta a ponta da v4 (iPhone 13 e SE simulados):
 - **Migração:** dados da versão anterior abertos com totais, planos, alimentos e GET iguais; cópia antes-da-v3 idêntica.

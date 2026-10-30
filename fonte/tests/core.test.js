@@ -241,3 +241,13 @@ test("próxima ação: uma por vez, só com dados, nada para crianças nos novos
   const irregular = ["21:30", "02:00", "22:00", "01:30", "23:00"].map((b, i) => ({date: C.addDays(today, -i), bed: b, wake: "08:00"}));
   assert.equal(C.nextAction({energyOk: true, hasPlan: true, age: 40, move: move(muito), sleep: sleep(irregular)}).id, "regular");
 });
+
+test("consumo do dia: soma só as refeições feitas naquele dia, com os valores guardados", () => {
+  const log = [{date: "2026-10-30", mealId: "m1", t: {kcal: 449.4, c: 60, p: 25, l: 12, f: 6}},
+    {date: "2026-10-30", mealId: "m2", t: {kcal: 425.2, c: 42, p: 42.7, l: 7.6, f: 11.4}},
+    {date: "2026-10-29", mealId: "m1", t: {kcal: 999, c: 1, p: 1, l: 1, f: 1}}];
+  const d = C.eatenDay(log, "2026-10-30");
+  assert.equal(d.count, 2); assert.deepEqual(d.mealIds, ["m1", "m2"]);
+  near(d.t.kcal, 874.6); near(d.t.c, 102); near(d.t.p, 67.7); near(d.t.l, 19.6); near(d.t.f, 17.4);
+  assert.equal(C.eatenDay(log, "2026-10-28").count, 0); assert.equal(C.eatenDay(undefined, "2026-10-30").t.kcal, 0);
+});

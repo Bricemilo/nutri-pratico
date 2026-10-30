@@ -97,17 +97,17 @@ Perfil       pessoa · energia e protocolo · família · dados e backup · como
 | B | Design system: tokens e componentes documentados | Feita (seção 5); modo claro preparado nos tokens, não ativado |
 | C | Navegação em quatro abas | Feita |
 | D | Hoje: painel integrado, painel nutricional refinado, atalhos, próxima ação | Feita |
-| E | Alimentação: refeições favoritas, reutilizar planos, copiar entre dias, registro do consumido | Próxima |
+| E | Alimentação: refeições favoritas e registro do consumido | Feita |
+| E2 | Planos semanais (dias diferentes), copiar entre dias, ajuste do consumido ("comi diferente") | Próxima |
 | F | Movimento, sono e bem-estar: registros rápidos | Feita (versão manual) |
 | G | Qualidade: testes em aparelho real, medição de tempos, acessibilidade com VoiceOver | Contínua |
 | Fase 2 | App nativo (SwiftUI) com HealthKit, SF Symbols, haptics e dados no aparelho com criptografia | Decisão pendente |
 | Fase 3 | Assistente, recomendações, planejamento semanal, assinatura | Depois de validar uso e disposição a pagar |
 
-**Próximo passo recomendado: Etapa E.**
-- Refeições favoritas: salvar uma refeição e reaplicá-la em 1 toque.
-- Separar "planejado" de "consumido": marcar refeições como feitas, sem pesagem.
-
-Essas duas mudanças são as que mais reduzem trabalho repetitivo hoje.
+**Próximo passo recomendado: validar em uso real antes da etapa E2.**
+- Usar a versão atual por uma ou duas semanas.
+- Medir no iPhone os tempos da seção 10.
+- A etapa E2 só faz sentido se o plano de um único dia se mostrar insuficiente.
 
 ---
 
@@ -171,6 +171,9 @@ Toques medidos no simulador (iPhone 13), contados a partir da tela Hoje.
 | Registrar bem-estar | Saúde → toque na escala | 1 (+1 para abrir a aba) |
 | Bem-estar com contexto | Bem-estar → escala → energia/estresse → Salvar | 4 |
 | Apagar um registro | × → (Desfazer em 5 s) | 1 |
+| Marcar refeição como feita | Hoje → círculo da refeição | 1 |
+| Salvar refeição favorita | Refeição → Ações → Salvar como favorita | 3 |
+| Usar refeição favorita (qualquer pessoa da família) | Alimentação → favorita | 1 (+1 para abrir a aba) |
 | Adicionar alimento ao plano | Alimentos → buscar → + → refeição → quantidade | 4 + digitação |
 | Cadastrar produto por foto | Alimentos → + → Escanear → foto → conferir → Salvar | 5 + foto (~3 s de leitura) |
 
@@ -192,7 +195,9 @@ Pilares que a pessoa não usa nunca geram cobrança. Para crianças, não há su
 - **Dados (versão 3 do formato):** cada perfil ganha `logs`:
   - `move`: `{id, at, date, type, min, intensity?}`;
   - `sleep`: `{id, at, date, bed, wake, quality?}`;
-  - `mood`: `{id, at, date, time, mood 1–5, energy?, stress?, note?}`.
+  - `mood`: `{id, at, date, time, mood 1–5, energy?, stress?, note?}`;
+  - `eaten`: `{id, at, date, mealId, name, time, t:{kcal, c, p, l, f}, items}`. É uma cópia da refeição no momento em que foi marcada como feita, então mudar o plano depois não altera o histórico.
+- **Favoritas:** `S.prefs.savedMeals` (`{id, name, time, items}`), comuns à família.
 - **Migração:** acréscimo de campos, sem alterar os existentes.
   - Cópia exata em `nutripratico.v1.antes-da-v3` antes da migração.
   - Adultos de versões anteriores mantêm `energy.method = "media"` para os números não mudarem sozinhos.
@@ -236,6 +241,8 @@ Pilares que a pessoa não usa nunca geram cobrança. Para crianças, não há su
 - [x] Todo registro pode ser desfeito ou apagado com Desfazer.
 - [x] Próxima ação: no máximo uma, nunca para pilar não usado, nunca para crianças nos novos pilares (testes do núcleo).
 - [x] Painel mostra "planejado" e meta; % de Atwater somam 100 (testes).
+- [x] Consumido separado do planejado. A marcação vale só para o dia; mudar o plano depois não altera o consumo já registrado (testes).
+- [x] Refeição favorita aplicada em 1 toque, também para outra pessoa da família, com Desfazer (teste).
 - [x] Sem rolagem horizontal em 320 px; sem erros de JavaScript (teste em iPhone SE simulado).
 - [x] Backup e restauração levam os novos registros (teste).
 - [ ] Medição em iPhone real: abertura, rolagem, teclado, seletor de hora, VoiceOver.
@@ -280,6 +287,11 @@ Os números de toques da seção 6 foram medidos no simulador. O tempo real prec
 ---
 
 ## 12. Registro de alterações
+
+- **v4.1:**
+  - **Refeição feita:** marcar com um toque na tela Hoje ou no plano. O consumido do dia aparece numa barra separada do painel planejado.
+  - **Refeições favoritas:** comuns à família, aplicadas com um toque e com Desfazer.
+  - 25 testes do núcleo.
 
 - **v4 do app (formato de dados v3):** abas Hoje / Alimentação / Saúde / Perfil; tela Hoje integrada com próxima ação e atalhos.
   - Movimento, sono e bem-estar com registros rápidos, Desfazer e histórico.

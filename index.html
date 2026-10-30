@@ -435,6 +435,33 @@ h2.sec .sec-n{float:right;letter-spacing:.02em;text-transform:none;font-weight:5
 .prose h3{font-size:15px;color:var(--ink);margin:18px 0 4px}
 .prose p{margin:0 0 8px}
 
+/* Refeição feita e favoritas */
+.done-w{display:contents}
+.done{width:30px;height:30px;border-radius:50%;border:1.6px solid var(--line-2);display:grid;place-items:center;color:transparent;flex:none;transition:background .15s,border-color .15s}
+.done svg{width:16px;height:16px}
+.done.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.done[disabled]{opacity:.3}
+.mh .done{margin-right:-2px}
+.eat{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.eat-h{display:flex;align-items:baseline;gap:8px;font-size:12.5px;color:var(--muted)}
+.eat-h b{font-size:15px;color:var(--ink);font-weight:650;font-variant-numeric:tabular-nums}
+.eat-n{margin-left:auto;font-variant-numeric:tabular-nums}
+.eat-bar{height:5px;border-radius:3px;background:var(--surface-3);margin:8px 0 4px;overflow:hidden}
+.eat-bar i{display:block;height:100%;background:var(--ok);border-radius:3px;transition:width .4s}
+.eat-r{display:flex;align-items:center;gap:10px;padding:5px 0}
+.eat-m{flex:1;min-width:0;display:flex;align-items:baseline;gap:10px;text-align:left;padding:6px 0;font-size:14.5px}
+.eat-m .tm{width:42px;flex:none;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.eat-m .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:550}
+.eat-m .kc{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.eat-r.on .nm{color:var(--ink-2)}
+.eat-x{margin:6px 0 0;font-size:11.5px;color:var(--muted);line-height:1.45}
+.favs{margin-top:16px}
+.favs-h{display:flex;align-items:baseline;justify-content:space-between;margin:0 2px 8px}
+.favs-l{display:flex;flex-direction:column;gap:6px}
+.fav{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;padding:8px 14px;border-radius:14px;background:var(--surface);border:1px dashed var(--accent-line);text-align:left;font-size:15px}
+.fav svg{width:16px;height:16px;color:var(--accent-2);flex:none}
+.fav .nm{flex:1;min-width:0;font-weight:560;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fav .kc{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
 /* Hoje */
 .tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
 .tiles.two{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -957,6 +984,14 @@ h2.sec .sec-n{float:right;letter-spacing:.02em;text-transform:none;font-weight:5
     return {lo: r[0] * 60, hi: r[1] * 60, text: `National Sleep Foundation (2015): ${r[0]} a ${r[1]} horas por noite nessa idade.`};
   }
 
+  // Consumo do dia: refeições marcadas como feitas. Cada marcação guarda uma cópia dos valores daquele momento,
+  // então mudar o plano depois não altera o que já foi registrado.
+  function eatenDay(list, date){
+    const day = (list || []).filter(e => e.date === date), t = {kcal: 0, c: 0, p: 0, l: 0, f: 0};
+    for (const e of day) for (const k in t) t[k] += (e.t && e.t[k]) || 0;
+    return {count: day.length, mealIds: day.map(e => e.mealId), t};
+  }
+
   /* Próxima ação: no máximo uma sugestão, só com dados suficientes, nunca diagnóstico.
      Pilares de movimento e sono só geram sugestão para quem já começou a registrá-los, e só para adultos. */
   function nextAction(c){
@@ -975,7 +1010,7 @@ h2.sec .sec-n{float:right;letter-spacing:.02em;text-transform:none;font-weight:5
     return null;
   }
 
-  return {dayKey, addDays, weekKeys, moveWeek, moveRef, sleepMinutes, sleepStats, sleepRef, nextAction,
+  return {eatenDay, dayKey, addDays, weekKeys, moveWeek, moveRef, sleepMinutes, sleepStats, sleepRef, nextAction,
     norm, normCh, words, parseLabel, friendly, createFoodDB, searchFoods, within1, measureOf, calcItem, sum, mealTotal, planTotal, macroSplit,
     ageOf, FAO_LV, FAO_FA, faoTMB, DRI_LV, driCalc, energyOf, roleOf, roundQty, equivalent, substitutes, CRITERIA, NO_DATA};
 });
@@ -1144,13 +1179,13 @@ function load(){
   }
   S.patients = S.patients || []; S.foods = S.foods || [];
   S.prefs = Object.assign({objectives: DEFAULT_OBJ.slice(), meals: DEFAULT_MEALS.slice(), use: {}, last: {}}, S.prefs || {});
-  S.prefs.fav = S.prefs.fav || []; S.prefs.recent = S.prefs.recent || [];
+  S.prefs.fav = S.prefs.fav || []; S.prefs.recent = S.prefs.recent || []; S.prefs.savedMeals = S.prefs.savedMeals || [];
   for (const p of S.patients){
     p.energy = p.energy || {weight: null, height: null, fao: 1, dri: 1};
     p.plan = p.plan || {objective: "", target: null, meals: []};
     for (const m of p.plan.meals){ m.time = m.time || ""; m.items = m.items || []; }
-    p.logs = p.logs || {move: [], sleep: [], mood: []};
-    for (const k of ["move", "sleep", "mood"]) p.logs[k] = p.logs[k] || [];
+    p.logs = p.logs || {};
+    for (const k of ["move", "sleep", "mood", "eaten"]) p.logs[k] = p.logs[k] || [];
     // até a v2 o padrão era a média FAO/OMS + DRI: quem já usava continua vendo os mesmos números
     if (from < 3 && !p.energy.method && C.ageOf(p.birth) >= 18) p.energy.method = "media";
   }
@@ -1319,11 +1354,47 @@ function renderWelcome(){
     h("section", {class: "card", style: "margin-top:14px"}, dataRow())));
 }
 
+/* ---------- Refeição feita (consumo) e refeições favoritas ----------
+   "Feita" registra a refeição do plano como consumida hoje, com uma cópia dos valores daquele momento.
+   O plano continua sendo o planejado; o consumo fica em p.logs.eaten, separado. */
+const doneOf = (p, m) => logsOf(p).eaten.find(e => e.date === C.dayKey() && e.mealId === m.id);
+const r1 = x => Math.round(x * 10) / 10;
+function toggleDone(p, m, after){
+  const L = logsOf(p), cur = doneOf(p, m), label = m.name.trim() || "Refeição";
+  if (cur){
+    const i = L.eaten.indexOf(cur); L.eaten.splice(i, 1); touch(p); after();
+    toast(`${label} desmarcada`, () => { L.eaten.splice(i, 0, cur); touch(p); after(); });
+    return;
+  }
+  const t = mealTotal(m); if (!t.kcal && !filled(m).length) return;
+  const e = {id: uid(), at: Date.now(), date: C.dayKey(), mealId: m.id, name: label, time: m.time || "",
+    t: {kcal: r1(t.kcal), c: r1(t.c), p: r1(t.p), l: r1(t.l), f: r1(t.f)}, items: filled(m).map(i => ({foodId: i.foodId, measure: i.measure, qty: i.qty}))};
+  L.eaten.push(e); touch(p); after();
+  toast(`${label} feita · ${k0(e.t.kcal)} kcal`, () => { L.eaten.splice(L.eaten.indexOf(e), 1); touch(p); after(); });
+}
+function doneBtn(p, m, after){
+  const d = !!doneOf(p, m), n = filled(m).length, label = m.name.trim() || "refeição";
+  return h("button", {class: "done" + (d ? " on" : ""), type: "button", disabled: !n && !d, "aria-pressed": String(d),
+    "aria-label": d ? `${label}: feita hoje. Toque para desmarcar` : `Marcar ${label} como feita hoje`, html: ICON.check,
+    onclick: e => { e.stopPropagation(); toggleDone(p, m, after); }});
+}
+// Favoritas valem para toda a família (S.prefs.savedMeals): a mesma refeição serve para várias pessoas.
+const favMeals = () => S.prefs.savedMeals;
+function saveFavMeal(m){
+  const name = m.name.trim() || "Refeição", list = favMeals(), old = list.find(x => norm(x.name) === norm(name));
+  const fav = {id: old ? old.id : uid(), name, time: m.time || "", at: Date.now(), items: filled(m).map(i => ({foodId: i.foodId, measure: i.measure, qty: i.qty}))};
+  const i = old ? list.indexOf(old) : -1;
+  if (old) list.splice(i, 1, fav); else list.push(fav);
+  save();
+  toast(old ? `Favorita “${name}” atualizada` : `“${name}” nas favoritas`, () => { if (old) list.splice(list.indexOf(fav), 1, old); else list.splice(list.indexOf(fav), 1); save(); render(); });
+}
+const favKcal = f => C.mealTotal(db, {items: f.items.filter(i => db.has(i.foodId))}).kcal;
+
 /* ---------- Hoje: resumo integrado ----------
    Responde "como estou e qual o próximo passo": painel da alimentação planejada, três indicadores de saúde,
    no máximo uma sugestão (core.nextAction) e atalhos de registro. */
 const today = () => C.dayKey();
-const logsOf = p => p.logs || (p.logs = {move: [], sleep: [], mood: []});
+const logsOf = p => { const L = p.logs || (p.logs = {}); for (const k of ["move", "sleep", "mood", "eaten"]) L[k] = L[k] || []; return L; };
 const fmtDur = m => m == null ? "—" : m < 60 ? `${Math.round(m)} min` : `${Math.floor(m / 60)} h${Math.round(m % 60) ? " " + pad2(Math.round(m % 60)) : ""}`;
 const pad2 = n => String(n).padStart(2, "0");
 const MOODS = ["Muito mal", "Mal", "Mais ou menos", "Bem", "Muito bem"];
@@ -1355,6 +1426,18 @@ function renderHome(p){
     tile("mov", "walk", "Movimento", L.move.length ? fmtDur(ctx.move.week.total) : "—", L.move.length ? "nesta semana" : "Registrar", () => L.move.length ? go({tab: "saude"}) : moveSheet(p)),
     tile("sono", "moon", "Sono", lastNight ? fmtDur(lastNight.min) : "—", lastNight ? "última noite" : "Registrar", () => lastNight ? go({tab: "saude"}) : sleepSheet(p)),
     adult ? tile("bem", "smile", "Bem-estar", moodToday ? MOODS[moodToday.mood - 1] : "—", moodToday ? "hoje" : "Como você está?", () => moodToday ? go({tab: "saude"}) : moodSheet(p)) : null];
+  // consumo de hoje (refeições marcadas como feitas), separado do planejado
+  const eaten = C.eatenDay(L.eaten, today()), ref = tg || t.kcal;
+  const todays = [...plan.meals].filter(m => filled(m).length).sort(byTime);
+  const repaint = () => renderHome(p);
+  const eatEl = todays.length ? h("div", {class: "eat"},
+    h("div", {class: "eat-h"}, h("span", null, "Consumido hoje"), h("b", null, `${k0(eaten.t.kcal)} kcal`), h("span", {class: "eat-n"}, `${eaten.count} de ${todays.length} ${todays.length === 1 ? "refeição" : "refeições"}`)),
+    h("div", {class: "eat-bar", role: "img", "aria-label": `Consumido ${k0(eaten.t.kcal)} de ${k0(ref)} kcal`}, h("i", {style: `width:${ref ? Math.min(100, eaten.t.kcal / ref * 100) : 0}%`})),
+    h("div", {class: "eat-l"}, todays.map(m => { const d = doneOf(p, m);
+      return h("div", {class: "eat-r" + (d ? " on" : "")}, doneBtn(p, m, repaint),
+        h("button", {class: "eat-m", type: "button", onclick: () => go({tab: "alimentacao", sub: "plano", open: [m.id], focusMeal: m.id, edit: null})},
+          h("span", {class: "tm"}, m.time || "—"), h("span", {class: "nm"}, m.name.trim() || "Refeição"), h("span", {class: "kc"}, `${k0(d ? d.t.kcal : mealTotal(m).kcal)} kcal`))); })),
+    h("p", {class: "eat-x"}, "Marque o que você comeu como planejado. O círculo mostra o plano; esta barra, o consumido.")) : null;
   const quick = (icon, label, fn) => h("button", {class: "qa", type: "button", onclick: fn}, h("span", {class: "qa-i", html: ICON[icon]}), label);
   put(app, h("div", {class: "view"}, topBar(),
     h("div", {class: "hello"},
@@ -1362,7 +1445,7 @@ function renderHome(p){
       h("h1", null, `Olá, ${firstName(p.name)}`),
       plan.objective ? h("div", {class: "goal"}, h("button", {onclick: () => go({tab: "alimentacao", sub: "plano"})}, plan.objective)) : null),
     dial(t, tg, p.energy.weight, {compact: true, head: h("div", {class: "dial-h"}, h("span", {class: "eyebrow"}, "Alimentação planejada"),
-      h("button", {class: "link", onclick: () => go({tab: "alimentacao", sub: "plano"})}, plan.meals.some(m => filled(m).length) ? "Abrir plano" : "Montar plano"))}),
+      h("button", {class: "link", onclick: () => go({tab: "alimentacao", sub: "plano"})}, plan.meals.some(m => filled(m).length) ? "Abrir plano" : "Montar plano")), extra: eatEl}),
     h("div", {class: "tiles" + (adult ? "" : " two")}, tiles),
     na ? h("button", {class: "na " + na.tone, type: "button", onclick: naGo[na.go]},
       h("span", {class: "na-e"}, na.tone === "good" ? "Bom trabalho" : "Próximo passo"), h("b", null, na.title), h("span", {class: "na-t"}, na.text), h("span", {class: "li-go", html: ICON.right})) : null,
@@ -1587,7 +1670,7 @@ function dial(t, tg, W, o = {}){
   }));
   const label = `Planejado ${k0(t.kcal)} kcal${tg ? ` de ${k0(tg)}, ${Math.round(pct)}% da meta` : ""}. Carboidratos ${fmtG(t.c)} g, ${Math.round(s.c)}%. Proteínas ${fmtG(t.p)} g, ${Math.round(s.p)}%. Gorduras ${fmtG(t.l)} g, ${Math.round(s.l)}%.`;
   return h("section", {class: "dial" + (o.compact ? " compact" : ""), "aria-label": label},
-    o.head || null, h("div", {class: "dial-wrap"}, svg, center), keys, detail, missNote(t));
+    o.head || null, h("div", {class: "dial-wrap"}, svg, center), keys, detail, missNote(t), o.extra || null);
 }
 
 function macroGrid(t, W, small){
@@ -1658,7 +1741,38 @@ function renderPlan(p){
   tgt.addEventListener("input", () => { const v = parseInt(tgt.value.replace(/\D/g, ""), 10); plan.target = v > 0 ? v : null; touch(p); paintSum(); });
 
   const mealsEl = h("div", {class: "meals"});
-  const pasteNew = h("div");
+  const pasteNew = h("div"), favEl = h("div");
+  // refeições favoritas: um toque cria a refeição pronta (nome, horário e alimentos)
+  function paintFavs(){
+    const list = favMeals();
+    put(favEl, list.length ? h("div", {class: "favs"},
+      h("div", {class: "favs-h"}, h("span", {class: "eyebrow"}, "Refeições favoritas"), h("button", {class: "link", type: "button", onclick: manageFavs}, "Editar")),
+      h("div", {class: "favs-l"}, [...list].sort(byTime).map(f => h("button", {class: "fav", type: "button", "aria-label": `Adicionar ${f.name} ao plano`, onclick: () => useFav(f)},
+        ic("plus"), h("span", {class: "nm"}, f.name), h("span", {class: "kc"}, `${k0(favKcal(f))} kcal`))))) : null);
+  }
+  function useFav(f){
+    const empty = plan.meals.find(x => !filled(x).length && !x.name.trim());
+    const m = empty || {id: uid(), name: "", time: "", items: []};
+    m.name = f.name; m.time = f.time || m.time; m.items = cloneItems(f.items);
+    if (!empty) plan.meals.push(m);
+    touch(p); open.add(m.id); syncOpen(); rebuild(m); orderByTime(m);
+    toast(`${f.name} adicionada`, () => { if (empty){ empty.items = []; empty.name = ""; empty.time = ""; } else plan.meals = plan.meals.filter(x => x !== m); touch(p); render(); });
+    setTimeout(() => { const R = refs.get(m.id); if (R) R.card.scrollIntoView({block: "start", behavior: "smooth"}); }, 60);
+  }
+  function manageFavs(){
+    sheet("Refeições favoritas", (el, close) => {
+      const listEl = h("div");
+      const paint = () => put(listEl, favMeals().length ? h("div", {class: "list"}, favMeals().map(f => h("div", {class: "li"},
+        h("div", {class: "li-m"}, h("div", {class: "li-t"}, f.name), h("div", {class: "li-s"}, `${nItems(f.items.length)} · ${k0(favKcal(f))} kcal${f.time ? " · " + f.time : ""}`)),
+        h("button", {class: "icon-btn", type: "button", "aria-label": `Tirar ${f.name} das favoritas`, onclick: () => {
+          const i = favMeals().indexOf(f); favMeals().splice(i, 1); save(); paint(); paintFavs();
+          toast(`${f.name} removida`, () => { favMeals().splice(i, 0, f); save(); paint(); paintFavs(); });
+        }}, ic("x"))))) : h("p", {class: "sh-sub"}, "Nenhuma favorita."));
+      paint();
+      el.append(h("h2", null, "Refeições favoritas"), h("p", {class: "sh-sub"}, "Servem para todas as pessoas da família. Para criar ou atualizar, use Ações → Salvar como favorita em uma refeição."), listEl,
+        h("div", {style: "height:12px"}), h("button", {class: "btn plain block", type: "button", onclick: close}, "Fechar"));
+    });
+  }
 
   /* ---- refeição ---- */
   const nextMealName = () => { const used = new Set(plan.meals.map(m => norm(m.name))); return DEFAULT_MEALS.find(n => !used.has(norm(n))) || ""; };
@@ -1734,6 +1848,7 @@ function renderPlan(p){
     actionSheet(m.name.trim() || "Refeição", n ? `${nItems(n)} · ${k0(mealTotal(m).kcal)} kcal` : "Sem alimentos", [
       n ? {label: "Copiar refeição", cls: "primary", fn: () => copyMeal(m)} : null,
       clip() && clip().items.length ? {label: `Colar aqui: ${clipLabel()}`, fn: () => askPaste(m)} : null,
+      n ? {label: favMeals().some(x => norm(x.name) === norm(m.name.trim() || "Refeição")) ? "Atualizar nas favoritas" : "Salvar como favorita", fn: () => { saveFavMeal(m); paintFavs(); }} : null,
       n ? {label: "Criar outra igual (duplicar)", fn: () => duplicateMeal(m)} : null,
       i > 0 ? {label: "Mover para cima", fn: () => moveMeal(m, -1)} : null,
       i < plan.meals.length - 1 ? {label: "Mover para baixo", fn: () => moveMeal(m, 1)} : null,
@@ -1770,7 +1885,9 @@ function renderPlan(p){
     } else {
       nameEl = h("div", {class: "mh-n" + (m.name.trim() ? "" : " unnamed")}, m.name.trim() || "Refeição sem nome");
     }
-    const head = h("div", {class: "mh", role: isOpen ? null : "button", tabindex: isOpen ? null : "0", "aria-expanded": String(isOpen)},
+    const done = h("span", {class: "done-w"});
+    refs.get(m.id).done = done;
+    const head = h("div", {class: "mh", role: isOpen ? null : "button", tabindex: isOpen ? null : "0", "aria-expanded": String(isOpen)}, done,
       h("div", {class: "mh-m"}, isOpen ? h("div", {class: "acw"}, nameEl) : nameEl, subEl), kcalEl, chev);
     if (!isOpen){
       head.addEventListener("click", () => toggle(m));
@@ -1809,7 +1926,8 @@ function renderPlan(p){
     const R = refs.get(m.id); if (!R) return;
     const t = mealTotal(m), n = filled(m).length;
     R.kcalEl.replaceChildren(k0(t.kcal), h("small", null, "kcal"));
-    R.subEl.textContent = [m.time, nItems(n)].filter(Boolean).join(" · ");
+    R.subEl.textContent = [m.time, nItems(n), doneOf(p, m) ? "feita" : ""].filter(Boolean).join(" · ");
+    put(R.done, doneBtn(p, m, () => paintMeal(m)));
     R.footEl.hidden = !t.kcal;
     put(R.footEl, h("div", {class: "eyebrow"}, totalOf(m.name)), macroGrid(t, p.energy.weight, true), missNote(t));
   }
@@ -1980,7 +2098,7 @@ function renderPlan(p){
   }
 
   for (const m of plan.meals) mealsEl.append(buildMeal(m));
-  paintPasteNew();
+  paintPasteNew(); paintFavs();
   put(app, h("div", {class: "view"},
     h("header", {class: "top"}, h("div", {class: "top-row"},
       h("button", {class: "who", "aria-label": `Perfil ativo: ${p.name}. Trocar de perfil`, onclick: switcher}, avatar(p), h("b", null, firstName(p.name)), ic("chev")),
@@ -1993,6 +2111,7 @@ function renderPlan(p){
     C.energyOf(p).child ? h("p", {class: "note warn"}, "Para crianças e adolescentes, a meta considera o crescimento. Evite déficit calórico sem acompanhamento profissional.") : null,
     pasteNew,
     mealsEl,
+    favEl,
     h("div", {class: "add-row"}, h("button", {class: "add-meal", onclick: () => addMeal()}, ic("plus"), "Adicionar refeição")),
     h("p", {class: "src"}, "Valores planejados. Composição: TACO 4ª ed. (NEPA/UNICAMP, 2011). Medidas caseiras: POF 2008–2009 (IBGE).")));
   paintSum();

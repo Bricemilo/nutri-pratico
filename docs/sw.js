@@ -1,5 +1,5 @@
 // Guarda o app no aparelho para abrir rápido e funcionar sem internet.
-const VERSION = "35ae93afb7";
+const VERSION = "b558a800ab";
 const CACHE = "nutri-pratico-" + VERSION;
 const OCR = "np-ocr-tesseract-6.0.1";   // leitor de rótulos: guardado à parte, sobrevive às atualizações do app
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icons/apple-touch-icon.png", "./icons/icon-192.png", "./icons/icon-512.png"];
