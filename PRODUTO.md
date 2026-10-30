@@ -288,6 +288,8 @@ Os números de toques da seção 6 foram medidos no simulador. O tempo real prec
 
 ## 12. Registro de alterações
 
+- **v6:** Home com saudação, pilares e instrumento de nutrição; nomes Nutrição/Exercício/Sono/Emocional; nova paleta dos macros; registro do consumo opcional (seção 15).
+
 - **v5:** design system por pilar e telas Hoje, Alimentação (com aba Favoritos), Saúde (abas por pilar) e Perfil (seções progressivas), seguindo a referência visual (seção 14).
 
 - **v4.2 (refinamento 2.0):**
@@ -412,3 +414,39 @@ Seriam funções simuladas (regra 9):
 - O indicador de alimentação no Hoje mostra kcal **consumidas** (não o % planejado da referência), para não confundir plano com consumo.
 - Movimento mostra o total da **semana**, comparável à referência da OMS (por semana), em vez de uma meta diária pessoal.
 - A cor rosa aparece em gorduras (macro) e em bem-estar (pilar), como na referência; os dois nunca aparecem lado a lado.
+
+---
+
+## 15. Refinamento final: Home e identidade dos pilares (v6)
+
+- **Pilares renomeados** em todas as telas: Nutrição, Exercício, Sono e Emocional. A aba "Alimentação" passou a se chamar "Nutrição".
+- **Home:**
+  - só a saudação, os quatro pilares e o instrumento de nutrição;
+  - saíram a frase-resumo, a lista de refeições (o plano fica só na aba Nutrição), o cartão de próximo passo e o lembrete de backup;
+  - o próximo passo de exercício e sono foi para Saúde → Resumo;
+  - o lembrete de backup virou um destaque discreto na linha "Backup e segurança" do Perfil.
+- **Instrumento de nutrição:**
+  - calorias planejadas no centro, sem selo de %;
+  - meta discreta abaixo do mostrador;
+  - anel externo = plano em relação à meta, com o consumido sobreposto **só quando há registro** (consumo zero nunca aparece);
+  - anel interno = divisão da energia, com legenda de quatro colunas (carboidratos, proteínas, gorduras, fibras);
+  - tamanho do mostrador proporcional à altura da tela.
+- **Medição de "sem rolagem":** o essencial termina acima da barra de abas em todos os tamanhos testados.
+
+| Tela | Fim do instrumento | Topo da barra de abas |
+|---|---|---|
+| iPhone SE | 488 px | 504 px |
+| iPhone 13 (Safari) | 581 px | 600 px |
+| iPhone 13 (app instalado) | 661 px | 716 px |
+| iPhone Pro Max (app instalado) | 661 px | 806 px |
+
+- **Paleta dos macros:**
+  - carboidratos âmbar `#D5A35F`; proteínas terracota `#A95E58` (em texto, `#C47A72`, contraste 5,5:1); gorduras amarelo `#E6C476`; fibras sálvia `#83A98B`;
+  - todos acima de 3:1 em gráficos e acima de 4,5:1 em texto;
+  - carboidratos e gorduras diferem sobretudo no matiz (contraste entre si de 1,4:1); nos anéis há espaço entre os segmentos e a legenda sempre traz o nome.
+- **Registro do consumo opcional (`p.trackEaten`):**
+  - por padrão o app é só planejador e não mostra marcação de "feita";
+  - registrar uma refeição avulsa fica no menu da refeição ("Registrar como comida hoje");
+  - quem quer acompanhar escolhe "Registrar também" em Perfil → Preferências, e as refeições ganham o círculo;
+  - quem já marcava refeições antes desta versão continua com a marcação ligada;
+  - registrar uma vez não liga o acompanhamento.

@@ -30,7 +30,7 @@ html{-webkit-text-size-adjust:100%}
   --bg:#0A0908; --surface:#191614; --surface-2:#221E1B; --surface-3:#2B2622;
   --ink:#F4EEE8; --ink-2:#CDC3B9; --muted:#968B81; --line:#2D2824; --line-2:#3B352F;
   --accent:#E08C4E; --accent-2:#F2A468; --accent-ink:#1C0E05; --accent-soft:#2F1E12; --accent-line:#6B4226;
-  --carb:#E5C07C; --prot:#6FC4BE; --fat:#DE8FA4; --fib:#A8C98B; --food:#E08C4E; --move:#5FC4B8; --sleep:#9C93EE; --mood:#E58BB0; --danger:#FF7D74; --danger-soft:#33191A; --ok:#8FCB9B;
+  --carb:#D5A35F; --prot:#A95E58; --prot-ink:#C47A72; --fat:#E6C476; --fib:#83A98B; --food:#E08C4E; --move:#5FC4B8; --sleep:#9C93EE; --mood:#E58BB0; --danger:#FF7D74; --danger-soft:#33191A; --ok:#8FCB9B;
   --hero-1:#2E1D11; --hero-2:#181513; --scrim:rgba(0,0,0,.62); --shadow:0 14px 36px rgba(0,0,0,.5);
   --font:"Geist",-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
   --r:18px; --tabbar:64px;
@@ -190,7 +190,9 @@ h2.sec{font-size:13px;font-weight:650;letter-spacing:.08em;text-transform:upperc
 .mwrap.sm .fib{margin-top:9px;padding-top:8px;border-top-color:var(--line)}
 .mwrap.sm .mgrid > div{border-left-color:var(--line)}
 @media (max-width:370px){.mgrid .v{font-size:18px}.mwrap.sm .v{font-size:15px}.mgrid .pc{margin-left:3px}}
-.t-c{color:var(--carb)} .t-p{color:var(--prot)} .t-g{color:var(--fat)} .t-f{color:var(--fib)}
+/* macros: âmbar (carboidratos), terracota (proteínas), amarelo (gorduras), sálvia (fibras).
+   Em texto, a proteína usa --prot-ink (contraste 5,5:1); a cor de referência fica para anéis e marcadores. */
+.t-c{color:var(--carb)} .t-p{color:var(--prot-ink)} .t-g{color:var(--fat)} .t-f{color:var(--fib)}
 .miss{margin-top:10px;font-size:12px;color:var(--accent-2)}
 
 /* Resumo fixo do plano, dentro do cabeçalho */
@@ -599,6 +601,8 @@ h1.pg{font-size:30px;margin:6px 2px 2px}
 .pr-i{width:34px;height:34px;border-radius:11px;background:var(--surface-2);color:var(--ink-2);display:grid;place-items:center;flex:none}
 .pr-i svg{width:18px;height:18px}
 .prow .pr-m b{font-size:15px;font-weight:600}
+.prow.due .pr-m span{color:var(--accent-2)}
+.prow.due .pr-i{color:var(--accent-2)}
 .prow .li-go svg{width:16px;height:16px;color:var(--muted);display:block}
 .chips.rm button{display:inline-flex;align-items:center;gap:6px;font-size:13px}
 .chips.rm svg{width:12px;height:12px;color:var(--muted)}
@@ -610,6 +614,39 @@ h1.pg{font-size:30px;margin:6px 2px 2px}
 .qbig.move{--c:var(--move)} .qbig.sleep{--c:var(--sleep)} .qbig.wb{--c:var(--mood)}
 .qbig:active{transform:scale(.97)}
 @media (max-width:370px){.qbig{font-size:11.5px;padding:14px 2px 10px}}
+/* Home v6: saudação, quatro pilares e o instrumento de nutrição centrado */
+.home .hi-h{margin:6px 2px 16px}
+.home .hi-h h1{font-size:30px;letter-spacing:-.035em}
+.home .mods{gap:8px}
+.home .mod{padding:12px 10px 11px;border-radius:20px;min-height:116px}
+.home .mod b{font-size:21px;margin-top:4px}
+.home .mod-l{font-size:11.5px;margin-top:8px}
+.inst{margin-top:14px;padding:18px 16px 16px;border-radius:24px;background:var(--surface)}
+.inst-b{display:flex;flex-direction:column;align-items:center;width:100%;text-align:center}
+.dial-wrap.mini.gx{width:min(64vw,236px,calc(100svh - 470px));min-width:168px;max-width:236px}
+.dial-wrap.mini.gx .dial-c{inset:24%}
+.dial-wrap.mini.gx .dial-k{font-size:clamp(34px,11vw,46px);font-weight:620;letter-spacing:-.045em;line-height:1}
+.dial-wrap.mini.gx .dial-m{font-size:12px;margin-top:4px;color:var(--muted)}
+.dial-wrap.mini.gx .arc{stroke-width:15}
+.dial-wrap.mini.gx .ticks line{stroke:#3A332D}
+.dial-wrap.mini.gx .ticks line.lit{stroke:var(--accent)}
+.inst-m{display:flex;justify-content:center;flex-wrap:wrap;gap:4px 16px;margin-top:10px;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.inst-m span{display:inline-flex;align-items:center;gap:6px}
+.inst-m i{display:inline-block;width:12px;height:4px;border-radius:2px}
+.inst-l{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;width:100%;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.il{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0;text-align:center}
+.il .sw{width:18px;height:4px;border-radius:2px;margin-bottom:5px}
+.sw.c{background:var(--carb)} .sw.p{background:var(--prot)} .sw.g{background:var(--fat)} .sw.f{background:var(--fib)}
+.il span{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.il b{font-size:16px;font-weight:620;font-variant-numeric:tabular-nums;white-space:nowrap}
+.il small{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.lg .dot.t-p{color:var(--prot)}
+/* telas baixas (Safari com barras, iPhone SE): tudo do essencial continua visível sem rolar */
+@media (max-height:700px){.home .hi-h{margin:0 2px 10px}.home .hi-h h1{font-size:26px}.home .mod{min-height:0;padding:10px 9px 9px}.home .mod-l{margin-top:5px}.home .mod b{font-size:18px;margin-top:2px}
+  .inst{margin-top:10px;padding:12px 12px 10px}.dial-wrap.mini.gx{min-width:132px;width:min(56vw,236px,calc(100svh - 445px))}.inst-m{margin-top:6px}.inst-l{margin-top:8px;padding-top:9px}.il .sw{margin-bottom:3px}}
+@media (max-width:370px){.home .mod{padding:9px 6px}.home .mod-l,.home .mod-s{font-size:10px;letter-spacing:-.02em}.il span{font-size:10px;letter-spacing:-.02em}
+  .dial-wrap.mini.gx .dial-c{inset:19%}.dial-wrap.mini.gx .dial-m{font-size:10.5px}.home .mod b{font-size:17px}.il b{font-size:14px}.il small{font-size:10px}.inst{padding:14px 10px 12px}}
+
 /* Hoje: cockpit */
 .today{margin:6px 2px 12px;font-size:13.5px;color:var(--muted);font-weight:500}
 .today::first-letter{text-transform:uppercase}
@@ -1450,6 +1487,8 @@ function load(){
     for (const k of ["move", "sleep", "mood", "eaten"]) p.logs[k] = p.logs[k] || [];
     // até a v2 o padrão era a média FAO/OMS + DRI: quem já usava continua vendo os mesmos números
     if (from < 3 && !p.energy.method && C.ageOf(p.birth) >= 18) p.energy.method = "media";
+    // quem já marcava refeições antes do registro virar opcional continua com a marcação ligada
+    if (p.trackEaten === undefined) p.trackEaten = p.logs.eaten.length > 0;
   }
   if (!S.patients.some(p => p.id === S.activeId)) S.activeId = (S.patients.find(p => !p.example) || S.patients[0] || {}).id || null;
   for (const raw2 of S.foods) db.add(raw2);
@@ -1584,7 +1623,7 @@ const foodTitle = q => !words(q).length && (S.prefs.fav.length || S.prefs.recent
 /* ---------- navegação ---------- */
 const app = $("#app"), tabbar = $("#tabbar");
 // Quatro abas: Hoje (resumo), Alimentação (plano + banco de alimentos), Saúde (movimento, sono, bem-estar), Perfil.
-const TABS = [["hoje", "Hoje", "home"], ["alimentacao", "Alimentação", "food"], ["saude", "Saúde", "pulse"], ["perfil", "Perfil", "user"]];
+const TABS = [["hoje", "Hoje", "home"], ["alimentacao", "Nutrição", "food"], ["saude", "Saúde", "pulse"], ["perfil", "Perfil", "user"]];
 let view = {tab: "hoje", sub: "plano", open: [], edit: null, focusMeal: null, foodSeg: "fav"};
 function go(v, keepScroll){
   view = Object.assign({}, view, v);
@@ -1650,14 +1689,14 @@ function toggleDone(p, m, after){
   const L = logsOf(p), cur = doneOf(p, m), label = m.name.trim() || "Refeição";
   if (cur){
     const i = L.eaten.indexOf(cur); L.eaten.splice(i, 1); touch(p); after();
-    toast(`${label} desmarcada`, () => { L.eaten.splice(i, 0, cur); touch(p); after(); });
+    toast(`Registro de ${label.toLowerCase()} desfeito`, () => { L.eaten.splice(i, 0, cur); touch(p); after(); });
     return;
   }
   const t = mealTotal(m); if (!t.kcal && !filled(m).length) return;
   const e = {id: uid(), at: Date.now(), date: C.dayKey(), mealId: m.id, name: label, time: m.time || "",
     t: {kcal: r1(t.kcal), c: r1(t.c), p: r1(t.p), l: r1(t.l), f: r1(t.f)}, items: filled(m).map(i => ({foodId: i.foodId, measure: i.measure, qty: i.qty}))};
   L.eaten.push(e); touch(p); after();
-  toast(`${label} feita · ${k0(e.t.kcal)} kcal`, () => { L.eaten.splice(L.eaten.indexOf(e), 1); touch(p); after(); });
+  toast(`${label} registrada · ${k0(e.t.kcal)} kcal`, () => { L.eaten.splice(L.eaten.indexOf(e), 1); touch(p); after(); });
 }
 function doneBtn(p, m, after){
   const d = !!doneOf(p, m), n = filled(m).length, label = m.name.trim() || "refeição";
@@ -1697,64 +1736,51 @@ function healthCtx(p){
   return {energyOk: r.ok && !!r.get, hasPlan: p.plan.meals.some(m => filled(m).length), age: C.ageOf(p.birth),
     move: {count: L.move.length, week: C.moveWeek(L.move, t)}, sleep: {count: L.sleep.length, stats: C.sleepStats(L.sleep, t)}};
 }
+// Registro do consumo é opcional: o app funciona como planejador puro. A marcação de "feita" só aparece
+// para quem ativa (ou já usava) o acompanhamento; ausência de marcação nunca significa que a pessoa não comeu.
+const tracks = p => !!p.trackEaten;
 function renderHome(p){
   const plan = p.plan, r = C.energyOf(p), tg = plan.target || (r.ok && r.get ? Math.round(r.get) : null);
   const t = planTotal(plan), L = logsOf(p), ctx = healthCtx(p), adult = adultOf(p), sp = C.macroSplit(t);
   const now = new Date(), hr = now.getHours();
   const dayTxt = now.toLocaleDateString("pt-BR", {weekday: "long", day: "numeric", month: "long"});
-  const days = S.lastBackup ? Math.floor((Date.now() - S.lastBackup) / DAY) : null;
-  const backupDue = S.patients.some(x => !x.example) && (days == null || days >= 7);
-  const na = C.nextAction(ctx);
-  const naGo = {perfil: () => go({tab: "perfil"}), plano: () => go({tab: "alimentacao", sub: "plano"}), mover: () => moveSheet(p), sono: () => go({tab: "saude", hsub: "sono"})};
-  const repaint = () => renderHome(p);
-  const openPlan = m => go({tab: "alimentacao", sub: "plano", open: m ? [m.id] : [], focusMeal: m ? m.id : null, edit: null});
+  const openPlan = () => go({tab: "alimentacao", sub: "plano", open: [], edit: null});
   const eaten = C.eatenDay(L.eaten, today());
-  const meals = [...plan.meals].filter(m => filled(m).length).sort(byTime);
+  const meals = plan.meals.filter(m => filled(m).length);
   const sl = ctx.sleep.stats.last, lastNight = sl && C.addDays(sl.date, 1) >= today() ? sl : null;
   const moodToday = [...L.mood].reverse().find(x => x.date === today());
-  // resumo em uma frase, só com o que existe
-  const status = [meals.length ? `${eaten.count} de ${meals.length} ${meals.length === 1 ? "refeição feita" : "refeições feitas"}` : null,
-    L.move.length ? `${fmtDur(ctx.move.week.total)} de movimento na semana` : null].filter(Boolean).join(" · ") || "Registre o que fizer sentido; o resto o app organiza.";
-  // quatro módulos: o número mais útil de cada pilar; sem dado, o toque abre o registro
-  const mod = (cls, icon, label, value, sub, fn, has) => h("button", {class: "mod " + cls + (has ? "" : " empty"), type: "button", onclick: fn, "aria-label": `${label}: ${has ? value + " " + sub : "registrar"}`},
-    h("span", {class: "mod-i", html: ICON[icon]}), h("span", {class: "mod-l"}, label), h("b", null, has ? value : ic("plus")), h("span", {class: "mod-s"}, has ? sub : "registrar"));
+  // quatro pilares: um número cada; sem dado, o cartão convida (sem cobrar) e abre o registro
+  const mod = (cls, icon, label, value, sub, fn, has) => h("button", {class: "mod " + cls + (has ? "" : " empty"), type: "button", onclick: fn, "aria-label": `${label}: ${has ? value + " " + sub : sub}`},
+    h("span", {class: "mod-i", html: ICON[icon]}), h("span", {class: "mod-l"}, label), h("b", null, has ? value : ic("plus")), h("span", {class: "mod-s"}, sub));
   const mods = h("div", {class: "mods" + (adult ? "" : " three")},
-    mod("food", "food", "Alimentação", k0(eaten.t.kcal), "kcal hoje", () => meals.length ? openPlan() : openPlan(), meals.length > 0),
-    mod("move", "walk", "Movimento", fmtDur(ctx.move.week.total), "na semana", () => L.move.length ? go({tab: "saude", hsub: "movimento"}) : moveSheet(p), L.move.length > 0),
-    mod("sleep", "moon", "Sono", lastNight ? fmtDur(lastNight.min) : "", "última noite", () => lastNight ? go({tab: "saude", hsub: "sono"}) : sleepSheet(p), !!lastNight),
-    adult ? mod("wb", "smile", "Bem-estar", moodToday ? MOODS[moodToday.mood - 1] : "", "hoje", () => moodToday ? go({tab: "saude", hsub: "bem-estar"}) : moodSheet(p), !!moodToday) : null);
-  // mostrador: planejado no centro, macros no anel interno e na legenda, consumido no anel externo
-  const legend = h("div", {class: "lgd"}, [["t-c", "Carboidratos", t.c, sp.c], ["t-p", "Proteínas", t.p, sp.p], ["t-g", "Gorduras", t.l, sp.l]].map(([c, n, g, pc]) =>
-      h("div", {class: "lg"}, h("i", {class: "dot " + c}), h("div", null, h("span", null, n), h("b", null, `${fmtG(g)} g`, h("small", null, ` · ${Math.round(pc)}%`))))),
-    h("div", {class: "lg"}, h("i", {class: "dot t-f"}), h("div", null, h("span", null, "Fibras"), h("b", null, `${fmtG(t.f)} g`, t.kcal ? h("small", null, ` · ${g1(t.f * 1000 / t.kcal)}/1.000 kcal`) : null))));
-  const nutCard = meals.length ? h("section", {class: "panel"},
-    h("button", {class: "panel-h", type: "button", onclick: () => nutritionSheet(p)}, h("span", null, "Alimentação do dia"), h("span", {class: "li-go", html: ICON.right})),
-    h("button", {class: "gauge", type: "button", "aria-label": "Ver o detalhe nutricional: macros, g/kg e fibras", onclick: () => nutritionSheet(p)}, dial(t, tg, p.energy.weight, {mini: true, big: true, eaten: eaten.t.kcal}), legend),
-    h("div", {class: "eatline"}, h("span", {class: "rk"}, h("i", {class: "rk-e"}), "Consumido"), h("b", null, `${k0(eaten.t.kcal)} kcal`),
-      h("span", {class: "eat-of"}, tg ? `de ${k0(tg)}` : ""), h("span", {class: "rk"}, h("i", {class: "rk-p"}), "Planejado")))
-    : h("button", {class: "panel ck-empty", type: "button", onclick: () => openPlan()}, h("span", {class: "qa-i", html: ICON.food}),
+    mod("food", "food", "Nutrição", eaten.t.kcal > 0 ? k0(eaten.t.kcal) : String(meals.length), eaten.t.kcal > 0 ? "kcal consumidas" : meals.length === 1 ? "refeição" : meals.length ? "refeições" : "montar plano", openPlan, meals.length > 0),
+    mod("move", "walk", "Exercício", fmtDur(ctx.move.week.total), L.move.length ? "na semana" : "registrar", () => L.move.length ? go({tab: "saude", hsub: "movimento"}) : moveSheet(p), L.move.length > 0),
+    mod("sleep", "moon", "Sono", lastNight ? fmtDur(lastNight.min) : "", lastNight ? "última noite" : "registrar", () => lastNight ? go({tab: "saude", hsub: "sono"}) : sleepSheet(p), !!lastNight),
+    adult ? mod("wb", "smile", "Emocional", moodToday ? MOODS[moodToday.mood - 1] : "", moodToday ? "hoje" : "registrar", () => moodToday ? go({tab: "saude", hsub: "bem-estar"}) : moodSheet(p), !!moodToday) : null);
+  // instrumento de nutrição: calorias planejadas no centro; anel externo = plano em relação à meta
+  // (consumido sobreposto só quando houver registro); anel interno = divisão da energia entre os macros
+  const macros = [["c", "Carboidratos", t.c, sp.c], ["p", "Proteínas", t.p, sp.p], ["g", "Gorduras", t.l, sp.l]];
+  const inst = meals.length ? h("section", {class: "inst"},
+    h("button", {class: "inst-b", type: "button", "aria-label": "Ver o detalhe nutricional: macros, g/kg e fibras", onclick: () => nutritionSheet(p)},
+      dial(t, tg, p.energy.weight, {mini: true, big: true, eaten: eaten.t.kcal > 0 ? eaten.t.kcal : null}),
+      h("div", {class: "inst-m"}, tg ? h("span", null, h("i", {class: "rk-p"}), `Meta ${k0(tg)} kcal`) : h("span", null, "Sem meta definida"),
+        eaten.t.kcal > 0 ? h("span", null, h("i", {class: "rk-e"}), `Consumido ${k0(eaten.t.kcal)}`) : null),
+      h("div", {class: "inst-l"}, macros.map(([k, n, g, pc]) => h("div", {class: "il"}, h("i", {class: "sw " + k}), h("span", null, n), h("b", null, `${fmtG(g)} g`), h("small", null, `${Math.round(pc)}%`))),
+        h("div", {class: "il"}, h("i", {class: "sw f"}), h("span", null, "Fibras"), h("b", null, `${fmtG(t.f)} g`), h("small", null, " ")))),
+    !tg ? h("button", {class: "link", type: "button", style: "display:block;margin:6px auto 0", onclick: () => go({tab: "perfil"})}, "Definir a meta de energia") : null)
+    : h("button", {class: "panel ck-empty", type: "button", onclick: openPlan}, h("span", {class: "qa-i", html: ICON.food}),
         h("div", null, h("b", null, "Monte o plano do dia"), "Refeições, calorias e macronutrientes em poucos toques."), h("span", {class: "li-go", html: ICON.right}));
-  const mealList = meals.length ? h("section", {class: "panel"},
-    h("div", {class: "panel-h"}, h("span", null, "Suas refeições"), h("button", {class: "link", type: "button", onclick: () => openPlan()}, "Ver plano")),
-    h("div", {class: "mlist"}, meals.map(m => { const d = doneOf(p, m);
-      return h("div", {class: "mrow" + (d ? " on" : "")}, doneBtn(p, m, repaint),
-        h("button", {class: "mrow-b", type: "button", onclick: () => openPlan(m)}, h("span", {class: "tm"}, m.time || "—"),
-          h("span", {class: "nm"}, h("b", null, m.name.trim() || "Refeição"), h("small", null, d ? "feita" : nItems(filled(m).length))), h("span", {class: "kc"}, k0(d ? d.t.kcal : mealTotal(m).kcal), h("small", null, " kcal")))); }))) : null;
-  put(app, h("div", {class: "view"}, topBar(quickBtn(p, "hoje")),
-    h("header", {class: "hi-h"}, h("div", {class: "today"}, dayTxt), h("h1", null, `${hr < 12 ? "Bom dia" : hr < 18 ? "Boa tarde" : "Boa noite"}, ${firstName(p.name)}`), h("p", {class: "sub"}, status)),
-    mods,
-    na ? h("button", {class: "na " + na.tone, type: "button", onclick: naGo[na.go]}, h("span", {class: "na-ic", html: ICON.spark}),
-      h("div", null, h("span", {class: "na-e"}, na.tone === "good" ? "Bom trabalho" : "Seu próximo passo"), h("b", null, na.title), h("span", {class: "na-t"}, na.text)), h("span", {class: "li-go", html: ICON.right})) : null,
-    nutCard, mealList,
-    backupDue ? h("button", {class: "quiet", onclick: backupSheet}, ic("lock"), days == null ? "Seus dados ainda não têm backup · Fazer agora" : `Último backup há ${days} dias · Fazer agora`) : null));
+  put(app, h("div", {class: "view home"}, topBar(quickBtn(p, "hoje")),
+    h("header", {class: "hi-h"}, h("div", {class: "today"}, dayTxt), h("h1", null, `${hr < 12 ? "Bom dia" : hr < 18 ? "Boa tarde" : "Boa noite"}, ${firstName(p.name)}`)),
+    mods, inst));
 }
 // Resumo nutricional completo (Hoje e Alimentação): painel com macros, g/kg, fibras, planejado e consumido.
 function nutritionSheet(p){
   const plan = p.plan, r = C.energyOf(p), tg = plan.target || (r.ok && r.get ? Math.round(r.get) : null);
   sheet("Resumo nutricional", (el, close) => {
     const t = planTotal(plan), s = C.macroSplit(t), e = C.eatenDay(logsOf(p).eaten, today());
-    el.append(h("h2", null, "Resumo nutricional"), h("p", {class: "sh-sub"}, "Valores do plano do dia. O consumido soma as refeições marcadas como feitas hoje."),
-      dial(t, tg, p.energy.weight, {eaten: e.t.kcal}),
+    el.append(h("h2", null, "Resumo nutricional"), h("p", {class: "sh-sub"}, "Valores do plano do dia. Se você registrar refeições como comidas, o consumido aparece no anel externo."),
+      dial(t, tg, p.energy.weight, {eaten: e.t.kcal > 0 ? e.t.kcal : null}),
       h("div", {class: "note"}, "As porcentagens usam 4 kcal/g para carboidratos e proteínas e 9 kcal/g para gorduras (fatores de Atwater). ",
         `A energia total vem da TACO, com fatores próprios de cada alimento; por isso pode diferir um pouco da soma dos macronutrientes (${k0(s.atwater)} kcal).`),
       h("div", {style: "height:12px"}),
@@ -1768,13 +1794,13 @@ function quickSheet(p, ctx){
   sheet("Registrar", (el, close) => {
     const row = (icon, title, sub, fn, cls) => h("button", {class: "qrow" + (cls ? " " + cls : ""), type: "button", onclick: () => { close(); setTimeout(fn, 60); }},
       h("span", {class: "qa-i", html: ICON[icon]}), h("div", null, h("b", null, title), sub ? h("span", null, sub) : null));
-    const mealRows = pending.length ? h("div", {class: "qmeals"}, h("div", {class: "lbl2", style: "margin-top:0"}, "Marcar refeição feita"),
+    const mealRows = tracks(p) && pending.length ? h("div", {class: "qmeals"}, h("div", {class: "lbl2", style: "margin-top:0"}, "Marcar refeição feita"),
       pending.slice(0, 4).map(m => h("button", {class: "qmeal", type: "button", onclick: () => { close(); toggleDone(p, m, render); }},
         h("span", {class: "done"}), h("span", {class: "tm"}, m.time || "—"), h("span", {class: "nm"}, m.name.trim() || "Refeição"), h("span", {class: "kc"}, `${k0(mealTotal(m).kcal)} kcal`)))) : null;
     const big = (cls, icon, label, fn) => h("button", {class: "qbig " + cls, type: "button", onclick: () => { close(); setTimeout(fn, 60); }}, h("span", {html: ICON[icon], style: "display:contents"}), label);
     const health = h("div", {class: "qbigs" + (adult ? "" : " three")},
-      big("food", "food", "Refeição", () => go({tab: "alimentacao", sub: "plano"})), big("move", "walk", "Atividade", () => moveSheet(p)),
-      big("sleep", "moon", "Sono", () => sleepSheet(p)), adult ? big("wb", "smile", "Bem-estar", () => moodSheet(p)) : null);
+      big("food", "food", "Nutrição", () => go({tab: "alimentacao", sub: "plano"})), big("move", "walk", "Exercício", () => moveSheet(p)),
+      big("sleep", "moon", "Sono", () => sleepSheet(p)), adult ? big("wb", "smile", "Emocional", () => moodSheet(p)) : null);
     const food = [row("food", "Alimento no plano", "Buscar e adicionar a uma refeição", () => { go({tab: "alimentacao", sub: "alimentos"}); setTimeout(() => { const i = $("#busca-alimento"); if (i) i.focus(); }, 80); }),
       row("camera", "Novo alimento", embedded ? "Digitar os dados do rótulo" : "Foto da tabela nutricional ou digitação", () => addFoodChooser("", () => render()))];
     el.append(h("h2", null, "Registrar"), h("p", {class: "sh-sub"}, "Em segundos, de qualquer tela."), health,
@@ -1800,7 +1826,7 @@ function removeLog(p, kind, e, label){
 }
 function moodLine(L, keys){
   // linha dos últimos dias: só os dias com registro viram ponto; dias sem registro ficam vazios (não há interpolação)
-  const W = 280, H = 56, x = i => 10 + i * (W - 20) / (keys.length - 1), y = v => H - 8 - (v - 1) * (H - 16) / 4;
+  const W = 340, H = 56, x = i => 10 + i * (W - 20) / (keys.length - 1), y = v => H - 8 - (v - 1) * (H - 16) / 4;
   const pts = keys.map((k, i) => { const e = [...L.mood].reverse().find(m => m.date === k); return e ? [x(i), y(e.mood)] : null; });
   const NS = "http://www.w3.org/2000/svg", el = (t, a) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
   const svg = el("svg", {viewBox: `0 0 ${W} ${H}`, class: "mline", "aria-hidden": "true", preserveAspectRatio: "none"});
@@ -1823,13 +1849,13 @@ function renderHealth(p){
   const moveBars = () => bars(mw.days.map(d => d.min), Math.max(60, ...mw.days.map(d => d.min)), WD, nowI);
   // o número principal de cada pilar; médias só com dados suficientes
   const P = {
-    movimento: {cls: "move", icon: "walk", title: "Movimento", has: L.move.length > 0, value: fmtDur(mw.total), ctx: `nesta semana · ${mw.activeDays} ${mw.activeDays === 1 ? "dia" : "dias"}`,
-      empty: "Caminhada, musculação, tênis… registre em segundos.", chart: moveBars, add: () => moveSheet(p), addL: "Registrar atividade"},
+    movimento: {cls: "move", icon: "walk", title: "Exercício", has: L.move.length > 0, value: fmtDur(mw.total), ctx: `nesta semana · ${mw.activeDays} ${mw.activeDays === 1 ? "dia" : "dias"}`,
+      empty: "Caminhada, musculação, tênis… registre em segundos.", chart: moveBars, add: () => moveSheet(p), addL: "Registrar exercício"},
     sono: {cls: "sleep", icon: "moon", title: "Sono", has: L.sleep.length > 0, value: ss.count >= 3 ? fmtDur(ss.avg) : ss.last ? fmtDur(ss.last.min) : "—",
       ctx: ss.count >= 3 ? `média de ${ss.count} noites` : ss.last ? `última noite registrada · ${relDay(ss.last.date).toLowerCase()}` : "",
       empty: "Hora de dormir e de acordar. Sem notas nem competição.", chart: sleepBars, add: () => sleepSheet(p), addL: "Registrar sono"},
-    "bem-estar": {cls: "wb", icon: "smile", title: "Bem-estar", has: L.mood.length > 0, value: todayM ? MOODS[todayM.mood - 1] : "—", ctx: todayM ? `hoje às ${todayM.time}` : "sem registro hoje",
-      empty: "Um toque para dizer como você está. Fica só com você.", chart: () => moodLine(L, last7), add: () => moodSheet(p), addL: "Registrar bem-estar"}};
+    "bem-estar": {cls: "wb", icon: "smile", title: "Emocional", has: L.mood.length > 0, value: todayM ? MOODS[todayM.mood - 1] : "—", ctx: todayM ? `hoje às ${todayM.time}` : "sem registro hoje",
+      empty: "Um toque para dizer como você está. Fica só com você.", chart: () => moodLine(L, last7), add: () => moodSheet(p), addL: "Registrar estado emocional"}};
   const card = (k, full) => { const c = P[k];
     return h("section", {class: "hp " + c.cls + (full ? " full" : ""), id: k},
       h("div", {class: "hp-h"}, h("span", {class: "hp-i", html: ICON[c.icon]}),
@@ -1854,11 +1880,12 @@ function renderHealth(p){
         h("div", {class: "dots"}, Array.from({length: 14}, (_, i) => C.addDays(t, i - 13)).map(k => { const x = dayMood(k); return h("span", {class: x ? "m" + x.mood : "", title: `${relDay(k)}: ${x ? MOODS[x.mood - 1] : "sem registro"}`}); })),
         h("p", {class: "ref"}, "Dias sem registro não significam nada. O app não faz diagnósticos."),
         hist("mood", [...L.mood].sort(byDate), e => [h("b", null, MOODS[e.mood - 1]), e.energy ? ` · energia ${e.energy}` : "", e.stress ? ` · estresse ${e.stress}` : "", e.note ? ` · “${e.note}”` : "", h("span", null, ` ${relDay(e.date)}${e.time ? " " + e.time : ""}`)])) : null]};
-  const tabs = [["resumo", "Resumo"], ["movimento", "Movimento"], ["sono", "Sono"], adult ? ["bem-estar", "Bem-estar"] : null].filter(Boolean);
+  const tabs = [["resumo", "Resumo"], ["movimento", "Exercício"], ["sono", "Sono"], adult ? ["bem-estar", "Emocional"] : null].filter(Boolean);
   put(app, h("div", {class: "view"}, topBar(quickBtn(p, "saude")),
-    h("h1", {class: "pg"}, "Saúde"), h("p", {class: "pg-s"}, adult ? "Movimento, sono e bem-estar." : "Movimento e sono."),
+    h("h1", {class: "pg"}, "Saúde"), h("p", {class: "pg-s"}, adult ? "Exercício, sono e emocional." : "Exercício e sono."),
     h("div", {class: "seg subnav hseg", role: "tablist", "aria-label": "Saúde"}, tabs.map(([k, l]) => h("button", {type: "button", role: "tab", class: sub === k ? "on" : "", "aria-selected": String(sub === k), onclick: () => go({hsub: k})}, l))),
-    h("div", {class: "hstack"}, sub === "resumo" ? [card("movimento"), card("sono"), adult ? card("bem-estar") : h("p", {class: "note"}, "O registro de bem-estar emocional para crianças e adolescentes terá um fluxo próprio, adequado à idade.")] : detail[sub]()),
+    h("div", {class: "hstack"}, sub === "resumo" ? [(na => na && ["mover", "regular", "mover-ok"].includes(na.id) ? h("div", {class: "na " + na.tone, style: "margin-top:0"}, h("span", {class: "na-ic", html: ICON.spark}),
+        h("div", null, h("span", {class: "na-e"}, na.tone === "good" ? "Bom trabalho" : "Sugestão"), h("b", null, na.title), h("span", {class: "na-t"}, na.text))) : null)(C.nextAction(healthCtx(p))), card("movimento"), card("sono"), adult ? card("bem-estar") : h("p", {class: "note"}, "O registro emocional para crianças e adolescentes terá um fluxo próprio, adequado à idade.") ] : detail[sub]()),
     h("p", {class: "src"}, "Só registros feitos por você, guardados neste aparelho; nenhum valor é estimado nem importado. Não são diagnósticos.")));
 }
 function chips(list, cur, onPick, cls){
@@ -1870,7 +1897,7 @@ function moveSheet(p, done){
   const types = [...new Set([...Object.keys(freq).sort((a, b) => freq[b] - freq[a]), ...MOVE_TYPES])].filter(x => x !== "Outra").concat("Outra");
   const last = [...L.move].sort((a, b) => (b.at || 0) - (a.at || 0))[0];
   let type = null, min = null, intensity = null, day = 0;
-  sheet("Registrar atividade", (el, close) => {
+  sheet("Registrar exercício", (el, close) => {
     const body = h("div"), other = h("input", {class: "input", id: "mv-outra", placeholder: "Qual atividade?", autocomplete: "off"});
     const custom = h("input", {class: "input num", id: "mv-min", inputmode: "numeric", placeholder: "Outro", "aria-label": "Minutos", autocomplete: "off"});
     const ok = h("button", {class: "btn primary block", type: "button", onclick: () => commit()}, "Salvar");
@@ -1887,7 +1914,7 @@ function moveSheet(p, done){
     other.addEventListener("input", check);
     function paint(){
       put(body,
-        h("div", {class: "lbl2"}, "Atividade"), chips(types.map(x => [x, x]), type, v => { type = v; paint(); if (v === "Outra") setTimeout(() => other.focus(), 30); }),
+        h("div", {class: "lbl2"}, "Exercício"), chips(types.map(x => [x, x]), type, v => { type = v; paint(); if (v === "Outra") setTimeout(() => other.focus(), 30); }),
         type === "Outra" ? h("div", {style: "margin-top:8px"}, other) : null,
         h("div", {class: "lbl2"}, "Duração"), h("div", {class: "chips dur"}, [15, 20, 30, 45, 60, 90].map(v => h("button", {type: "button", class: min === v && !custom.value ? "on" : "", onclick: () => { custom.value = ""; min = v; paint(); }}, `${v} min`)), custom),
         h("div", {class: "lbl2"}, "Intensidade ", h("span", {class: "opt"}, "opcional")), chips(INTENS, intensity, v => { intensity = v; paint(); }, "opt"),
@@ -1895,7 +1922,7 @@ function moveSheet(p, done){
       check();
     }
     paint();
-    el.append(h("h2", null, "Registrar atividade"),
+    el.append(h("h2", null, "Registrar exercício"),
       last ? h("button", {class: "repeat", type: "button", onclick: () => commit({type: last.type, min: last.min, intensity: last.intensity || null, date: today()})},
         h("span", {class: "qa-i", html: ICON.repeat}), h("div", null, h("b", null, "Repetir hoje"), `${last.type} · ${fmtDur(last.min)}${last.intensity ? " · " + last.intensity : ""}`)) : h("p", {class: "sh-sub"}, "Tipo e duração. A intensidade é opcional."),
       body, h("p", {class: "note"}, "O app não converte atividade em calorias: as estimativas de gasto variam muito de pessoa para pessoa."),
@@ -1940,7 +1967,7 @@ function saveMood(p, data, close){
 }
 function moodSheet(p){
   let mood = null, energy = null, stress = null;
-  sheet("Bem-estar", (el, close) => {
+  sheet("Emocional", (el, close) => {
     const note = h("textarea", {class: "input area", id: "bm-nota", maxlength: "280", rows: "2", placeholder: "Algo que queira lembrar (opcional)"});
     const body = h("div"), ok = h("button", {class: "btn primary block", type: "button", onclick: () => saveMood(p, {mood, energy, stress, note: note.value.trim() || null}, close)}, "Salvar");
     function paint(){
@@ -2011,8 +2038,7 @@ function dial(t, tg, W, o = {}){
   }));
   const label = `Planejado ${k0(t.kcal)} kcal${tg ? ` de ${k0(tg)}, ${Math.round(pct)}% da meta` : ""}.${hasEat ? ` Consumido ${k0(o.eaten)} kcal.` : ""} Carboidratos ${fmtG(t.c)} g, ${Math.round(s.c)}%. Proteínas ${fmtG(t.p)} g, ${Math.round(s.p)}%. Gorduras ${fmtG(t.l)} g, ${Math.round(s.l)}%.`;
   if (o.mini){
-    put(center, h("div", {class: "dial-k"}, k0(t.kcal)), h("div", {class: "dial-m"}, "kcal planejadas"),
-      o.big ? (tg ? h("div", {class: "dial-p" + (pct > 100 ? " over" : "")}, `${Math.round(pct)}% da meta`) : h("div", {class: "dial-p dim"}, "sem meta")) : null);
+    put(center, h("div", {class: "dial-k"}, k0(t.kcal)), h("div", {class: "dial-m"}, "kcal planejadas"));
     return h("div", {class: "dial-wrap mini" + (o.big ? " gx" : ""), role: "img", "aria-label": label}, svg, center);
   }
   const ringKey = hasEat ? h("div", {class: "ringkey"}, h("span", null, h("i", {class: "rk-p"}), `Planejado ${k0(t.kcal)}`), h("span", null, h("i", {class: "rk-e"}), `Consumido ${k0(o.eaten)}`), h("span", null, `Meta ${k0(tg)} kcal`)) : null;
@@ -2039,10 +2065,10 @@ function missNote(t){
 
 /* Alimentação: plano do dia e banco de alimentos lado a lado, sem nível extra de navegação */
 function foodHead(p, ...right){
-  return [topBar(...right), h("h1", {class: "pg"}, "Alimentação"), h("p", {class: "pg-s"}, "Planeje, marque o que comeu e reutilize."), foodNav()];
+  return [topBar(...right), h("h1", {class: "pg"}, "Nutrição"), h("p", {class: "pg-s"}, "Planeje e reutilize. Registrar o que comeu é opcional."), foodNav()];
 }
 function foodNav(){
-  return h("div", {class: "seg subnav", role: "tablist", "aria-label": "Alimentação"}, [["plano", "Plano do dia"], ["alimentos", "Alimentos"], ["favoritos", "Favoritos"]].map(([k, l]) =>
+  return h("div", {class: "seg subnav", role: "tablist", "aria-label": "Nutrição"}, [["plano", "Plano do dia"], ["alimentos", "Alimentos"], ["favoritos", "Favoritos"]].map(([k, l]) =>
     h("button", {type: "button", role: "tab", class: view.sub === k ? "on" : "", "aria-selected": String(view.sub === k), onclick: () => { if (view.sub !== k) go({sub: k, edit: null}); }}, l)));
 }
 
@@ -2061,9 +2087,9 @@ function renderPlan(p){
     const t = planTotal(plan), tg = target(), pct = tg ? Math.round(t.kcal / tg * 100) : null;
     const e = C.eatenDay(logsOf(p).eaten, today()), sp = C.macroSplit(t);
     put(sumCard,
-      h("div", {class: "sc-top"}, dial(t, tg, p.energy.weight, {mini: true, eaten: e.t.kcal}),
+      h("div", {class: "sc-top"}, dial(t, tg, p.energy.weight, {mini: true, eaten: e.t.kcal > 0 ? e.t.kcal : null}),
         h("div", {class: "sc-k"}, h("div", null, h("b", null, k0(t.kcal)), h("span", null, tg ? ` / ${k0(tg)} kcal` : " kcal")),
-          h("div", {class: "sc-p"}, pct != null ? `plano cobre ${pct}% da meta` : "sem meta", e.count ? ` · ${k0(e.t.kcal)} consumidas` : "")),
+          h("div", {class: "sc-p"}, pct != null ? `plano cobre ${pct}% da meta` : "sem meta", e.t.kcal > 0 ? ` · ${k0(e.t.kcal)} consumidas` : "")),
         h("span", {class: "li-go", html: ICON.right})),
       h("div", {class: "sc-m"}, [["t-c", "C", t.c, sp.c], ["t-p", "P", t.p, sp.p], ["t-g", "G", t.l, sp.l]].map(([c, k, g, pc]) =>
           h("span", null, h("b", {class: c}, k), ` ${fmtG(g)} g`, h("small", null, `${Math.round(pc)}%`))),
@@ -2209,6 +2235,7 @@ function renderPlan(p){
     actionSheet(m.name.trim() || "Refeição", n ? `${nItems(n)} · ${k0(mealTotal(m).kcal)} kcal` : "Sem alimentos", [
       n ? {label: "Copiar refeição", cls: "primary", fn: () => copyMeal(m)} : null,
       clip() && clip().items.length ? {label: `Colar aqui: ${clipLabel()}`, fn: () => askPaste(m)} : null,
+      n || doneOf(p, m) ? {label: doneOf(p, m) ? "Desfazer o registro de hoje" : "Registrar como comida hoje", fn: () => toggleDone(p, m, () => paintMeal(m))} : null,
       n ? {label: favMeals().some(x => norm(x.name) === norm(m.name.trim() || "Refeição")) ? "Atualizar nas favoritas" : "Salvar como favorita", fn: () => { saveFavMeal(m); render(); }} : null,
       n ? {label: "Criar outra igual (duplicar)", fn: () => duplicateMeal(m)} : null,
       i > 0 ? {label: "Mover para cima", fn: () => moveMeal(m, -1)} : null,
@@ -2292,7 +2319,7 @@ function renderPlan(p){
     const t = mealTotal(m), n = filled(m).length;
     R.kcalEl.replaceChildren(k0(t.kcal), h("small", null, "kcal"));
     R.subEl.textContent = [R.card.classList.contains("open") ? m.time : "", nItems(n), doneOf(p, m) ? "feita" : ""].filter(Boolean).join(" · ");
-    put(R.done, doneBtn(p, m, () => paintMeal(m)));
+    put(R.done, tracks(p) || doneOf(p, m) ? doneBtn(p, m, () => paintMeal(m)) : null);
     R.footEl.hidden = !t.kcal;
     put(R.footEl, h("div", {class: "eyebrow"}, totalOf(m.name)), macroGrid(t, p.energy.weight, true), missNote(t));
   }
@@ -2469,7 +2496,7 @@ function renderPlan(p){
       h("div", {class: "spacer"}),
       h("button", {class: "icon-btn", "aria-label": "Copiar plano em texto", onclick: copyPlan}, ic("share")), quickBtn(p, "alimentacao")), sumbar);
   put(app, h("div", {class: "view"},
-    head, h("h1", {class: "pg"}, "Alimentação"), h("p", {class: "pg-s"}, "Planeje, marque o que comeu e reutilize."), foodNav(),
+    head, h("h1", {class: "pg"}, "Nutrição"), h("p", {class: "pg-s"}, "Planeje e reutilize. Registrar o que comeu é opcional."), foodNav(),
     sumCard, goalRow, goalEd,
     C.energyOf(p).child ? h("p", {class: "note warn"}, "Para crianças e adolescentes, a meta considera o crescimento. Evite déficit calórico sem acompanhamento profissional.") : null,
     pasteNew,
@@ -2811,7 +2838,7 @@ function foodSheet(opt, done){
 function renderProfile(p){
   const e = p.energy, adult = adultOf(p), plan = p.plan;
   const days = S.lastBackup ? Math.floor((Date.now() - S.lastBackup) / DAY) : null;
-  const row = (icon, title, sub, fn, id) => h("button", {class: "prow", type: "button", onclick: fn, id}, h("span", {class: "pr-i", html: ICON[icon]}),
+  const row = (icon, title, sub, fn, id, due) => h("button", {class: "prow" + (due ? " due" : ""), type: "button", onclick: fn, id}, h("span", {class: "pr-i", html: ICON[icon]}),
     h("div", {class: "pr-m"}, h("b", null, title), h("span", null, sub)), h("span", {class: "li-go", html: ICON.right}));
   const actLabel = () => { const pick = ["fao", "media"].includes(e.method) ? e.method : "dri";
     return !adult || pick === "dri" ? C.DRI_LV[e.dri ?? 1].toLowerCase() : pick === "fao" ? C.FAO_LV[e.fao ?? 1].toLowerCase() : `${C.FAO_LV[e.fao ?? 1].toLowerCase()} / ${C.DRI_LV[e.dri ?? 1].toLowerCase()}`; };
@@ -2824,8 +2851,9 @@ function renderProfile(p){
       row("target", "Objetivos e metas", [plan.objective || "Sem objetivo", plan.target ? `${k0(plan.target)} kcal` : "sem meta"].join(" · "), () => goalSheet(p)),
       row("ruler", "Dados corporais", e.weight && e.height ? `${fq.format(e.weight)} kg · ${fq.format(e.height)} cm · ${actLabel()}` : "Peso, altura e atividade", () => bodySheet(p)),
       row("users", "Família", `${nPeople(S.patients.length)} · troque no topo da tela`, () => familySheet(), "familia"),
-      row("sliders", "Preferências", "Sugestões de refeições e objetivos, recentes", () => prefsSheet()),
-      row("lock", "Backup e segurança", days == null ? "Só neste aparelho · nenhum backup ainda" : `Só neste aparelho · backup ${days === 0 ? "hoje" : days === 1 ? "ontem" : `há ${days} dias`}`, () => backupSheet()),
+      row("sliders", "Preferências", `${tracks(p) ? "Registra o consumo" : "Só planejamento"} · sugestões e recentes`, () => prefsSheet()),
+      row("lock", "Backup e segurança", days == null ? "Só neste aparelho · nenhum backup ainda" : `Só neste aparelho · backup ${days === 0 ? "hoje" : days === 1 ? "ontem" : `há ${days} dias`}`, () => backupSheet(), null,
+        S.patients.some(x => !x.example) && (days == null || days >= 7)),
       row("book", "Como o Nutri Prático calcula", "Fórmulas, fontes e limitações", () => scienceSheet(p)))));
 }
 // Necessidade energética: resumo (protocolo, TMB, GET, IMC) e ação de usar como meta; fórmulas ficam em scienceSheet.
@@ -2910,7 +2938,12 @@ function prefsSheet(){
     const list = (key, title, defs) => h("div", null, h("div", {class: "lbl2"}, title),
       h("div", {class: "chips rm"}, S.prefs[key].map(o => h("button", {type: "button", "aria-label": `Remover ${o}`, onclick: () => { S.prefs[key] = S.prefs[key].filter(x => x !== o); save(); paint(); }}, o, h("span", {html: ICON.x, style: "display:contents"})))),
       h("button", {class: "link", type: "button", style: "margin-top:6px", onclick: () => { S.prefs[key] = [...new Set([...S.prefs[key], ...defs])]; save(); paint(); }}, "Restaurar sugestões padrão"));
-    const paint = () => put(body, list("meals", "Nomes de refeições sugeridos", DEFAULT_MEALS), list("objectives", "Objetivos sugeridos", DEFAULT_OBJ),
+    const p = active();
+    const track = () => h("div", null, h("div", {class: "lbl2"}, `Registro do que ${firstName(p.name)} comeu`),
+      h("div", {class: "seg", role: "radiogroup", "aria-label": "Registro do consumo"}, [[false, "Só planejar"], [true, "Registrar também"]].map(([v, l]) =>
+        h("button", {type: "button", role: "radio", class: tracks(p) === v ? "on" : "", "aria-checked": String(tracks(p) === v), onclick: () => { p.trackEaten = v; touch(p); paint(); }}, l))),
+      h("p", {class: "note"}, "Registrar é opcional. Com “Registrar também”, cada refeição do plano ganha um círculo para marcar o que foi comido."));
+    const paint = () => put(body, track(), list("meals", "Nomes de refeições sugeridos", DEFAULT_MEALS), list("objectives", "Objetivos sugeridos", DEFAULT_OBJ),
       h("div", {class: "lbl2"}, "Alimentos recentes"), h("button", {class: "btn ghost block", type: "button", disabled: !S.prefs.recent.length, onclick: () => { S.prefs.recent = []; save(); paint(); toast("Recentes apagados"); }},
         S.prefs.recent.length ? `Limpar ${S.prefs.recent.length} recentes` : "Nenhum recente"));
     paint();
