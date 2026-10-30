@@ -1,0 +1,290 @@
+# Nutri Prático: produto, arquitetura e evolução
+
+Documento vivo da evolução para a saúde integral. As decisões técnicas e as fórmulas ficam em `AUDITORIA.md`.
+
+**Princípio:** o app trabalha para a pessoa. Cada recurso passa por cinco perguntas:
+1. É necessário?
+2. Pode ser automático?
+3. Pode levar menos toques?
+4. Pode ficar mais claro?
+5. Traz benefício perceptível?
+
+---
+
+## 1. Diagnóstico (outubro de 2026, antes desta etapa)
+
+### Técnico
+- **Arquitetura:** app web instalável (PWA) de um arquivo, em JavaScript sem framework.
+  - Núcleo puro e testado em `fonte/core.js`; tela em `fonte/app.html`.
+  - Montagem por `fonte/build.sh`, publicação pelo GitHub Pages, funcionamento offline por service worker.
+- **Dependências:** só o leitor de rótulos (tesseract.js), hospedado com o app e carregado sob demanda. Isso é um ponto forte: leve, rápido e sem custo de servidor.
+- **Dados:** `localStorage` em um único documento JSON, com versão e cópia automática antes de cada atualização. Backup manual (arquivo ou texto).
+  - Risco 1: o iOS pode apagar os dados de um site que fica muito tempo sem uso. O app pede armazenamento persistente, mas o sistema pode negar.
+  - Risco 2: não há criptografia em repouso; o app depende da proteção do aparelho.
+- **Cálculos:** TACO 4ª ed. com medidas da POF; FAO/OMS 1985 e DRI 2005 conferidos com as fontes. Ver a seção 8.
+- **Limite estrutural:** sendo app web, não há acesso ao HealthKit (Apple Saúde), a SF Symbols nativos nem a haptics no iOS. Esses itens exigem a versão nativa (fase 2).
+
+### Experiência (UX)
+- O app era só alimentação: não havia movimento, sono nem bem-estar.
+- **Navegação redundante:** "Meu plano" e "Alimentos" eram abas separadas para a mesma tarefa (montar o plano).
+- O Início mostrava só nutrição, sem uma resposta para "qual o próximo passo".
+- O painel circular tinha 50 marcas decorativas, brilho e uma legenda que repetia o que o centro já dizia.
+- O padrão de energia era a média FAO/OMS + DRI, apresentada como se fosse um método.
+
+### Mapa de funcionalidades existentes (todas preservadas)
+- **Perfis:** família, com seletor no topo.
+- **Energia:** protocolos FAO/OMS 1985 e DRI 2005, com meta aplicável ao plano.
+- **Plano por refeições:**
+  - autocompletar, quantidades rápidas, substituições, horário com ordenação automática;
+  - copiar, colar, duplicar e mover refeições.
+- **Alimentos:** busca tolerante a erros, favoritos, recentes, meus alimentos, cadastro manual e por foto da tabela.
+- **Dados:** backup e restauração, cópias automáticas e funcionamento offline.
+
+### Riscos priorizados
+
+| Risco | Impacto | Resposta |
+|---|---|---|
+| Perda de dados pelo iOS ou ao apagar o app | Alto | Lembrete discreto de backup (feito); backup automático em nuvem só com decisão explícita (fase 3) |
+| Apresentar o planejado como consumido | Alto | Painel rotulado "planejado"; consumo será um registro separado |
+| Sugestões sem base ou com tom de cobrança | Médio | Regras explícitas e testadas, uma por vez, só com dados (seção 6) |
+| Metas adultas aplicadas a crianças | Alto | Referências por idade; sugestões automáticas só para adultos |
+| Crescer em telas e opções | Médio | Quatro abas fixas e registros em folhas de um passo |
+
+---
+
+## 2. Arquitetura de produto
+
+Quatro pilares sobre um núcleo comum: perfis, dados locais, backup e design system.
+
+| Pilar | Agora (fase 1) | Depois |
+|---|---|---|
+| **Alimentação** | Plano do dia, banco TACO, produtos por foto, metas | Refeições favoritas, planos semanais, registro do consumido |
+| **Movimento** | Registro rápido (tipo, duração, intensidade), semana × referência da OMS | Importação do Apple Saúde / Apple Watch |
+| **Sono** | Dormir e acordar, qualidade, 7 noites, regularidade | Importação do Apple Saúde |
+| **Bem-estar** | Escala de 5 pontos, energia, estresse e nota, 14 dias | Pausas guiadas curtas; fluxo próprio para crianças |
+
+**Integração sem complexidade:** os pilares se encontram em dois pontos.
+1. A tela Hoje, com um indicador por pilar.
+2. A "próxima ação", uma única sugestão escolhida por regras.
+
+Cada pilar continua simples sozinho.
+
+---
+
+## 3. Navegação (implementada)
+
+```
+Hoje         resumo integrado · próximo passo · atalhos de registro
+Alimentação  [Plano do dia | Alimentos]   ← mesma tarefa, um seletor, sem nível extra
+Saúde        Movimento · Sono · Bem-estar  (uma tela, cartões em sequência)
+Perfil       pessoa · energia e protocolo · família · dados e backup · como calcula
+```
+
+**Avaliação crítica:**
+- Juntar "Meu plano" e "Alimentos" elimina a principal redundância: o banco de alimentos existe para alimentar o plano.
+- "Saúde" reúne três registros curtos que, separados, não justificariam três abas.
+- Movimento, sono e bem-estar ficam numa só tela, sem subníveis.
+- As ações frequentes estão a no máximo um toque, nos atalhos da tela Hoje.
+- A troca de pessoa fica só no topo; editar e excluir pessoas, só no Perfil.
+
+---
+
+## 4. Plano de evolução por prioridade
+
+| Etapa | Conteúdo | Situação |
+|---|---|---|
+| A | Auditoria, arquitetura e riscos (este documento) | Feita |
+| B | Design system: tokens e componentes documentados | Feita (seção 5); modo claro preparado nos tokens, não ativado |
+| C | Navegação em quatro abas | Feita |
+| D | Hoje: painel integrado, painel nutricional refinado, atalhos, próxima ação | Feita |
+| E | Alimentação: refeições favoritas, reutilizar planos, copiar entre dias, registro do consumido | Próxima |
+| F | Movimento, sono e bem-estar: registros rápidos | Feita (versão manual) |
+| G | Qualidade: testes em aparelho real, medição de tempos, acessibilidade com VoiceOver | Contínua |
+| Fase 2 | App nativo (SwiftUI) com HealthKit, SF Symbols, haptics e dados no aparelho com criptografia | Decisão pendente |
+| Fase 3 | Assistente, recomendações, planejamento semanal, assinatura | Depois de validar uso e disposição a pagar |
+
+**Próximo passo recomendado: Etapa E.**
+- Refeições favoritas: salvar uma refeição e reaplicá-la em 1 toque.
+- Separar "planejado" de "consumido": marcar refeições como feitas, sem pesagem.
+
+Essas duas mudanças são as que mais reduzem trabalho repetitivo hoje.
+
+---
+
+## 5. Design system
+
+### Cores (tokens em `:root`)
+
+| Papel | Token | Valor |
+|---|---|---|
+| Fundo | `--bg` | `#0A0908` |
+| Superfícies 1 / 2 / 3 | `--surface`, `--surface-2`, `--surface-3` | `#191614`, `#221E1B`, `#2B2622` |
+| Texto / secundário / apagado | `--ink`, `--ink-2`, `--muted` | `#F4EEE8`, `#CDC3B9`, `#968B81` |
+| Cobre: ação principal | `--accent`, `--accent-2` | `#E08C4E`, `#F2A468` |
+| Carboidratos / proteínas / gorduras / fibras | `--carb`, `--prot`, `--fat`, `--fib` | `#E5C07C`, `#6FC4BE`, `#DE8FA4`, `#A8C98B` |
+| Movimento / sono / bem-estar | turquesa, lavanda `#A9A6E0`, champanhe | |
+
+Regras:
+- O cobre marca só a ação principal da tela e o progresso.
+- Nada de verde/vermelho para "bom/ruim" em saúde: a escala de bem-estar vai de tons frios a quentes, sem julgamento.
+
+### Tipografia
+- Família: Geist, com fallback para a fonte do sistema (SF Pro no iPhone).
+- Escala: 32 (título), 22 (folha), 16–17 (corpo/valores), 13–14 (secundário), 11–12 (rótulos).
+- Números sempre com algarismos tabulares.
+
+### Espaçamento e forma
+- Base de 4 px; margem lateral de 16 px; blocos com espaço de 12–14 px.
+- Raio de 18 px em cartões, 13–14 px em botões e campos, 24 px em folhas.
+
+### Componentes
+- `card`, `seg` (seletor segmentado), `chips`, `btn` (primary, ghost, plain, danger, sm), `sheet` (folha inferior com botão fixo no rodapé).
+- Também: `tile` (indicador), `qa` (atalho), `na` (próxima ação), `dial` (painel), `bars` (semana), `toast` com Desfazer.
+
+### Estados
+- `:focus-visible` com contorno cobre; `[disabled]` com 35% de opacidade.
+- Estado selecionado sempre preenchido em cobre.
+
+### Movimento
+- Transições de 0,2–0,26 s; o painel anima em 1,1 s.
+- Tudo é desligado com "Reduzir movimento".
+- Sem brilhos nem efeitos decorativos.
+
+### Acessibilidade
+- Alvos de toque de 36 px ou mais nos componentes novos (atalhos e abas acima de 44 px).
+- Rótulos `aria` em ícones; o painel tem uma descrição completa para leitores de tela; contraste do texto secundário de 5,0 a 6,0:1 sobre as superfícies (mínimo AA: 4,5:1).
+
+### Ícones
+- SVG de traço único (1,9 px), no estilo dos SF Symbols, sem copiá-los. Na versão nativa, serão SF Symbols.
+
+---
+
+## 6. Fluxos principais
+
+Toques medidos no simulador (iPhone 13), contados a partir da tela Hoje.
+
+| Tarefa | Fluxo | Toques |
+|---|---|---|
+| Registrar atividade | Atividade → tipo → duração → Salvar | 4 |
+| Repetir a última atividade | Atividade → Repetir hoje | 2 |
+| Registrar sono | Sono → (horários já vêm do último registro) → qualidade → Salvar | 3 |
+| Registrar bem-estar | Saúde → toque na escala | 1 (+1 para abrir a aba) |
+| Bem-estar com contexto | Bem-estar → escala → energia/estresse → Salvar | 4 |
+| Apagar um registro | × → (Desfazer em 5 s) | 1 |
+| Adicionar alimento ao plano | Alimentos → buscar → + → refeição → quantidade | 4 + digitação |
+| Cadastrar produto por foto | Alimentos → + → Escanear → foto → conferir → Salvar | 5 + foto (~3 s de leitura) |
+
+### Próxima ação (`core.nextAction`)
+No máximo uma sugestão, na ordem abaixo. A primeira regra que valer é a mostrada.
+1. Sem peso/altura: "Calcule sua meta de energia".
+2. Plano vazio: "Monte a primeira refeição".
+3. Adulto que já registra movimento, com menos de 150 min moderados/vigorosos na semana e 2 dias ou mais sem atividade: caminhada de 20 min, com o número da semana.
+4. Adulto com 5 noites ou mais registradas e horário de dormir variando mais de 60 min: regularidade.
+5. Adulto que já passou de 150 min: reconhecimento positivo.
+6. Nada se aplica: nenhum cartão. O app não inventa sugestões.
+
+Pilares que a pessoa não usa nunca geram cobrança. Para crianças, não há sugestão automática de movimento ou sono.
+
+---
+
+## 7. Plano técnico
+
+- **Dados (versão 3 do formato):** cada perfil ganha `logs`:
+  - `move`: `{id, at, date, type, min, intensity?}`;
+  - `sleep`: `{id, at, date, bed, wake, quality?}`;
+  - `mood`: `{id, at, date, time, mood 1–5, energy?, stress?, note?}`.
+- **Migração:** acréscimo de campos, sem alterar os existentes.
+  - Cópia exata em `nutripratico.v1.antes-da-v3` antes da migração.
+  - Adultos de versões anteriores mantêm `energy.method = "media"` para os números não mudarem sozinhos.
+- **Núcleo:** funções puras `dayKey`, `weekKeys`, `moveWeek`, `moveRef`, `sleepMinutes`, `sleepStats`, `sleepRef`, `nextAction`, testadas sem tela.
+- **Separação por perfil:** registros ficam dentro do perfil. Trocar de pessoa troca tudo; excluir a pessoa exclui seus registros.
+- **Fase 2 (nativo):**
+  - SwiftUI e SwiftData, com dados protegidos pelo sistema (Data Protection);
+  - HealthKit com permissão por tipo de dado; importação para os mesmos campos de `logs`, com origem marcada;
+  - o núcleo de cálculo pode ser portado e conferido contra os mesmos testes.
+- **Fase 3:** conta e sincronização só com decisão explícita (ver `AUDITORIA.md`).
+  - Consentimento do responsável para perfis de menores.
+  - Exportação e exclusão de dados (LGPD).
+
+---
+
+## 8. Cálculos: revisão desta etapa
+
+- **Equações conferidas com as fontes** (coeficientes idênticos):
+  - Schofield/FAO 1985, seis faixas por sexo;
+  - DRI 2005: EER e BEE de adultos e de 3–18 anos, com fatores de atividade por sexo e energia de crescimento.
+- **Mudança:** o padrão para adultos passou a ser a DRI 2005, e a média deixou de ser apresentada como método.
+  - Motivo: a média não é um método científico; a DRI vem de medidas com água duplamente marcada e usa idade, peso, altura e atividade.
+  - A média continua disponível, com a explicação de que serve para comparar.
+- **Limitações declaradas no app e no `AUDITORIA.md`:**
+  - DRI de peso adequado aplicada a qualquer IMC (a IOM tem equações próprias para sobrepeso, ainda não implementadas);
+  - gestação e lactação não somam energia extra;
+  - aos 18 anos, a DRI usa a equação de 9–18 anos.
+- **Referências dos novos pilares:**
+  - OMS 2020: 150–300 min/semana de atividade moderada para adultos; média de 60 min/dia de 5 a 17 anos;
+  - National Sleep Foundation 2015: horas de sono por faixa etária.
+  - São mostradas como referência populacional, nunca como meta pessoal ou diagnóstico.
+
+---
+
+## 9. Critérios de aceitação (verificáveis)
+
+- [x] Dados existentes abrem iguais depois da atualização: totais, planos, alimentos e GET (teste de ponta a ponta).
+- [x] Cópia exata antes da migração (teste).
+- [x] Quatro abas; nenhuma funcionalidade anterior perdida (plano, alimentos, foto, perfis, backup).
+- [x] Registrar atividade em até 4 toques; repetir em 2; bem-estar em 1 na aba Saúde (medido).
+- [x] Todo registro pode ser desfeito ou apagado com Desfazer.
+- [x] Próxima ação: no máximo uma, nunca para pilar não usado, nunca para crianças nos novos pilares (testes do núcleo).
+- [x] Painel mostra "planejado" e meta; % de Atwater somam 100 (testes).
+- [x] Sem rolagem horizontal em 320 px; sem erros de JavaScript (teste em iPhone SE simulado).
+- [x] Backup e restauração levam os novos registros (teste).
+- [ ] Medição em iPhone real: abertura, rolagem, teclado, seletor de hora, VoiceOver.
+- [ ] Testes de usabilidade com pessoas (tempo e conclusão por tarefa; seção 10).
+
+---
+
+## 10. Indicadores para validar o diferencial
+
+| Indicador | Como medir | Meta inicial (hipótese) |
+|---|---|---|
+| Tempo para registrar atividade, sono e bem-estar | Cronômetro em teste moderado, 5–8 pessoas | < 10 s cada |
+| Tempo para montar uma refeição habitual | Idem | < 60 s; < 10 s com refeições favoritas (etapa E) |
+| Tempo para cadastrar produto por foto | Idem | < 45 s, incluindo a conferência |
+| Correções na leitura de rótulos | Campos alterados ÷ campos lidos | < 10% |
+| Conclusão de tarefa sem ajuda | Teste moderado | > 90% |
+| Erros de navegação | Toques em lugar errado antes de achar a função | < 1 por tarefa |
+| Uso voluntário | Dias com registro por semana (local, sem envio) | Acompanhar, sem meta |
+| Facilidade percebida | SEQ (1–7) por tarefa | ≥ 6 |
+
+Os números de toques da seção 6 foram medidos no simulador. O tempo real precisa de pessoas e de aparelhos reais. Não há métricas de uso coletadas: o app não envia dados.
+
+**Medição já disponível:** a abertura do app levou ~110 ms até a tela montada (DOMContentLoaded) no simulador. Ainda falta medir em aparelho real.
+
+---
+
+## 11. Modelo comercial (proposta, não implementada)
+
+- **Gratuito:** perfil individual, plano do dia, banco TACO, cadastro manual, registros de movimento, sono e bem-estar, backup.
+- **Premium:**
+  - leitura de rótulos ilimitada;
+  - planejamento semanal e refeições favoritas;
+  - importação do Apple Saúde;
+  - tendências de 90 dias;
+  - família com mais de 2 perfis;
+  - sincronização entre aparelhos.
+- **Validação antes de preço:**
+  - entrevistas e uma página de interesse;
+  - teste de disposição a pagar (Van Westendorp) com usuários ativos;
+  - nada essencial bloqueado até lá.
+
+---
+
+## 12. Registro de alterações
+
+- **v4 do app (formato de dados v3):** abas Hoje / Alimentação / Saúde / Perfil; tela Hoje integrada com próxima ação e atalhos.
+  - Movimento, sono e bem-estar com registros rápidos, Desfazer e histórico.
+  - Painel nutricional sem marcas decorativas, brilho e legenda.
+  - Protocolo padrão DRI 2005 com limitações explicadas.
+  - Migração com cópia; 24 testes do núcleo.
+- **v3:** painel circular, cadastro por foto da tabela, protocolo escolhível, biblioteca com origem do dado.
+- **v2:** núcleo testado, família, substituições, busca tolerante, backup.

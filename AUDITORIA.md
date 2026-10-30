@@ -1,4 +1,6 @@
-# Nutri Prático: auditoria técnica (v3)
+# Nutri Prático: auditoria técnica (v4)
+
+Produto, navegação, roadmap e design system: ver `PRODUTO.md`.
 
 Documento de referência da evolução para o planejador alimentar pessoal e familiar.
 
@@ -23,6 +25,11 @@ O app funciona sem internet (service worker em `docs/sw.js`) e não depende de s
 - **Antes de restaurar um backup:** o estado atual é guardado em `nutripratico.v1.antes-de-restaurar`.
 - **Gravação:** ocorre a cada alteração (com intervalo de 250 ms), ao sair da página e ao trocar de app.
 - **Backups aceitos:** os da v1, v2 e v3.
+- **Formato de dados v3 (app v4):**
+  - cada perfil ganha `logs.move`, `logs.sleep` e `logs.mood` (movimento, sono e bem-estar);
+  - antes de migrar, guarda uma cópia exata em `nutripratico.v1.antes-da-v3`;
+  - adultos vindos de versões anteriores recebem `energy.method = "media"`, o padrão antigo, para os números não mudarem sozinhos;
+  - testado: mesmos totais, planos, alimentos e GET.
 - **v3 sem migração:** a v3 lê os dados da v2 sem alterá-los (testado: mesmos perfis, alimentos e totais). Campos novos são opcionais:
   - `energy.method` (`media`, `fao` ou `dri`): protocolo escolhido para adultos;
   - posição 9 de um alimento próprio: `{brand, portion:{amount, unit, label}, extra:{sugar, addedSugar, satFat, transFat, sodium}, source:"manual"|"rotulo"}`.
@@ -50,7 +57,12 @@ O app funciona sem internet (service worker em `docs/sw.js`) e não depende de s
   - EER e BEE para adultos (19 anos ou mais).
   - EER para 3–18 anos, com energia de crescimento: +20 kcal (3–8 anos) e +25 kcal (9–18 anos).
 - **Resultado exibido:**
-  - **Adultos:** média dos dois protocolos (padrão, comportamento preservado da v1). Na v3 é possível escolher usar só FAO/OMS 1985 ou só DRI 2005; as equações não mudaram.
+  - **Adultos:** DRI 2005 por padrão desde a v4. A média dos dois protocolos não é um método científico próprio: continua disponível para comparação, e perfis anteriores à v4 seguem nela até a pessoa escolher outro protocolo. As equações não mudaram.
+  - **Revisão v4:** coeficientes de Schofield (FAO/OMS 1985) e de EER/BEE (DRI 2005) conferidos com as fontes, sem divergência.
+  - **Limitações conhecidas:**
+    - a DRI de peso adequado é usada em qualquer IMC (a IOM tem equações próprias para sobrepeso, ainda não implementadas);
+    - gestação e lactação não somam energia;
+    - aos 18 anos vale a equação DRI de 9–18 anos.
   - **Menores de 18 anos (mudança justificada):** só a DRI 2005. Os fatores de atividade da FAO/OMS 1985 foram definidos para adultos, e a DRI inclui a energia de crescimento. A v1 fazia a média também para crianças.
   - **Menores de 3 anos:** só a TMB, sem GET.
 - **Meta do plano:** o botão "Usar X kcal como meta do plano" copia o GET do protocolo escolhido; a meta pode ser editada no plano.
@@ -89,7 +101,21 @@ Ficam em `core.substitutes` e `core.equivalent`.
 - **Arredondamento:** frações de ¼ na medida caseira, ou múltiplos de 5 g. Quando a medida ficaria abaixo de ½, usa gramas.
 - **Antes de confirmar:** o app mostra a quantidade e o impacto no plano (kcal antes e depois), com um aviso de que equivalência em um critério não significa equivalência nutricional.
 
-## 4. Testes automatizados (21, todos passando)
+### Movimento, sono e bem-estar (`core.js`)
+- **Movimento:**
+  - soma da semana de segunda a domingo;
+  - atividade "leve" fica fora da comparação com a OMS 2020 (150–300 min/semana moderada para adultos; média de 60 min/dia de 5 a 17 anos);
+  - minutos vigorosos não são dobrados (simplificação conservadora);
+  - o app não converte atividade em calorias.
+- **Sono:**
+  - duração com virada da meia-noite;
+  - média das últimas 7 noites;
+  - regularidade = desvio padrão do horário de deitar (contado a partir do meio-dia), com 3 noites ou mais;
+  - referência por idade: National Sleep Foundation, 2015.
+- **Bem-estar:** escala de 5 pontos, sem cálculo nem inferência.
+- **Próxima ação:** regras fixas em `nextAction`, documentadas em `PRODUTO.md`. No máximo uma; nunca para pilar não usado nem para crianças.
+
+## 4. Testes automatizados (24, todos passando)
 
 1. Idade completa com a data de aniversário.
 2. TMB e GET da FAO/OMS 1985 para adultos.
@@ -111,9 +137,23 @@ Ficam em `core.substitutes` e `core.equivalent`.
 18. Foto real do rótulo dá o mesmo resultado do arquivo digital.
 19. Nada é inventado: campo ausente fica vazio e sinalizado.
 20. Energia incoerente com 4/4/9 é sinalizada.
-21. Escolha do protocolo de energia (média, FAO ou DRI; crianças sempre DRI).
+21. Escolha do protocolo de energia (DRI por padrão, média ou FAO quando escolhidas; crianças sempre DRI).
+22. Semana de movimento (segunda a domingo, atividade leve fora da referência) e referências por idade.
+23. Sono: duração atravessando a meia-noite, regularidade, poucas noites sem conclusão, referências por idade.
+24. Próxima ação: uma por vez, só com dados, nenhuma para pilar não usado nem para crianças.
 
-Testes de ponta a ponta no navegador (iPhone 13 e iPhone SE simulados):
+Testes de ponta a ponta da v4 (iPhone 13 e SE simulados):
+- **Migração:** dados da versão anterior abertos com totais, planos, alimentos e GET iguais; cópia antes-da-v3 idêntica.
+- **Registros:**
+  - atividade em 4 toques, repetir em 2, sono em 3, bem-estar em 1 na aba Saúde;
+  - Desfazer após registrar e após apagar.
+- **Próxima ação:** aparece só com dados (regularidade do sono, plano vazio).
+- **Crianças:** sem bem-estar nem sugestões adultas.
+- **Navegação:** adicionar alimento pela aba Alimentos leva ao plano.
+- **Backup:** restauração com os registros; nada se perde ao recarregar.
+- **Tela:** sem rolagem horizontal em 320 px.
+
+Testes de ponta a ponta da v3 (iPhone 13 e iPhone SE simulados):
 - **Dados da v2 na v3:** mesmos perfis, alimentos e totais, sem alteração no conteúdo salvo.
 - **Painel:** anel externo igual a planejado ÷ meta; arcos internos iguais aos % de Atwater; toque em cada macro; estado acima da meta.
 - **Família:** troca pelo seletor do topo; edição e inclusão no Perfil; criança sem seletor de protocolo.

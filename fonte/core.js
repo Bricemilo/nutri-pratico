@@ -210,9 +210,10 @@
     const fa = FAO_FA[profile.sex][e.fao ?? 1];
     const fao = {tmb: f.v, fa, get: f.v * fa, coef: f.coef, cons: f.cons, range: f.range, adultOnly: age < 18};
     const dri = driCalc(profile.sex, age, W, Hc, e.dri ?? 1);
-    // Adultos escolhem: média (padrão), só FAO/OMS 1985 ou só DRI 2005.
+    // Adultos escolhem o protocolo. Padrão: DRI 2005 (equação única, derivada de água duplamente marcada,
+    // usa idade, peso, altura e atividade). A média FAO/OMS + DRI continua disponível quando escolhida.
     let tmb, get, method;
-    const pick = METHODS.includes(e.method) ? e.method : "media";
+    const pick = METHODS.includes(e.method) ? e.method : "dri";
     if (age < 18 && dri) { tmb = dri.tmb; get = dri.get; method = "dri"; }
     else if (dri && pick === "fao") { tmb = fao.tmb; get = fao.get; method = "fao"; }
     else if (dri && pick === "dri") { tmb = dri.tmb; get = dri.get; method = "dri"; }
@@ -383,6 +384,74 @@
     return {basis, portion, per100, found, flags, unitMl: !!(portion && portion.unit === "ml")};
   }
 
-  return {norm, normCh, words, parseLabel, friendly, createFoodDB, searchFoods, within1, measureOf, calcItem, sum, mealTotal, planTotal, macroSplit,
+  /* ---------- movimento, sono e bem-estar ----------
+     Datas como "AAAA-MM-DD" no horário local. Nada aqui é diagnóstico: são somas, médias e referências populacionais. */
+  const pad = n => String(n).padStart(2, "0");
+  const dayKey = (d = new Date()) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const keyDate = k => { const [y, m, d] = k.split("-").map(Number); return new Date(y, m - 1, d, 12); };
+  const addDays = (k, n) => { const d = keyDate(k); d.setDate(d.getDate() + n); return dayKey(d); };
+  const daysBetween = (a, b) => Math.round((keyDate(b) - keyDate(a)) / 864e5);
+  // Semana de segunda a domingo que contém o dia informado.
+  function weekKeys(today){ const wd = (keyDate(today).getDay() + 6) % 7, mon = addDays(today, -wd); return [0, 1, 2, 3, 4, 5, 6].map(i => addDays(mon, i)); }
+  const toMin = t => { const m = /^(\d{1,2}):(\d{2})$/.exec(t || ""); return m ? +m[1] * 60 + +m[2] : null; };
+
+  // Minutos de atividade na semana. "Leve" não entra na comparação com a referência da OMS (moderada ou vigorosa);
+  // minutos vigorosos não são dobrados (simplificação conservadora).
+  function moveWeek(list, today){
+    const keys = weekKeys(today), days = keys.map(k => ({key: k, min: 0, mv: 0}));
+    for (const e of list || []){ const d = days.find(x => x.key === e.date); if (d && e.min > 0){ d.min += e.min; if (e.intensity !== "leve") d.mv += e.min; } }
+    const last = (list || []).filter(e => e.date <= today).map(e => e.date).sort().pop() || null;
+    return {days, total: days.reduce((a, d) => a + d.min, 0), mv: days.reduce((a, d) => a + d.mv, 0), activeDays: days.filter(d => d.min > 0).length,
+      last, sinceLast: last ? daysBetween(last, today) : null};
+  }
+  // Referência por idade (OMS 2020, diretrizes de atividade física). Abaixo de 5 anos não há meta numérica no app.
+  function moveRef(age){
+    if (age == null || age < 5) return null;
+    if (age < 18) return {perDay: 60, week: 420, text: "OMS 2020: média de 60 minutos por dia de atividade moderada a vigorosa, de 5 a 17 anos."};
+    return {week: 150, upper: 300, text: "OMS 2020: 150 a 300 minutos por semana de atividade moderada (ou 75 a 150 de vigorosa) para adultos."};
+  }
+
+  // Duração do sono em minutos; a hora de acordar pode ser no dia seguinte.
+  function sleepMinutes(bed, wake){ const b = toMin(bed), w = toMin(wake); if (b == null || w == null) return null; let d = w - b; if (d <= 0) d += 1440; return d; }
+  // Últimas n noites (chave = dia em que acordou). Regularidade: desvio padrão do horário de deitar, com 3 noites ou mais.
+  function sleepStats(list, today, n = 7){
+    const keys = Array.from({length: n}, (_, i) => addDays(today, i - n + 1));
+    const nights = keys.map(k => { const e = (list || []).find(x => x.date === k); return {key: k, min: e ? sleepMinutes(e.bed, e.wake) : null, q: e ? e.quality ?? null : null}; });
+    const got = nights.filter(x => x.min != null), cnt = got.length;
+    const avg = cnt ? got.reduce((a, x) => a + x.min, 0) / cnt : null;
+    // horário de deitar contado a partir do meio-dia: 23:30 e 00:30 ficam a 60 min um do outro
+    const beds = keys.map(k => (list || []).find(x => x.date === k)).filter(Boolean).map(e => { const m = toMin(e.bed); return m == null ? null : (m < 720 ? m + 1440 : m); }).filter(m => m != null);
+    let bedSD = null;
+    if (beds.length >= 3){ const mu = beds.reduce((a, b) => a + b, 0) / beds.length; bedSD = Math.sqrt(beds.reduce((a, b) => a + (b - mu) ** 2, 0) / beds.length); }
+    const lastE = (list || []).filter(e => e.date <= today).sort((a, b) => a.date < b.date ? 1 : -1)[0] || null;
+    return {nights, count: cnt, avg, bedSD, last: lastE ? {date: lastE.date, min: sleepMinutes(lastE.bed, lastE.wake), quality: lastE.quality ?? null} : null};
+  }
+  // Duração recomendada (National Sleep Foundation, 2015). Abaixo de 3 anos inclui cochilos: sem referência no app.
+  function sleepRef(age){
+    if (age == null || age < 3) return null;
+    const r = age < 6 ? [10, 13] : age < 14 ? [9, 11] : age < 18 ? [8, 10] : age < 65 ? [7, 9] : [7, 8];
+    return {lo: r[0] * 60, hi: r[1] * 60, text: `National Sleep Foundation (2015): ${r[0]} a ${r[1]} horas por noite nessa idade.`};
+  }
+
+  /* Próxima ação: no máximo uma sugestão, só com dados suficientes, nunca diagnóstico.
+     Pilares de movimento e sono só geram sugestão para quem já começou a registrá-los, e só para adultos. */
+  function nextAction(c){
+    if (!c.energyOk) return {id: "meta", tone: "start", title: "Calcule sua meta de energia", text: "Com peso e altura, o app estima o seu gasto diário.", go: "perfil"};
+    if (!c.hasPlan) return {id: "plano", tone: "start", title: "Monte a primeira refeição", text: "Comece pela refeição que você repete mais.", go: "plano"};
+    const adult = c.age != null && c.age >= 18;
+    if (adult && c.move && c.move.count > 0){
+      const w = c.move.week;
+      if (w.mv < 150 && (w.sinceLast == null || w.sinceLast >= 2))
+        return {id: "mover", tone: "suggest", title: "Uma caminhada de 20 minutos hoje?", text: `Nesta semana: ${w.mv} de 150 minutos da referência da OMS.`, go: "mover"};
+    }
+    if (adult && c.sleep && c.sleep.count > 0 && c.sleep.stats.count >= 5 && c.sleep.stats.bedSD > 60)
+      return {id: "regular", tone: "suggest", title: "Deitar perto do mesmo horário", text: `Nos últimos 7 dias, o horário de dormir variou cerca de ${Math.round(c.sleep.stats.bedSD)} minutos para mais ou para menos.`, go: "sono"};
+    if (adult && c.move && c.move.count > 0 && c.move.week.mv >= 150)
+      return {id: "mover-ok", tone: "good", title: `${c.move.week.mv} minutos de movimento nesta semana`, text: "Você já alcançou a referência da OMS para adultos.", go: "mover"};
+    return null;
+  }
+
+  return {dayKey, addDays, weekKeys, moveWeek, moveRef, sleepMinutes, sleepStats, sleepRef, nextAction,
+    norm, normCh, words, parseLabel, friendly, createFoodDB, searchFoods, within1, measureOf, calcItem, sum, mealTotal, planTotal, macroSplit,
     ageOf, FAO_LV, FAO_FA, faoTMB, DRI_LV, driCalc, energyOf, roleOf, roundQty, equivalent, substitutes, CRITERIA, NO_DATA};
 });

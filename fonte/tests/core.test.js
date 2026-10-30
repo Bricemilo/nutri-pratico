@@ -40,8 +40,9 @@ test("DRI 2005: crianças e adolescentes incluem energia de crescimento", () => 
 });
 
 test("média dos protocolos para adultos; só DRI abaixo de 18 anos", () => {
-  const adult = C.energyOf({sex: "M", birth: "1994-06-15", energy: {weight: 70, height: 175, fao: 1, dri: 1}}, NOW);
+  const adult = C.energyOf({sex: "M", birth: "1994-06-15", energy: {weight: 70, height: 175, fao: 1, dri: 1, method: "media"}}, NOW);
   assert.equal(adult.method, "media");
+  assert.equal(C.energyOf({sex: "M", birth: "1994-06-15", energy: {weight: 70, height: 175, fao: 1, dri: 1}}, NOW).method, "dri");   // padrão: DRI 2005
   near(adult.get, (adult.fao.get + adult.dri.get) / 2);
   near(adult.tmb, (adult.fao.tmb + adult.dri.tmb) / 2);
   const kid = C.energyOf({sex: "F", birth: "2019-05-05", energy: {weight: 24, height: 122, fao: 1, dri: 1}}, NOW);
@@ -189,7 +190,7 @@ test("energia incoerente com os macronutrientes é sinalizada", () => {
 
 test("método de energia escolhido para adultos; crianças sempre DRI", () => {
   const base = {sex: "M", birth: "1994-06-15", energy: {weight: 70, height: 175, fao: 1, dri: 1}};
-  const media = C.energyOf(base, NOW);
+  const media = C.energyOf({...base, energy: {...base.energy, method: "media"}}, NOW);
   const fao = C.energyOf({...base, energy: {...base.energy, method: "fao"}}, NOW);
   const dri = C.energyOf({...base, energy: {...base.energy, method: "dri"}}, NOW);
   assert.equal(fao.method, "fao"); near(fao.get, media.fao.get); near(fao.tmb, media.fao.tmb);
@@ -197,4 +198,46 @@ test("método de energia escolhido para adultos; crianças sempre DRI", () => {
   near(media.get, (fao.get + dri.get) / 2);
   const kid = C.energyOf({sex: "F", birth: "2019-05-05", energy: {weight: 24, height: 122, method: "fao"}}, NOW);
   assert.equal(kid.method, "dri");
+});
+
+test("movimento: semana de segunda a domingo, leve fora da referência", () => {
+  const log = [{date: "2026-10-26", min: 30, intensity: "moderada"}, {date: "2026-10-28", min: 45, intensity: "vigorosa"},
+    {date: "2026-10-29", min: 20, intensity: "leve"}, {date: "2026-10-25", min: 60}, {date: "2026-11-02", min: 50}];
+  const w = C.moveWeek(log, "2026-10-30");   // sexta-feira
+  assert.deepEqual(w.days.map(d => d.key), ["2026-10-26", "2026-10-27", "2026-10-28", "2026-10-29", "2026-10-30", "2026-10-31", "2026-11-01"]);
+  assert.equal(w.total, 95); assert.equal(w.mv, 75); assert.equal(w.activeDays, 3);
+  assert.equal(w.last, "2026-10-29"); assert.equal(w.sinceLast, 1);
+  assert.equal(C.moveRef(40).week, 150); assert.equal(C.moveRef(10).perDay, 60); assert.equal(C.moveRef(3), null);
+});
+
+test("sono: duração atravessa a meia-noite; regularidade pelo horário de deitar", () => {
+  assert.equal(C.sleepMinutes("23:30", "07:00"), 450);
+  assert.equal(C.sleepMinutes("01:15", "08:45"), 450);
+  assert.equal(C.sleepMinutes("22:00", "22:00"), 1440);
+  assert.equal(C.sleepMinutes("", "07:00"), null);
+  const regular = ["23:00", "23:30", "00:00", "23:15", "23:45"].map((b, i) => ({date: C.addDays("2026-10-30", -i), bed: b, wake: "07:00"}));
+  const s = C.sleepStats(regular, "2026-10-30");
+  assert.equal(s.count, 5); assert.ok(s.bedSD < 25, "23:00–00:00 é regular (" + s.bedSD + ")");
+  assert.equal(s.nights.length, 7); assert.equal(s.last.date, "2026-10-30");
+  const irregular = ["21:30", "02:00", "22:00", "01:30", "23:00"].map((b, i) => ({date: C.addDays("2026-10-30", -i), bed: b, wake: "08:00"}));
+  assert.ok(C.sleepStats(irregular, "2026-10-30").bedSD > 60);
+  assert.equal(C.sleepStats([{date: "2026-10-30", bed: "23:00", wake: "07:00"}], "2026-10-30").bedSD, null);   // poucas noites: sem regularidade
+  assert.deepEqual([C.sleepRef(30).lo, C.sleepRef(30).hi], [420, 540]); assert.equal(C.sleepRef(70).hi, 480); assert.equal(C.sleepRef(2), null);
+});
+
+test("próxima ação: uma por vez, só com dados, nada para crianças nos novos pilares", () => {
+  const today = "2026-10-30";
+  const move = (list) => ({count: list.length, week: C.moveWeek(list, today)});
+  const sleep = (list) => ({count: list.length, stats: C.sleepStats(list, today)});
+  assert.equal(C.nextAction({energyOk: false, hasPlan: false, age: 40}).id, "meta");
+  assert.equal(C.nextAction({energyOk: true, hasPlan: false, age: 40}).id, "plano");
+  assert.equal(C.nextAction({energyOk: true, hasPlan: true, age: 40, move: move([]), sleep: sleep([])}), null);   // sem registros: sem cobrança
+  const pouco = [{date: "2026-10-27", min: 30}];
+  assert.equal(C.nextAction({energyOk: true, hasPlan: true, age: 40, move: move(pouco)}).id, "mover");
+  assert.equal(C.nextAction({energyOk: true, hasPlan: true, age: 40, move: move([{date: "2026-10-29", min: 30}])}), null);   // ativo ontem
+  assert.equal(C.nextAction({energyOk: true, hasPlan: true, age: 10, move: move(pouco)}), null);   // criança: sem meta adulta
+  const muito = [{date: "2026-10-26", min: 90}, {date: "2026-10-28", min: 70}];
+  assert.equal(C.nextAction({energyOk: true, hasPlan: true, age: 40, move: move(muito)}).id, "mover-ok");
+  const irregular = ["21:30", "02:00", "22:00", "01:30", "23:00"].map((b, i) => ({date: C.addDays(today, -i), bed: b, wake: "08:00"}));
+  assert.equal(C.nextAction({energyOk: true, hasPlan: true, age: 40, move: move(muito), sleep: sleep(irregular)}).id, "regular");
 });
