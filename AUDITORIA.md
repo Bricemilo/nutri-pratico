@@ -24,6 +24,10 @@ O app funciona sem internet (service worker em `docs/sw.js`) e não depende de s
 - **Migração:** ao abrir a v2 pela primeira vez, uma cópia exata do conteúdo anterior é guardada em `nutripratico.v1.antes-da-v2`. O botão Backup oferece "Voltar à cópia de antes da atualização".
 - **Antes de restaurar um backup:** o estado atual é guardado em `nutripratico.v1.antes-de-restaurar`.
 - **Gravação:** ocorre a cada alteração (com intervalo de 250 ms), ao sair da página e ao trocar de app.
+- **Falha de gravação (v4.2):** se o armazenamento recusar (cheio ou bloqueado), aparece um aviso fixo com atalho para backup, e o app tenta gravar de novo a cada 5 s. Antes, a falha era silenciosa.
+- **Duas janelas (v4.2):** alterações gravadas por outra janela do app são recarregadas (evento `storage`), em vez de sobrescritas pela cópia antiga em memória.
+- **Restauração (v4.2):** grava o backup antes de mexer na memória. Se a gravação falhar, nada é alterado e a tela diz isso; antes, anunciava "Backup restaurado" e removia da memória os alimentos próprios.
+- **Privacidade:** os dados ficam só no aparelho, sem criptografia própria; a tela de backup avisa que o arquivo contém dados de saúde da família. Bloqueio por Face ID e criptografia em repouso dependem da versão nativa.
 - **Backups aceitos:** os da v1, v2 e v3.
 - **Formato de dados v3 (app v4):**
   - cada perfil ganha `logs.move`, `logs.sleep` e `logs.mood` (movimento, sono e bem-estar);

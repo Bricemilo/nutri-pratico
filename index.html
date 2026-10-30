@@ -12,7 +12,7 @@
   --bg:#0A0908; --surface:#191614; --surface-2:#221E1B; --surface-3:#2B2622;
   --ink:#F4EEE8; --ink-2:#CDC3B9; --muted:#968B81; --line:#2D2824; --line-2:#3B352F;
   --accent:#E08C4E; --accent-2:#F2A468; --accent-ink:#1C0E05; --accent-soft:#2F1E12; --accent-line:#6B4226;
-  --carb:#E5C07C; --prot:#6FC4BE; --fat:#DE8FA4; --fib:#A8C98B; --danger:#FF7D74; --danger-soft:#33191A; --ok:#8FCB9B;
+  --carb:#E5C07C; --prot:#6FC4BE; --fat:#DE8FA4; --fib:#A8C98B; --move:#6FC4BE; --sleep:#A9A6E0; --mood:#E5C07C; --danger:#FF7D74; --danger-soft:#33191A; --ok:#8FCB9B;
   --hero-1:#2E1D11; --hero-2:#181513; --scrim:rgba(0,0,0,.62); --shadow:0 14px 36px rgba(0,0,0,.5);
   --font:"Geist",-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
   --r:18px; --tabbar:64px;
@@ -67,7 +67,6 @@ h2.sec{font-size:13px;font-weight:650;letter-spacing:.08em;text-transform:upperc
 .eyebrow{font-size:11px;font-weight:650;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .stack{display:flex;flex-direction:column;gap:14px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
-.card-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:12px}
 .card-t{font-weight:620;font-size:16.5px;letter-spacing:-.01em}
 .hero{background:linear-gradient(155deg,var(--hero-1),var(--hero-2) 72%);border:1px solid var(--accent-line)}
 .note{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.5}
@@ -141,8 +140,6 @@ h2.sec{font-size:13px;font-weight:650;letter-spacing:.08em;text-transform:upperc
 .li-t{font-weight:560;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .li-t b{color:var(--accent-2);font-weight:inherit}
 .li-s{color:var(--muted);font-size:13px;margin-top:1px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.li-r{text-align:right;white-space:nowrap;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
-.li-r b{display:block;color:var(--ink);font-weight:600;font-size:15px}
 .check{display:grid;width:22px;height:22px;color:var(--accent-2);flex:none}
 .check svg{width:22px;height:22px}
 .li > svg,.li-go svg,.li > span[style] > svg{width:18px;height:18px;color:var(--muted);flex:none}
@@ -152,10 +149,6 @@ h2.sec{font-size:13px;font-weight:650;letter-spacing:.08em;text-transform:upperc
 .empty b{display:block;color:var(--ink);font-size:17px;margin-bottom:6px}
 
 /* Totais: nome do macro colorido, gramas e % na 1ª linha, g/kg na 2ª; fibras numa linha própria */
-.tot-top{display:flex;align-items:center;gap:10px}
-.tot-kcal{display:flex;align-items:baseline;gap:7px;flex:1;min-width:0}
-.tot-kcal b{font-size:34px;font-weight:640;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
-.tot-kcal span{color:var(--muted);font-size:13.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
 .pill{font-size:12px;font-weight:650;padding:4px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent-2);border:1px solid var(--accent-line);font-variant-numeric:tabular-nums;white-space:nowrap}
 .mwrap{margin-top:12px;padding-top:12px;border-top:1px solid var(--line-2)}
 .mgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
@@ -197,16 +190,12 @@ h2.sec{font-size:13px;font-weight:650;letter-spacing:.08em;text-transform:upperc
 .hello h1{margin:0 0 4px}
 .goal{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .goal span{font-size:12.5px;font-weight:600;padding:5px 11px;border-radius:999px;background:var(--surface);border:1px solid var(--line);color:var(--ink-2)}
-.dmeals .li-t{font-size:15.5px}
-.dmeals .tm{width:46px;font-size:13.5px;font-weight:600;color:var(--accent-2);font-variant-numeric:tabular-nums;flex:none}
 .cta{display:flex;align-items:center;gap:14px}
 .cta .ic{width:42px;height:42px;border-radius:12px;background:var(--accent-soft);color:var(--accent-2);display:grid;place-items:center;flex:none}
 .cta .ic svg{width:20px;height:20px}
 .cta div{flex:1;min-width:0;font-size:13.5px;color:var(--muted)}
 .cta b{display:block;color:var(--ink);font-size:15.5px;font-weight:600;margin-bottom:1px}
 .goal button{font-size:12.5px;font-weight:600;padding:5px 11px;border-radius:999px;background:var(--accent-soft);border:1px solid var(--accent-line);color:var(--accent-2);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
-.sec-h h2.sec{margin-right:0}
 .link{font-size:13.5px;font-weight:600;color:var(--accent-2);padding:6px 2px}
 .quiet{display:block;margin:26px auto 0;padding:8px 12px;font-size:12.5px;color:var(--muted);text-align:center;text-wrap:balance}
 .quiet svg{width:13px;height:13px;vertical-align:-2px;margin-right:6px}
@@ -244,7 +233,6 @@ h2.sec{font-size:13px;font-weight:650;letter-spacing:.08em;text-transform:upperc
 .dial-d b{font-weight:650}
 .dial-d .nw{white-space:nowrap}
 .dial .miss{text-align:center}
-.dial-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:-4px 2px 4px}
 .dial.compact .dial-wrap{width:min(100%,236px)}
 .dial.compact .dial-k{font-size:40px}
 .dial.compact .dial-c{inset:20%}
@@ -443,18 +431,12 @@ h2.sec .sec-n{float:right;letter-spacing:.02em;text-transform:none;font-weight:5
 .done[disabled]{opacity:.3}
 .mh .done{margin-right:-2px}
 .eat{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
-.eat-h{display:flex;align-items:baseline;gap:8px;font-size:12.5px;color:var(--muted)}
-.eat-h b{font-size:15px;color:var(--ink);font-weight:650;font-variant-numeric:tabular-nums}
-.eat-n{margin-left:auto;font-variant-numeric:tabular-nums}
-.eat-bar{height:5px;border-radius:3px;background:var(--surface-3);margin:8px 0 4px;overflow:hidden}
-.eat-bar i{display:block;height:100%;background:var(--ok);border-radius:3px;transition:width .4s}
 .eat-r{display:flex;align-items:center;gap:10px;padding:5px 0}
 .eat-m{flex:1;min-width:0;display:flex;align-items:baseline;gap:10px;text-align:left;padding:6px 0;font-size:14.5px}
 .eat-m .tm{width:42px;flex:none;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
 .eat-m .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:550}
 .eat-m .kc{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
 .eat-r.on .nm{color:var(--ink-2)}
-.eat-x{margin:6px 0 0;font-size:11.5px;color:var(--muted);line-height:1.45}
 .favs{margin-top:16px}
 .favs-h{display:flex;align-items:baseline;justify-content:space-between;margin:0 2px 8px}
 .favs-l{display:flex;flex-direction:column;gap:6px}
@@ -462,15 +444,65 @@ h2.sec .sec-n{float:right;letter-spacing:.02em;text-transform:none;font-weight:5
 .fav svg{width:16px;height:16px;color:var(--accent-2);flex:none}
 .fav .nm{flex:1;min-width:0;font-weight:560;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .fav .kc{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
-/* Hoje */
-.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
-.tiles.two{grid-template-columns:repeat(2,minmax(0,1fr))}
-.tile{display:flex;flex-direction:column;gap:2px;padding:12px;border-radius:16px;background:var(--surface);border:1px solid var(--line);text-align:left;min-width:0}
+/* Hoje: cockpit */
+.today{margin:6px 2px 12px;font-size:13.5px;color:var(--muted);font-weight:500}
+.today::first-letter{text-transform:uppercase}
+.cockpit{background:var(--surface);border-radius:22px;overflow:hidden}
+.ck-nut{display:grid;grid-template-columns:132px minmax(0,1fr);gap:16px;align-items:center;width:100%;padding:16px 16px 12px;text-align:left}
+.dial-wrap.mini{width:132px}
+.dial-wrap.mini .dial-c{inset:22%}
+.dial-wrap.mini .dial-k{font-size:27px;letter-spacing:-.04em}
+.dial-wrap.mini .dial-m{font-size:11px;margin-top:2px}
+.ck-st{display:flex;flex-direction:column;gap:9px;min-width:0}
+.ck-row{display:grid;grid-template-columns:10px auto 1fr;grid-template-rows:auto auto;column-gap:7px;align-items:baseline}
+.ck-row i{grid-row:1;align-self:center;width:10px;height:4px;border-radius:2px}
+.ck-row span{font-size:12.5px;color:var(--muted)}
+.ck-row b{grid-column:3;justify-self:end;font-size:19px;font-weight:650;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.ck-row small{grid-column:2/4;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.rk-p{background:color-mix(in srgb,var(--accent) 38%,transparent)} .rk-e{background:var(--accent)}
+.ck-mac{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding-top:9px;border-top:1px solid var(--line);font-size:13px;color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ck-mac b{font-weight:700;margin-right:3px}
+.ck-mac small{display:block;color:var(--muted);font-size:10.5px;font-weight:500;margin-top:1px;overflow:hidden;text-overflow:ellipsis}
+.ck-row b em{font-style:normal;font-size:11.5px;font-weight:500;color:var(--muted);letter-spacing:0}
+.ck-empty{display:flex;align-items:center;gap:13px;width:100%;padding:16px;text-align:left;font-size:13px;color:var(--muted)}
+.ck-empty b{display:block;color:var(--ink);font-size:15.5px;font-weight:600;margin-bottom:2px}
+.ck-empty > div{flex:1;min-width:0}
+.ck-meals{padding:2px 16px 8px}
+.ck-meals .eat-r{padding:2px 0}
+.ck-meals .link.sm{font-size:12.5px;padding:4px 0 2px 40px}
+.ck-done{display:flex;align-items:center;gap:8px;padding:8px 0;font-size:13.5px;color:var(--ok)}
+.ck-done svg{width:16px;height:16px}
+.ck-p{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--line)}
+.ck-p.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.ck-c{display:flex;flex-direction:column;gap:2px;padding:12px 14px 13px;text-align:left;min-width:0;border-left:1px solid var(--line)}
+.ck-c:first-child{border-left:0}
+.ck-c b{font-size:17px;font-weight:650;letter-spacing:-.02em;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+.ck-c b.ck-add{display:flex;align-items:center;gap:4px;font-size:14px;font-weight:600;color:var(--accent-2)}
+.ck-c b.ck-add svg{width:14px;height:14px;flex:none}
+.ck-c:active,.ck-nut:active{background:var(--surface-2)}
+.ringkey{display:flex;justify-content:center;flex-wrap:wrap;gap:4px 14px;margin-top:8px;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.ringkey span{display:inline-flex;align-items:center;gap:6px}
+.ringkey i{display:inline-block;width:14px;height:4px;border-radius:2px}
+.prog.plan{stroke:color-mix(in srgb,var(--accent) 38%,transparent)}
+.eatarc{fill:none;stroke:var(--accent);stroke-width:9;stroke-linecap:round;transition:stroke-dashoffset 1.1s cubic-bezier(.2,.8,.2,1) .2s}
+@media (prefers-reduced-motion:reduce){.eatarc{transition:none}}
+.qlist{display:flex;flex-direction:column;gap:2px;margin-top:10px}
+.qrow{display:flex;align-items:center;gap:13px;width:100%;padding:10px 4px;border-radius:12px;text-align:left;font-size:12.5px;color:var(--muted)}
+.qrow b{display:block;color:var(--ink);font-size:15.5px;font-weight:600}
+.qrow:active{background:var(--surface-2)}
+.qmeals{margin-top:6px;padding:12px;border-radius:14px;background:var(--surface-2)}
+.qmeal{display:flex;align-items:center;gap:10px;width:100%;padding:7px 0;text-align:left;font-size:14.5px}
+.qmeal .done{width:24px;height:24px}
+.qmeal .tm{width:42px;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.qmeal .nm{flex:1;min-width:0;font-weight:550;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qmeal .kc{font-size:12.5px;color:var(--muted)}
+@media (max-width:370px){.ck-nut{grid-template-columns:112px minmax(0,1fr);gap:12px;padding:14px 12px 10px}.dial-wrap.mini{width:112px}.dial-wrap.mini .dial-k{font-size:23px}.ck-c{padding:11px 8px}.ck-c .tl-h{font-size:11px;gap:4px}.ck-c b.ck-add{font-size:13px}.ck-mac{font-size:11.5px}}
+
+/* Hoje (anterior) */
 .tl-h{display:flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:var(--muted);white-space:nowrap;overflow:hidden}
 .tl-i svg{width:14px;height:14px;display:block}
-.tile b{font-size:18px;font-weight:650;letter-spacing:-.02em;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
 .tl-s{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mov .tl-i,.hc-i.mov{color:var(--prot)} .sono .tl-i,.hc-i.sono{color:#A9A6E0} .bem .tl-i,.hc-i.bem{color:var(--carb)}
+.mov .tl-i,.hc-i.mov{color:var(--move)} .sono .tl-i,.hc-i.sono{color:var(--sleep)} .bem .tl-i,.hc-i.bem{color:var(--mood)}
 .na{position:relative;display:flex;flex-direction:column;gap:2px;width:100%;margin-top:12px;padding:14px 44px 14px 16px;border-radius:16px;text-align:left;
   background:var(--accent-soft);border:1px solid var(--accent-line)}
 .na.good{background:var(--surface);border-color:var(--line-2)}
@@ -478,8 +510,6 @@ h2.sec .sec-n{float:right;letter-spacing:.02em;text-transform:none;font-weight:5
 .na b{font-size:16px;font-weight:620;letter-spacing:-.01em}
 .na-t{font-size:13px;color:var(--ink-2)}
 .na .li-go{position:absolute;right:14px;top:50%;transform:translateY(-50%)}
-.qas{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.qas.three{grid-template-columns:repeat(3,minmax(0,1fr))}
 .qa{display:flex;flex-direction:column;align-items:center;gap:7px;padding:12px 2px 10px;border-radius:16px;background:var(--surface);border:1px solid var(--line);font-size:12.5px;font-weight:600;color:var(--ink-2);min-width:0}
 .qa-i{width:38px;height:38px;border-radius:12px;background:var(--surface-2);color:var(--accent-2);display:grid;place-items:center;flex:none}
 .qa-i svg{width:20px;height:20px}
@@ -493,14 +523,11 @@ h2.sec .sec-n{float:right;letter-spacing:.02em;text-transform:none;font-weight:5
 .hc-t{flex:1;min-width:0;font-size:12.5px;color:var(--muted)}
 .hc-t b{display:block;color:var(--ink);font-size:16.5px;font-weight:620;letter-spacing:-.01em}
 .hc-e{margin:12px 2px 2px;font-size:13.5px;color:var(--muted);line-height:1.5}
-.hc-big{display:flex;align-items:baseline;gap:8px;margin:14px 2px 0}
-.hc-big b{font-size:30px;font-weight:640;letter-spacing:-.035em;font-variant-numeric:tabular-nums}
-.hc-big span{font-size:13px;color:var(--muted)}
 .bars{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;height:84px;margin-top:10px}
-.bar{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px;min-width:0}
-.bar i{display:block;width:100%;max-width:26px;border-radius:6px 6px 3px 3px;background:var(--surface-3);flex:none}
+.bar{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px;min-width:0;height:100%}
+.bar i{display:block;width:100%;max-width:26px;max-height:calc(100% - 18px);border-radius:6px 6px 3px 3px;background:var(--surface-3);flex:none}
 .bar span{font-size:11px;color:var(--muted)}
-#movimento .bar i{background:var(--prot)} #sono .bar i{background:#A9A6E0}
+#movimento .bar i{background:var(--move)} #sono .bar i{background:var(--sleep)}
 .bar.now span{color:var(--ink);font-weight:650}
 .ref{margin:10px 2px 0;font-size:12px;color:var(--muted);line-height:1.5}
 .hist{margin-top:10px;border-top:1px solid var(--line)}
@@ -536,6 +563,65 @@ h2.sec .sec-n{float:right;letter-spacing:.02em;text-transform:none;font-weight:5
 @media (max-height:700px){.dial.compact .dial-wrap{width:min(100%,196px)}.dial.compact .dial-k{font-size:34px}.dial.compact .dial-m{font-size:12px}.dial.compact .dial-p{font-size:11.5px;padding:2px 8px;margin-top:6px}.hello{margin:10px 0 12px}.hello h1{font-size:28px}}
 .chips button{height:36px}
 @media (max-width:370px){.mood{font-size:10.5px}.qa{font-size:11.5px}.tile{padding:10px}.tile b{font-size:16px}}
+/* Alimentação compacta */
+.subnav{margin-top:10px}
+.subnav button{height:34px;font-size:13.5px}
+.goalrow{display:flex;align-items:center;gap:10px;width:100%;margin-top:10px;padding:10px 12px;border-radius:13px;background:var(--surface);text-align:left;font-size:14px}
+.gl-o{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.gl-o.dim{color:var(--muted);font-weight:500}
+.gl-t{margin-left:auto;color:var(--muted);font-size:13px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.gl-e svg{width:15px;height:15px;color:var(--muted);display:block}
+.plan-head{grid-template-columns:1fr 104px}
+.plan-head[hidden]{display:none}
+.meals{gap:8px;margin-top:12px}
+.mh{min-height:54px;padding:9px 8px 9px 12px;gap:10px}
+.mh-n{font-size:16px}
+.mh-s{font-size:12.5px;margin-top:1px}
+.mh-k{font-size:15px}
+.meal-name{font-size:16px;padding:2px 0}
+.mh .done{width:28px;height:28px}
+.chev{width:30px;height:30px}
+.mtools{padding:8px 8px 2px 14px;gap:4px}
+.tool{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:var(--muted);flex:none}
+.tool svg{width:18px;height:18px}
+.tool.on{color:var(--accent-2)}
+.it-main{padding:9px 14px}
+.it-name{font-size:15px}
+.it-sub{font-size:12.5px}
+.mfoot{padding:9px 10px 10px}
+.mfoot .eyebrow{margin:0 0 6px 4px}
+.mwrap.sm .v{font-size:15px}
+.favs{margin-top:14px}
+.favs-l{flex-direction:row;flex-wrap:wrap;gap:6px}
+.fav{width:auto;min-height:38px;padding:6px 12px 6px 10px;border-radius:12px;border:1px solid var(--line-2);background:transparent;gap:6px;font-size:14px;max-width:100%}
+.fav .kc{font-size:12px}
+.add-row{margin-top:10px}
+.add-meal{height:46px}
+/* Saúde compacta */
+.hstack{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.hc{background:var(--surface);border-radius:20px;padding:12px 12px 4px 14px}
+.hc-h{gap:11px}
+.hc-i{width:34px;height:34px;border-radius:11px}
+.hc-i svg{width:18px;height:18px}
+.hc-t b{font-size:16px}
+.hc-t span{display:block;font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hc .icon-btn{width:38px;height:38px;background:var(--surface-2);border:0;color:var(--accent-2)}
+.hc .bars{height:52px;margin:10px 2px 2px}
+.hc .bar span{font-size:10px}
+.hc .hc-e{margin:8px 2px 10px;font-size:13px}
+.hc .moods{margin:10px 0 6px}
+.hc .mood{padding:8px 2px 7px;font-size:11px}
+.hc > .link{display:block;font-size:13px;padding:4px 2px 10px}
+details.hd{margin:2px 0 0;border-top:1px solid var(--line)}
+details.hd summary{font-size:13px;color:var(--muted);font-weight:500;padding:10px 2px}
+details.hd .ref{margin-top:0}
+details.hd .hist{border-top:0}
+/* Superfícies sem contorno: o contraste do fundo separa os blocos; bordas só em campos e estados */
+.card,.list,.meal,.meal.open,.dial,.hero{border-color:transparent}
+.hero{background:var(--surface)}
+.savewarn{position:fixed;left:12px;right:12px;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:70;display:flex;align-items:center;gap:12px;max-width:576px;margin:0 auto;
+  padding:12px 12px 12px 14px;border-radius:14px;background:var(--danger-soft);border:1px solid var(--danger);font-size:13.5px;line-height:1.4;box-shadow:var(--shadow)}
+.savewarn span{flex:1}
 .toast{position:fixed;left:50%;bottom:calc(var(--tabbar) + 22px + env(safe-area-inset-bottom,0px));transform:translate(-50%,10px);background:var(--surface-3);border:1px solid var(--line-2);color:var(--ink);padding:10px 16px;border-radius:12px;font-size:14px;font-weight:500;opacity:0;transition:.2s;z-index:60;pointer-events:none;box-shadow:var(--shadow);white-space:nowrap}
 .toast.act{pointer-events:auto;display:flex;align-items:center;gap:14px;padding:6px 6px 6px 16px}
 .toast .undo{color:var(--accent-2);font-weight:650;padding:6px 10px;border-radius:9px}
@@ -1054,6 +1140,8 @@ const ICON = {
   starOn:'<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m12 3.5 2.6 5.4 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z"/></svg>',
   swap:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h12l-3-3M17 17H5l3 3"/></svg>',
   mark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 5-14 14-14 0 9-6 14-14 14Z"/><path d="M5 19 13 11"/></svg>',
+  share:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5v11M8 7.5l4-4 4 4"/><path d="M6 11.5H5a1 1 0 0 0-1 1V19a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 20 19v-6.5a1 1 0 0 0-1-1h-1"/></svg>',
+  dup:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6.5A2.5 2.5 0 0 0 13.5 4h-7A2.5 2.5 0 0 0 4 6.5v7A2.5 2.5 0 0 0 6.5 16H8M14 11v6M11 14h6"/></svg>',
   pulse:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12.5h4l2-5 4 10 2.2-5h4.8"/></svg>',
   walk:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="4.5" r="1.8"/><path d="m9 21 2.5-6 2.5 2.5V21M8 11l2.5-3.5h3L16 11l2.5 1M11.5 15l1-4.5"/></svg>',
   moon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 14.5A7.5 7.5 0 0 1 9.5 4.5a7.5 7.5 0 1 0 10 10Z"/></svg>',
@@ -1194,7 +1282,27 @@ function load(){
   saveNow();
 }
 let saveT;
-function saveNow(){ clearTimeout(saveT); try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+// Se a gravação falhar (armazenamento cheio ou bloqueado), avisa e oferece backup em vez de perder dados em silêncio.
+function saveNow(){
+  clearTimeout(saveT);
+  let ok = true; try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { ok = false; }
+  saveWarn(!ok); return ok;
+}
+function saveWarn(on){
+  let b = document.getElementById("savewarn");
+  if (!on){ clearInterval(saveWarn.t); saveWarn.t = null; if (b) b.remove(); return; }
+  if (!saveWarn.t) saveWarn.t = setInterval(saveNow, 5000);   // tenta de novo sozinho; o aviso some quando gravar
+  if (b) return;
+  document.body.append(h("div", {id: "savewarn", class: "savewarn", role: "alert"},
+    h("span", null, "Não foi possível salvar neste aparelho. Faça um backup agora para não perder as últimas alterações."),
+    h("button", {class: "btn sm primary", type: "button", onclick: () => backupSheet()}, "Backup")));
+}
+// Outra janela do app mudou os dados: recarrega em vez de sobrescrever com uma versão antiga.
+window.addEventListener("storage", e => {
+  if (e.key !== KEY || e.newValue == null || e.newValue === JSON.stringify(S)) return;
+  for (const f of db.list.filter(x => x.own)) db.remove(f.id);
+  S = null; load(); render(); toast("Dados atualizados por outra janela");
+});
 function save(){ clearTimeout(saveT); saveT = setTimeout(saveNow, 250); }
 window.addEventListener("pagehide", saveNow);
 document.addEventListener("visibilitychange", () => { if (document.hidden) saveNow(); });
@@ -1388,6 +1496,7 @@ function saveFavMeal(m){
   save();
   toast(old ? `Favorita “${name}” atualizada` : `“${name}” nas favoritas`, () => { if (old) list.splice(list.indexOf(fav), 1, old); else list.splice(list.indexOf(fav), 1); save(); render(); });
 }
+const isFavMeal = m => favMeals().some(x => norm(x.name) === norm(m.name.trim() || "Refeição"));
 const favKcal = f => C.mealTotal(db, {items: f.items.filter(i => db.has(i.foodId))}).kcal;
 
 /* ---------- Hoje: resumo integrado ----------
@@ -1411,51 +1520,81 @@ function healthCtx(p){
 }
 function renderHome(p){
   const plan = p.plan, r = C.energyOf(p), tg = plan.target || (r.ok && r.get ? Math.round(r.get) : null);
-  const t = planTotal(plan), L = logsOf(p), ctx = healthCtx(p), adult = adultOf(p);
-  const dayTxt = (d => d.charAt(0).toUpperCase() + d.slice(1))(new Date().toLocaleDateString("pt-BR", {weekday: "long", day: "numeric", month: "long"}));
+  const t = planTotal(plan), L = logsOf(p), ctx = healthCtx(p), adult = adultOf(p), sp = C.macroSplit(t);
+  const dayTxt = new Date().toLocaleDateString("pt-BR", {weekday: "long", day: "numeric", month: "long"});
   const days = S.lastBackup ? Math.floor((Date.now() - S.lastBackup) / DAY) : null;
   const backupDue = S.patients.some(x => !x.example) && (days == null || days >= 7);
   const na = C.nextAction(ctx);
-  const naGo = {perfil: () => go({tab: "perfil"}), plano: () => go({tab: "alimentacao", sub: "plano"}), mover: () => moveSheet(p), sono: () => go({tab: "saude"})};
-  // indicadores dos outros pilares: só o essencial, toque leva ao detalhe
+  const naGo = {perfil: () => go({tab: "perfil"}), plano: () => go({tab: "alimentacao", sub: "plano"}), mover: () => moveSheet(p), sono: () => go({tab: "saude", anchor: "sono"})};
+  const repaint = () => renderHome(p);
+  const openPlan = m => go({tab: "alimentacao", sub: "plano", open: m ? [m.id] : [], focusMeal: m ? m.id : null, edit: null});
+  // alimentação: anel (planejado × consumido) + números essenciais; o detalhe completo abre sob demanda
+  const eaten = C.eatenDay(L.eaten, today());
+  const meals = [...plan.meals].filter(m => filled(m).length).sort(byTime);
+  const pending = meals.filter(m => !doneOf(p, m));
+  const nut = meals.length ? h("button", {class: "ck-nut", type: "button", "aria-label": "Ver o resumo nutricional completo", onclick: () => nutritionSheet(p)},
+    dial(t, tg, p.energy.weight, {mini: true, eaten: eaten.t.kcal}),
+    h("div", {class: "ck-st"},
+      h("div", {class: "ck-row"}, h("i", {class: "rk-p"}), h("span", null, "Meta"), h("b", null, tg ? k0(tg) : "—", tg ? h("em", null, " kcal") : null), h("small", null, tg ? `plano cobre ${Math.round(t.kcal / tg * 100)}%` : "sem meta")),
+      h("div", {class: "ck-row"}, h("i", {class: "rk-e"}), h("span", null, "Consumido"), h("b", null, k0(eaten.t.kcal), h("em", null, " kcal")), h("small", null, `${eaten.count} de ${meals.length} ${meals.length === 1 ? "refeição" : "refeições"}`)),
+      h("div", {class: "ck-mac"}, [["t-c", "C", t.c, sp.c], ["t-p", "P", t.p, sp.p], ["t-g", "G", t.l, sp.l]].map(([c, k, g, pc]) =>
+        h("span", null, h("b", {class: c}, k), `${fmtG(g)} g`, h("small", null, `${Math.round(pc)}%`))))))
+    : h("button", {class: "ck-empty", type: "button", onclick: () => openPlan()}, h("span", {class: "qa-i", html: ICON.food}),
+        h("div", null, h("b", null, "Monte o plano do dia"), "Refeições, calorias e macronutrientes em poucos toques."), h("span", {class: "li-go", html: ICON.right}));
+  // próximas refeições: só as pendentes, no máximo 3; a lista encolhe ao longo do dia
+  const next = meals.length ? h("div", {class: "ck-meals"},
+    pending.length ? pending.slice(0, 3).map(m => h("div", {class: "eat-r"}, doneBtn(p, m, repaint),
+      h("button", {class: "eat-m", type: "button", onclick: () => openPlan(m)}, h("span", {class: "tm"}, m.time || "—"), h("span", {class: "nm"}, m.name.trim() || "Refeição"), h("span", {class: "kc"}, `${k0(mealTotal(m).kcal)} kcal`))))
+      : h("div", {class: "ck-done"}, h("span", {html: ICON.check}), "Todas as refeições de hoje feitas"),
+    pending.length > 3 ? h("button", {class: "link sm", type: "button", onclick: () => openPlan()}, `+${pending.length - 3} no plano`) : null) : null;
+  // outros pilares: um número cada; sem dado, o toque já abre o registro
   const sl = ctx.sleep.stats.last, lastNight = sl && C.addDays(sl.date, 1) >= today() ? sl : null;
   const moodToday = [...L.mood].reverse().find(x => x.date === today());
-  const tile = (cls, icon, label, value, sub, fn) => h("button", {class: "tile " + cls, type: "button", onclick: fn},
-    h("span", {class: "tl-h"}, h("span", {class: "tl-i", html: ICON[icon]}), label), h("b", null, value), h("span", {class: "tl-s"}, sub));
-  const tiles = [
-    tile("mov", "walk", "Movimento", L.move.length ? fmtDur(ctx.move.week.total) : "—", L.move.length ? "nesta semana" : "Registrar", () => L.move.length ? go({tab: "saude"}) : moveSheet(p)),
-    tile("sono", "moon", "Sono", lastNight ? fmtDur(lastNight.min) : "—", lastNight ? "última noite" : "Registrar", () => lastNight ? go({tab: "saude"}) : sleepSheet(p)),
-    adult ? tile("bem", "smile", "Bem-estar", moodToday ? MOODS[moodToday.mood - 1] : "—", moodToday ? "hoje" : "Como você está?", () => moodToday ? go({tab: "saude"}) : moodSheet(p)) : null];
-  // consumo de hoje (refeições marcadas como feitas), separado do planejado
-  const eaten = C.eatenDay(L.eaten, today()), ref = tg || t.kcal;
-  const todays = [...plan.meals].filter(m => filled(m).length).sort(byTime);
-  const repaint = () => renderHome(p);
-  const eatEl = todays.length ? h("div", {class: "eat"},
-    h("div", {class: "eat-h"}, h("span", null, "Consumido hoje"), h("b", null, `${k0(eaten.t.kcal)} kcal`), h("span", {class: "eat-n"}, `${eaten.count} de ${todays.length} ${todays.length === 1 ? "refeição" : "refeições"}`)),
-    h("div", {class: "eat-bar", role: "img", "aria-label": `Consumido ${k0(eaten.t.kcal)} de ${k0(ref)} kcal`}, h("i", {style: `width:${ref ? Math.min(100, eaten.t.kcal / ref * 100) : 0}%`})),
-    h("div", {class: "eat-l"}, todays.map(m => { const d = doneOf(p, m);
-      return h("div", {class: "eat-r" + (d ? " on" : "")}, doneBtn(p, m, repaint),
-        h("button", {class: "eat-m", type: "button", onclick: () => go({tab: "alimentacao", sub: "plano", open: [m.id], focusMeal: m.id, edit: null})},
-          h("span", {class: "tm"}, m.time || "—"), h("span", {class: "nm"}, m.name.trim() || "Refeição"), h("span", {class: "kc"}, `${k0(d ? d.t.kcal : mealTotal(m).kcal)} kcal`))); })),
-    h("p", {class: "eat-x"}, "Marque o que você comeu como planejado. O círculo mostra o plano; esta barra, o consumido.")) : null;
-  const quick = (icon, label, fn) => h("button", {class: "qa", type: "button", onclick: fn}, h("span", {class: "qa-i", html: ICON[icon]}), label);
-  put(app, h("div", {class: "view"}, topBar(),
-    h("div", {class: "hello"},
-      h("div", {class: "sub"}, dayTxt),
-      h("h1", null, `Olá, ${firstName(p.name)}`),
-      plan.objective ? h("div", {class: "goal"}, h("button", {onclick: () => go({tab: "alimentacao", sub: "plano"})}, plan.objective)) : null),
-    dial(t, tg, p.energy.weight, {compact: true, head: h("div", {class: "dial-h"}, h("span", {class: "eyebrow"}, "Alimentação planejada"),
-      h("button", {class: "link", onclick: () => go({tab: "alimentacao", sub: "plano"})}, plan.meals.some(m => filled(m).length) ? "Abrir plano" : "Montar plano")), extra: eatEl}),
-    h("div", {class: "tiles" + (adult ? "" : " two")}, tiles),
+  const cell = (cls, icon, label, value, sub, has, fn) => h("button", {class: "ck-c " + cls + (has ? "" : " empty"), type: "button", onclick: fn},
+    h("span", {class: "tl-h"}, h("span", {class: "tl-i", html: ICON[icon]}), label), has ? h("b", null, value) : h("b", {class: "ck-add"}, ic("plus"), "Registrar"), h("span", {class: "tl-s"}, has ? sub : " "));
+  const pillars = h("div", {class: "ck-p" + (adult ? "" : " two")},
+    cell("mov", "walk", "Movimento", fmtDur(ctx.move.week.total), "nesta semana", L.move.length > 0, () => L.move.length ? go({tab: "saude", anchor: "movimento"}) : moveSheet(p)),
+    cell("sono", "moon", "Sono", lastNight ? fmtDur(lastNight.min) : "", "última noite", !!lastNight, () => lastNight ? go({tab: "saude", anchor: "sono"}) : sleepSheet(p)),
+    adult ? cell("bem", "smile", "Bem-estar", moodToday ? MOODS[moodToday.mood - 1] : "", "hoje", !!moodToday, () => moodToday ? go({tab: "saude", anchor: "bem-estar"}) : moodSheet(p)) : null);
+  put(app, h("div", {class: "view"}, topBar(quickBtn(p, "hoje")),
+    h("div", {class: "today"}, dayTxt),
+    h("section", {class: "cockpit", "aria-label": "Resumo de hoje"}, nut, next, pillars),
     na ? h("button", {class: "na " + na.tone, type: "button", onclick: naGo[na.go]},
       h("span", {class: "na-e"}, na.tone === "good" ? "Bom trabalho" : "Próximo passo"), h("b", null, na.title), h("span", {class: "na-t"}, na.text), h("span", {class: "li-go", html: ICON.right})) : null,
-    h("h2", {class: "sec"}, "Registrar"),
-    h("div", {class: "qas" + (adult ? "" : " three")},
-      quick("food", "Refeição", () => go({tab: "alimentacao", sub: "plano"})),
-      quick("walk", "Atividade", () => moveSheet(p)),
-      quick("moon", "Sono", () => sleepSheet(p)),
-      adult ? quick("smile", "Bem-estar", () => moodSheet(p)) : null),
     backupDue ? h("button", {class: "quiet", onclick: backupSheet}, ic("lock"), days == null ? "Seus dados ainda não têm backup · Fazer agora" : `Último backup há ${days} dias · Fazer agora`) : null));
+}
+// Resumo nutricional completo (Hoje e Alimentação): painel com macros, g/kg, fibras, planejado e consumido.
+function nutritionSheet(p){
+  const plan = p.plan, r = C.energyOf(p), tg = plan.target || (r.ok && r.get ? Math.round(r.get) : null);
+  sheet("Resumo nutricional", (el, close) => {
+    const t = planTotal(plan), s = C.macroSplit(t), e = C.eatenDay(logsOf(p).eaten, today());
+    el.append(h("h2", null, "Resumo nutricional"), h("p", {class: "sh-sub"}, "Valores do plano do dia. O consumido soma as refeições marcadas como feitas hoje."),
+      dial(t, tg, p.energy.weight, {eaten: e.t.kcal}),
+      h("div", {class: "note"}, "As porcentagens usam 4 kcal/g para carboidratos e proteínas e 9 kcal/g para gorduras (fatores de Atwater). ",
+        `A energia total vem da TACO, com fatores próprios de cada alimento; por isso pode diferir um pouco da soma dos macronutrientes (${k0(s.atwater)} kcal).`),
+      h("div", {style: "height:12px"}),
+      h("button", {class: "btn ghost block", type: "button", onclick: () => { close(); go({tab: "alimentacao", sub: "plano"}); }}, "Abrir o plano"));
+  });
+}
+/* Registro universal: o "+" do topo abre os registros, na ordem que faz sentido para a tela atual. */
+function quickBtn(p, ctx){ return h("button", {class: "icon-btn accent", type: "button", "aria-label": "Registrar", onclick: () => quickSheet(p, ctx)}, ic("plus")); }
+function quickSheet(p, ctx){
+  const adult = adultOf(p), meals = [...p.plan.meals].filter(m => filled(m).length).sort(byTime), pending = meals.filter(m => !doneOf(p, m));
+  sheet("Registrar", (el, close) => {
+    const row = (icon, title, sub, fn, cls) => h("button", {class: "qrow" + (cls ? " " + cls : ""), type: "button", onclick: () => { close(); setTimeout(fn, 60); }},
+      h("span", {class: "qa-i", html: ICON[icon]}), h("div", null, h("b", null, title), sub ? h("span", null, sub) : null));
+    const mealRows = pending.length ? h("div", {class: "qmeals"}, h("div", {class: "lbl2", style: "margin-top:0"}, "Marcar refeição feita"),
+      pending.slice(0, 4).map(m => h("button", {class: "qmeal", type: "button", onclick: () => { close(); toggleDone(p, m, render); }},
+        h("span", {class: "done"}), h("span", {class: "tm"}, m.time || "—"), h("span", {class: "nm"}, m.name.trim() || "Refeição"), h("span", {class: "kc"}, `${k0(mealTotal(m).kcal)} kcal`)))) : null;
+    const health = [row("walk", "Atividade", "Tipo e duração", () => moveSheet(p)), row("moon", "Sono", "Dormir, acordar e como foi", () => sleepSheet(p)),
+      adult ? row("smile", "Bem-estar", "Como você está agora", () => moodSheet(p)) : null];
+    const food = [row("food", "Alimento no plano", "Buscar e adicionar a uma refeição", () => { go({tab: "alimentacao", sub: "alimentos"}); setTimeout(() => { const i = $("#busca-alimento"); if (i) i.focus(); }, 80); }),
+      row("camera", "Novo alimento", embedded ? "Digitar os dados do rótulo" : "Foto da tabela nutricional ou digitação", () => addFoodChooser("", () => render()))];
+    el.append(h("h2", null, "Registrar"),
+      ...(ctx === "alimentacao" ? [h("div", {class: "qlist"}, food), mealRows, h("div", {class: "qlist"}, health)]
+        : ctx === "saude" ? [h("div", {class: "qlist"}, health), mealRows, h("div", {class: "qlist"}, food)]
+        : [mealRows, h("div", {class: "qlist"}, health), h("div", {class: "qlist"}, food)]));
+  });
 }
 const byTime = (a, b) => (a.time || "99") < (b.time || "99") ? -1 : (a.time || "99") > (b.time || "99") ? 1 : 0;
 
@@ -1477,51 +1616,49 @@ function removeLog(p, kind, e, label){
 function renderHealth(p){
   const L = logsOf(p), t = today(), age = C.ageOf(p.birth), adult = adultOf(p);
   const mw = C.moveWeek(L.move, t), mref = C.moveRef(age), ss = C.sleepStats(L.sleep, t), sref = C.sleepRef(age);
-  const wk = C.weekKeys(t), nowI = wk.indexOf(t);
-  const hist = (kind, list, line, label) => list.length ? h("div", {class: "hist"}, list.slice(0, 5).map(e => h("div", {class: "hi"},
-    h("div", {class: "hi-m"}, line(e)), h("button", {class: "x", type: "button", "aria-label": `Apagar ${label.toLowerCase()} de ${relDay(e.date)}`, html: ICON.x, onclick: () => removeLog(p, kind, e, label)})))) : null;
+  const nowI = C.weekKeys(t).indexOf(t);
   const byDate = (a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : (b.at || 0) - (a.at || 0);
-  // movimento
-  const movCard = h("section", {class: "card hc", id: "movimento"},
-    h("div", {class: "hc-h"}, h("span", {class: "hc-i mov", html: ICON.walk}), h("div", {class: "hc-t"}, h("b", null, "Movimento"), h("span", null, "Esta semana")),
-      h("button", {class: "btn sm primary", type: "button", onclick: () => moveSheet(p)}, ic("plus"), "Registrar")),
-    L.move.length ? [
-      h("div", {class: "hc-big"}, h("b", null, fmtDur(mw.total)), h("span", null, `em ${mw.activeDays} ${mw.activeDays === 1 ? "dia" : "dias"}`)),
-      bars(mw.days.map(d => d.min), Math.max(60, ...mw.days.map(d => d.min)), WD, nowI),
-      mref ? h("p", {class: "ref"}, mref.week && !mref.perDay ? `${mw.mv} min de atividade moderada ou vigorosa. ` : "", mref.text) : null,
-      hist("move", [...L.move].sort(byDate), e => [h("b", null, e.type), ` · ${fmtDur(e.min)}${e.intensity ? " · " + INTENS.find(x => x[0] === e.intensity)[1].toLowerCase() : ""}`, h("span", null, " " + relDay(e.date))], "Registro")]
-      : h("p", {class: "hc-e"}, "Caminhada, musculação, tênis… Registre em segundos e acompanhe a semana."));
-  // sono
-  const sleepCard = h("section", {class: "card hc", id: "sono"},
-    h("div", {class: "hc-h"}, h("span", {class: "hc-i sono", html: ICON.moon}), h("div", {class: "hc-t"}, h("b", null, "Sono"), h("span", null, "Últimas 7 noites")),
-      h("button", {class: "btn sm primary", type: "button", onclick: () => sleepSheet(p)}, ic("plus"), "Registrar")),
-    L.sleep.length ? [
-      h("div", {class: "hc-big"}, h("b", null, ss.avg != null ? fmtDur(ss.avg) : "—"), h("span", null, ss.count ? `média de ${ss.count} ${ss.count === 1 ? "noite" : "noites"}` : "sem noites nos últimos 7 dias")),
-      bars(ss.nights.map(n => n.min || 0), 600, ss.nights.map(n => WD[(new Date(n.key + "T12:00").getDay() + 6) % 7]), 6),
-      h("p", {class: "ref"}, ss.bedSD != null ? `Horário de dormir: variação de cerca de ${Math.round(ss.bedSD)} min. ` : "", sref ? sref.text : ""),
-      hist("sleep", [...L.sleep].sort(byDate), e => [h("b", null, fmtDur(C.sleepMinutes(e.bed, e.wake))), ` · ${e.bed}–${e.wake}${e.quality ? " · " + QUAL[e.quality - 1].toLowerCase() : ""}`, h("span", null, " " + relDay(e.date))], "Registro")]
-      : h("p", {class: "hc-e"}, "Hora de dormir, hora de acordar e como foi. O app mostra a sua regularidade, sem notas nem competição."));
-  // bem-estar (adultos)
+  const hist = (kind, list, line) => list.length ? h("div", {class: "hist"}, list.slice(0, 6).map(e => h("div", {class: "hi"},
+    h("div", {class: "hi-m"}, line(e)), h("button", {class: "x", type: "button", "aria-label": `Apagar registro de ${relDay(e.date)}`, html: ICON.x, onclick: () => removeLog(p, kind, e, "Registro")})))) : null;
+  // cada pilar: uma linha de resumo + minigráfico; histórico e referências abrem sob demanda
+  const card = (id, cls, icon, title, summary, add, addLabel, body, more) => h("section", {class: "hc", id},
+    h("div", {class: "hc-h"}, h("span", {class: "hc-i " + cls, html: ICON[icon]}), h("div", {class: "hc-t"}, h("b", null, title), h("span", null, summary)),
+      add ? h("button", {class: "icon-btn", type: "button", "aria-label": addLabel, onclick: add}, ic("plus")) : null),
+    body, more ? h("details", {class: "adv hd"}, h("summary", null, "Histórico e referência"), more) : null);
+  const movCard = card("movimento", "mov", "walk", "Movimento",
+    L.move.length ? `${fmtDur(mw.total)} nesta semana · ${mw.activeDays} ${mw.activeDays === 1 ? "dia" : "dias"}` : "Nenhum registro ainda", () => moveSheet(p), "Registrar atividade",
+    L.move.length ? bars(mw.days.map(d => d.min), Math.max(60, ...mw.days.map(d => d.min)), WD, nowI)
+      : h("p", {class: "hc-e"}, "Caminhada, musculação, tênis… registre em segundos."),
+    L.move.length ? [mref ? h("p", {class: "ref"}, mref.week && !mref.perDay ? `${mw.mv} min de atividade moderada ou vigorosa nesta semana. ` : "", mref.text) : null,
+      hist("move", [...L.move].sort(byDate), e => [h("b", null, e.type), ` · ${fmtDur(e.min)}${e.intensity ? " · " + INTENS.find(x => x[0] === e.intensity)[1].toLowerCase() : ""}`, h("span", null, " " + relDay(e.date))])] : null);
+  // sono: média só com 3 noites ou mais; antes disso, só a última noite (um registro não é tendência)
+  const sleepSum = ss.count >= 3 ? `média ${fmtDur(ss.avg)} · ${ss.count} de 7 noites` : ss.last ? `última noite ${fmtDur(ss.last.min)}` : "Nenhum registro ainda";
+  const sleepCard = card("sono", "sono", "moon", "Sono", sleepSum, () => sleepSheet(p), "Registrar sono",
+    L.sleep.length ? bars(ss.nights.map(n => n.min || 0), 600, ss.nights.map(n => WD[(new Date(n.key + "T12:00").getDay() + 6) % 7]), 6)
+      : h("p", {class: "hc-e"}, "Hora de dormir, hora de acordar e como foi. Sem notas nem competição."),
+    L.sleep.length ? [h("p", {class: "ref"}, ss.count < 3 ? "A média e a regularidade aparecem a partir de 3 noites registradas nos últimos 7 dias. " : "",
+        ss.count >= 5 && ss.bedSD != null ? `Horário de dormir: variação de cerca de ${Math.round(ss.bedSD)} min. ` : "", sref ? sref.text : ""),
+      hist("sleep", [...L.sleep].sort(byDate), e => [h("b", null, fmtDur(C.sleepMinutes(e.bed, e.wake))), ` · ${e.bed}–${e.wake}${e.quality ? " · " + QUAL[e.quality - 1].toLowerCase() : ""}`, h("span", null, " " + relDay(e.date))])] : null);
   let moodCard;
   if (adult){
     const last14 = Array.from({length: 14}, (_, i) => C.addDays(t, i - 13));
     const dayMood = k => [...L.mood].reverse().find(x => x.date === k);
     const todayM = dayMood(t);
-    moodCard = h("section", {class: "card hc", id: "bem-estar"},
-      h("div", {class: "hc-h"}, h("span", {class: "hc-i bem", html: ICON.smile}), h("div", {class: "hc-t"}, h("b", null, "Bem-estar"), h("span", null, "Como você está se sentindo agora?"))),
-      h("div", {class: "moods", role: "group", "aria-label": "Registrar como você está"}, MOODS.map((m, i) => h("button", {type: "button", class: "mood m" + (i + 1) + (todayM && todayM.mood === i + 1 ? " on" : ""),
+    moodCard = card("bem-estar", "bem", "smile", "Bem-estar", todayM ? `Hoje: ${MOODS[todayM.mood - 1].toLowerCase()}` : "Como você está agora?", null, "",
+      [h("div", {class: "moods", role: "group", "aria-label": "Registrar como você está"}, MOODS.map((m, i) => h("button", {type: "button", class: "mood m" + (i + 1) + (todayM && todayM.mood === i + 1 ? " on" : ""),
         onclick: () => saveMood(p, {mood: i + 1})}, h("i"), m))),
-      h("button", {class: "link", type: "button", style: "margin-top:6px", onclick: () => moodSheet(p)}, "Registrar com detalhes"),
-      L.mood.length ? [h("div", {class: "dots", "aria-label": "Últimos 14 dias"}, last14.map(k => { const x = dayMood(k); return h("span", {class: x ? "m" + x.mood : "", title: `${relDay(k)}: ${x ? MOODS[x.mood - 1] : "sem registro"}`}); })),
-        h("p", {class: "ref"}, "Últimos 14 dias. Dias sem registro não significam nada: registre quando quiser."),
-        hist("mood", [...L.mood].sort(byDate), e => [h("b", null, MOODS[e.mood - 1]), e.energy ? ` · energia ${e.energy}` : "", e.stress ? ` · estresse ${e.stress}` : "", e.note ? ` · “${e.note}”` : "", h("span", null, ` ${relDay(e.date)}${e.time ? " " + e.time : ""}`)], "Registro")] : null);
+       h("button", {class: "link", type: "button", onclick: () => moodSheet(p)}, "Registrar com energia, estresse ou nota")],
+      !L.mood.length ? null : [
+       L.mood.length ? h("div", {class: "dots", "aria-label": "Últimos 14 dias"}, last14.map(k => { const x = dayMood(k); return h("span", {class: x ? "m" + x.mood : "", title: `${relDay(k)}: ${x ? MOODS[x.mood - 1] : "sem registro"}`}); })) : null,
+       L.mood.length ? h("p", {class: "ref"}, "Últimos 14 dias. Dias sem registro não significam nada.") : null,
+       hist("mood", [...L.mood].sort(byDate), e => [h("b", null, MOODS[e.mood - 1]), e.energy ? ` · energia ${e.energy}` : "", e.stress ? ` · estresse ${e.stress}` : "", e.note ? ` · “${e.note}”` : "", h("span", null, ` ${relDay(e.date)}${e.time ? " " + e.time : ""}`)])]);
   } else {
     moodCard = h("p", {class: "note"}, "O registro de bem-estar emocional para crianças e adolescentes terá um fluxo próprio, adequado à idade.");
   }
-  put(app, h("div", {class: "view"}, topBar(),
-    h("h1", null, "Saúde"), h("p", {class: "sub", style: "margin:0 0 16px"}, "Registre só o que fizer sentido para você."),
-    h("div", {class: "stack"}, movCard, sleepCard, moodCard),
-    h("p", {class: "src"}, "Registros manuais, guardados só neste aparelho. Não são diagnósticos. A importação automática do Apple Saúde depende da versão nativa do app.")));
+  put(app, h("div", {class: "view"}, topBar(quickBtn(p, "saude")),
+    h("h1", null, "Saúde"),
+    h("div", {class: "hstack"}, movCard, sleepCard, moodCard),
+    h("p", {class: "src"}, "Só registros feitos por você, guardados neste aparelho; nenhum valor é estimado. Não são diagnósticos. A importação do Apple Saúde depende da versão nativa do app.")));
   if (view.anchor){ const a = $("#" + view.anchor); view.anchor = null; if (a) setTimeout(() => a.scrollIntoView({block: "start"}), 40); }
 }
 function chips(list, cur, onPick, cls){
@@ -1636,7 +1773,10 @@ function dial(t, tg, W, o = {}){
     const a = i / 4 * 2 * Math.PI - Math.PI / 2;
     ticks.append(sv("line", {x1: 150 + 141 * Math.cos(a), y1: 150 + 141 * Math.sin(a), x2: 150 + 133 * Math.cos(a), y2: 150 + 133 * Math.sin(a), class: fill >= (i ? i * 25 : 100) ? "lit" : ""}));
   }
-  const prog = sv("circle", {cx: 150, cy: 150, r: R1, class: "prog" + (pct > 100 ? " over" : ""), "stroke-dasharray": `${C1} ${C1}`, "stroke-dashoffset": C1, transform: "rotate(-90 150 150)"});
+  const hasEat = o.eaten != null && !!tg, eatFill = hasEat ? Math.min(o.eaten / tg * 100, 100) : 0;
+  const prog = sv("circle", {cx: 150, cy: 150, r: R1, class: "prog" + (pct > 100 ? " over" : "") + (hasEat ? " plan" : ""), "stroke-dasharray": `${C1} ${C1}`, "stroke-dashoffset": C1, transform: "rotate(-90 150 150)"});
+  // consumido: mesmo anel, cobre cheio sobre o planejado (cobre translúcido)
+  const eatArc = hasEat ? sv("circle", {cx: 150, cy: 150, r: R1, class: "eatarc", "stroke-dasharray": `${C1} ${C1}`, "stroke-dashoffset": C1, transform: "rotate(-90 150 150)"}) : null;
   const gap = s.atwater ? 0.012 : 0;
   let start = 0;
   const arcs = MAC.map(([k, , cls, , share]) => {
@@ -1646,7 +1786,7 @@ function dial(t, tg, W, o = {}){
     return el;
   });
   const svg = sv("svg", {viewBox: "0 0 300 300", class: "dial-svg", "aria-hidden": "true"},
-    ticks, sv("circle", {cx: 150, cy: 150, r: R1, class: "trk"}), prog, sv("circle", {cx: 150, cy: 150, r: R2, class: "trk in"}), ...arcs);
+    ticks, sv("circle", {cx: 150, cy: 150, r: R1, class: "trk"}), prog, ...(eatArc ? [eatArc] : []), sv("circle", {cx: 150, cy: 150, r: R2, class: "trk in"}), ...arcs);
   const center = h("div", {class: "dial-c"},
     h("div", {class: "dial-k"}, k0(t.kcal)),
     h("div", {class: "dial-m"}, "kcal planejadas"),
@@ -1666,11 +1806,17 @@ function dial(t, tg, W, o = {}){
   paintKeys();
   requestAnimationFrame(() => requestAnimationFrame(() => {
     prog.setAttribute("stroke-dashoffset", C1 * (1 - fill / 100));
+    if (eatArc && eatFill > 0) eatArc.setAttribute("stroke-dashoffset", C1 * (1 - eatFill / 100));
     arcs.forEach(a => a.setAttribute("stroke-dasharray", `${a.dataset.len} ${C2}`));
   }));
-  const label = `Planejado ${k0(t.kcal)} kcal${tg ? ` de ${k0(tg)}, ${Math.round(pct)}% da meta` : ""}. Carboidratos ${fmtG(t.c)} g, ${Math.round(s.c)}%. Proteínas ${fmtG(t.p)} g, ${Math.round(s.p)}%. Gorduras ${fmtG(t.l)} g, ${Math.round(s.l)}%.`;
+  const label = `Planejado ${k0(t.kcal)} kcal${tg ? ` de ${k0(tg)}, ${Math.round(pct)}% da meta` : ""}.${hasEat ? ` Consumido ${k0(o.eaten)} kcal.` : ""} Carboidratos ${fmtG(t.c)} g, ${Math.round(s.c)}%. Proteínas ${fmtG(t.p)} g, ${Math.round(s.p)}%. Gorduras ${fmtG(t.l)} g, ${Math.round(s.l)}%.`;
+  if (o.mini){
+    put(center, h("div", {class: "dial-k"}, k0(t.kcal)), h("div", {class: "dial-m"}, "planejadas"));
+    return h("div", {class: "dial-wrap mini", role: "img", "aria-label": label}, svg, center);
+  }
+  const ringKey = hasEat ? h("div", {class: "ringkey"}, h("span", null, h("i", {class: "rk-p"}), `Planejado ${k0(t.kcal)}`), h("span", null, h("i", {class: "rk-e"}), `Consumido ${k0(o.eaten)}`), h("span", null, `Meta ${k0(tg)} kcal`)) : null;
   return h("section", {class: "dial" + (o.compact ? " compact" : ""), "aria-label": label},
-    o.head || null, h("div", {class: "dial-wrap"}, svg, center), keys, detail, missNote(t), o.extra || null);
+    o.head || null, h("div", {class: "dial-wrap"}, svg, center), ringKey, keys, detail, missNote(t), o.extra || null);
 }
 
 function macroGrid(t, W, small){
@@ -1714,17 +1860,7 @@ function renderPlan(p){
         h("span", null, h("b", {class: "t-c"}, "C"), fmtG(t.c)), h("span", null, h("b", {class: "t-p"}, "P"), fmtG(t.p)),
         h("span", null, h("b", {class: "t-g"}, "G"), fmtG(t.l)), h("span", null, h("b", {class: "t-f"}, "F"), fmtG(t.f))));
   }
-  function summarySheet(){
-    sheet("Resumo do plano", (el) => {
-      const t = planTotal(plan), s = C.macroSplit(t);
-      el.append(h("h2", null, "Resumo do plano"), h("p", {class: "sh-sub"}, "Valores planejados para o dia. Não é um registro do que foi consumido."),
-        dial(t, target(), p.energy.weight),
-        h("div", {class: "note"}, "As porcentagens usam 4 kcal/g para carboidratos e proteínas e 9 kcal/g para gorduras (fatores de Atwater). ",
-          `A energia total vem da TACO, calculada pela fonte com fatores próprios de cada alimento; por isso pode diferir um pouco da soma dos macronutrientes (${k0(s.atwater)} kcal).`),
-        h("div", {style: "height:12px"}),
-        h("button", {class: "btn ghost block", onclick: copyPlan}, ic("copy"), "Copiar plano em texto"));
-    });
-  }
+  function summarySheet(){ nutritionSheet(p); }
 
   /* objetivo e meta */
   const obj = h("input", {class: "input", id: "objetivo", placeholder: "Objetivo", value: plan.objective || "", enterkeyhint: "done", "aria-label": "Objetivo"});
@@ -1737,8 +1873,19 @@ function renderPlan(p){
   });
   obj.addEventListener("input", () => { plan.objective = obj.value; touch(p); });
   obj.addEventListener("change", () => rememberOption("objectives", obj.value));
+  // objetivo e meta: uma linha que abre os campos no lugar (sem nova tela)
+  const goalLine = () => [h("span", {class: "gl-o" + (plan.objective ? "" : " dim")}, plan.objective || "Definir objetivo"),
+    h("span", {class: "gl-t"}, plan.target ? `Meta ${k0(plan.target)} kcal` : r.ok && r.get ? `Meta sugerida ${k0(r.get)} kcal` : "Sem meta"), h("span", {class: "gl-e", html: ICON.edit})];
+  const goalRow = h("button", {class: "goalrow", type: "button", "aria-expanded": "false", "aria-label": "Editar objetivo e meta"});
+  const goalEd = h("div", {class: "plan-head"});
+  const setGoalOpen = on => { goalEd.hidden = !on; goalRow.hidden = on; goalRow.setAttribute("aria-expanded", String(on)); if (!on) put(goalRow, goalLine()); };
+  goalRow.addEventListener("click", () => { setGoalOpen(true); setTimeout(() => obj.focus(), 30); });
   const tgt = h("input", {class: "input num", id: "meta", inputmode: "numeric", placeholder: r.ok && r.get ? k0(r.get) : "kcal", value: plan.target ? String(plan.target) : "", "aria-label": "Meta de calorias"});
   tgt.addEventListener("input", () => { const v = parseInt(tgt.value.replace(/\D/g, ""), 10); plan.target = v > 0 ? v : null; touch(p); paintSum(); });
+  goalEd.append(h("div", {class: "field", style: "margin:0"}, h("label", {for: "objetivo"}, "Objetivo"), h("div", {class: "acw"}, obj)),
+    h("div", {class: "field", style: "margin:0"}, h("label", {for: "meta"}, "Meta (kcal)"), tgt),
+    h("button", {class: "btn ghost sm", type: "button", style: "grid-column:1/-1", onclick: () => setGoalOpen(false)}, "Pronto"));
+  setGoalOpen(!plan.objective && !plan.target);
 
   const mealsEl = h("div", {class: "meals"});
   const pasteNew = h("div"), favEl = h("div");
@@ -1747,8 +1894,8 @@ function renderPlan(p){
     const list = favMeals();
     put(favEl, list.length ? h("div", {class: "favs"},
       h("div", {class: "favs-h"}, h("span", {class: "eyebrow"}, "Refeições favoritas"), h("button", {class: "link", type: "button", onclick: manageFavs}, "Editar")),
-      h("div", {class: "favs-l"}, [...list].sort(byTime).map(f => h("button", {class: "fav", type: "button", "aria-label": `Adicionar ${f.name} ao plano`, onclick: () => useFav(f)},
-        ic("plus"), h("span", {class: "nm"}, f.name), h("span", {class: "kc"}, `${k0(favKcal(f))} kcal`))))) : null);
+      h("div", {class: "favs-l"}, [...list].sort(byTime).map(f => h("button", {class: "fav", type: "button", "aria-label": `Adicionar ${f.name} ao plano, ${k0(favKcal(f))} kcal`, onclick: () => useFav(f)},
+        ic("plus"), h("span", {class: "nm"}, f.name), h("span", {class: "kc"}, k0(favKcal(f))))))) : null);
   }
   function useFav(f){
     const empty = plan.meals.find(x => !filled(x).length && !x.name.trim());
@@ -1913,7 +2060,10 @@ function renderPlan(p){
       addIn.addEventListener("focus", () => setTimeout(() => addIn.scrollIntoView({block: "center", behavior: "smooth"}), 40));
       card.append(
         h("div", {class: "mtools"}, tw, h("div", {class: "spacer"}),
-          h("button", {class: "btn ghost sm", type: "button", onclick: () => mealMenu(m), "aria-label": "Mais ações da refeição"}, ic("more"), "Ações")),
+          filled(m).length ? h("button", {class: "tool" + (isFavMeal(m) ? " on" : ""), type: "button", "aria-pressed": String(isFavMeal(m)), "aria-label": isFavMeal(m) ? "Atualizar nas refeições favoritas" : "Salvar como refeição favorita",
+            html: isFavMeal(m) ? ICON.starOn : ICON.star, onclick: () => { saveFavMeal(m); paintFavs(); rebuild(m); }}) : null,
+          filled(m).length ? h("button", {class: "tool", type: "button", "aria-label": "Duplicar refeição", html: ICON.dup, onclick: () => duplicateMeal(m)}) : null,
+          h("button", {class: "tool", type: "button", onclick: () => mealMenu(m), "aria-label": "Mais ações da refeição", html: ICON.more})),
         askEl, body,
         h("div", {class: "add"}, h("label", {class: "add-l"}, ic("plus"), h("div", {class: "acw", style: "flex:1"}, addIn))),
         footEl);
@@ -2103,11 +2253,9 @@ function renderPlan(p){
     h("header", {class: "top"}, h("div", {class: "top-row"},
       h("button", {class: "who", "aria-label": `Perfil ativo: ${p.name}. Trocar de perfil`, onclick: switcher}, avatar(p), h("b", null, firstName(p.name)), ic("chev")),
       h("div", {class: "spacer"}),
-      h("button", {class: "icon-btn", "aria-label": "Copiar plano em texto", onclick: copyPlan}, ic("copy"))), sumbar),
+      h("button", {class: "icon-btn", "aria-label": "Copiar plano em texto", onclick: copyPlan}, ic("share")), quickBtn(p, "alimentacao")), sumbar),
     foodNav(),
-    h("div", {class: "plan-head"},
-      h("div", {class: "field", style: "margin:0"}, h("label", {for: "objetivo"}, "Objetivo"), h("div", {class: "acw"}, obj)),
-      h("div", {class: "field", style: "margin:0"}, h("label", {for: "meta"}, "Meta (kcal)"), tgt)),
+    goalRow, goalEd,
     C.energyOf(p).child ? h("p", {class: "note warn"}, "Para crianças e adolescentes, a meta considera o crescimento. Evite déficit calórico sem acompanhamento profissional.") : null,
     pasteNew,
     mealsEl,
@@ -2421,7 +2569,7 @@ function foodSheet(opt, done){
 /* ---------- Perfil ---------- */
 function renderProfile(p){
   const body = h("div", {class: "stack"});
-  put(app, h("div", {class: "view"}, topBar(),
+  put(app, h("div", {class: "view"}, topBar(quickBtn(p, "perfil")),
     h("section", {class: "card", style: "margin-top:14px"},
       h("div", {class: "prof"}, avatar(p), h("div", {style: "flex:1;min-width:0"}, h("b", null, p.name),
         h("div", {class: "sub"}, `${ageLabel(C.ageOf(p.birth))} · ${sexLabel(p.sex)} · nasc. ${fromISO(p.birth)}`)),
@@ -2655,15 +2803,18 @@ function backupSheet(){
         h("span", {style: "flex:1 1 100%"}, `Substituir ${nPeople(S.patients.length)} deste aparelho por ${nPeople(d.patients.length)} ${label || (b.exported ? "do backup de " + new Date(b.exported).toLocaleDateString("pt-BR") : "do backup")}?`),
         h("button", {class: "btn ghost", type: "button", style: "flex:1", onclick: () => confirmBox.replaceChildren()}, "Cancelar"),
         h("button", {class: "btn primary", type: "button", style: "flex:1", onclick: () => {
-          try { localStorage.setItem(KEY + ".antes-de-restaurar", JSON.stringify(S)); } catch (e) {}
+          const prev = JSON.stringify(S);
+          try { localStorage.setItem(KEY + ".antes-de-restaurar", prev); } catch (e) {}
+          try { localStorage.setItem(KEY, JSON.stringify(d)); }
+          catch (e) { status.textContent = "Não foi possível restaurar: o armazenamento deste aparelho está cheio ou bloqueado. Nada foi alterado."; confirmBox.replaceChildren(); return; }
           for (const f of db.list.filter(x => x.own)) db.remove(f.id);
-          try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (e) {}
           S = null; load(); close(); go({tab: "hoje", open: [], edit: null}); toast("Backup restaurado");
         }}, "Restaurar")));
     }
     let snap = null; try { for (const k of SNAPS) if (!snap) snap = localStorage.getItem(k); } catch (e) {}   // a cópia mais recente feita antes de uma atualização
     el.append(h("h2", null, "Backup"),
       h("p", {class: "sh-sub"}, S.lastBackup ? `Último backup: ${new Date(S.lastBackup).toLocaleDateString("pt-BR")}` : "Nenhum backup feito ainda."),
+      h("p", {class: "note", style: "margin:-8px 0 14px"}, "O backup contém os dados de saúde da família, sem criptografia. Guarde o arquivo em um lugar só seu."),
       h("div", {class: "bk-row"},
         embedded ? null : h("button", {class: "btn primary block", type: "button", onclick: exportNow}, "Exportar backup (arquivo)"),
         h("button", {class: embedded ? "btn primary block" : "btn ghost block", type: "button", onclick: copyNow}, "Copiar backup"),

@@ -288,6 +288,11 @@ Os números de toques da seção 6 foram medidos no simulador. O tempo real prec
 
 ## 12. Registro de alterações
 
+- **v4.2 (refinamento 2.0):**
+  - Hoje como cockpit; registro universal; Alimentação e Saúde compactas;
+  - planejado × consumido no anel;
+  - proteções contra perda de dados (seção 13).
+
 - **v4.1:**
   - **Refeição feita:** marcar com um toque na tela Hoje ou no plano. O consumido do dia aparece numa barra separada do painel planejado.
   - **Refeições favoritas:** comuns à família, aplicadas com um toque e com Desfazer.
@@ -300,3 +305,61 @@ Os números de toques da seção 6 foram medidos no simulador. O tempo real prec
   - Migração com cópia; 24 testes do núcleo.
 - **v3:** painel circular, cadastro por foto da tabela, protocolo escolhível, biblioteca com origem do dado.
 - **v2:** núcleo testado, família, substituições, busca tolerante, backup.
+
+---
+
+## 13. Refinamento premium 2.0 (auditoria e mudanças)
+
+### Auditoria das telas (antes)
+
+| Tela | Problema | Medida |
+|---|---|---|
+| Hoje | Alimentação ocupava ~1.000 de 1.600 px; movimento, sono e bem-estar e o próximo passo ficavam abaixo da primeira tela | Só a saudação e meio painel apareciam sem rolar (iPhone 13) |
+| Hoje | Repetições: "Olá, Camilo" (o nome já está no seletor), chip do objetivo (está no plano), "Abrir plano" (é a aba), grade "Registrar" (os indicadores vazios já abriam o registro) | 4 blocos redundantes |
+| Hoje | Texto explicativo permanente e linha de fibras ocupando espaço do essencial | — |
+| Alimentação | Cabeçalho, seletor, objetivo e meta: ~330 px antes da primeira refeição; objetivo e meta quase nunca mudam | — |
+| Alimentação | Cartões altos (refeição fechada ~70 px, alimento ~66 px); duplicar e favoritar escondidos no menu "Ações"; mesmo ícone para "copiar texto" e "duplicar" | 3 toques para favoritar |
+| Saúde | Gráficos grandes e históricos sempre abertos; "média de 1 noite" apresentada como tendência | — |
+| Geral | Bordas em todos os cartões; contorno cobre no cartão de energia | Ruído visual |
+| Dados | Falha de gravação ignorada em silêncio; a restauração anunciava sucesso mesmo quando a gravação falhava, e já tinha apagado da memória os alimentos próprios; duas janelas abertas podiam sobrescrever uma à outra | 3 riscos de perda de dados |
+
+### O que mudou
+
+- **Hoje vira um cockpit.** Um só bloco com três partes:
+  1. Anel com as calorias planejadas no centro e os macros no anel interno; ao lado, meta, consumido e C/P/G.
+  2. Só as refeições pendentes, até 3; a lista encolhe ao longo do dia.
+  3. Uma linha com movimento, sono e bem-estar.
+  - Tudo cabe acima da dobra (medido: termina em 432 px de 600 úteis no iPhone 13 e em 442 de 504 no SE).
+  - O detalhe completo (g/kg, fibras, Atwater) abre ao tocar no anel.
+- **Planejado × consumido no mesmo instrumento:** o anel externo mostra o planejado em cobre translúcido e o consumido em cobre cheio. Um rótulo identifica os dois; sem legenda decorativa.
+- **Registro universal "+"** no topo de Hoje, Alimentação (plano), Saúde e Perfil. A ordem das opções segue a tela:
+  - na Saúde, primeiro os registros de saúde;
+  - na Alimentação, primeiro os alimentos;
+  - no Hoje, primeiro as refeições pendentes, marcáveis com 1 toque dentro da própria folha.
+- **Alimentação:**
+  - objetivo e meta numa linha que abre os campos no lugar;
+  - cartões cerca de 20% mais baixos;
+  - favoritar (★) e duplicar com 1 toque no cartão aberto, com ícones distintos para exportar texto e duplicar;
+  - favoritas em chips.
+- **Saúde:**
+  - um resumo por pilar e um minigráfico; histórico e referências em "Histórico e referência", fechado por padrão;
+  - sono: média só com 3 noites ou mais, regularidade com 5 ou mais; antes disso, "última noite";
+  - aviso de que nenhum valor é estimado.
+- **Design:**
+  - cartões sem contorno (o contraste do fundo separa os blocos);
+  - tokens `--move` (turquesa), `--sleep` (lilás) e `--mood` (champanhe);
+  - CSS sem regras mortas (27 removidas).
+- **Segurança dos dados:**
+  - falha de gravação mostra aviso com atalho para backup e tenta de novo a cada 5 s;
+  - a restauração grava primeiro e só depois altera a memória; se falhar, diz que nada foi alterado;
+  - alterações feitas em outra janela são recarregadas, não sobrescritas;
+  - a tela de backup avisa que o arquivo contém dados de saúde sem criptografia.
+
+### Preservado
+- Todas as funções: plano, substituições, banco TACO, foto da tabela, cadastro manual, favoritas, refeição feita, família, backup.
+- Cálculos científicos sem alteração; dados existentes intactos (testado com a mesma base).
+
+### Ainda depende de validação
+- Uso em iPhone real.
+- Testes com pessoas.
+- O modo claro continua só preparado.
