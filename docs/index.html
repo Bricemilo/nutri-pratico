@@ -30,7 +30,7 @@ html{-webkit-text-size-adjust:100%}
   --bg:#0A0908; --surface:#191614; --surface-2:#221E1B; --surface-3:#2B2622;
   --ink:#F4EEE8; --ink-2:#CDC3B9; --muted:#968B81; --line:#2D2824; --line-2:#3B352F;
   --accent:#E08C4E; --accent-2:#F2A468; --accent-ink:#1C0E05; --accent-soft:#2F1E12; --accent-line:#6B4226;
-  --carb:#E5C07C; --prot:#6FC4BE; --fat:#DE8FA4; --fib:#A8C98B; --move:#6FC4BE; --sleep:#A9A6E0; --mood:#E5C07C; --danger:#FF7D74; --danger-soft:#33191A; --ok:#8FCB9B;
+  --carb:#E5C07C; --prot:#6FC4BE; --fat:#DE8FA4; --fib:#A8C98B; --food:#E08C4E; --move:#5FC4B8; --sleep:#9C93EE; --mood:#E58BB0; --danger:#FF7D74; --danger-soft:#33191A; --ok:#8FCB9B;
   --hero-1:#2E1D11; --hero-2:#181513; --scrim:rgba(0,0,0,.62); --shadow:0 14px 36px rgba(0,0,0,.5);
   --font:"Geist",-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
   --r:18px; --tabbar:64px;
@@ -462,6 +462,154 @@ h2.sec .sec-n{float:right;letter-spacing:.02em;text-transform:none;font-weight:5
 .fav svg{width:16px;height:16px;color:var(--accent-2);flex:none}
 .fav .nm{flex:1;min-width:0;font-weight:560;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .fav .kc{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+/* ===== Design system v5 =====
+   Pilares: alimentação (cobre), movimento (turquesa), sono (violeta), bem-estar (rosa). Cada um tinge só o próprio módulo.
+   Superfície padrão .panel: grafite, raio 20, sem contorno; título .panel-h. */
+.hi-h{margin:4px 2px 14px}
+.hi-h .today{margin:0 0 2px}
+.hi-h h1{font-size:28px;margin:0 0 4px}
+.hi-h .sub{font-size:13.5px;margin:0}
+.mods{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.mods.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.mod{--c:var(--food);display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-width:0;padding:11px 10px 10px;border-radius:18px;text-align:left;
+  background:color-mix(in srgb,var(--c) 13%,var(--surface));border:1px solid color-mix(in srgb,var(--c) 22%,transparent)}
+.mod.move{--c:var(--move)} .mod.sleep{--c:var(--sleep)} .mod.wb{--c:var(--mood)}
+.mod-i{color:var(--c)} .mod-i svg{width:20px;height:20px;display:block}
+.mod-l{font-size:10.5px;font-weight:600;letter-spacing:-.02em;color:var(--c);margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.mod b{font-size:19px;font-weight:650;letter-spacing:-.03em;line-height:1.15;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;font-variant-numeric:tabular-nums}
+.mod b svg{width:18px;height:18px;color:var(--c);display:block;margin:2px 0}
+.mod-s{font-size:11px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.mod.empty .mod-s{color:var(--muted)}
+.mod:active{transform:scale(.98)}
+.na{flex-direction:row;align-items:center;gap:12px;padding:14px 40px 14px 14px;margin-top:12px;border-radius:18px}
+.na > div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.na-ic{width:36px;height:36px;border-radius:12px;background:color-mix(in srgb,var(--accent) 22%,transparent);color:var(--accent-2);display:grid;place-items:center;flex:none}
+.na-ic svg{width:20px;height:20px}
+.panel{display:block;width:100%;margin-top:12px;padding:14px 16px 14px;border-radius:20px;background:var(--surface);text-align:left}
+.panel-h{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;margin:0 0 10px;font-size:16px;font-weight:620;letter-spacing:-.01em;text-align:left}
+.panel-h .li-go svg{width:16px;height:16px;color:var(--muted);display:block}
+.gauge{width:100%;text-align:left;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:10px;align-items:center}
+.dial-wrap.mini.gx{width:100%;max-width:196px}
+.dial-wrap.mini.gx .dial-c{inset:21%}
+.dial-wrap.mini.gx .dial-k{font-size:clamp(28px,8.5vw,36px)}
+.dial-wrap.mini.gx .dial-m{font-size:11px;margin-top:2px}
+.dial-wrap.mini.gx .dial-p{font-size:11px;padding:2px 8px;margin-top:6px}
+.dial-wrap.mini.gx .arc{stroke-width:17}
+.lgd{display:flex;flex-direction:column;gap:9px;min-width:0}
+.lg{display:flex;align-items:flex-start;gap:8px;min-width:0}
+.lg .dot{width:9px;height:9px;border-radius:50%;margin-top:4px;flex:none;background:currentColor}
+.lg span{display:block;font-size:12px;color:var(--muted)}
+.lg b{display:block;font-size:14px;font-weight:620;font-variant-numeric:tabular-nums;white-space:nowrap}
+.lg b small{font-size:11.5px;font-weight:500;color:var(--muted)}
+.eatline{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;margin-top:12px;padding-top:11px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.eatline b{color:var(--ink);font-size:14px;font-weight:650}
+.eatline .rk{display:inline-flex;align-items:center;gap:5px}
+.eatline .rk:last-child{margin-left:auto}
+.eatline i{display:inline-block;width:12px;height:4px;border-radius:2px}
+.mlist{display:flex;flex-direction:column}
+.mrow{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--line)}
+.mrow:first-child{border-top:0;padding-top:0}
+.mrow-b{flex:1;min-width:0;display:flex;align-items:center;gap:10px;text-align:left}
+.mrow .tm{width:42px;flex:none;font-size:13px;font-weight:600;color:var(--accent-2);font-variant-numeric:tabular-nums}
+.mrow .nm{flex:1;min-width:0}
+.mrow .nm b{display:block;font-size:15px;font-weight:580;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mrow .nm small{display:block;font-size:12px;color:var(--muted)}
+.mrow .kc{font-size:15px;font-weight:620;font-variant-numeric:tabular-nums;white-space:nowrap}
+.mrow .kc small{font-size:11.5px;color:var(--muted);font-weight:500}
+.mrow.on .nm b,.mrow.on .kc{color:var(--ink-2)}
+@media (max-width:370px){.mods{gap:6px}.mod{padding:10px 7px 9px}.mod b{font-size:16px}.mod-l{font-size:10.5px}.mod-s{font-size:10px}.gauge{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}.lg b{font-size:13px}.hi-h h1{font-size:25px}}
+
+/* Alimentação v5 */
+h1.pg{font-size:30px;margin:6px 2px 2px}
+.pg-s{margin:0 2px 12px;font-size:13.5px;color:var(--muted)}
+.top .sumbar{display:none}
+.top.show-sum .sumbar{display:flex}
+.sumcard{margin-top:12px;padding:12px 14px}
+.sc-top{display:flex;align-items:center;gap:12px}
+.sc-top .dial-wrap.mini{width:62px;flex:none}
+.sc-top .dial-wrap.mini .dial-c{display:none}
+.sc-top .dial-wrap.mini .arc{stroke-width:20}
+.sc-top .dial-wrap.mini .prog,.sc-top .dial-wrap.mini .eatarc,.sc-top .dial-wrap.mini .trk{stroke-width:14}
+.sc-top .dial-wrap.mini .ticks{display:none}
+.sc-k{flex:1;min-width:0}
+.sc-k b{font-size:24px;font-weight:650;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.sc-k span{font-size:13.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.sc-p{font-size:12.5px;color:var(--accent-2);margin-top:1px;font-variant-numeric:tabular-nums}
+.sc-top .li-go svg{width:16px;height:16px;color:var(--muted);display:block}
+.sc-m{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) minmax(0,1.2fr);gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:13.5px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.sc-m b{font-weight:700}
+.sc-m small{display:block;font-size:11px;color:var(--muted);font-weight:500;margin-top:1px}
+.mh-tm{width:42px;flex:none;font-size:13px;font-weight:600;color:var(--accent-2);font-variant-numeric:tabular-nums}
+.mh-n{color:var(--ink);font-size:15.5px;font-weight:600}
+.meal.open .mh-n,.meal-name{color:var(--accent-2)}
+.sec-n{font-size:12.5px;color:var(--muted);font-weight:500}
+@media (max-width:370px){.sc-m{grid-template-columns:repeat(3,minmax(0,1fr));}.sc-m span:last-child{display:none}h1.pg{font-size:26px}}
+
+.add-row.two{flex-direction:row}
+.add-row.two .add-meal{flex:1;white-space:nowrap}
+.add-meal.fav-b{flex:0 0 auto;padding:0 16px;border-style:solid;color:var(--accent-2)}
+.add-meal.fav-b svg{color:var(--accent-2)}
+/* Saúde v5: módulos tingidos pelo pilar */
+.hseg button{font-size:12.5px;padding:0 2px}
+.hp{--c:var(--move);padding:14px 14px 12px;border-radius:20px;background:color-mix(in srgb,var(--c) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--c) 20%,transparent)}
+.hp.sleep{--c:var(--sleep)} .hp.wb{--c:var(--mood)}
+.hp-h{display:flex;align-items:center;gap:10px}
+.hp-i{width:34px;height:34px;border-radius:11px;background:color-mix(in srgb,var(--c) 22%,transparent);color:var(--c);display:grid;place-items:center;flex:none}
+.hp-i svg{width:19px;height:19px}
+.hp-t{flex:1;display:flex;align-items:center;gap:6px;font-size:16px;font-weight:620;color:var(--c);text-align:left}
+.hp-t .li-go svg{width:14px;height:14px;color:var(--muted);display:block}
+.hp-add{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;color:var(--c);background:color-mix(in srgb,var(--c) 14%,transparent);flex:none}
+.hp-add svg{width:18px;height:18px}
+.hp-v{display:flex;align-items:baseline;gap:8px;margin:10px 2px 0}
+.hp-v b{font-size:28px;font-weight:650;letter-spacing:-.035em;font-variant-numeric:tabular-nums}
+.hp-v span{font-size:12.5px;color:var(--ink-2)}
+.hp .bars{height:50px;margin:8px 2px 0}
+.hp .bar i{background:var(--c)!important}
+.hp.full .bars{height:96px}
+.hp .hc-e{margin:10px 2px 2px;font-size:13px;color:var(--ink-2)}
+.hp .moods{margin-top:12px}
+.mchart{margin:8px 2px 0}
+.mline{display:block;width:100%;height:46px}
+.mline .ml{fill:none;stroke:var(--mood);stroke-width:2;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.mline .md{fill:var(--mood)}
+.mdays{display:flex;justify-content:space-between;padding:0 calc(3.57% - 4px);font-size:10px;color:var(--muted);margin-top:4px}
+.mdays span{width:8px;text-align:center}
+.hp.full .mline{height:70px}
+.hstack .panel{margin-top:0}
+/* Perfil v5 */
+.idc{display:flex;align-items:center;gap:14px}
+.idc .av{width:54px;height:54px;font-size:18px}
+.pr-m{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.pr-m b{font-size:16.5px;font-weight:620;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.idc .pr-m b{font-size:19px;letter-spacing:-.02em}
+.pr-m span{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ecard .seg{margin-top:2px}
+.ecard .seg button{font-size:13px}
+.etiles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.etile{padding:11px 13px;border-radius:14px;background:var(--surface-2)}
+.etile span{display:block;font-size:12px;color:var(--muted)}
+.etile b{font-size:28px;font-weight:640;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.etile b small{font-size:12.5px;font-weight:500;color:var(--muted);letter-spacing:0}
+.etile b.acc{color:var(--accent-2)}
+.eline{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:10px;font-size:12.5px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.prows{margin-top:12px;border-radius:20px;background:var(--surface);overflow:hidden}
+.prow{display:flex;align-items:center;gap:13px;width:100%;padding:12px 14px;text-align:left;border-top:1px solid var(--line)}
+.prow:first-child{border-top:0}
+.prow:active{background:var(--surface-2)}
+.pr-i{width:34px;height:34px;border-radius:11px;background:var(--surface-2);color:var(--ink-2);display:grid;place-items:center;flex:none}
+.pr-i svg{width:18px;height:18px}
+.prow .pr-m b{font-size:15px;font-weight:600}
+.prow .li-go svg{width:16px;height:16px;color:var(--muted);display:block}
+.chips.rm button{display:inline-flex;align-items:center;gap:6px;font-size:13px}
+.chips.rm svg{width:12px;height:12px;color:var(--muted)}
+.qbigs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.qbigs.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.qbig{--c:var(--food);display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 4px 12px;border-radius:18px;font-size:13px;font-weight:600;color:var(--ink);
+  background:color-mix(in srgb,var(--c) 14%,var(--surface-2));border:1px solid color-mix(in srgb,var(--c) 26%,transparent);min-width:0}
+.qbig svg{width:26px;height:26px;color:var(--c)}
+.qbig.move{--c:var(--move)} .qbig.sleep{--c:var(--sleep)} .qbig.wb{--c:var(--mood)}
+.qbig:active{transform:scale(.97)}
+@media (max-width:370px){.qbig{font-size:11.5px;padding:14px 2px 10px}}
 /* Hoje: cockpit */
 .today{margin:6px 2px 12px;font-size:13.5px;color:var(--muted);font-weight:500}
 .today::first-letter{text-transform:uppercase}
@@ -1162,6 +1310,12 @@ const ICON = {
   mark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 5-14 14-14 0 9-6 14-14 14Z"/><path d="M5 19 13 11"/></svg>',
   share:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5v11M8 7.5l4-4 4 4"/><path d="M6 11.5H5a1 1 0 0 0-1 1V19a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 20 19v-6.5a1 1 0 0 0-1-1h-1"/></svg>',
   dup:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6.5A2.5 2.5 0 0 0 13.5 4h-7A2.5 2.5 0 0 0 4 6.5v7A2.5 2.5 0 0 0 6.5 16H8M14 11v6M11 14h6"/></svg>',
+  spark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V16h5.2v-.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3Z"/></svg>',
+  target:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".8" fill="currentColor"/></svg>',
+  ruler:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="8" width="17" height="8" rx="1.5"/><path d="M7.5 8v3M11 8v4M14.5 8v3M18 8v4"/></svg>',
+  users:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="3.3"/><path d="M3.5 19c.8-3 3-4.6 5.5-4.6s4.7 1.6 5.5 4.6"/><path d="M15.5 6a3 3 0 0 1 0 6M17 14.6c1.8.5 3 1.9 3.5 4.4"/></svg>',
+  sliders:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>',
+  book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg>',
   pulse:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12.5h4l2-5 4 10 2.2-5h4.8"/></svg>',
   walk:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="4.5" r="1.8"/><path d="m9 21 2.5-6 2.5 2.5V21M8 11l2.5-3.5h3L16 11l2.5 1M11.5 15l1-4.5"/></svg>',
   moon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 14.5A7.5 7.5 0 0 1 9.5 4.5a7.5 7.5 0 1 0 10 10Z"/></svg>',
@@ -1443,9 +1597,14 @@ function render(){
     h("button", {class: "tab" + (view.tab === id ? " on" : ""), "aria-current": view.tab === id ? "page" : null, onclick: () => go({tab: id, edit: null})}, ic(icon), label))));
   const p = active();
   if (!p) { renderWelcome(); return; }
-  ({hoje: renderHome, alimentacao: view.sub === "alimentos" ? renderFoods : renderPlan, saude: renderHealth, perfil: renderProfile})[view.tab](p);
+  ({hoje: renderHome, alimentacao: view.sub === "alimentos" ? renderFoods : view.sub === "favoritos" ? renderFavorites : renderPlan, saude: renderHealth, perfil: renderProfile})[view.tab](p);
 }
-window.addEventListener("scroll", () => { const t = $(".top"); if (t) t.classList.toggle("scrolled", scrollY > 4); }, {passive: true});
+window.addEventListener("scroll", () => {
+  const t = $(".top"); if (!t) return;
+  t.classList.toggle("scrolled", scrollY > 4);
+  // no plano, a barra-resumo fixa só aparece quando o cartão-resumo já saiu da tela (sem informação repetida à vista)
+  const sc = $(".sumcard"); if (sc) t.classList.toggle("show-sum", sc.getBoundingClientRect().bottom < t.offsetHeight);
+}, {passive: true});
 const coarse = matchMedia("(pointer: coarse)");
 document.addEventListener("focusin", e => { if (coarse.matches && e.target.matches("input:not([type=time]), textarea")) document.body.classList.add("typing"); });
 document.addEventListener("focusout", () => setTimeout(() => { const a = document.activeElement; if (!a || !a.matches("input, textarea")) document.body.classList.remove("typing"); }, 80));
@@ -1468,7 +1627,7 @@ function switcher(){
       h("div", {style: "height:12px"}),
       h("div", {class: "bk-row"},
         h("button", {class: "btn ghost block", onclick: () => { close(); profileSheet(); }}, ic("plus"), "Adicionar pessoa"),
-        h("button", {class: "btn plain block", onclick: () => { close(); go({tab: "perfil"}); setTimeout(() => { const f = $("#familia"); if (f) f.scrollIntoView({block: "start"}); }, 60); }}, "Editar ou excluir pessoas em Perfil")));
+        h("button", {class: "btn plain block", onclick: () => { close(); setTimeout(familySheet, 280); }}, "Editar ou excluir pessoas")));
   });
 }
 
@@ -1541,46 +1700,52 @@ function healthCtx(p){
 function renderHome(p){
   const plan = p.plan, r = C.energyOf(p), tg = plan.target || (r.ok && r.get ? Math.round(r.get) : null);
   const t = planTotal(plan), L = logsOf(p), ctx = healthCtx(p), adult = adultOf(p), sp = C.macroSplit(t);
-  const dayTxt = new Date().toLocaleDateString("pt-BR", {weekday: "long", day: "numeric", month: "long"});
+  const now = new Date(), hr = now.getHours();
+  const dayTxt = now.toLocaleDateString("pt-BR", {weekday: "long", day: "numeric", month: "long"});
   const days = S.lastBackup ? Math.floor((Date.now() - S.lastBackup) / DAY) : null;
   const backupDue = S.patients.some(x => !x.example) && (days == null || days >= 7);
   const na = C.nextAction(ctx);
-  const naGo = {perfil: () => go({tab: "perfil"}), plano: () => go({tab: "alimentacao", sub: "plano"}), mover: () => moveSheet(p), sono: () => go({tab: "saude", anchor: "sono"})};
+  const naGo = {perfil: () => go({tab: "perfil"}), plano: () => go({tab: "alimentacao", sub: "plano"}), mover: () => moveSheet(p), sono: () => go({tab: "saude", hsub: "sono"})};
   const repaint = () => renderHome(p);
   const openPlan = m => go({tab: "alimentacao", sub: "plano", open: m ? [m.id] : [], focusMeal: m ? m.id : null, edit: null});
-  // alimentação: anel (planejado × consumido) + números essenciais; o detalhe completo abre sob demanda
   const eaten = C.eatenDay(L.eaten, today());
   const meals = [...plan.meals].filter(m => filled(m).length).sort(byTime);
-  const pending = meals.filter(m => !doneOf(p, m));
-  const nut = meals.length ? h("button", {class: "ck-nut", type: "button", "aria-label": "Ver o resumo nutricional completo", onclick: () => nutritionSheet(p)},
-    dial(t, tg, p.energy.weight, {mini: true, eaten: eaten.t.kcal}),
-    h("div", {class: "ck-st"},
-      h("div", {class: "ck-row"}, h("i", {class: "rk-p"}), h("span", null, "Meta"), h("b", null, tg ? k0(tg) : "—", tg ? h("em", null, " kcal") : null), h("small", null, tg ? `plano cobre ${Math.round(t.kcal / tg * 100)}%` : "sem meta")),
-      h("div", {class: "ck-row"}, h("i", {class: "rk-e"}), h("span", null, "Consumido"), h("b", null, k0(eaten.t.kcal), h("em", null, " kcal")), h("small", null, `${eaten.count} de ${meals.length} ${meals.length === 1 ? "refeição" : "refeições"}`)),
-      h("div", {class: "ck-mac"}, [["t-c", "C", t.c, sp.c], ["t-p", "P", t.p, sp.p], ["t-g", "G", t.l, sp.l]].map(([c, k, g, pc]) =>
-        h("span", null, h("b", {class: c}, k), `${fmtG(g)} g`, h("small", null, `${Math.round(pc)}%`))))))
-    : h("button", {class: "ck-empty", type: "button", onclick: () => openPlan()}, h("span", {class: "qa-i", html: ICON.food}),
-        h("div", null, h("b", null, "Monte o plano do dia"), "Refeições, calorias e macronutrientes em poucos toques."), h("span", {class: "li-go", html: ICON.right}));
-  // próximas refeições: só as pendentes, no máximo 3; a lista encolhe ao longo do dia
-  const next = meals.length ? h("div", {class: "ck-meals"},
-    pending.length ? pending.slice(0, 3).map(m => h("div", {class: "eat-r"}, doneBtn(p, m, repaint),
-      h("button", {class: "eat-m", type: "button", onclick: () => openPlan(m)}, h("span", {class: "tm"}, m.time || "—"), h("span", {class: "nm"}, m.name.trim() || "Refeição"), h("span", {class: "kc"}, `${k0(mealTotal(m).kcal)} kcal`))))
-      : h("div", {class: "ck-done"}, h("span", {html: ICON.check}), "Todas as refeições de hoje feitas"),
-    pending.length > 3 ? h("button", {class: "link sm", type: "button", onclick: () => openPlan()}, `+${pending.length - 3} no plano`) : null) : null;
-  // outros pilares: um número cada; sem dado, o toque já abre o registro
   const sl = ctx.sleep.stats.last, lastNight = sl && C.addDays(sl.date, 1) >= today() ? sl : null;
   const moodToday = [...L.mood].reverse().find(x => x.date === today());
-  const cell = (cls, icon, label, value, sub, has, fn) => h("button", {class: "ck-c " + cls + (has ? "" : " empty"), type: "button", onclick: fn},
-    h("span", {class: "tl-h"}, h("span", {class: "tl-i", html: ICON[icon]}), label), has ? h("b", null, value) : h("b", {class: "ck-add"}, ic("plus"), "Registrar"), h("span", {class: "tl-s"}, has ? sub : " "));
-  const pillars = h("div", {class: "ck-p" + (adult ? "" : " two")},
-    cell("mov", "walk", "Movimento", fmtDur(ctx.move.week.total), "nesta semana", L.move.length > 0, () => L.move.length ? go({tab: "saude", anchor: "movimento"}) : moveSheet(p)),
-    cell("sono", "moon", "Sono", lastNight ? fmtDur(lastNight.min) : "", "última noite", !!lastNight, () => lastNight ? go({tab: "saude", anchor: "sono"}) : sleepSheet(p)),
-    adult ? cell("bem", "smile", "Bem-estar", moodToday ? MOODS[moodToday.mood - 1] : "", "hoje", !!moodToday, () => moodToday ? go({tab: "saude", anchor: "bem-estar"}) : moodSheet(p)) : null);
+  // resumo em uma frase, só com o que existe
+  const status = [meals.length ? `${eaten.count} de ${meals.length} ${meals.length === 1 ? "refeição feita" : "refeições feitas"}` : null,
+    L.move.length ? `${fmtDur(ctx.move.week.total)} de movimento na semana` : null].filter(Boolean).join(" · ") || "Registre o que fizer sentido; o resto o app organiza.";
+  // quatro módulos: o número mais útil de cada pilar; sem dado, o toque abre o registro
+  const mod = (cls, icon, label, value, sub, fn, has) => h("button", {class: "mod " + cls + (has ? "" : " empty"), type: "button", onclick: fn, "aria-label": `${label}: ${has ? value + " " + sub : "registrar"}`},
+    h("span", {class: "mod-i", html: ICON[icon]}), h("span", {class: "mod-l"}, label), h("b", null, has ? value : ic("plus")), h("span", {class: "mod-s"}, has ? sub : "registrar"));
+  const mods = h("div", {class: "mods" + (adult ? "" : " three")},
+    mod("food", "food", "Alimentação", k0(eaten.t.kcal), "kcal hoje", () => meals.length ? openPlan() : openPlan(), meals.length > 0),
+    mod("move", "walk", "Movimento", fmtDur(ctx.move.week.total), "na semana", () => L.move.length ? go({tab: "saude", hsub: "movimento"}) : moveSheet(p), L.move.length > 0),
+    mod("sleep", "moon", "Sono", lastNight ? fmtDur(lastNight.min) : "", "última noite", () => lastNight ? go({tab: "saude", hsub: "sono"}) : sleepSheet(p), !!lastNight),
+    adult ? mod("wb", "smile", "Bem-estar", moodToday ? MOODS[moodToday.mood - 1] : "", "hoje", () => moodToday ? go({tab: "saude", hsub: "bem-estar"}) : moodSheet(p), !!moodToday) : null);
+  // mostrador: planejado no centro, macros no anel interno e na legenda, consumido no anel externo
+  const legend = h("div", {class: "lgd"}, [["t-c", "Carboidratos", t.c, sp.c], ["t-p", "Proteínas", t.p, sp.p], ["t-g", "Gorduras", t.l, sp.l]].map(([c, n, g, pc]) =>
+      h("div", {class: "lg"}, h("i", {class: "dot " + c}), h("div", null, h("span", null, n), h("b", null, `${fmtG(g)} g`, h("small", null, ` · ${Math.round(pc)}%`))))),
+    h("div", {class: "lg"}, h("i", {class: "dot t-f"}), h("div", null, h("span", null, "Fibras"), h("b", null, `${fmtG(t.f)} g`, t.kcal ? h("small", null, ` · ${g1(t.f * 1000 / t.kcal)}/1.000 kcal`) : null))));
+  const nutCard = meals.length ? h("section", {class: "panel"},
+    h("button", {class: "panel-h", type: "button", onclick: () => nutritionSheet(p)}, h("span", null, "Alimentação do dia"), h("span", {class: "li-go", html: ICON.right})),
+    h("button", {class: "gauge", type: "button", "aria-label": "Ver o detalhe nutricional: macros, g/kg e fibras", onclick: () => nutritionSheet(p)}, dial(t, tg, p.energy.weight, {mini: true, big: true, eaten: eaten.t.kcal}), legend),
+    h("div", {class: "eatline"}, h("span", {class: "rk"}, h("i", {class: "rk-e"}), "Consumido"), h("b", null, `${k0(eaten.t.kcal)} kcal`),
+      h("span", {class: "eat-of"}, tg ? `de ${k0(tg)}` : ""), h("span", {class: "rk"}, h("i", {class: "rk-p"}), "Planejado")))
+    : h("button", {class: "panel ck-empty", type: "button", onclick: () => openPlan()}, h("span", {class: "qa-i", html: ICON.food}),
+        h("div", null, h("b", null, "Monte o plano do dia"), "Refeições, calorias e macronutrientes em poucos toques."), h("span", {class: "li-go", html: ICON.right}));
+  const mealList = meals.length ? h("section", {class: "panel"},
+    h("div", {class: "panel-h"}, h("span", null, "Suas refeições"), h("button", {class: "link", type: "button", onclick: () => openPlan()}, "Ver plano")),
+    h("div", {class: "mlist"}, meals.map(m => { const d = doneOf(p, m);
+      return h("div", {class: "mrow" + (d ? " on" : "")}, doneBtn(p, m, repaint),
+        h("button", {class: "mrow-b", type: "button", onclick: () => openPlan(m)}, h("span", {class: "tm"}, m.time || "—"),
+          h("span", {class: "nm"}, h("b", null, m.name.trim() || "Refeição"), h("small", null, d ? "feita" : nItems(filled(m).length))), h("span", {class: "kc"}, k0(d ? d.t.kcal : mealTotal(m).kcal), h("small", null, " kcal")))); }))) : null;
   put(app, h("div", {class: "view"}, topBar(quickBtn(p, "hoje")),
-    h("div", {class: "today"}, dayTxt),
-    h("section", {class: "cockpit", "aria-label": "Resumo de hoje"}, nut, next, pillars),
-    na ? h("button", {class: "na " + na.tone, type: "button", onclick: naGo[na.go]},
-      h("span", {class: "na-e"}, na.tone === "good" ? "Bom trabalho" : "Próximo passo"), h("b", null, na.title), h("span", {class: "na-t"}, na.text), h("span", {class: "li-go", html: ICON.right})) : null,
+    h("header", {class: "hi-h"}, h("div", {class: "today"}, dayTxt), h("h1", null, `${hr < 12 ? "Bom dia" : hr < 18 ? "Boa tarde" : "Boa noite"}, ${firstName(p.name)}`), h("p", {class: "sub"}, status)),
+    mods,
+    na ? h("button", {class: "na " + na.tone, type: "button", onclick: naGo[na.go]}, h("span", {class: "na-ic", html: ICON.spark}),
+      h("div", null, h("span", {class: "na-e"}, na.tone === "good" ? "Bom trabalho" : "Seu próximo passo"), h("b", null, na.title), h("span", {class: "na-t"}, na.text)), h("span", {class: "li-go", html: ICON.right})) : null,
+    nutCard, mealList,
     backupDue ? h("button", {class: "quiet", onclick: backupSheet}, ic("lock"), days == null ? "Seus dados ainda não têm backup · Fazer agora" : `Último backup há ${days} dias · Fazer agora`) : null));
 }
 // Resumo nutricional completo (Hoje e Alimentação): painel com macros, g/kg, fibras, planejado e consumido.
@@ -1606,14 +1771,14 @@ function quickSheet(p, ctx){
     const mealRows = pending.length ? h("div", {class: "qmeals"}, h("div", {class: "lbl2", style: "margin-top:0"}, "Marcar refeição feita"),
       pending.slice(0, 4).map(m => h("button", {class: "qmeal", type: "button", onclick: () => { close(); toggleDone(p, m, render); }},
         h("span", {class: "done"}), h("span", {class: "tm"}, m.time || "—"), h("span", {class: "nm"}, m.name.trim() || "Refeição"), h("span", {class: "kc"}, `${k0(mealTotal(m).kcal)} kcal`)))) : null;
-    const health = [row("walk", "Atividade", "Tipo e duração", () => moveSheet(p)), row("moon", "Sono", "Dormir, acordar e como foi", () => sleepSheet(p)),
-      adult ? row("smile", "Bem-estar", "Como você está agora", () => moodSheet(p)) : null];
+    const big = (cls, icon, label, fn) => h("button", {class: "qbig " + cls, type: "button", onclick: () => { close(); setTimeout(fn, 60); }}, h("span", {html: ICON[icon], style: "display:contents"}), label);
+    const health = h("div", {class: "qbigs" + (adult ? "" : " three")},
+      big("food", "food", "Refeição", () => go({tab: "alimentacao", sub: "plano"})), big("move", "walk", "Atividade", () => moveSheet(p)),
+      big("sleep", "moon", "Sono", () => sleepSheet(p)), adult ? big("wb", "smile", "Bem-estar", () => moodSheet(p)) : null);
     const food = [row("food", "Alimento no plano", "Buscar e adicionar a uma refeição", () => { go({tab: "alimentacao", sub: "alimentos"}); setTimeout(() => { const i = $("#busca-alimento"); if (i) i.focus(); }, 80); }),
       row("camera", "Novo alimento", embedded ? "Digitar os dados do rótulo" : "Foto da tabela nutricional ou digitação", () => addFoodChooser("", () => render()))];
-    el.append(h("h2", null, "Registrar"),
-      ...(ctx === "alimentacao" ? [h("div", {class: "qlist"}, food), mealRows, h("div", {class: "qlist"}, health)]
-        : ctx === "saude" ? [h("div", {class: "qlist"}, health), mealRows, h("div", {class: "qlist"}, food)]
-        : [mealRows, h("div", {class: "qlist"}, health), h("div", {class: "qlist"}, food)]));
+    el.append(h("h2", null, "Registrar"), h("p", {class: "sh-sub"}, "Em segundos, de qualquer tela."), health,
+      ...(ctx === "alimentacao" ? [h("div", {class: "qlist"}, food), mealRows] : [mealRows, h("div", {class: "qlist"}, food)]));
   });
 }
 const byTime = (a, b) => (a.time || "99") < (b.time || "99") ? -1 : (a.time || "99") > (b.time || "99") ? 1 : 0;
@@ -1633,53 +1798,68 @@ function removeLog(p, kind, e, label){
   L[kind].splice(i, 1); touch(p); render();
   toast(`${label} apagado`, () => { L[kind].splice(i, 0, e); touch(p); render(); });
 }
+function moodLine(L, keys){
+  // linha dos últimos dias: só os dias com registro viram ponto; dias sem registro ficam vazios (não há interpolação)
+  const W = 280, H = 56, x = i => 10 + i * (W - 20) / (keys.length - 1), y = v => H - 8 - (v - 1) * (H - 16) / 4;
+  const pts = keys.map((k, i) => { const e = [...L.mood].reverse().find(m => m.date === k); return e ? [x(i), y(e.mood)] : null; });
+  const NS = "http://www.w3.org/2000/svg", el = (t, a) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
+  const svg = el("svg", {viewBox: `0 0 ${W} ${H}`, class: "mline", "aria-hidden": "true", preserveAspectRatio: "none"});
+  let run = [];
+  const flush = () => { if (run.length > 1) svg.append(el("polyline", {points: run.map(p => p.join(",")).join(" "), class: "ml"})); run = []; };
+  pts.forEach(p => { if (p) run.push(p); else flush(); }); flush();
+  pts.forEach(p => { if (p) svg.append(el("circle", {cx: p[0], cy: p[1], r: 3.6, class: "md"})); });
+  return h("div", {class: "mchart"}, svg, h("div", {class: "mdays"}, keys.map(k => h("span", null, WD[(new Date(k + "T12:00").getDay() + 6) % 7]))));
+}
 function renderHealth(p){
   const L = logsOf(p), t = today(), age = C.ageOf(p.birth), adult = adultOf(p);
   const mw = C.moveWeek(L.move, t), mref = C.moveRef(age), ss = C.sleepStats(L.sleep, t), sref = C.sleepRef(age);
-  const nowI = C.weekKeys(t).indexOf(t);
+  const nowI = C.weekKeys(t).indexOf(t), last7 = Array.from({length: 7}, (_, i) => C.addDays(t, i - 6));
+  const sub = ["movimento", "sono", "bem-estar"].includes(view.hsub) && (adult || view.hsub !== "bem-estar") ? view.hsub : "resumo";
   const byDate = (a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : (b.at || 0) - (a.at || 0);
-  const hist = (kind, list, line) => list.length ? h("div", {class: "hist"}, list.slice(0, 6).map(e => h("div", {class: "hi"},
+  const hist = (kind, list, line) => list.length ? h("div", {class: "hist"}, list.slice(0, 12).map(e => h("div", {class: "hi"},
     h("div", {class: "hi-m"}, line(e)), h("button", {class: "x", type: "button", "aria-label": `Apagar registro de ${relDay(e.date)}`, html: ICON.x, onclick: () => removeLog(p, kind, e, "Registro")})))) : null;
-  // cada pilar: uma linha de resumo + minigráfico; histórico e referências abrem sob demanda
-  const card = (id, cls, icon, title, summary, add, addLabel, body, more) => h("section", {class: "hc", id},
-    h("div", {class: "hc-h"}, h("span", {class: "hc-i " + cls, html: ICON[icon]}), h("div", {class: "hc-t"}, h("b", null, title), h("span", null, summary)),
-      add ? h("button", {class: "icon-btn", type: "button", "aria-label": addLabel, onclick: add}, ic("plus")) : null),
-    body, more ? h("details", {class: "adv hd"}, h("summary", null, "Histórico e referência"), more) : null);
-  const movCard = card("movimento", "mov", "walk", "Movimento",
-    L.move.length ? `${fmtDur(mw.total)} nesta semana · ${mw.activeDays} ${mw.activeDays === 1 ? "dia" : "dias"}` : "Nenhum registro ainda", () => moveSheet(p), "Registrar atividade",
-    L.move.length ? bars(mw.days.map(d => d.min), Math.max(60, ...mw.days.map(d => d.min)), WD, nowI)
-      : h("p", {class: "hc-e"}, "Caminhada, musculação, tênis… registre em segundos."),
-    L.move.length ? [mref ? h("p", {class: "ref"}, mref.week && !mref.perDay ? `${mw.mv} min de atividade moderada ou vigorosa nesta semana. ` : "", mref.text) : null,
-      hist("move", [...L.move].sort(byDate), e => [h("b", null, e.type), ` · ${fmtDur(e.min)}${e.intensity ? " · " + INTENS.find(x => x[0] === e.intensity)[1].toLowerCase() : ""}`, h("span", null, " " + relDay(e.date))])] : null);
-  // sono: média só com 3 noites ou mais; antes disso, só a última noite (um registro não é tendência)
-  const sleepSum = ss.count >= 3 ? `média ${fmtDur(ss.avg)} · ${ss.count} de 7 noites` : ss.last ? `última noite ${fmtDur(ss.last.min)}` : "Nenhum registro ainda";
-  const sleepCard = card("sono", "sono", "moon", "Sono", sleepSum, () => sleepSheet(p), "Registrar sono",
-    L.sleep.length ? bars(ss.nights.map(n => n.min || 0), 600, ss.nights.map(n => WD[(new Date(n.key + "T12:00").getDay() + 6) % 7]), 6)
-      : h("p", {class: "hc-e"}, "Hora de dormir, hora de acordar e como foi. Sem notas nem competição."),
-    L.sleep.length ? [h("p", {class: "ref"}, ss.count < 3 ? "A média e a regularidade aparecem a partir de 3 noites registradas nos últimos 7 dias. " : "",
-        ss.count >= 5 && ss.bedSD != null ? `Horário de dormir: variação de cerca de ${Math.round(ss.bedSD)} min. ` : "", sref ? sref.text : ""),
-      hist("sleep", [...L.sleep].sort(byDate), e => [h("b", null, fmtDur(C.sleepMinutes(e.bed, e.wake))), ` · ${e.bed}–${e.wake}${e.quality ? " · " + QUAL[e.quality - 1].toLowerCase() : ""}`, h("span", null, " " + relDay(e.date))])] : null);
-  let moodCard;
-  if (adult){
-    const last14 = Array.from({length: 14}, (_, i) => C.addDays(t, i - 13));
-    const dayMood = k => [...L.mood].reverse().find(x => x.date === k);
-    const todayM = dayMood(t);
-    moodCard = card("bem-estar", "bem", "smile", "Bem-estar", todayM ? `Hoje: ${MOODS[todayM.mood - 1].toLowerCase()}` : "Como você está agora?", null, "",
-      [h("div", {class: "moods", role: "group", "aria-label": "Registrar como você está"}, MOODS.map((m, i) => h("button", {type: "button", class: "mood m" + (i + 1) + (todayM && todayM.mood === i + 1 ? " on" : ""),
-        onclick: () => saveMood(p, {mood: i + 1})}, h("i"), m))),
-       h("button", {class: "link", type: "button", onclick: () => moodSheet(p)}, "Registrar com energia, estresse ou nota")],
-      !L.mood.length ? null : [
-       L.mood.length ? h("div", {class: "dots", "aria-label": "Últimos 14 dias"}, last14.map(k => { const x = dayMood(k); return h("span", {class: x ? "m" + x.mood : "", title: `${relDay(k)}: ${x ? MOODS[x.mood - 1] : "sem registro"}`}); })) : null,
-       L.mood.length ? h("p", {class: "ref"}, "Últimos 14 dias. Dias sem registro não significam nada.") : null,
-       hist("mood", [...L.mood].sort(byDate), e => [h("b", null, MOODS[e.mood - 1]), e.energy ? ` · energia ${e.energy}` : "", e.stress ? ` · estresse ${e.stress}` : "", e.note ? ` · “${e.note}”` : "", h("span", null, ` ${relDay(e.date)}${e.time ? " " + e.time : ""}`)])]);
-  } else {
-    moodCard = h("p", {class: "note"}, "O registro de bem-estar emocional para crianças e adolescentes terá um fluxo próprio, adequado à idade.");
-  }
+  const dayMood = k => [...L.mood].reverse().find(x => x.date === k), todayM = dayMood(t);
+  const sleepBars = () => bars(ss.nights.map(n => n.min || 0), 600, ss.nights.map(n => WD[(new Date(n.key + "T12:00").getDay() + 6) % 7]), 6);
+  const moveBars = () => bars(mw.days.map(d => d.min), Math.max(60, ...mw.days.map(d => d.min)), WD, nowI);
+  // o número principal de cada pilar; médias só com dados suficientes
+  const P = {
+    movimento: {cls: "move", icon: "walk", title: "Movimento", has: L.move.length > 0, value: fmtDur(mw.total), ctx: `nesta semana · ${mw.activeDays} ${mw.activeDays === 1 ? "dia" : "dias"}`,
+      empty: "Caminhada, musculação, tênis… registre em segundos.", chart: moveBars, add: () => moveSheet(p), addL: "Registrar atividade"},
+    sono: {cls: "sleep", icon: "moon", title: "Sono", has: L.sleep.length > 0, value: ss.count >= 3 ? fmtDur(ss.avg) : ss.last ? fmtDur(ss.last.min) : "—",
+      ctx: ss.count >= 3 ? `média de ${ss.count} noites` : ss.last ? `última noite registrada · ${relDay(ss.last.date).toLowerCase()}` : "",
+      empty: "Hora de dormir e de acordar. Sem notas nem competição.", chart: sleepBars, add: () => sleepSheet(p), addL: "Registrar sono"},
+    "bem-estar": {cls: "wb", icon: "smile", title: "Bem-estar", has: L.mood.length > 0, value: todayM ? MOODS[todayM.mood - 1] : "—", ctx: todayM ? `hoje às ${todayM.time}` : "sem registro hoje",
+      empty: "Um toque para dizer como você está. Fica só com você.", chart: () => moodLine(L, last7), add: () => moodSheet(p), addL: "Registrar bem-estar"}};
+  const card = (k, full) => { const c = P[k];
+    return h("section", {class: "hp " + c.cls + (full ? " full" : ""), id: k},
+      h("div", {class: "hp-h"}, h("span", {class: "hp-i", html: ICON[c.icon]}),
+        full ? h("span", {class: "hp-t"}, c.title) : h("button", {class: "hp-t link0", type: "button", onclick: () => go({hsub: k})}, c.title, h("span", {class: "li-go", html: ICON.right})),
+        h("button", {class: "hp-add", type: "button", "aria-label": c.addL, onclick: c.add}, ic("plus"))),
+      c.has ? [h("div", {class: "hp-v"}, h("b", null, c.value), h("span", null, c.ctx)), c.chart()] : h("p", {class: "hc-e"}, c.empty),
+      k === "bem-estar" && full ? h("div", {class: "moods", role: "group", "aria-label": "Registrar como você está"}, MOODS.map((m, i) => h("button", {type: "button", class: "mood m" + (i + 1) + (todayM && todayM.mood === i + 1 ? " on" : ""),
+        onclick: () => saveMood(p, {mood: i + 1})}, h("i"), m))) : null);
+  };
+  const detail = {
+    movimento: () => [card("movimento", true), h("div", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Referência")),
+        h("p", {class: "ref", style: "margin:0"}, mref ? [mref.week && !mref.perDay ? `${mw.mv} min de atividade moderada ou vigorosa nesta semana. ` : "", mref.text] : "Abaixo de 5 anos o app não usa meta numérica de atividade."),
+        h("p", {class: "ref"}, "O app não converte atividade em calorias: as estimativas variam muito entre pessoas.")),
+      L.move.length ? h("div", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Histórico")), hist("move", [...L.move].sort(byDate), e => [h("b", null, e.type), ` · ${fmtDur(e.min)}${e.intensity ? " · " + INTENS.find(x => x[0] === e.intensity)[1].toLowerCase() : ""}`, h("span", null, " " + relDay(e.date))])) : null],
+    sono: () => [card("sono", true), h("div", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Regularidade e referência")),
+        h("p", {class: "ref", style: "margin:0"}, ss.count < 3 ? "A média aparece a partir de 3 noites registradas nos últimos 7 dias; a regularidade, a partir de 5." :
+          ss.count >= 5 && ss.bedSD != null ? `Horário de dormir variou cerca de ${Math.round(ss.bedSD)} minutos para mais ou para menos nos últimos 7 dias.` : "A regularidade aparece a partir de 5 noites registradas."),
+        sref ? h("p", {class: "ref"}, sref.text) : null),
+      L.sleep.length ? h("div", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Histórico")), hist("sleep", [...L.sleep].sort(byDate), e => [h("b", null, fmtDur(C.sleepMinutes(e.bed, e.wake))), ` · ${e.bed}–${e.wake}${e.quality ? " · " + QUAL[e.quality - 1].toLowerCase() : ""}`, h("span", null, " " + relDay(e.date))])) : null],
+    "bem-estar": () => [card("bem-estar", true), h("button", {class: "link", type: "button", style: "margin:10px 4px 0", onclick: () => moodSheet(p)}, "Registrar com energia, estresse ou nota"),
+      L.mood.length ? h("div", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Últimos 14 dias")),
+        h("div", {class: "dots"}, Array.from({length: 14}, (_, i) => C.addDays(t, i - 13)).map(k => { const x = dayMood(k); return h("span", {class: x ? "m" + x.mood : "", title: `${relDay(k)}: ${x ? MOODS[x.mood - 1] : "sem registro"}`}); })),
+        h("p", {class: "ref"}, "Dias sem registro não significam nada. O app não faz diagnósticos."),
+        hist("mood", [...L.mood].sort(byDate), e => [h("b", null, MOODS[e.mood - 1]), e.energy ? ` · energia ${e.energy}` : "", e.stress ? ` · estresse ${e.stress}` : "", e.note ? ` · “${e.note}”` : "", h("span", null, ` ${relDay(e.date)}${e.time ? " " + e.time : ""}`)])) : null]};
+  const tabs = [["resumo", "Resumo"], ["movimento", "Movimento"], ["sono", "Sono"], adult ? ["bem-estar", "Bem-estar"] : null].filter(Boolean);
   put(app, h("div", {class: "view"}, topBar(quickBtn(p, "saude")),
-    h("h1", null, "Saúde"),
-    h("div", {class: "hstack"}, movCard, sleepCard, moodCard),
-    h("p", {class: "src"}, "Só registros feitos por você, guardados neste aparelho; nenhum valor é estimado. Não são diagnósticos. A importação do Apple Saúde depende da versão nativa do app.")));
-  if (view.anchor){ const a = $("#" + view.anchor); view.anchor = null; if (a) setTimeout(() => a.scrollIntoView({block: "start"}), 40); }
+    h("h1", {class: "pg"}, "Saúde"), h("p", {class: "pg-s"}, adult ? "Movimento, sono e bem-estar." : "Movimento e sono."),
+    h("div", {class: "seg subnav hseg", role: "tablist", "aria-label": "Saúde"}, tabs.map(([k, l]) => h("button", {type: "button", role: "tab", class: sub === k ? "on" : "", "aria-selected": String(sub === k), onclick: () => go({hsub: k})}, l))),
+    h("div", {class: "hstack"}, sub === "resumo" ? [card("movimento"), card("sono"), adult ? card("bem-estar") : h("p", {class: "note"}, "O registro de bem-estar emocional para crianças e adolescentes terá um fluxo próprio, adequado à idade.")] : detail[sub]()),
+    h("p", {class: "src"}, "Só registros feitos por você, guardados neste aparelho; nenhum valor é estimado nem importado. Não são diagnósticos.")));
 }
 function chips(list, cur, onPick, cls){
   return h("div", {class: "chips" + (cls ? " " + cls : "")}, list.map(([v, l]) => h("button", {type: "button", class: cur === v ? "on" : "", "aria-pressed": String(cur === v), onclick: () => onPick(cur === v && cls === "opt" ? null : v)}, l)));
@@ -1831,8 +2011,9 @@ function dial(t, tg, W, o = {}){
   }));
   const label = `Planejado ${k0(t.kcal)} kcal${tg ? ` de ${k0(tg)}, ${Math.round(pct)}% da meta` : ""}.${hasEat ? ` Consumido ${k0(o.eaten)} kcal.` : ""} Carboidratos ${fmtG(t.c)} g, ${Math.round(s.c)}%. Proteínas ${fmtG(t.p)} g, ${Math.round(s.p)}%. Gorduras ${fmtG(t.l)} g, ${Math.round(s.l)}%.`;
   if (o.mini){
-    put(center, h("div", {class: "dial-k"}, k0(t.kcal)), h("div", {class: "dial-m"}, "planejadas"));
-    return h("div", {class: "dial-wrap mini", role: "img", "aria-label": label}, svg, center);
+    put(center, h("div", {class: "dial-k"}, k0(t.kcal)), h("div", {class: "dial-m"}, "kcal planejadas"),
+      o.big ? (tg ? h("div", {class: "dial-p" + (pct > 100 ? " over" : "")}, `${Math.round(pct)}% da meta`) : h("div", {class: "dial-p dim"}, "sem meta")) : null);
+    return h("div", {class: "dial-wrap mini" + (o.big ? " gx" : ""), role: "img", "aria-label": label}, svg, center);
   }
   const ringKey = hasEat ? h("div", {class: "ringkey"}, h("span", null, h("i", {class: "rk-p"}), `Planejado ${k0(t.kcal)}`), h("span", null, h("i", {class: "rk-e"}), `Consumido ${k0(o.eaten)}`), h("span", null, `Meta ${k0(tg)} kcal`)) : null;
   return h("section", {class: "dial" + (o.compact ? " compact" : ""), "aria-label": label},
@@ -1857,8 +2038,11 @@ function missNote(t){
 }
 
 /* Alimentação: plano do dia e banco de alimentos lado a lado, sem nível extra de navegação */
+function foodHead(p, ...right){
+  return [topBar(...right), h("h1", {class: "pg"}, "Alimentação"), h("p", {class: "pg-s"}, "Planeje, marque o que comeu e reutilize."), foodNav()];
+}
 function foodNav(){
-  return h("div", {class: "seg subnav", role: "tablist", "aria-label": "Alimentação"}, [["plano", "Plano do dia"], ["alimentos", "Alimentos"]].map(([k, l]) =>
+  return h("div", {class: "seg subnav", role: "tablist", "aria-label": "Alimentação"}, [["plano", "Plano do dia"], ["alimentos", "Alimentos"], ["favoritos", "Favoritos"]].map(([k, l]) =>
     h("button", {type: "button", role: "tab", class: view.sub === k ? "on" : "", "aria-selected": String(view.sub === k), onclick: () => { if (view.sub !== k) go({sub: k, edit: null}); }}, l)));
 }
 
@@ -1872,8 +2056,18 @@ function renderPlan(p){
 
   /* resumo fixo no cabeçalho; toque abre os detalhes */
   const sumbar = h("button", {class: "sumbar", "aria-label": "Ver resumo nutricional completo", onclick: summarySheet});
+  const sumCard = h("button", {class: "panel sumcard", type: "button", "aria-label": "Ver resumo nutricional completo", onclick: summarySheet});
   function paintSum(){
     const t = planTotal(plan), tg = target(), pct = tg ? Math.round(t.kcal / tg * 100) : null;
+    const e = C.eatenDay(logsOf(p).eaten, today()), sp = C.macroSplit(t);
+    put(sumCard,
+      h("div", {class: "sc-top"}, dial(t, tg, p.energy.weight, {mini: true, eaten: e.t.kcal}),
+        h("div", {class: "sc-k"}, h("div", null, h("b", null, k0(t.kcal)), h("span", null, tg ? ` / ${k0(tg)} kcal` : " kcal")),
+          h("div", {class: "sc-p"}, pct != null ? `plano cobre ${pct}% da meta` : "sem meta", e.count ? ` · ${k0(e.t.kcal)} consumidas` : "")),
+        h("span", {class: "li-go", html: ICON.right})),
+      h("div", {class: "sc-m"}, [["t-c", "C", t.c, sp.c], ["t-p", "P", t.p, sp.p], ["t-g", "G", t.l, sp.l]].map(([c, k, g, pc]) =>
+          h("span", null, h("b", {class: c}, k), ` ${fmtG(g)} g`, h("small", null, `${Math.round(pc)}%`))),
+        h("span", null, h("b", {class: "t-f"}, "Fibras"), ` ${fmtG(t.f)} g`, h("small", null, " "))));
     put(sumbar,
       h("span", {class: "k"}, h("b", null, k0(t.kcal)), tg ? ` / ${k0(tg)}` : "", h("span", {class: "u"}, " kcal"), pct != null ? h("span", {class: "pc"}, `${pct}%`) : null),
       h("span", {class: "m", "aria-label": `Carboidratos ${fmtG(t.c)} g, proteínas ${fmtG(t.p)} g, gorduras ${fmtG(t.l)} g, fibras ${fmtG(t.f)} g`},
@@ -2015,7 +2209,7 @@ function renderPlan(p){
     actionSheet(m.name.trim() || "Refeição", n ? `${nItems(n)} · ${k0(mealTotal(m).kcal)} kcal` : "Sem alimentos", [
       n ? {label: "Copiar refeição", cls: "primary", fn: () => copyMeal(m)} : null,
       clip() && clip().items.length ? {label: `Colar aqui: ${clipLabel()}`, fn: () => askPaste(m)} : null,
-      n ? {label: favMeals().some(x => norm(x.name) === norm(m.name.trim() || "Refeição")) ? "Atualizar nas favoritas" : "Salvar como favorita", fn: () => { saveFavMeal(m); paintFavs(); }} : null,
+      n ? {label: favMeals().some(x => norm(x.name) === norm(m.name.trim() || "Refeição")) ? "Atualizar nas favoritas" : "Salvar como favorita", fn: () => { saveFavMeal(m); render(); }} : null,
       n ? {label: "Criar outra igual (duplicar)", fn: () => duplicateMeal(m)} : null,
       i > 0 ? {label: "Mover para cima", fn: () => moveMeal(m, -1)} : null,
       i < plan.meals.length - 1 ? {label: "Mover para baixo", fn: () => moveMeal(m, 1)} : null,
@@ -2055,6 +2249,7 @@ function renderPlan(p){
     const done = h("span", {class: "done-w"});
     refs.get(m.id).done = done;
     const head = h("div", {class: "mh", role: isOpen ? null : "button", tabindex: isOpen ? null : "0", "aria-expanded": String(isOpen)}, done,
+      isOpen ? null : h("span", {class: "mh-tm"}, m.time || "—"),
       h("div", {class: "mh-m"}, isOpen ? h("div", {class: "acw"}, nameEl) : nameEl, subEl), kcalEl, chev);
     if (!isOpen){
       head.addEventListener("click", () => toggle(m));
@@ -2081,7 +2276,7 @@ function renderPlan(p){
       card.append(
         h("div", {class: "mtools"}, tw, h("div", {class: "spacer"}),
           filled(m).length ? h("button", {class: "tool" + (isFavMeal(m) ? " on" : ""), type: "button", "aria-pressed": String(isFavMeal(m)), "aria-label": isFavMeal(m) ? "Atualizar nas refeições favoritas" : "Salvar como refeição favorita",
-            html: isFavMeal(m) ? ICON.starOn : ICON.star, onclick: () => { saveFavMeal(m); paintFavs(); rebuild(m); }}) : null,
+            html: isFavMeal(m) ? ICON.starOn : ICON.star, onclick: () => { saveFavMeal(m); rebuild(m); }}) : null,
           filled(m).length ? h("button", {class: "tool", type: "button", "aria-label": "Duplicar refeição", html: ICON.dup, onclick: () => duplicateMeal(m)}) : null,
           h("button", {class: "tool", type: "button", onclick: () => mealMenu(m), "aria-label": "Mais ações da refeição", html: ICON.more})),
         askEl, body,
@@ -2096,7 +2291,7 @@ function renderPlan(p){
     const R = refs.get(m.id); if (!R) return;
     const t = mealTotal(m), n = filled(m).length;
     R.kcalEl.replaceChildren(k0(t.kcal), h("small", null, "kcal"));
-    R.subEl.textContent = [m.time, nItems(n), doneOf(p, m) ? "feita" : ""].filter(Boolean).join(" · ");
+    R.subEl.textContent = [R.card.classList.contains("open") ? m.time : "", nItems(n), doneOf(p, m) ? "feita" : ""].filter(Boolean).join(" · ");
     put(R.done, doneBtn(p, m, () => paintMeal(m)));
     R.footEl.hidden = !t.kcal;
     put(R.footEl, h("div", {class: "eyebrow"}, totalOf(m.name)), macroGrid(t, p.energy.weight, true), missNote(t));
@@ -2268,19 +2463,20 @@ function renderPlan(p){
   }
 
   for (const m of plan.meals) mealsEl.append(buildMeal(m));
-  paintPasteNew(); paintFavs();
-  put(app, h("div", {class: "view"},
-    h("header", {class: "top"}, h("div", {class: "top-row"},
+  paintPasteNew();
+  const head = h("header", {class: "top"}, h("div", {class: "top-row"},
       h("button", {class: "who", "aria-label": `Perfil ativo: ${p.name}. Trocar de perfil`, onclick: switcher}, avatar(p), h("b", null, firstName(p.name)), ic("chev")),
       h("div", {class: "spacer"}),
-      h("button", {class: "icon-btn", "aria-label": "Copiar plano em texto", onclick: copyPlan}, ic("share")), quickBtn(p, "alimentacao")), sumbar),
-    foodNav(),
-    goalRow, goalEd,
+      h("button", {class: "icon-btn", "aria-label": "Copiar plano em texto", onclick: copyPlan}, ic("share")), quickBtn(p, "alimentacao")), sumbar);
+  put(app, h("div", {class: "view"},
+    head, h("h1", {class: "pg"}, "Alimentação"), h("p", {class: "pg-s"}, "Planeje, marque o que comeu e reutilize."), foodNav(),
+    sumCard, goalRow, goalEd,
     C.energyOf(p).child ? h("p", {class: "note warn"}, "Para crianças e adolescentes, a meta considera o crescimento. Evite déficit calórico sem acompanhamento profissional.") : null,
     pasteNew,
     mealsEl,
-    favEl,
-    h("div", {class: "add-row"}, h("button", {class: "add-meal", onclick: () => addMeal()}, ic("plus"), "Adicionar refeição")),
+    h("div", {class: "add-row two"}, h("button", {class: "add-meal", onclick: () => addMeal()}, ic("plus"), "Adicionar refeição"),
+      favMeals().length ? h("button", {class: "add-meal fav-b", type: "button", "aria-label": "Usar uma refeição favorita", onclick: () => actionSheet("Usar uma refeição favorita", "Entra no plano com nome, horário e alimentos.",
+        [...favMeals()].sort(byTime).map(f => ({label: `${f.time ? f.time + " · " : ""}${f.name} · ${k0(favKcal(f))} kcal`, fn: () => useFav(f)})))}, h("span", {html: ICON.starOn, style: "display:contents"}), "Favorita") : null),
     h("p", {class: "src"}, "Valores planejados. Composição: TACO 4ª ed. (NEPA/UNICAMP, 2011). Medidas caseiras: POF 2008–2009 (IBGE).")));
   paintSum();
   if (!plan.meals.length) addMeal(null, false);
@@ -2339,12 +2535,37 @@ function renderFoods(p){
       words(q).length ? h("div", {style: "margin-top:12px"}, h("button", {class: "btn ghost block", onclick: () => addFoodChooser(q.trim(), () => fill())}, ic("plus"), `Cadastrar “${q.trim()}”`)) : null);
   }
   fill();
-  put(app, h("div", {class: "view"}, topBar(h("button", {class: "icon-btn accent", "aria-label": "Cadastrar alimento", onclick: () => addFoodChooser("", () => { view.foodSeg = "meus"; fill(); })}, ic("plus"))),
-    foodNav(),
+  put(app, h("div", {class: "view"}, ...foodHead(p, h("button", {class: "icon-btn accent", "aria-label": "Cadastrar alimento", onclick: () => addFoodChooser("", () => { view.foodSeg = "meus"; fill(); })}, ic("plus"))),
     h("div", {class: "search"}, ic("search"), inp), seg, h("div", {style: "height:12px"}), listEl,
     h("p", {class: "src"}, `${db.list.filter(f => !f.own).length} alimentos da TACO 4ª ed. (NEPA/UNICAMP, 2011), com medidas caseiras da POF 2008–2009 (IBGE). Leite integral, leite desnatado UHT, iogurte sabor abacaxi e coco verde estão em reanálise na própria TACO e não aparecem.`)));
 }
 
+function renderFavorites(p){
+  const plan = p.plan, list = favMeals(), foods = S.prefs.fav.map(id => db.get(id)).filter(Boolean);
+  const useFav = f => {
+    const empty = plan.meals.find(x => !filled(x).length && !x.name.trim());
+    const m = empty || {id: uid(), name: "", time: "", items: []};
+    m.name = f.name; m.time = f.time || m.time; m.items = f.items.filter(i => db.has(i.foodId)).map(i => ({id: uid(), foodId: i.foodId, measure: i.measure, qty: i.qty}));
+    if (!empty) plan.meals.push(m);
+    plan.meals.sort(byTime); touch(p);
+    toast(`${f.name} no plano de ${firstName(p.name)}`, () => { if (empty){ empty.items = []; empty.name = ""; empty.time = ""; } else plan.meals = plan.meals.filter(x => x !== m); touch(p); render(); });
+    render();
+  };
+  const removeFav = f => { const i = list.indexOf(f); list.splice(i, 1); save(); render(); toast(`${f.name} removida`, () => { list.splice(i, 0, f); save(); render(); }); };
+  put(app, h("div", {class: "view"}, ...foodHead(p, quickBtn(p, "alimentacao")),
+    h("section", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Refeições favoritas"), h("span", {class: "sec-n"}, list.length ? String(list.length) : "")),
+      list.length ? h("div", {class: "mlist"}, [...list].sort(byTime).map(f => h("div", {class: "mrow"},
+        h("button", {class: "mrow-b", type: "button", onclick: () => useFav(f), "aria-label": `Adicionar ${f.name} ao plano de ${firstName(p.name)}`},
+          h("span", {class: "tm"}, f.time || "—"), h("span", {class: "nm"}, h("b", null, f.name), h("small", null, `${nItems(f.items.length)} · toque para usar`)), h("span", {class: "kc"}, k0(favKcal(f)), h("small", null, " kcal"))),
+        h("button", {class: "tool", type: "button", "aria-label": `Tirar ${f.name} das favoritas`, html: ICON.x, onclick: () => removeFav(f)}))))
+      : h("p", {class: "hc-e"}, "No plano, toque na ★ de uma refeição para guardá-la aqui. As favoritas servem para toda a família.")),
+    h("section", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Alimentos favoritos"), h("button", {class: "link", type: "button", onclick: () => go({sub: "alimentos"})}, "Buscar")),
+      foods.length ? h("div", {class: "mlist"}, foods.map(f => { const ms = C.measureOf(f, lastMeasure(f)), c = C.calcItem(db, {foodId: f.id, measure: ms.l, qty: ms.l === "Grama" ? 100 : 1});
+        return h("div", {class: "mrow"}, h("button", {class: "mrow-b", type: "button", onclick: () => foodDetail(f, render)},
+          h("span", {class: "nm"}, h("b", null, f.dn), h("small", null, measureText(f, ms))), h("span", {class: "kc"}, k0(c.kcal), h("small", null, " kcal"))),
+          h("button", {class: "tool", type: "button", "aria-label": `Adicionar ${f.dn} ao plano`, html: ICON.plus, onclick: () => pickMeal(f, ms.l)})); }))
+      : h("p", {class: "hc-e"}, "Toque na estrela de um alimento para guardá-lo aqui."))));
+}
 function foodDetail(f, after){
   const p = active();
   let mlabel = lastMeasure(f);
@@ -2588,27 +2809,141 @@ function foodSheet(opt, done){
 
 /* ---------- Perfil ---------- */
 function renderProfile(p){
-  const body = h("div", {class: "stack"});
+  const e = p.energy, adult = adultOf(p), plan = p.plan;
+  const days = S.lastBackup ? Math.floor((Date.now() - S.lastBackup) / DAY) : null;
+  const row = (icon, title, sub, fn, id) => h("button", {class: "prow", type: "button", onclick: fn, id}, h("span", {class: "pr-i", html: ICON[icon]}),
+    h("div", {class: "pr-m"}, h("b", null, title), h("span", null, sub)), h("span", {class: "li-go", html: ICON.right}));
+  const actLabel = () => { const pick = ["fao", "media"].includes(e.method) ? e.method : "dri";
+    return !adult || pick === "dri" ? C.DRI_LV[e.dri ?? 1].toLowerCase() : pick === "fao" ? C.FAO_LV[e.fao ?? 1].toLowerCase() : `${C.FAO_LV[e.fao ?? 1].toLowerCase()} / ${C.DRI_LV[e.dri ?? 1].toLowerCase()}`; };
   put(app, h("div", {class: "view"}, topBar(quickBtn(p, "perfil")),
-    h("section", {class: "card", style: "margin-top:14px"},
-      h("div", {class: "prof"}, avatar(p), h("div", {style: "flex:1;min-width:0"}, h("b", null, p.name),
-        h("div", {class: "sub"}, `${ageLabel(C.ageOf(p.birth))} · ${sexLabel(p.sex)} · nasc. ${fromISO(p.birth)}`)),
-        h("button", {class: "icon-btn", "aria-label": "Editar perfil", onclick: () => profileSheet(p)}, ic("edit")))),
-    h("h2", {class: "sec"}, "Necessidade energética"), body,
-    h("h2", {class: "sec", id: "familia"}, "Família", h("span", {class: "sec-n"}, nPeople(S.patients.length))),
-    h("div", {class: "list"}, [...S.patients].sort((a, b) => a.name.localeCompare(b.name, "pt-BR")).map(x => h("div", {class: "li fam" + (x.id === p.id ? " cur" : "")},
-      h("button", {class: "fam-b", "aria-label": x.id === p.id ? `${x.name}, perfil aberto` : `Abrir o perfil de ${x.name}`, onclick: () => { if (x.id === p.id) return; S.activeId = x.id; save(); go({open: [], edit: null}); toast(`Perfil de ${firstName(x.name)}`); }},
-        avatar(x), h("div", {class: "li-m"}, h("div", {class: "li-t", html: esc(x.name) + (x.example ? '<span class="chip">exemplo</span>' : "")}), h("div", {class: "li-s"}, `${ageLabel(C.ageOf(x.birth))} · ${sexLabel(x.sex)}${x.plan.target ? ` · meta ${k0(x.plan.target)} kcal` : ""}`)),
-        x.id === p.id ? h("span", {class: "check", html: ICON.check}) : null),
-      h("button", {class: "icon-btn", "aria-label": `Editar ${x.name}`, onclick: () => profileSheet(x)}, ic("edit")))),
-      h("button", {class: "li", style: "color:var(--accent-2)", onclick: () => profileSheet()}, h("span", {class: "av", html: ICON.plus, style: "padding:12px"}), h("div", {class: "li-m"}, h("div", {class: "li-t"}, "Adicionar pessoa")))),
-    h("h2", {class: "sec"}, "Seus dados"), h("section", {class: "card"}, dataRow()),
-    h("h2", {class: "sec"}, "Sobre os cálculos"),
-    h("div", {class: "list"}, h("button", {class: "li", onclick: methodSheet}, h("div", {class: "li-m"}, h("div", {class: "li-t"}, "Como o Nutri Prático calcula"), h("div", {class: "li-s"}, "Equações, fontes e limitações")), ic("right")))));
-  renderEnergy(p, body);
+    h("h1", {class: "pg"}, "Perfil"), h("p", {class: "pg-s"}, "Seus dados, metas, família e privacidade."),
+    h("section", {class: "panel idc"}, avatar(p), h("div", {class: "pr-m"}, h("b", null, p.name), h("span", null, `${ageLabel(C.ageOf(p.birth))} · ${sexLabel(p.sex)}`), h("span", null, `Nascimento ${fromISO(p.birth)}`)),
+      h("button", {class: "icon-btn", type: "button", "aria-label": "Editar identificação", onclick: () => profileSheet(p)}, ic("edit"))),
+    energyCard(p),
+    h("div", {class: "prows"},
+      row("target", "Objetivos e metas", [plan.objective || "Sem objetivo", plan.target ? `${k0(plan.target)} kcal` : "sem meta"].join(" · "), () => goalSheet(p)),
+      row("ruler", "Dados corporais", e.weight && e.height ? `${fq.format(e.weight)} kg · ${fq.format(e.height)} cm · ${actLabel()}` : "Peso, altura e atividade", () => bodySheet(p)),
+      row("users", "Família", `${nPeople(S.patients.length)} · troque no topo da tela`, () => familySheet(), "familia"),
+      row("sliders", "Preferências", "Sugestões de refeições e objetivos, recentes", () => prefsSheet()),
+      row("lock", "Backup e segurança", days == null ? "Só neste aparelho · nenhum backup ainda" : `Só neste aparelho · backup ${days === 0 ? "hoje" : days === 1 ? "ontem" : `há ${days} dias`}`, () => backupSheet()),
+      row("book", "Como o Nutri Prático calcula", "Fórmulas, fontes e limitações", () => scienceSheet(p)))));
 }
-function methodSheet(){
-  sheet("Como o Nutri Prático calcula", el => el.append(h("h2", null, "Como o Nutri Prático calcula"), h("div", {class: "prose"},
+// Necessidade energética: resumo (protocolo, TMB, GET, IMC) e ação de usar como meta; fórmulas ficam em scienceSheet.
+function energyCard(p){
+  const e = p.energy, r = C.energyOf(p), adult = !(r.age != null && r.age < 18), pick = ["fao", "media"].includes(e.method) ? e.method : "dri";
+  const tg = p.plan.target, same = r.ok && r.get && tg === Math.round(r.get);
+  const seg = adult ? h("div", {class: "seg", role: "radiogroup", "aria-label": "Protocolo usado"}, [["dri", "DRI 2005"], ["fao", "FAO/OMS 1985"], ["media", "Média"]].map(([k, l]) =>
+    h("button", {type: "button", class: pick === k ? "on" : "", role: "radio", "aria-checked": String(pick === k), onclick: () => { e.method = k; touch(p); render(); }}, l))) : null;
+  const tile = (k, v, acc) => h("div", {class: "etile"}, h("span", null, k), h("b", {class: acc ? "acc" : ""}, v == null ? "—" : k0(v), v == null ? null : h("small", null, " kcal")));
+  return h("section", {class: "panel ecard"},
+    h("div", {class: "panel-h"}, h("span", null, "Necessidade energética"), adult ? null : h("span", {class: "sec-n"}, "DRI 2005 · crescimento")),
+    seg, adult ? h("p", {class: "eq-n", style: "margin:6px 2px 0"}, METHOD_NOTE[pick]) : null,
+    h("div", {class: "etiles"}, tile("TMB", r.ok ? r.tmb : null), tile("GET", r.ok ? r.get : null, true)),
+    r.ok ? h("div", {class: "eline"}, h("span", null, `IMC ${g1(r.imc)}`), h("span", null, `${fq.format(e.weight)} kg · ${fq.format(e.height)} cm`), h("span", null, ageLabel(r.age)))
+      : h("button", {class: "btn ghost block", type: "button", style: "margin-top:10px", onclick: () => bodySheet(p)}, "Informar peso e altura"),
+    r.child ? h("p", {class: "note warn"}, "Para crianças e adolescentes vale a DRI 2005, que inclui a energia do crescimento. O IMC é avaliado pelas curvas de crescimento, não pelos cortes de adultos.") : null,
+    r.ok && r.get ? h("button", {class: "btn block " + (same ? "set" : "primary"), type: "button", style: "margin-top:12px", disabled: same, onclick: () => {
+      p.plan.target = Math.round(r.get); touch(p); toast(`Meta do plano: ${k0(r.get)} kcal`); render(); }}, same ? `✓ Meta do plano: ${k0(r.get)} kcal` : `Usar ${k0(r.get)} kcal como meta do plano`) : null,
+    r.ok && r.get && tg && !same ? h("p", {class: "meta-n", style: "margin-top:6px"}, `Meta atual do plano: ${k0(tg)} kcal.`) : null);
+}
+function goalSheet(p){
+  const plan = p.plan, r = C.energyOf(p);
+  sheet("Objetivos e metas", (el, close) => {
+    const obj = h("input", {class: "input", id: "pf-obj", value: plan.objective || "", placeholder: "Ex.: Hipertrofia muscular", autocomplete: "off"});
+    const tgt = h("input", {class: "input num", id: "pf-meta", inputmode: "numeric", value: plan.target ? String(plan.target) : "", placeholder: r.ok && r.get ? k0(r.get) : "kcal", autocomplete: "off"});
+    const opts = h("div", {class: "chips"}, S.prefs.objectives.map(o => h("button", {type: "button", class: norm(o) === norm(obj.value) ? "on" : "", onclick: () => { obj.value = o; paint(); }}, o)));
+    const paint = () => [...opts.children].forEach(b => b.classList.toggle("on", norm(b.textContent) === norm(obj.value)));
+    obj.addEventListener("input", paint);
+    el.append(h("h2", null, "Objetivos e metas"), h("p", {class: "sh-sub"}, `Valem para o plano de ${firstName(p.name)}.`),
+      h("div", {class: "field"}, h("label", {for: "pf-obj"}, "Objetivo"), obj), opts,
+      h("div", {class: "field", style: "margin-top:14px"}, h("label", {for: "pf-meta"}, "Meta de energia (kcal por dia)"), tgt),
+      r.ok && r.get ? h("button", {class: "btn ghost block", type: "button", onclick: () => { tgt.value = String(Math.round(r.get)); }}, `Usar o GET estimado (${k0(r.get)} kcal)`) : null,
+      r.child ? h("p", {class: "note warn"}, "Para crianças e adolescentes, evite déficit calórico sem acompanhamento profissional.") : null,
+      h("div", {class: "confirmbar"}, h("button", {class: "btn primary block", type: "button", onclick: () => {
+        plan.objective = canonical("objectives", obj.value); if (plan.objective) rememberOption("objectives", plan.objective);
+        const v = parseInt(tgt.value.replace(/\D/g, ""), 10); plan.target = v > 0 ? v : null; touch(p); close(); render(); toast("Objetivo e meta salvos"); }}, "Salvar")));
+  });
+}
+function bodySheet(p){
+  const e = p.energy;
+  sheet("Dados corporais", (el, close) => {
+    const num = s => { const v = parseFloat(String(s).replace(",", ".")); return isFinite(v) ? v : null; };
+    const W = h("input", {class: "input", id: "peso", inputmode: "decimal", placeholder: "0", value: e.weight ? fq.format(e.weight) : "", "aria-label": "Peso em kg", enterkeyhint: "next"});
+    const H = h("input", {class: "input", id: "altura", inputmode: "decimal", placeholder: "0", value: e.height ? fq.format(e.height) : "", "aria-label": "Altura em cm", enterkeyhint: "done"});
+    const out = h("p", {class: "dur-out", style: "margin:12px 2px 0"}), acts = h("div");
+    function paint(){
+      const r = C.energyOf(p), adult = !(r.age != null && r.age < 18), pick = ["fao", "media"].includes(e.method) ? e.method : "dri";
+      out.textContent = r.ok ? `TMB ${k0(r.tmb)} · GET ${r.get ? k0(r.get) : "—"} kcal · IMC ${g1(r.imc)}` : "Informe peso e altura para calcular.";
+      const segOf = (labels, key, label) => h("div", {class: "seg seg4", role: "radiogroup", "aria-label": label}, labels.map((l, i) => h("button", {type: "button", class: (e[key] ?? 1) === i ? "on" : "", role: "radio", "aria-checked": String((e[key] ?? 1) === i),
+        onclick: () => { e[key] = i; touch(p); paint(); }}, l)));
+      put(acts, adult && pick !== "dri" ? h("div", {class: "act"}, h("div", {class: "act-t"}, "Atividade ", h("span", null, "FAO/OMS 1985")), segOf(C.FAO_LV, "fao", "Atividade, FAO/OMS 1985")) : null,
+        !adult || pick !== "fao" ? h("div", {class: "act"}, h("div", {class: "act-t"}, "Atividade física ", h("span", null, "DRI 2005")), segOf(C.DRI_LV, "dri", "Atividade física, DRI 2005")) : null);
+    }
+    W.addEventListener("input", () => { e.weight = num(W.value); touch(p); paint(); });
+    H.addEventListener("input", () => { let v = num(H.value); if (v != null && v < 3) v = v * 100; e.height = v; touch(p); paint(); });   // aceita 1,65 m
+    W.addEventListener("keydown", ev => { if (ev.key === "Enter") { ev.preventDefault(); H.focus(); } });
+    paint();
+    el.append(h("h2", null, "Dados corporais"), h("p", {class: "sh-sub"}, "Usados nas equações de energia. Salvos enquanto você digita."),
+      h("div", {class: "measures"},
+        h("div", {class: "field", style: "margin:0"}, h("label", {for: "peso"}, "Peso"), h("div", {class: "mfield"}, W, h("span", null, "kg"))),
+        h("div", {class: "field", style: "margin:0"}, h("label", {for: "altura"}, "Altura"), h("div", {class: "mfield"}, H, h("span", null, "cm")))),
+      acts, out, h("div", {class: "confirmbar"}, h("button", {class: "btn primary block", type: "button", onclick: () => { close(); render(); }}, "Pronto")));
+    if (!e.weight) setTimeout(() => W.focus(), 60);
+  });
+}
+function familySheet(){
+  sheet("Família", (el, close) => {
+    const p = active();
+    el.append(h("h2", null, "Família"), h("p", {class: "sh-sub"}, "Cada pessoa tem dados, metas, plano e registros separados."),
+      h("div", {class: "list"}, [...S.patients].sort((a, b) => a.name.localeCompare(b.name, "pt-BR")).map(x => h("div", {class: "li fam" + (x.id === p.id ? " cur" : "")},
+        h("button", {class: "fam-b", "aria-label": x.id === p.id ? `${x.name}, perfil aberto` : `Abrir o perfil de ${x.name}`, onclick: () => { close(); if (x.id === p.id) return; S.activeId = x.id; save(); go({open: [], edit: null}); toast(`Perfil de ${firstName(x.name)}`); }},
+          avatar(x), h("div", {class: "li-m"}, h("div", {class: "li-t", html: esc(x.name) + (x.example ? '<span class="chip">exemplo</span>' : "")}), h("div", {class: "li-s"}, `${ageLabel(C.ageOf(x.birth))} · ${sexLabel(x.sex)}${x.plan.target ? ` · meta ${k0(x.plan.target)} kcal` : ""}`)),
+          x.id === p.id ? h("span", {class: "check", html: ICON.check}) : null),
+        h("button", {class: "icon-btn", "aria-label": `Editar ${x.name}`, onclick: () => { close(); profileSheet(x); }}, ic("edit")))),
+        h("button", {class: "li", style: "color:var(--accent-2)", onclick: () => { close(); profileSheet(); }}, h("span", {class: "av", html: ICON.plus, style: "padding:12px"}), h("div", {class: "li-m"}, h("div", {class: "li-t"}, "Adicionar pessoa")))),
+      h("div", {style: "height:12px"}), h("button", {class: "btn plain block", type: "button", onclick: close}, "Fechar"));
+  });
+}
+function prefsSheet(){
+  sheet("Preferências", (el, close) => {
+    const body = h("div");
+    const list = (key, title, defs) => h("div", null, h("div", {class: "lbl2"}, title),
+      h("div", {class: "chips rm"}, S.prefs[key].map(o => h("button", {type: "button", "aria-label": `Remover ${o}`, onclick: () => { S.prefs[key] = S.prefs[key].filter(x => x !== o); save(); paint(); }}, o, h("span", {html: ICON.x, style: "display:contents"})))),
+      h("button", {class: "link", type: "button", style: "margin-top:6px", onclick: () => { S.prefs[key] = [...new Set([...S.prefs[key], ...defs])]; save(); paint(); }}, "Restaurar sugestões padrão"));
+    const paint = () => put(body, list("meals", "Nomes de refeições sugeridos", DEFAULT_MEALS), list("objectives", "Objetivos sugeridos", DEFAULT_OBJ),
+      h("div", {class: "lbl2"}, "Alimentos recentes"), h("button", {class: "btn ghost block", type: "button", disabled: !S.prefs.recent.length, onclick: () => { S.prefs.recent = []; save(); paint(); toast("Recentes apagados"); }},
+        S.prefs.recent.length ? `Limpar ${S.prefs.recent.length} recentes` : "Nenhum recente"));
+    paint();
+    el.append(h("h2", null, "Preferências"), h("p", {class: "sh-sub"}, "Valem para toda a família neste aparelho. Toque em uma sugestão para removê-la."), body,
+      h("div", {style: "height:12px"}), h("button", {class: "btn plain block", type: "button", onclick: close}, "Fechar"));
+  });
+}
+// Ciência: os mesmos números do perfil com as equações e premissas, verificáveis à mão.
+function scienceSheet(p){
+  const r = C.energyOf(p), e = p.energy;
+  const resGrid = (tmb, fator, fl, get) => h("div", {class: "res"},
+    h("div", null, h("div", {class: "k"}, "TMB"), h("div", {class: "v"}, tmb == null ? "—" : k0(tmb))),
+    h("div", null, h("div", {class: "k"}, fl), h("div", {class: "v"}, fator == null ? "—" : nf2.format(fator))),
+    h("div", null, h("div", {class: "k"}, "GET"), h("div", {class: "v acc"}, get == null ? "—" : k0(get))));
+  sheet("Como o Nutri Prático calcula", el => {
+    el.append(h("h2", null, "Como o Nutri Prático calcula"));
+    if (r.ok){
+      el.append(h("p", {class: "sh-sub"}, `Cálculo de ${firstName(p.name)}: ${fq.format(e.weight)} kg, ${fq.format(e.height)} cm, ${ageLabel(r.age)}.`),
+        h("div", {class: "card-t"}, "FAO/OMS 1985"), resGrid(r.fao.tmb, r.fao.fa, "FA", r.child ? null : r.fao.get),
+        h("div", {class: "eq"}, `TMB = ${nf1.format(r.fao.coef)} × P ${r.fao.cons < 0 ? "−" : "+"} ${Math.abs(r.fao.cons)} (${r.fao.range} anos)`, h("br"),
+          r.child ? "Fatores de atividade definidos para adultos: não usados abaixo de 18 anos." : `GET = TMB × ${nf2.format(r.fao.fa)}`),
+        h("div", {class: "card-t", style: "margin-top:16px"}, "DRI 2005"),
+        ...(r.dri ? [resGrid(r.dri.tmb, r.dri.PA, "AF", r.dri.get), h("div", {class: "eq"}, `GET (EER) = ${r.dri.eq}`, h("br"), "I = idade · P = kg · A = m · TMB pela equação BEE da DRI 2005")]
+          : [h("div", {class: "note warn"}, "As equações DRI 2005 deste app cobrem a partir de 3 anos.")]),
+        h("p", {class: "eq-n"}, r.method === "media" ? `Em uso: média. TMB (${k0(r.fao.tmb)} + ${k0(r.dri.tmb)}) ÷ 2 = ${k0(r.tmb)} kcal · GET (${k0(r.fao.get)} + ${k0(r.dri.get)}) ÷ 2 = ${k0(r.get)} kcal.`
+          : r.child ? "Em uso: DRI 2005 (abaixo de 18 anos)." : `Em uso: ${METHOD_LABEL[r.method]}.`));
+    } else el.append(h("p", {class: "sh-sub"}, "Informe peso e altura para ver o cálculo com os seus números."));
+    el.append(methodProse());
+  });
+}
+function methodSheet(){ sheet("Como o Nutri Prático calcula", el => el.append(h("h2", null, "Como o Nutri Prático calcula"), methodProse())); }
+function methodProse(){
+  return h("div", {class: "prose"},
     h("h3", null, "Gasto energético"),
     h("p", null, "Adultos: por padrão, DRI 2005 (IOM), que estima o gasto total pela idade, peso, altura e nível de atividade, a partir de medidas com água duplamente marcada. Também dá para usar FAO/OMS 1985 (taxa metabólica basal de Schofield × fator de atividade) ou a média das duas, que serve só para comparar. Perfis criados antes da versão 3 continuam na média, que era o padrão anterior, até você escolher outro protocolo."),
     h("p", null, "Crianças e adolescentes (3 a 18 anos): DRI 2005, que inclui a energia para o crescimento. Os fatores de atividade da FAO/OMS 1985 foram definidos para adultos, então não entram na média. O app não aplica déficit calórico automático."),
@@ -2620,7 +2955,7 @@ function methodSheet(){
     h("p", null, "Usam 4 kcal/g para carboidratos e proteínas e 9 kcal/g para gorduras. A energia total vem da própria TACO; por isso ela pode diferir um pouco da soma dos macronutrientes."),
     h("h3", null, "Substituições"),
     h("p", null, "Sugere alimentos com o mesmo papel principal (fonte de carboidrato, proteína ou gordura) e calcula a quantidade com a mesma energia, carboidratos ou proteínas. Alimentos equivalentes nesse critério não são nutricionalmente idênticos."),
-    h("p", null, "Este app organiza o planejamento. Ele não substitui orientação de nutricionista ou médico, especialmente para crianças, gestantes e pessoas com doenças."))));
+    h("p", null, "Este app organiza o planejamento. Ele não substitui orientação de nutricionista ou médico, especialmente para crianças, gestantes e pessoas com doenças."));
 }
 
 /* ---------- Necessidade energética ----------
@@ -2631,85 +2966,6 @@ const METHOD_NOTE = {
   fao: "Taxa basal pelo peso (Schofield) × fator de atividade. Não usa a altura; os fatores descrevem grupos, não indivíduos.",
   media: "Média das duas estimativas. Não é um método científico próprio: serve para comparar os protocolos."};
 const METHOD_LABEL = {media: "Média FAO/OMS 1985 + DRI 2005", fao: "FAO/OMS 1985", dri: "DRI 2005", "fao-tmb": "FAO/OMS 1985 · só taxa basal"};
-function renderEnergy(p, body){
-  const e = p.energy;
-  const W = h("input", {class: "input", id: "peso", inputmode: "decimal", placeholder: "0", value: e.weight ? fq.format(e.weight) : "", "aria-label": "Peso em kg", enterkeyhint: "next"});
-  const H = h("input", {class: "input", id: "altura", inputmode: "decimal", placeholder: "0", value: e.height ? fq.format(e.height) : "", "aria-label": "Altura em cm", enterkeyhint: "done"});
-  const num = s => { const v = parseFloat(String(s).replace(",", ".")); return isFinite(v) ? v : null; };
-  W.addEventListener("input", () => { e.weight = num(W.value); touch(p); paint(); });
-  H.addEventListener("input", () => { let v = num(H.value); if (v != null && v < 3) v = v * 100; e.height = v; touch(p); paint(); });   // aceita 1,65 m
-  W.addEventListener("keydown", ev => { if (ev.key === "Enter") { ev.preventDefault(); H.focus(); } });
-  H.addEventListener("keydown", ev => { if (ev.key === "Enter") { ev.preventDefault(); H.blur(); } });
-  function segOf(labels, key, label){
-    const seg = h("div", {class: "seg seg4", role: "radiogroup", "aria-label": label});
-    const paintSeg = () => seg.replaceChildren(...labels.map((l, i) => h("button", {type: "button", class: (e[key] ?? 1) === i ? "on" : "", role: "radio", "aria-checked": String((e[key] ?? 1) === i),
-      onclick: () => { e[key] = i; touch(p); paintSeg(); paint(); }}, l)));
-    paintSeg(); return seg;
-  }
-  const faoSeg = segOf(C.FAO_LV, "fao", "Atividade, FAO/OMS 1985"), driSeg = segOf(C.DRI_LV, "dri", "Atividade física, DRI 2005");
-  const methodSeg = h("div", {class: "seg", role: "radiogroup", "aria-label": "Protocolo usado"});
-  const methodNote = h("p", {class: "eq-n", style: "margin:-6px 2px 0"});
-  const faoBox = h("div", {class: "act"}, h("div", {class: "act-t"}, "Atividade ", h("span", null, "FAO/OMS 1985")), faoSeg);
-  const driBox = h("div", {class: "act"}, h("div", {class: "act-t"}, "Atividade física ", h("span", null, "DRI 2005")), driSeg);
-  const faoRes = h("div"), driRes = h("div"), hero = h("div"), why = h("p", {class: "eq-n"});
-  const resGrid = (tmb, fator, fl, get) => h("div", {class: "res"},
-    h("div", null, h("div", {class: "k"}, "TMB"), h("div", {class: "v"}, tmb == null ? "—" : k0(tmb))),
-    h("div", null, h("div", {class: "k"}, fl), h("div", {class: "v"}, fator == null ? "—" : nf2.format(fator))),
-    h("div", null, h("div", {class: "k"}, "GET"), h("div", {class: "v acc"}, get == null ? "—" : k0(get))));
-  const useBtn = h("button", {class: "btn primary block", type: "button", disabled: true, onclick: () => {
-    const r = C.energyOf(p); if (!r.ok || !r.get) return;
-    p.plan.target = Math.round(r.get); touch(p); toast(`Meta do plano: ${k0(r.get)} kcal`); paint();
-  }}, "Usar como meta do plano");
-  const metaNote = h("p", {class: "meta-n"});
-  function paint(){
-    const r = C.energyOf(p);
-    const pick = ["fao", "media"].includes(e.method) ? e.method : "dri";
-    const adult = !(r.age != null && r.age < 18);
-    methodSeg.hidden = !adult;
-    methodNote.hidden = !adult; methodNote.textContent = METHOD_NOTE[pick];
-    put(methodSeg, [["dri", "DRI 2005"], ["fao", "FAO/OMS 1985"], ["media", "Média"]].map(([k, l]) =>
-      h("button", {type: "button", class: pick === k ? "on" : "", role: "radio", "aria-checked": String(pick === k), onclick: () => { e.method = k; touch(p); paint(); }}, l)));
-    // mostra só as atividades que entram no protocolo escolhido
-    faoBox.hidden = !adult || pick === "dri";
-    driBox.hidden = adult && pick === "fao";
-    if (!r.ok){
-      put(hero, h("div", {class: "card hero"}, h("div", {class: "eyebrow"}, adult ? METHOD_LABEL[pick] : "DRI 2005"),
-        h("div", {class: "hero-grid"}, h("div", null, h("div", {class: "lbl"}, "TMB"), h("div", {class: "big"}, "—")), h("div", null, h("div", {class: "lbl"}, "GET"), h("div", {class: "big gold"}, "—"))),
-        h("div", {class: "hero-foot"}, "Informe peso e altura para calcular")));
-      useBtn.disabled = true; useBtn.textContent = "Usar como meta do plano"; metaNote.textContent = "";
-      put(faoRes, resGrid(null, C.FAO_FA[p.sex][e.fao ?? 1], "FA", null)); put(driRes, resGrid(null, null, "AF", null)); why.textContent = "";
-      return;
-    }
-    put(hero, h("div", {class: "card hero"}, h("div", {class: "eyebrow"}, r.child && r.method === "dri" ? "DRI 2005 · inclui crescimento" : METHOD_LABEL[r.method]),
-      h("div", {class: "hero-grid"},
-        h("div", null, h("div", {class: "lbl"}, "TMB"), h("div", {class: "big"}, k0(r.tmb), h("small", null, "kcal"))),
-        h("div", null, h("div", {class: "lbl"}, "GET"), h("div", {class: "big gold"}, r.get ? k0(r.get) : "—", r.get ? h("small", null, "kcal") : null))),
-      h("div", {class: "hero-foot"}, h("span", null, `IMC ${g1(r.imc)}`), h("span", null, ageLabel(r.age)), h("span", null, `${fq.format(e.weight)} kg · ${fq.format(e.height)} cm`)),
-      r.child ? h("p", {class: "note warn"}, "Para crianças e adolescentes vale a DRI 2005, que inclui a energia do crescimento. O IMC precisa ser avaliado pelas curvas de crescimento, não pelos pontos de corte de adultos.") : null));
-    put(faoRes, resGrid(r.fao.tmb, r.fao.fa, "FA", r.child ? null : r.fao.get),
-      h("div", {class: "eq"}, `TMB = ${nf1.format(r.fao.coef)} × P ${r.fao.cons < 0 ? "−" : "+"} ${Math.abs(r.fao.cons)} (${r.fao.range} anos)`, h("br"),
-        r.child ? "Fatores de atividade definidos para adultos: não usados abaixo de 18 anos." : `GET = TMB × ${nf2.format(r.fao.fa)}`));
-    put(driRes, r.dri ? [resGrid(r.dri.tmb, r.dri.PA, "AF", r.dri.get), h("div", {class: "eq"}, `GET (EER) = ${r.dri.eq}`, h("br"), "I = idade · P = kg · A = m · TMB pela equação BEE da DRI 2005")]
-      : [resGrid(null, null, "AF", null), h("div", {class: "note warn"}, "As equações DRI 2005 deste app cobrem a partir de 3 anos.")]);
-    why.textContent = r.method === "media" ? `Média: TMB (${k0(r.fao.tmb)} + ${k0(r.dri.tmb)}) ÷ 2 = ${k0(r.tmb)} kcal · GET (${k0(r.fao.get)} + ${k0(r.dri.get)}) ÷ 2 = ${k0(r.get)} kcal.`
-      : r.child ? "Abaixo de 18 anos o app usa só a DRI 2005." : r.method === "fao-tmb" ? "Sem equação de gasto total para esta idade: só a taxa basal." : `Usando apenas ${METHOD_LABEL[r.method]}.`;
-    const tg = p.plan.target, same = r.get && tg === Math.round(r.get);
-    useBtn.disabled = !r.get || same; useBtn.classList.toggle("set", !!same);
-    useBtn.textContent = !r.get ? "Usar como meta do plano" : same ? `✓ Meta do plano: ${k0(r.get)} kcal` : `Usar ${k0(r.get)} kcal como meta do plano`;
-    metaNote.textContent = r.get && tg && !same ? `Meta atual do plano: ${k0(tg)} kcal.` : "";
-  }
-  body.append(hero, methodSeg, methodNote, h("div", {style: "display:grid;gap:6px"}, useBtn, metaNote),
-    h("div", {class: "card"},
-      h("div", {class: "measures"},
-        h("div", {class: "field", style: "margin:0"}, h("label", {for: "peso"}, "Peso"), h("div", {class: "mfield"}, W, h("span", null, "kg"))),
-        h("div", {class: "field", style: "margin:0"}, h("label", {for: "altura"}, "Altura"), h("div", {class: "mfield"}, H, h("span", null, "cm")))),
-      faoBox, driBox),
-    h("details", {class: "card adv formulas"}, h("summary", null, "Fórmulas e cálculos"),
-      h("div", {class: "card-t", style: "margin-top:12px"}, "FAO/OMS 1985"), faoRes,
-      h("div", {class: "card-t", style: "margin-top:16px"}, "DRI 2005"), driRes, why));
-  paint();
-}
-
 /* ---------- cadastro e edição de perfil ---------- */
 function maskDate(v){ const d = v.replace(/\D/g, "").slice(0, 8); return d.length > 4 ? `${d.slice(0, 2)}/${d.slice(2, 4)}/${d.slice(4)}` : d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d; }
 function toISO(br){
@@ -2760,7 +3016,7 @@ function profileSheet(p){
       const np = {id: uid(), name: name.value.trim(), birth: toISO(birth.value), sex, updated: Date.now(),
         energy: {weight: null, height: null, fao: 1, dri: 1}, plan: {objective: "", target: null, meals: []}};
       S.patients.push(np); S.activeId = np.id; saveNow(); close(); go({tab: "perfil", open: [], edit: null}); toast(`Perfil de ${firstName(np.name)} criado`);
-      setTimeout(() => { const w = $("#peso"); if (w) w.focus(); }, 300);
+      setTimeout(() => bodySheet(np), 320);   // próximo passo natural: peso e altura
     });
     el.append(form);
     if (!editing) setTimeout(() => name.focus(), 60);

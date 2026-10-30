@@ -288,6 +288,8 @@ Os números de toques da seção 6 foram medidos no simulador. O tempo real prec
 
 ## 12. Registro de alterações
 
+- **v5:** design system por pilar e telas Hoje, Alimentação (com aba Favoritos), Saúde (abas por pilar) e Perfil (seções progressivas), seguindo a referência visual (seção 14).
+
 - **v4.2 (refinamento 2.0):**
   - Hoje como cockpit; registro universal; Alimentação e Saúde compactas;
   - planejado × consumido no anel;
@@ -363,3 +365,50 @@ Os números de toques da seção 6 foram medidos no simulador. O tempo real prec
 - Uso em iPhone real.
 - Testes com pessoas.
 - O modo claro continua só preparado.
+
+---
+
+## 14. Evolução visual v5 (referência de design aplicada)
+
+### Design system
+- **Pilares com cor própria**, usada só no próprio módulo: alimentação (cobre `--food`), movimento (turquesa `--move`), sono (violeta `--sleep`), bem-estar (rosa `--mood`).
+  - Módulos tingidos com `color-mix` a 10–14% sobre o grafite.
+- **Componentes:**
+  - `.panel` (superfície padrão, raio 20, sem contorno) com título `.panel-h`;
+  - `.mod` (indicador de pilar), `.hp` (cartão de pilar na Saúde), `.gauge` (mostrador com legenda);
+  - `.mrow` (linha de refeição), `.prow` (linha de seção do Perfil), `.qbig` (atalho de registro).
+- **Títulos de página:** `h1.pg` com subtítulo `.pg-s`; abas internas com `.subnav`.
+
+### Por tela
+- **Hoje:**
+  - saudação com resumo real do dia;
+  - quatro indicadores de pilar (sem dado, o toque abre o registro);
+  - próximo passo só com dados;
+  - mostrador com calorias planejadas no centro, macros no anel interno e na legenda, consumido no anel externo e na linha inferior;
+  - lista de refeições com marcação de feita.
+- **Alimentação:**
+  - abas Plano do dia / Alimentos / Favoritos;
+  - cartão-resumo no topo; a barra fixa só aparece quando o cartão sai da tela;
+  - refeições com horário em coluna;
+  - "Favorita" ao lado de "Adicionar refeição".
+- **Saúde:**
+  - abas Resumo / Movimento / Sono / Bem-estar (crianças: sem bem-estar);
+  - resumo com o número principal e um minigráfico por pilar;
+  - abas com referência e histórico completo;
+  - bem-estar em linha sem interpolação (dia sem registro fica vazio).
+- **Perfil:**
+  - identificação;
+  - cartão de energia com protocolo, TMB/GET, IMC e "usar como meta";
+  - seções que abrem em folhas: Objetivos e metas, Dados corporais, Família, Preferências, Backup e segurança, Como o Nutri Prático calcula (as equações com os números da pessoa).
+
+### Da referência, deliberadamente não implementado
+Seriam funções simuladas (regra 9):
+- fotos dos pratos (não há imagens de alimentos);
+- sino de notificações (o app não envia notificações);
+- cartão "Integração com Apple Saúde" (exige app nativo);
+- engrenagem de configurações (as preferências reais estão no Perfil).
+
+### Decisões que pedem validação
+- O indicador de alimentação no Hoje mostra kcal **consumidas** (não o % planejado da referência), para não confundir plano com consumo.
+- Movimento mostra o total da **semana**, comparável à referência da OMS (por semana), em vez de uma meta diária pessoal.
+- A cor rosa aparece em gorduras (macro) e em bem-estar (pilar), como na referência; os dois nunca aparecem lado a lado.
