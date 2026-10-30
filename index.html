@@ -885,6 +885,46 @@ html.big-text .home .mods .mod b,html.big-text .home .mods .mod b.nr{margin:0}
 .seg.seg-2 button.on{background:var(--surface-3);color:var(--ink);font-weight:620}
 /* SE: rótulo curto no resumo ("Carbo") e nome da refeição em até duas linhas, sem reticências */
 @media (max-width:370px){.sc-m i span.opt{display:none}.mh-n{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.2}}
+/* v9 · Saúde: gráfico conforme a quantidade de dados; referências por expansão */
+.strip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin:12px 2px 0}
+.st{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0}
+.st i{width:10px;height:10px;border-radius:50%;background:var(--surface-3)}
+.st i.on{background:var(--c)}
+.st i.m1{background:#6F6A86} .st i.m2{background:#8C7F92} .st i.m3{background:#A89280} .st i.m4{background:#D49A6A} .st i.m5{background:var(--accent-2)}
+.st span{font-size:0.647rem;color:var(--muted)}
+.st.now span{color:var(--ink);font-weight:650}
+.hp.full .st i{width:13px;height:13px}
+.hp.full .bars{height:76px}
+.hp.full .mline{height:56px}
+.hp-n{margin:12px 2px 0;font-size:var(--t-sm);color:var(--ink-2);line-height:1.45}
+.hp-link{margin:12px 2px 0;display:block}
+details.src.more{margin:var(--s3) 2px 0}
+.panel details.src.more{margin:var(--s2) 2px 0}
+details.src.more p + p{margin-top:var(--s2)}
+.view > details.src.more{margin:var(--s5) 4px 0}
+/* v9 · Perfil: necessidade energética recolhível */
+.ecard.fold{padding:0;overflow:hidden}
+.ec-h{display:flex;align-items:center;gap:13px;width:100%;padding:12px 14px;text-align:left}
+.ec-h:active{background:var(--surface-2)}
+.ec-h .pr-m b{font-size:0.882rem;font-weight:600}
+.ec-h .pr-m span b.ec-v{display:inline;font-size:inherit;font-weight:620;color:var(--accent-2);font-variant-numeric:tabular-nums}
+.ec-c{display:grid;place-items:center;color:var(--muted);flex:none;transition:transform .2s}
+.ec-c svg{width:16px;height:16px}
+.ecard.open .ec-c{transform:rotate(180deg)}
+.ecard.open{padding-bottom:var(--s4)}
+.ec-b{padding:0 var(--s4)}
+.hstack .na{flex-direction:row;align-items:center;gap:12px;padding:12px 14px}
+.hstack .na b{font-size:var(--t-body)}
+/* v9 · iPhone SE: abas da Saúde e linhas do Perfil sem cortes */
+@media (max-width:370px){
+  .hseg{gap:2px;padding:3px}.hseg button{font-size:0.7rem;padding:0 1px;letter-spacing:-.01em}
+  .prow .pr-m span,.ec-h .pr-m span,.idc .pr-m span{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.3}
+  .prow .pr-m b{white-space:normal;line-height:1.25}
+  .etile b{font-size:1.35rem;white-space:nowrap}
+}
+.hist details.hmore{margin:0}
+.hist details.hmore summary{padding:var(--s3) 2px var(--s1)}
+.hist details.hmore[open] summary{border-bottom:1px solid var(--line)}
 </style>
 
 <div class="app" id="app"></div>
@@ -1909,51 +1949,60 @@ function renderHealth(p){
   const nowI = C.weekKeys(t).indexOf(t), last7 = Array.from({length: 7}, (_, i) => C.addDays(t, i - 6));
   const sub = ["movimento", "sono", "bem-estar"].includes(view.hsub) && (adult || view.hsub !== "bem-estar") ? view.hsub : "resumo";
   const byDate = (a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : (b.at || 0) - (a.at || 0);
-  const hist = (kind, list, line) => list.length ? h("div", {class: "hist"}, list.slice(0, 12).map(e => h("div", {class: "hi"},
-    h("div", {class: "hi-m"}, line(e)), h("button", {class: "x", type: "button", "aria-label": `Apagar registro de ${relDay(e.date)}`, html: ICON.x, onclick: () => removeLog(p, kind, e, "Registro")})))) : null;
+  // histórico: os 5 mais recentes à vista; os outros (até 12) por expansão
+  const hist = (kind, list, line) => { if (!list.length) return null;
+    const row = e => h("div", {class: "hi"}, h("div", {class: "hi-m"}, line(e)), h("button", {class: "x", type: "button", "aria-label": `Apagar registro de ${relDay(e.date)}`, html: ICON.x, onclick: () => removeLog(p, kind, e, "Registro")}));
+    const rest = list.slice(5, 12);
+    return h("div", {class: "hist"}, list.slice(0, 5).map(row), rest.length ? h("details", {class: "src hmore"}, h("summary", null, `Mostrar mais ${rest.length}`), rest.map(row)) : null); };
   const dayMood = k => [...L.mood].reverse().find(x => x.date === k), todayM = dayMood(t);
-  const sleepBars = () => bars(ss.nights.map(n => n.min || 0), 600, ss.nights.map(n => WD[(new Date(n.key + "T12:00").getDay() + 6) % 7]), 6);
-  const moveBars = () => bars(mw.days.map(d => d.min), Math.max(60, ...mw.days.map(d => d.min)), WD, nowI);
+  // o gráfico acompanha a quantidade de dados: com 1 ou 2 dias, uma faixa de pontos; barras e linha só a partir de 3 dias
+  const wdOf = k => WD[(new Date(k + "T12:00").getDay() + 6) % 7];
+  const strip = (cls, labels, mark) => h("div", {class: "strip", "aria-hidden": "true"}, cls.map((c, i) => h("div", {class: "st" + (mark === i ? " now" : "")}, h("i", {class: c || null}), h("span", null, labels[i]))));
+  const moodDays = last7.map(k => dayMood(k)), moodN = moodDays.filter(Boolean).length;
+  const sleepBars = () => !ss.count ? null : ss.count < 3 ? strip(ss.nights.map(n => n.min ? "on" : ""), ss.nights.map(n => wdOf(n.key)), 6)
+    : bars(ss.nights.map(n => n.min || 0), 600, ss.nights.map(n => wdOf(n.key)), 6);
+  const moveBars = () => !mw.activeDays ? null : mw.activeDays < 3 ? strip(mw.days.map(d => d.min ? "on" : ""), WD, nowI)
+    : bars(mw.days.map(d => d.min), Math.max(60, ...mw.days.map(d => d.min)), WD, nowI);
+  const moodChart = () => !moodN ? null : moodN < 3 ? strip(moodDays.map(x => x ? "on m" + x.mood : ""), last7.map(wdOf), 6) : moodLine(L, last7);
+  const more = (title, ...ps) => h("details", {class: "src more"}, h("summary", null, title), ...ps.filter(Boolean).map(x => h("p", null, x)));
   // o número principal de cada pilar; médias só com dados suficientes
   const P = {
-    movimento: {cls: "move", icon: "walk", title: "Exercício", has: L.move.length > 0, value: fmtDur(mw.total), ctx: `nesta semana · ${mw.activeDays} ${mw.activeDays === 1 ? "dia" : "dias"}`,
+    movimento: {cls: "move", icon: "walk", title: "Exercício", has: L.move.length > 0, value: fmtDur(mw.total), ctx: mw.activeDays ? `nesta semana · ${mw.activeDays} ${mw.activeDays === 1 ? "dia" : "dias"}` : mw.last ? `nesta semana · último ${relDay(mw.last).toLowerCase()}` : "nesta semana",
       empty: "Caminhada, musculação, tênis… registre em segundos.", chart: moveBars, add: () => moveSheet(p), addL: "Registrar exercício"},
     sono: {cls: "sleep", icon: "moon", title: "Sono", has: L.sleep.length > 0, value: ss.count >= 3 ? fmtDur(ss.avg) : ss.last ? fmtDur(ss.last.min) : "—",
       ctx: ss.count >= 3 ? `média de ${ss.count} noites` : ss.last ? `última noite registrada · ${relDay(ss.last.date).toLowerCase()}` : "",
       empty: "Hora de dormir e de acordar. Sem notas nem competição.", chart: sleepBars, add: () => sleepSheet(p), addL: "Registrar sono"},
     "bem-estar": {cls: "wb", icon: "smile", title: "Emocional", has: L.mood.length > 0, value: todayM ? MOODS[todayM.mood - 1] : "—", ctx: todayM ? `hoje às ${todayM.time}` : "sem registro hoje",
-      empty: "Um toque para dizer como você está. Fica só com você.", chart: () => moodLine(L, last7), add: () => moodSheet(p), addL: "Registrar estado emocional"}};
-  const card = (k, full) => { const c = P[k];
+      empty: "Um toque para dizer como você está. Fica só com você.", chart: moodChart, add: () => moodSheet(p), addL: "Registrar estado emocional"}};
+  const card = (k, full, ...extra) => { const c = P[k];
     return h("section", {class: "hp " + c.cls + (full ? " full" : ""), id: k},
       h("div", {class: "hp-h"}, h("span", {class: "hp-i", html: ICON[c.icon]}),
         full ? h("span", {class: "hp-t"}, c.title) : h("button", {class: "hp-t link0", type: "button", onclick: () => go({hsub: k})}, c.title, h("span", {class: "li-go", html: ICON.right})),
         h("button", {class: "hp-add", type: "button", "aria-label": c.addL, onclick: c.add}, ic("plus"))),
       c.has ? [h("div", {class: "hp-v"}, h("b", null, c.value), h("span", null, c.ctx)), c.chart()] : h("p", {class: "hc-e"}, c.empty),
       k === "bem-estar" && full ? h("div", {class: "moods", role: "group", "aria-label": "Registrar como você está"}, MOODS.map((m, i) => h("button", {type: "button", class: "mood m" + (i + 1) + (todayM && todayM.mood === i + 1 ? " on" : ""),
-        onclick: () => saveMood(p, {mood: i + 1})}, h("i"), m))) : null);
+        onclick: () => saveMood(p, {mood: i + 1})}, h("i"), m))) : null, ...extra);
   };
   const detail = {
-    movimento: () => [card("movimento", true), h("div", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Referência")),
-        h("p", {class: "ref", style: "margin:0"}, mref ? [mref.week && !mref.perDay ? `${mw.mv} min de atividade moderada ou vigorosa nesta semana. ` : "", mref.text] : "Abaixo de 5 anos o app não usa meta numérica de atividade."),
-        h("p", {class: "ref"}, "O app não converte atividade em calorias: as estimativas variam muito entre pessoas.")),
+    movimento: () => [card("movimento", true, mref && mref.week && !mref.perDay && L.move.length ? h("p", {class: "hp-n"}, `${mw.mv} min de atividade moderada ou vigorosa nesta semana.`) : null,
+        more("Referência", mref ? mref.text : "Abaixo de 5 anos o app não usa meta numérica de atividade.", "O app não converte atividade em calorias: as estimativas variam muito entre pessoas.")),
       L.move.length ? h("div", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Histórico")), hist("move", [...L.move].sort(byDate), e => [h("b", null, e.type), ` · ${fmtDur(e.min)}${e.intensity ? " · " + INTENS.find(x => x[0] === e.intensity)[1].toLowerCase() : ""}`, h("span", null, " " + relDay(e.date))])) : null],
-    sono: () => [card("sono", true), h("div", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Regularidade e referência")),
-        h("p", {class: "ref", style: "margin:0"}, ss.count < 3 ? "A média aparece a partir de 3 noites registradas nos últimos 7 dias; a regularidade, a partir de 5." :
-          ss.count >= 5 && ss.bedSD != null ? `Horário de dormir variou cerca de ${Math.round(ss.bedSD)} minutos para mais ou para menos nos últimos 7 dias.` : "A regularidade aparece a partir de 5 noites registradas."),
-        sref ? h("p", {class: "ref"}, sref.text) : null),
+    sono: () => [card("sono", true, L.sleep.length ? h("p", {class: "hp-n"}, ss.count < 3 ? "Média a partir de 3 noites nos últimos 7 dias; regularidade a partir de 5."
+          : ss.count >= 5 && ss.bedSD != null ? `Horário de dormir variou cerca de ${Math.round(ss.bedSD)} minutos para mais ou para menos nos últimos 7 dias.` : "Regularidade a partir de 5 noites registradas.") : null,
+        sref ? more("Referência", sref.text) : null),
       L.sleep.length ? h("div", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Histórico")), hist("sleep", [...L.sleep].sort(byDate), e => [h("b", null, fmtDur(C.sleepMinutes(e.bed, e.wake))), ` · ${e.bed}–${e.wake}${e.quality ? " · " + QUAL[e.quality - 1].toLowerCase() : ""}`, h("span", null, " " + relDay(e.date))])) : null],
-    "bem-estar": () => [card("bem-estar", true), h("button", {class: "link", type: "button", style: "margin:10px 4px 0", onclick: () => moodSheet(p)}, "Registrar com energia, estresse ou nota"),
+    "bem-estar": () => [card("bem-estar", true, h("button", {class: "link hp-link", type: "button", onclick: () => moodSheet(p)}, "Registrar com energia, estresse ou nota")),
       L.mood.length ? h("div", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Últimos 14 dias")),
         h("div", {class: "dots"}, Array.from({length: 14}, (_, i) => C.addDays(t, i - 13)).map(k => { const x = dayMood(k); return h("span", {class: x ? "m" + x.mood : "", title: `${relDay(k)}: ${x ? MOODS[x.mood - 1] : "sem registro"}`}); })),
-        h("p", {class: "ref"}, "Dias sem registro não significam nada. O app não faz diagnósticos."),
+        more("Como ler", "Dias sem registro não significam nada. O app não faz diagnósticos."),
         hist("mood", [...L.mood].sort(byDate), e => [h("b", null, MOODS[e.mood - 1]), e.energy ? ` · energia ${e.energy}` : "", e.stress ? ` · estresse ${e.stress}` : "", e.note ? ` · “${e.note}”` : "", h("span", null, ` ${relDay(e.date)}${e.time ? " " + e.time : ""}`)])) : null]};
   const tabs = [["resumo", "Resumo"], ["movimento", "Exercício"], ["sono", "Sono"], adult ? ["bem-estar", "Emocional"] : null].filter(Boolean);
   put(app, h("div", {class: "view"}, topBar(quickBtn(p, "saude")),
-    h("h1", {class: "pg"}, "Saúde"), h("p", {class: "pg-s"}, adult ? "Exercício, sono e emocional." : "Exercício e sono."),
+    h("h1", {class: "pg"}, "Saúde"),
     h("div", {class: "seg subnav hseg", role: "tablist", "aria-label": "Saúde"}, tabs.map(([k, l]) => h("button", {type: "button", role: "tab", class: sub === k ? "on" : "", "aria-selected": String(sub === k), onclick: () => go({hsub: k})}, l))),
     h("div", {class: "hstack"}, sub === "resumo" ? [(na => na && ["mover", "regular", "mover-ok"].includes(na.id) ? h("div", {class: "na " + na.tone, style: "margin-top:0"}, h("span", {class: "na-ic", html: ICON.spark}),
         h("div", null, h("span", {class: "na-e"}, na.tone === "good" ? "Bom trabalho" : "Sugestão"), h("b", null, na.title), h("span", {class: "na-t"}, na.text))) : null)(C.nextAction(healthCtx(p))), card("movimento"), card("sono"), adult ? card("bem-estar") : h("p", {class: "note"}, "O registro emocional para crianças e adolescentes terá um fluxo próprio, adequado à idade.") ] : detail[sub]()),
-    h("p", {class: "src"}, "Só registros feitos por você, guardados neste aparelho; nenhum valor é estimado nem importado. Não são diagnósticos.")));
+    more("Sobre estes dados", "Só registros feitos por você, guardados neste aparelho; nenhum valor é estimado nem importado. Não são diagnósticos.")));
 }
 function chips(list, cur, onPick, cls){
   return h("div", {class: "chips" + (cls ? " " + cls : "")}, list.map(([v, l]) => h("button", {type: "button", class: cur === v ? "on" : "", "aria-pressed": String(cur === v), onclick: () => onPick(cur === v && cls === "opt" ? null : v)}, l)));
@@ -2879,36 +2928,43 @@ function renderProfile(p){
   const actLabel = () => { const pick = ["fao", "media"].includes(e.method) ? e.method : "dri";
     return !adult || pick === "dri" ? C.DRI_LV[e.dri ?? 1].toLowerCase() : pick === "fao" ? C.FAO_LV[e.fao ?? 1].toLowerCase() : `${C.FAO_LV[e.fao ?? 1].toLowerCase()} / ${C.DRI_LV[e.dri ?? 1].toLowerCase()}`; };
   put(app, h("div", {class: "view"}, topBar(quickBtn(p, "perfil")),
-    h("h1", {class: "pg"}, "Perfil"), h("p", {class: "pg-s"}, "Seus dados, metas, família e privacidade."),
+    h("h1", {class: "pg"}, "Perfil"),
     h("section", {class: "panel idc"}, avatar(p), h("div", {class: "pr-m"}, h("b", null, p.name), h("span", null, `${ageLabel(C.ageOf(p.birth))} · ${sexLabel(p.sex)}`), h("span", null, `Nascimento ${fromISO(p.birth)}`)),
       h("button", {class: "icon-btn", type: "button", "aria-label": "Editar identificação", onclick: () => profileSheet(p)}, ic("edit"))),
-    energyCard(p),
     h("div", {class: "prows"},
       row("target", "Objetivos e metas", [plan.objective || "Sem objetivo", plan.target ? `${k0(plan.target)} kcal` : "sem meta"].join(" · "), () => goalSheet(p)),
       row("ruler", "Dados corporais", e.weight && e.height ? `${fq.format(e.weight)} kg · ${fq.format(e.height)} cm · ${actLabel()}` : "Peso, altura e atividade", () => bodySheet(p)),
-      row("users", "Família", `${nPeople(S.patients.length)} · troque no topo da tela`, () => familySheet(), "familia"),
+      row("users", "Família", `${nPeople(S.patients.length)} · troque no topo da tela`, () => familySheet(), "familia")),
+    energyCard(p),
+    h("div", {class: "prows"},
       row("sliders", "Preferências", `${tracks(p) ? "Registra o consumo" : "Só planejamento"} · sugestões e recentes`, () => prefsSheet()),
       row("lock", "Backup e segurança", days == null ? "Só neste aparelho · nenhum backup ainda" : `Só neste aparelho · backup ${days === 0 ? "hoje" : days === 1 ? "ontem" : `há ${days} dias`}`, () => backupSheet(), null,
         S.patients.some(x => !x.example) && (days == null || days >= 7)),
       row("book", "Como o Nutri Prático calcula", "Fórmulas, fontes e limitações", () => scienceSheet(p)))));
 }
-// Necessidade energética: resumo (protocolo, TMB, GET, IMC) e ação de usar como meta; fórmulas ficam em scienceSheet.
+// Necessidade energética: seção recolhível. Fechada mostra só o GET e o protocolo; aberta, o seletor de protocolo,
+// TMB, GET, IMC e a ação de usar como meta. As fórmulas ficam em scienceSheet.
 function energyCard(p){
   const e = p.energy, r = C.energyOf(p), adult = !(r.age != null && r.age < 18), pick = ["fao", "media"].includes(e.method) ? e.method : "dri";
   const tg = p.plan.target, same = r.ok && r.get && tg === Math.round(r.get);
   const seg = adult ? h("div", {class: "seg", role: "radiogroup", "aria-label": "Protocolo usado"}, [["dri", "DRI 2005"], ["fao", "FAO/OMS 1985"], ["media", "Média"]].map(([k, l]) =>
     h("button", {type: "button", class: pick === k ? "on" : "", role: "radio", "aria-checked": String(pick === k), onclick: () => { e.method = k; touch(p); render(); }}, l))) : null;
+  const open = !!view.eopen, proto = r.child || !adult ? "DRI 2005 · crescimento" : {dri: "DRI 2005", fao: "FAO/OMS 1985", media: "média"}[pick];
+  const head = h("button", {class: "ec-h", type: "button", "aria-expanded": String(open), onclick: () => go({eopen: !open}, true)},
+    h("span", {class: "pr-i", html: ICON.bolt}), h("div", {class: "pr-m"}, h("b", null, "Necessidade energética"),
+      h("span", null, !r.ok ? "Faltam peso e altura" : r.get ? [h("b", {class: "ec-v"}, `${k0(r.get)} kcal`), ` · GET · ${proto}`] : [h("b", {class: "ec-v"}, `${k0(r.tmb)} kcal`), " · só taxa basal nesta idade"])),
+    h("span", {class: "ec-c", html: ICON.chev}));
+  if (!open) return h("section", {class: "panel ecard fold"}, head);
   const tile = (k, v, acc) => h("div", {class: "etile"}, h("span", null, k), h("b", {class: acc ? "acc" : ""}, v == null ? "—" : k0(v), v == null ? null : h("small", null, " kcal")));
-  return h("section", {class: "panel ecard"},
-    h("div", {class: "panel-h"}, h("span", null, "Necessidade energética"), adult ? null : h("span", {class: "sec-n"}, "DRI 2005 · crescimento")),
+  return h("section", {class: "panel ecard fold open"}, head, h("div", {class: "ec-b"},
     seg, adult ? h("p", {class: "eq-n", style: "margin:6px 2px 0"}, METHOD_NOTE[pick]) : null,
     h("div", {class: "etiles"}, tile("TMB", r.ok ? r.tmb : null), tile("GET", r.ok ? r.get : null, true)),
     r.ok ? h("div", {class: "eline"}, h("span", null, `IMC ${g1(r.imc)}`), h("span", null, `${fq.format(e.weight)} kg · ${fq.format(e.height)} cm`), h("span", null, ageLabel(r.age)))
       : h("button", {class: "btn ghost block", type: "button", style: "margin-top:10px", onclick: () => bodySheet(p)}, "Informar peso e altura"),
     r.child ? h("p", {class: "note warn"}, "Para crianças e adolescentes vale a DRI 2005, que inclui a energia do crescimento. O IMC é avaliado pelas curvas de crescimento, não pelos cortes de adultos.") : null,
     r.ok && r.get ? h("button", {class: "btn block " + (same ? "set" : "primary"), type: "button", style: "margin-top:12px", disabled: same, onclick: () => {
-      p.plan.target = Math.round(r.get); touch(p); toast(`Meta do plano: ${k0(r.get)} kcal`); render(); }}, same ? `✓ Meta do plano: ${k0(r.get)} kcal` : `Usar ${k0(r.get)} kcal como meta do plano`) : null,
-    r.ok && r.get && tg && !same ? h("p", {class: "meta-n", style: "margin-top:6px"}, `Meta atual do plano: ${k0(tg)} kcal.`) : null);
+      p.plan.target = Math.round(r.get); touch(p); toast(`Meta do plano: ${k0(r.get)} kcal`); render(); }}, same ? `✓ Meta do plano: ${k0(r.get)} kcal` : `Usar ${k0(r.get)} kcal como meta`) : null,
+    r.ok && r.get && tg && !same ? h("p", {class: "meta-n", style: "margin-top:6px"}, `Meta atual do plano: ${k0(tg)} kcal.`) : null));
 }
 function goalSheet(p){
   const plan = p.plan, r = C.energyOf(p);

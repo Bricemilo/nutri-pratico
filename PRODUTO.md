@@ -568,3 +568,19 @@ Cálculos (GET 2.730 kcal no fixture), dados, favoritas (uso com 2 toques, remo�
 
 ### Próximas etapas (aguardando avaliação)
 Saúde (gráficos adaptados à quantidade de registros; ciência por expansão) → Perfil (calculadora energética compacta e expansível) → revisão geral de consistência.
+
+## 18. v9 — Refinamento premium, etapa 3 (Saúde, Perfil e consistência)
+
+| Problema real | Correção |
+|---|---|
+| Gráficos com área vazia quando há 1 ou 2 registros (uma barra solitária, um ponto numa linha) | O gráfico acompanha a quantidade de dados: 1–2 dias na semana viram uma faixa de pontos por dia; barras (exercício, sono) e linha (emocional) só a partir de 3 dias; sem registros na semana, nenhum gráfico |
+| Referências científicas (OMS 2020, National Sleep Foundation) ocupando painéis inteiros | Ficam em "Referência", aberta por toque; o dado do usuário (minutos moderados/vigorosos, regularidade do sono) continua à vista dentro do cartão |
+| Histórico com até 12 linhas abertas | 5 mais recentes à vista; o restante em "Mostrar mais N" |
+| Subtítulos repetindo o nome das abas (Saúde, Perfil) | Removidos, como em Nutrição |
+| Nota de rodapé longa em Saúde | "Sobre estes dados", por expansão |
+| Cartão de sugestão com ícone empilhado acima do texto | Ícone ao lado do texto |
+| Calculadora energética no topo do Perfil, antes de objetivos e família | Perfil: identificação → Objetivos, Dados corporais, Família → Necessidade energética (recolhida: "2.730 kcal · GET · média") → Preferências, Backup, Como calcula |
+| iPhone SE: aba "Emocional" e linhas do Perfil cortadas com "…" | Abas mais justas; linhas do Perfil em até 2 linhas; números da calculadora sem quebrar a unidade |
+
+Preservado: cálculos (GET 2.730 kcal na média, 2.696 kcal na DRI 2005), escolha de protocolo, "Usar como meta" (só com toque, nunca automático), registros, apagar com desfazer, fluxo infantil.
+A opção "Média" continua disponível como antes; a decisão sobre mantê-la só como comparação segue em aberto.
