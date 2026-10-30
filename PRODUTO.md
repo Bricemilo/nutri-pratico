@@ -288,6 +288,8 @@ Os números de toques da seção 6 foram medidos no simulador. O tempo real prec
 
 ## 12. Registro de alterações
 
+- **v7:** Design System definitivo (fonte do sistema, escala em rem com Dynamic Type, tokens), Home v7, Saúde em superfícies neutras, ~100 regras de CSS mortas removidas (seção 16).
+
 - **v6:** Home com saudação, pilares e instrumento de nutrição; nomes Nutrição/Exercício/Sono/Emocional; nova paleta dos macros; registro do consumo opcional (seção 15).
 
 - **v5:** design system por pilar e telas Hoje, Alimentação (com aba Favoritos), Saúde (abas por pilar) e Perfil (seções progressivas), seguindo a referência visual (seção 14).
@@ -450,3 +452,93 @@ Seriam funções simuladas (regra 9):
   - quem quer acompanhar escolhe "Registrar também" em Perfil → Preferências, e as refeições ganham o círculo;
   - quem já marcava refeições antes desta versão continua com a marcação ligada;
   - registrar uma vez não liga o acompanhamento.
+
+---
+
+## 16. Direção criativa v7: auditoria, Design System definitivo e Home
+
+### Auditoria (antes desta etapa)
+
+| Área | Achado | Risco |
+|---|---|---|
+| Tipografia | Fonte Geist baixada do Google Fonts; 279 tamanhos em px | Requisição a terceiros (privacidade), primeira abertura depende de rede, não usa SF Pro, ignora o tamanho de texto do iPhone (Dynamic Type) |
+| CSS | ~800 linhas acumuladas em 7 iterações; 5 definições do cartão de próximo passo; ~100 regras mortas | Inconsistência e manutenção difícil |
+| Home | Pilar Nutrição mostrava "2 refeições" (sem unidade de energia); estados vazios como "+ registrar" (parecia tarefa); necessidade estimada ausente | Leitura ambígua; sensação de cobrança |
+| Painel | Mostrador grande e dominante | Hierarquia desequilibrada |
+| Saúde | Cartões inteiramente tingidos | Peso visual excessivo |
+| Dados | Só no aparelho, sem criptografia própria (limite da versão web) | Perda de dados se o iOS limpar o armazenamento; mitigado por backup e cópias automáticas |
+| Cálculos | "Média" sem fundamento metodológico próprio | Já sinalizada como comparação; ver decisão abaixo |
+
+### Design System definitivo (tokens em `:root`)
+
+- **Fonte do sistema:** `-apple-system` (SF Pro no iPhone), sem download externo; Inter como substituto em outros sistemas.
+- **Escala tipográfica em rem** (1 rem = 17 px no tamanho padrão do iOS):
+
+| Token | rem | px no padrão | Uso |
+|---|---|---|---|
+| `--t-cap` | 0,68 | 11,5 | rótulos |
+| `--t-sm` | 0,76 | 13 | apoio |
+| `--t-body` | 0,88 | 15 | texto |
+| `--t-h` | 1 | 17 | títulos de seção |
+| `--t-num` | 1,18 | 20 | indicadores |
+| `--t-title` | 1,3 | 22 | títulos de folha |
+| `--t-page` | 1,76 | 30 | título de página |
+
+  Todos os tamanhos do app foram convertidos para rem (278).
+- **Dynamic Type:** o app lê o tamanho de texto do sistema (`-apple-system-body`) e o aplica dentro do limite de 15–24 px. Com texto ampliado (19 px ou mais), as grades de 4 colunas viram 2×2 para não cortar palavras.
+- **Espaçamento em base 4:** `--s1`…`--s8` = 4, 8, 12, 16, 20, 24, 32 px.
+- **Raios:** `--r-s` 12, `--r-m` 16, `--r-l` 20, `--r-xl` 24.
+- **Cores:**
+  - pilares: `--food` cobre, `--move` turquesa, `--sleep` violeta, `--mood` rosa;
+  - macros: `--carb`, `--prot` (texto: `--prot-ink`), `--fat`, `--fib`;
+  - neutros: `--bg`, `--surface` 1–3, `--ink`, `--ink-2`, `--muted`.
+- **Superfícies:** grafite sem contorno. A cor do pilar só tinge os cartões dos pilares (8%); na Saúde a superfície é neutra e a cor fica no ícone, no título e no gráfico.
+
+### Home v7
+- **Saudação:** sem frase extra.
+- **Quatro pilares**, sempre com valor, unidade e período:
+  - Nutrição: kcal planejadas;
+  - Exercício: tempo nesta semana;
+  - Sono: última noite;
+  - Emocional: hoje.
+  - Sem dado, o cartão diz "Não registrado" (ou "Sem plano" na Nutrição) e nunca presume zero.
+- **Plano nutricional do dia:**
+  - anel compacto, cerca de 40% menor que na v6, com as kcal planejadas no centro geométrico (desvio medido: 0 px);
+  - legenda de macros com g e %;
+  - abaixo, três números que não se confundem: **Meta**, **Necessidade estimada** (GET, com o protocolo) e **Consumido** (só se a pessoa registra; senão nem aparece).
+- **Próximo passo:** volta, em uma linha discreta, só quando `nextAction` tem dados e sugestão apropriada. Exemplo sem dados: "Calcule sua meta de energia".
+- **Comparação circular × simples:**
+  - uma barra empilhada ocuparia menos altura, mas perderia a relação plano × meta, que o anel externo mostra sem texto;
+  - o anel compacto com legenda lateral ficou com a mesma altura de uma barra com rótulos;
+  - por isso mantive o anel.
+- **"Registrar rapidamente" da referência:** não implementado, porque duplicaria o "+" do topo.
+
+### Medido (Home sem rolagem, nada cortado, nada fora da largura)
+
+| Caso | Fim do conteúdo | Barra de abas |
+|---|---|---|
+| iPhone 13, app instalado | 577 | 716 |
+| iPhone 13, Safari | 545 | 600 |
+| iPhone SE | 491 | 504 |
+| iPhone Pro Max | 577 | 806 |
+| iPhone 13 com texto ampliado (21 px) | 693 | 712 |
+| Sem registros | 585 | 716 |
+| Perfil novo, vazio | 466 | 716 |
+
+### Plano de implementação priorizado
+1. **(Feito)** Design System e Home.
+2. **Nutrição:**
+   - copiar dia completo e modelos semanais (exige plano por dia da semana; mudança no modelo de dados);
+   - ajuste rápido de porções;
+   - porções individualizadas em refeições familiares.
+3. **Saúde:** tendências de 4 semanas (exercício por tipo e intensidade; sono com regularidade) só com dados suficientes.
+4. **Perfil:**
+   - rever a opção "Média": manter só como comparação ou removê-la;
+   - perfis de menores com responsável;
+   - exportação e exclusão por pessoa (LGPD).
+5. **Integrações (app nativo):** HealthKit com consentimento por tipo, origem de cada dado e prevenção de duplicatas; criptografia e Face ID.
+
+### Pendências e limites honestos
+- As capturas foram feitas em navegador simulado com a fonte Inter; no iPhone a fonte é SF Pro.
+- Ainda falta validar em aparelho real: Dynamic Type, VoiceOver e desempenho.
+- Itens da referência não implementados por serem simulações: fotos de pratos, sino de notificações, cartão de Apple Saúde, engrenagem de configurações.
