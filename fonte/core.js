@@ -441,6 +441,23 @@
     return {count: day.length, mealIds: day.map(e => e.mealId), t};
   }
 
+  /* Hidratação: estimativa prática de 35 mL de água por kg de peso por dia, só para adultos. É um ponto de partida, não a
+     necessidade fisiológica exata: perdas variam com clima, suor, atividade e saúde. Um valor definido pela pessoa prevalece.
+     Abaixo de 18 anos o app não calcula (a necessidade por kg muda com a idade); vale apenas o valor definido manualmente. */
+  function waterRec(weight, age, custom){
+    if (custom > 0) return {ml: Math.round(custom), src: "manual"};
+    if (!(weight > 0) || age == null || age < 18) return {ml: null, src: null};
+    return {ml: Math.round(35 * weight), src: "35ml"};
+  }
+  // Soma meses a uma data (AAAA-MM-DD); se o dia não existir no mês de destino, usa o último dia (31/01 + 1 mês = 28/02 ou 29/02).
+  function addMonths(iso, n){
+    const [y, m, d] = String(iso).split("-").map(Number); if (!y || !m || !d) return null;
+    const t = new Date(y, m - 1 + n, 1), last = new Date(t.getFullYear(), t.getMonth() + 1, 0).getDate();
+    return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(Math.min(d, last)).padStart(2, "0")}`;
+  }
+  // Próxima data prevista de um exame: última realização + intervalo escolhido pela pessoa. Sem intervalo, sem previsão.
+  function examNext(e){ return e && e.last && e.every > 0 ? addMonths(e.last, e.every) : null; }
+
   /* Próxima ação: no máximo uma sugestão, só com dados suficientes, nunca diagnóstico.
      Pilares de movimento e sono só geram sugestão para quem já começou a registrá-los, e só para adultos. */
   function nextAction(c){
@@ -459,7 +476,7 @@
     return null;
   }
 
-  return {eatenDay, dayKey, addDays, weekKeys, moveWeek, moveRef, sleepMinutes, sleepStats, sleepRef, nextAction,
+  return {waterRec, addMonths, examNext, eatenDay, dayKey, addDays, weekKeys, moveWeek, moveRef, sleepMinutes, sleepStats, sleepRef, nextAction,
     norm, normCh, words, parseLabel, friendly, createFoodDB, searchFoods, within1, measureOf, calcItem, sum, mealTotal, planTotal, macroSplit,
     ageOf, FAO_LV, FAO_FA, faoTMB, DRI_LV, driCalc, energyOf, roleOf, roundQty, equivalent, substitutes, CRITERIA, NO_DATA};
 });

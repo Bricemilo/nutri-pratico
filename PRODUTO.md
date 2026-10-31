@@ -628,3 +628,22 @@ A opção "Média" continua disponível como antes; a decisão sobre mantê-la s
 **Acessibilidade**: alvos de toque ≥ 44 px em telas e folhas (chips, abas, segmentos, ícones, campos); contraste de texto ≥ 4,5:1 inclusive sobre os fundos tingidos; rótulos de VoiceOver do anel e do resumo agora leem os valores.
 
 Divergências intencionais da referência: sem subtítulos de página e sem a aba Favoritos (removidos antes a pedido, por redundância); sem fotos de refeições; sem barras "fantasma" em dias sem registro; "+" mantido no Perfil (a referência mostra engrenagem, que não tem função hoje).
+
+## 21. v12 — Refinamento definitivo + hidratação, suplementos e exames
+
+**Home** (cabe sem rolar no iPhone 13: conteúdo termina em 681 px, barra em 713)
+- Pilares 2 × 2 em duas linhas: ícone + título; valor + descrição curta ("2 refeições", "1 h na semana", "7 h 20", "Bem hoje"). Ícones novos da mesma família: talheres, halter, lua, rosto. Altura 2 × 90 px.
+- Anel só com carboidratos, proteínas e gorduras; 875 no centro (desvio 0 px). Fibras saíram do marcador colorido e viraram linha complementar com separador ("Fibras 17 g").
+- Rodapé: Hidratação (esquerda, azul-petróleo) e Gasto energético (direita, tom quente), mesma altura. A meta calórica saiu da Home (continua na Nutrição e no Perfil). Título do GET na Home: "Gasto energético" (com "(GET)" a caixa quebrava em três linhas); o método vai embaixo do valor.
+
+**Hidratação** (core.waterRec, testada): adultos 35 mL × kg/dia; valor manual prevalece (0,5–8 L); abaixo de 18 anos só valor manual. Sem acréscimo automático por exercício (ACSM 2007: reposição individual, perda < 2% do peso); explicação de água total vs. bebidas (EFSA 2010; IOM 2004). Sem registro de copos, barra ou percentual.
+
+**Saúde**: resumo em cartões compactos (Exercício, Sono, Emocional, Hidratação) que levam ao detalhe; gráficos só no detalhe; dia sem registro = traço, com legenda; dias futuros em branco. Novas seções: Suplementos e medicamentos; Exames e acompanhamento (com Prioridades de saúde).
+
+**Suplementos, fórmulas e medicamentos** (p.care.meds): nome (único campo obrigatório), categoria, dose, unidade, momento, frequência, observações; pausar, retomar, excluir com desfazer. Sem marcação diária. Reaproveitamento de suplementos de outro perfil da família (medicamentos e fórmulas não são sugeridos, por serem prescrições individuais). Sem recomendação de doses.
+
+**Exames** (p.care.exams; core.addMonths/examNext, testados): nome, data da última realização (validada), intervalo escolhido (3, 6, 12, 24 meses ou nenhum), próxima data prevista, resultado e observações em texto livre. Sem periodicidade sugerida nem interpretação. **Prioridades de saúde** (p.care.goals): texto livre, remover com desfazer.
+
+**Perfil**: Você (dados pessoais, dados corporais, objetivos e metas, família) · Planejamento (GET, hidratação) · Saúde e acompanhamento (atalhos para as seções da Saúde e prioridades) · Aplicativo (backup, configurações, fontes e metodologia). "Preferências" virou "Configurações" (registro do consumo, sugestões e recentes); não foram criadas "preferências alimentares" porque o app não tem esses dados.
+
+**Dados**: os novos campos ficam em `p.care` de cada perfil; perfis antigos ganham `care` vazio ao abrir; entram no backup (o backup exporta o estado inteiro). Nada existente foi alterado.

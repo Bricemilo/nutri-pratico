@@ -251,3 +251,20 @@ test("consumo do dia: soma só as refeições feitas naquele dia, com os valores
   near(d.t.kcal, 874.6); near(d.t.c, 102); near(d.t.p, 67.7); near(d.t.l, 19.6); near(d.t.f, 17.4);
   assert.equal(C.eatenDay(log, "2026-10-28").count, 0); assert.equal(C.eatenDay(undefined, "2026-10-30").t.kcal, 0);
 });
+
+test("hidratação: 35 mL/kg para adultos, valor manual prevalece, sem cálculo abaixo de 18 anos", () => {
+  assert.deepEqual(C.waterRec(82, 40), {ml: 2870, src: "35ml"});
+  assert.deepEqual(C.waterRec(82, 40, 2500), {ml: 2500, src: "manual"});
+  assert.deepEqual(C.waterRec(50, 15), {ml: null, src: null});
+  assert.deepEqual(C.waterRec(50, 15, 1800), {ml: 1800, src: "manual"});
+  assert.deepEqual(C.waterRec(null, 40), {ml: null, src: null});
+});
+
+test("exames: próxima data = última + intervalo, com ajuste de fim de mês", () => {
+  assert.equal(C.addMonths("2024-08-15", 12), "2025-08-15");
+  assert.equal(C.addMonths("2025-01-31", 1), "2025-02-28");
+  assert.equal(C.addMonths("2024-01-31", 1), "2024-02-29");
+  assert.equal(C.addMonths("2024-11-10", 3), "2025-02-10");
+  assert.equal(C.examNext({last: "2024-08-15", every: 6}), "2025-02-15");
+  assert.equal(C.examNext({last: "2024-08-15", every: null}), null);
+});
