@@ -678,3 +678,22 @@ Divergências intencionais da referência: sem subtítulos de página e sem a ab
 - **Barra inferior**: mesma navegação; a aba ativa ganhou um traço fino de cobre na borda superior (sem brilho, sem animação).
 - **Toque**: escala 0,982 e brilho +12% por 140 ms; desligado com "Reduzir movimento".
 - iPhone 13: conteúdo termina em 688 px (barra em 713), sem rolar. "Gasto energético" ocupa duas linhas em 390 px de largura por causa da seta; os valores dos dois cartões continuam alinhados.
+
+## 25. v16 — BRICEÑO 4.0 Signature Edition (Home)
+
+**Auditoria da v15** (problemas corrigidos): mesmos arcos de luz nos oito cartões (efeito de modelo); "Gasto energético" quebrando em duas linhas; caixas de ícone e oito setas somando ruído; marca apenas centralizada; arco decorativo no topo sem função; botão "+" com halo; legenda com contraste no limite sobre o reflexo; valores em texto ("Muito bem") podendo encostar na borda com texto ampliado.
+
+**Material**: um único `.hc` com parâmetros por módulo — luz principal (`--lx/--ly` origem, `--lw/--lh` alcance, `--li` intensidade), faixa acetinada só nos metais (`--sa/--sp/--si`), aro aceso do lado da luz (`--ra`). Toda luz fica à direita; título e número ficam sobre fundo escuro.
+- Metais: Nutrição cobre (luz quente no alto, faixa diagonal) · Exercício titânio esmeralda (luz lateral, faixa quase horizontal) · Gasto energético bronze champanhe (luz baixa, faixa vertical).
+- Gemas (sem faixa, luz difusa): Sono ametista (de baixo) · Emocional rubi (ponto concentrado no alto) · Hidratação safira-petróleo (rasante no topo) · Suplementos peridoto (suave, lateral) · Medicamentos safira-ardósia (precisa, no canto).
+
+**Cartões**: ícone de 19 px sem caixa, na cor da gema; sem setas (o cartão inteiro é o botão, com resposta ao toque). Título 14/600 sem compressão; número 28 (pilares) e 22 (demais), algarismos tabulares, unidade 14 a 66% de opacidade, legenda 13 a 70%.
+- Gasto energético: título completo quando cabe em uma linha; senão "GET" (medido continuamente: largura, rotação, texto ampliado; volta ao completo quando cabe). Legenda "Estimativa diária". VoiceOver sempre lê "Gasto energético". Detalhes científicos seguem no Perfil.
+- Suplementos e Medicamentos: sempre um número — "2 ativos" / "1 ativo"; vazio "0 cadastrados · Toque para adicionar" (abre o cadastro); "1 pausado" só quando houver.
+- Grupos 2 e 3: número logo abaixo do título, alinhado entre os dois cartões da linha mesmo quando uma legenda quebra.
+
+**Geometria**: margem 16 · entre cartões 10 · entre grupos 20 · padding 14 · raio 20 (SE: 8 · 16 · 12). Pilares 124 px; grupos 2 e 3 com 104 px.
+**Cabeçalho**: assinatura BRICEÑO alinhada à esquerda (mesma margem da saudação), cobre, espaçamento 0,34 em, seguida de um fio cobre que esmaece — composição editorial; arco decorativo removido. Botão "+" circular de 44 px (igual à altura do seletor), sem halo.
+**Barra**: divisória mais fina, aba ativa em cobre com traço curto; resposta ao toque (escala 0,94).
+**Toque**: cartões 0,98 + brilho 10% (160 ms); tudo desligado com "Reduzir movimento". Resposta tátil: vibração de 6 ms no Android; no iPhone, interruptor nativo invisível (comportamento do Safari a partir do iOS 18) — não verificável fora do aparelho.
+**Medições** (Playwright): iPhone 13 termina em 683 px (barra 712); contraste mínimo 5,3:1 medido sobre o fundo renderizado (35 textos); sem cortes nem estouros em 13, SE, Pro Max e texto ampliado.

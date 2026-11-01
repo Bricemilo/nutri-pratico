@@ -1216,83 +1216,81 @@ html.big-text .sc-m > span + span{border-left:0;border-top:1px solid var(--line)
 .st i:not([class]){width:14px;height:3px;border-radius:2px;margin:5px 0;background:color-mix(in srgb,var(--ink-2) 45%,transparent)}
 .hp.full .st i:not([class]){width:14px;height:3px}
 .hp .bar.fut i,.st i.fut{visibility:hidden}
-/* ===== Home v15 — "Digital Jewelry": um único material parametrizado para os oito cartões =====
-   Cada cartão define só duas cores: --g (a gema: ícone, aro e reflexos) e --gd (o fundo profundo da pedra).
-   Camadas, todas em CSS (sem imagens, sem animação contínua):
-     1 · corpo: gradiente da gema ao fundo profundo, com luz direcional vinda do canto superior esquerdo;
-     2 · aro: contorno de 1 px em gradiente (metal acetinado: mais vivo nos cantos opostos, quase neutro no meio);
-     3 · reflexo: três arcos finos presos ao canto inferior direito (abaixo do número e da legenda);
-     4 · brilho interno de 1 px no topo e sombra curta, para a sensação de peça lapidada.
-   Escala: margem 16 · entre cartões 10 · entre níveis 18 · padding 14 · raio 20 · ícone em lâmina de 30 px. */
-.hi-h{position:relative;isolation:isolate;margin:2px 2px 18px}
-.hi-h::before{content:"";position:absolute;z-index:-1;pointer-events:none;right:-16px;top:-64px;width:230px;height:180px;
-  background:radial-gradient(circle at 100% 0,transparent 139px,rgba(224,140,78,.34) 140px,transparent 141.5px),
-    radial-gradient(circle at 104% -6%,transparent 158px,rgba(224,140,78,.18) 159px,transparent 160.5px),
-    radial-gradient(circle at 96% 4%,transparent 122px,rgba(224,140,78,.12) 123px,transparent 124.5px);
-  -webkit-mask:linear-gradient(205deg,#000 25%,transparent 78%);mask:linear-gradient(205deg,#000 25%,transparent 78%)}
-.hi-h .wm{display:flex;flex-direction:column;align-items:center;margin:-4px 0 12px;padding-top:4px;font-size:var(--t-cap);font-weight:600;letter-spacing:.46em;text-indent:.46em;line-height:1.3;
-  color:#E59A5E;background:linear-gradient(100deg,#C9773E,#F1B07A 50%,#C9773E);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.hi-h .wm::after{content:"";width:22px;height:1px;margin-top:7px;background:linear-gradient(90deg,transparent,#D98A4E,transparent)}
-.hi-h h1{margin:0;font-size:1.647rem;font-weight:700;letter-spacing:-.03em;line-height:1.12}
-.hi-h .today{margin:4px 0 0;font-size:var(--t-sm);color:var(--muted);font-weight:500}
-.hgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.hgrid + .hgrid{margin-top:10px}
-.hgrid.lv2{margin-top:18px}
+/* ===== Home v16 — Signature Edition: um material, oito configurações =====
+   Geometria (tokens da Home): margem 16 · entre cartões 10 · entre grupos 20 · padding 14 · raio 20 · ícone 19 sem caixa.
+   Material (.hc): corpo escuro que clareia só em direção à luz · luz principal (origem --lx/--ly, alcance --lw/--lh, intensidade --li)
+   · faixa acetinada só nos metais (ângulo --sa, posição --sp, intensidade --si) · aro de 1 px aceso do lado da luz (--ra) · brilho de 1 px no topo.
+   Toda luz fica no lado direito do cartão: a região do título (alto à esquerda) e do número (baixo à esquerda) permanece escura.
+   Gemas (ametista, rubi, safiras, peridoto): luz difusa, sem faixa. Metais (cobre, titânio, bronze): luz mais concentrada e faixa acetinada. */
+.home{--hc-gap:10px;--hc-group:20px;--hc-pad:14px;--hc-r:20px}
+.hi-h{margin:6px 2px 20px}
+.hi-h .wm{display:flex;align-items:center;gap:12px;margin:0 0 10px;line-height:1.45}
+.hi-h .wm span{padding-top:2px;font-size:var(--t-cap);font-weight:600;letter-spacing:.34em;color:#E39A60;
+  background:linear-gradient(100deg,#CF7D43,#F0AE78 55%,#D4864C);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hi-h .wm::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(224,140,78,.42),rgba(224,140,78,0) 72%)}
+.hi-h h1{margin:0;font-size:1.647rem;font-weight:680;letter-spacing:-.028em;line-height:1.12}
+.hi-h .today{margin:5px 0 0;font-size:var(--t-sm);color:var(--muted);font-weight:500}
+.hgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--hc-gap)}
+.hgrid + .hgrid{margin-top:var(--hc-group)}
 .hgrid.odd .hc:last-child{grid-column:1 / -1}
-/* o material */
-.hc{--g:#D98A4E;--gd:#22140B;position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;align-items:stretch;min-width:0;padding:13px 12px 14px 13px;border-radius:20px;text-align:left;
+.hc{--g:#D98A4E;--gd:#20130A;--lx:100%;--ly:0%;--lw:80%;--lh:75%;--li:22%;--sa:118deg;--sp:86%;--si:0%;--ra:225deg;
+  position:relative;display:flex;flex-direction:column;align-items:stretch;min-width:0;padding:var(--hc-pad);border-radius:var(--hc-r);text-align:left;
   border:1px solid transparent;
   background:
-    radial-gradient(110% 85% at 0% 0%,color-mix(in srgb,var(--g) 15%,transparent),transparent 62%) padding-box,
-    linear-gradient(152deg,color-mix(in srgb,var(--g) 17%,var(--gd)) 0%,var(--gd) 52%,color-mix(in srgb,var(--gd) 55%,#080706) 100%) padding-box,
-    linear-gradient(135deg,color-mix(in srgb,var(--g) 58%,transparent) 0%,rgba(255,255,255,.07) 34%,rgba(255,255,255,.035) 62%,color-mix(in srgb,var(--g) 42%,transparent) 100%) border-box;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 12px 26px -16px rgba(0,0,0,.9);
-  transition:transform .14s cubic-bezier(.3,.7,.4,1),filter .14s ease}
-.hc::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
-  background:
-    radial-gradient(circle at calc(100% + 30px) calc(100% + 150px),transparent 172px,color-mix(in srgb,var(--g) 62%,transparent) 173px,transparent 174.6px),
-    radial-gradient(circle at calc(100% + 30px) calc(100% + 150px),transparent 179px,color-mix(in srgb,var(--g) 30%,transparent) 180px,transparent 181.5px),
-    radial-gradient(circle at calc(100% + 30px) calc(100% + 150px),transparent 165px,color-mix(in srgb,var(--g) 18%,transparent) 166px,transparent 167.5px),
-    radial-gradient(60% 55% at 104% 108%,color-mix(in srgb,var(--g) 20%,transparent),transparent 72%)}
-.hc:active{transform:scale(.982);filter:brightness(1.12)}
+    radial-gradient(var(--lw) var(--lh) at var(--lx) var(--ly),color-mix(in srgb,var(--g) var(--li),transparent),transparent) padding-box,
+    linear-gradient(var(--sa),transparent calc(var(--sp) - 13%),color-mix(in srgb,var(--g) var(--si),transparent) var(--sp),transparent calc(var(--sp) + 11%)) padding-box,
+    linear-gradient(100deg,var(--gd) 40%,color-mix(in srgb,var(--g) 8%,var(--gd))) padding-box,
+    linear-gradient(var(--ra),color-mix(in srgb,var(--g) 46%,transparent),rgba(255,255,255,.045) 36%,rgba(255,255,255,.028) 70%,color-mix(in srgb,var(--g) 16%,transparent)) border-box;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 14px 28px -18px rgba(0,0,0,.95);
+  transition:transform .16s cubic-bezier(.2,.8,.3,1),filter .16s ease}
+.hc:active{transform:scale(.98);filter:brightness(1.1)}
 .hc:focus-visible{outline:2px solid var(--g);outline-offset:2px}
-.hc.move{--g:#3FBF9F;--gd:#0A1D18} .hc.sleep{--g:#A387F2;--gd:#171126} .hc.wb{--g:#E3728C;--gd:#251018}
-.hc.water{--g:#3BAFD3;--gd:#091A22} .hc.energy{--g:#D7B678;--gd:#1D170E} .hc.supp{--g:#ABCB5C;--gd:#151A0B} .hc.meds{--g:#7399E0;--gd:#0E1526}
+/* oito configurações do mesmo material */
+.hc.food  {--g:#D98A4E;--gd:#1F1209;--lx:100%;--ly:0%;  --lw:82%;--lh:78%;--li:24%;--sa:118deg;--sp:88%;--si:12%;--ra:225deg}  /* cobre acetinado: luz quente no alto, faixa diagonal */
+.hc.move  {--g:#45BC9F;--gd:#091B16;--lx:100%;--ly:48%; --lw:52%;--lh:95%;--li:17%;--sa:165deg;--sp:90%;--si:12%;--ra:270deg}  /* titânio: luz lateral fria, faixa quase horizontal */
+.hc.sleep {--g:#A68AF0;--gd:#150F28;--lx:100%;--ly:100%;--lw:100%;--lh:95%;--li:21%;--ra:315deg}                          /* ametista: brilho difuso vindo de baixo */
+.hc.wb    {--g:#E2738D;--gd:#230E16;--lx:94%; --ly:0%;  --lw:58%;--lh:62%;--li:25%;--ra:215deg}                          /* rubi: ponto de luz concentrado */
+.hc.water {--g:#3DB1D3;--gd:#081820;--lx:100%;--ly:0%;  --lw:95%;--lh:48%;--li:21%;--ra:195deg}                          /* safira-petróleo: luz rasante e fria no topo */
+.hc.energy{--g:#D3B47D;--gd:#1A150D;--lx:100%;--ly:100%;--lw:70%;--lh:85%;--li:17%;--sa:100deg;--sp:93%;--si:10%;--ra:320deg} /* bronze champanhe: luz baixa, faixa vertical */
+.hc.supp  {--g:#A9C45E;--gd:#13190A;--lx:100%;--ly:72%; --lw:72%;--lh:95%;--li:15%;--ra:290deg}                          /* peridoto: luz natural e suave */
+.hc.meds  {--g:#7C9DDC;--gd:#0D1425;--lx:100%;--ly:0%;  --lw:50%;--lh:58%;--li:20%;--ra:225deg}                          /* safira-ardósia: luz precisa, clínica */
 .hc-h{display:flex;align-items:center;gap:8px;min-width:0}
-.hc-i{display:grid;place-items:center;flex:none;width:28px;height:28px;border-radius:9px;color:color-mix(in srgb,var(--g) 82%,#fff);
-  background:linear-gradient(150deg,color-mix(in srgb,var(--g) 30%,var(--gd)),color-mix(in srgb,var(--g) 9%,var(--gd)));
-  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--g) 38%,transparent),inset 0 1px 0 rgba(255,255,255,.1)}
-.hc-i svg{width:16px;height:16px;display:block}
-.hc-t{flex:1;font-size:var(--t-sm);font-weight:600;letter-spacing:-.02em;color:rgba(244,238,232,.92);line-height:1.25;min-width:0}
-.hc-c{display:grid;flex:none;margin:0 -4px 0 -6px;color:rgba(244,238,232,.42)}
-.hc-c svg{width:13px;height:13px;display:block}
-.hc-v{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:5px;margin-top:auto;padding-top:12px;min-width:0;max-width:100%}
-.hc-v b{font-weight:640;letter-spacing:-.035em;line-height:1.08;color:#F7F2EC;font-variant-numeric:tabular-nums;white-space:nowrap}
-.hc-v small{font-size:var(--t-sm);font-weight:500;letter-spacing:0;color:rgba(244,238,232,.6);white-space:nowrap}
-.hc-s{margin-top:4px;font-size:var(--t-cap);color:rgba(244,238,232,.64);line-height:1.3;min-height:1.3em}
-/* nível 1: pilares */
-.hc.l1{min-height:122px}
+.hc-i{display:grid;place-items:center;flex:none;width:20px;height:20px;color:color-mix(in srgb,var(--g) 80%,#fff)}
+.hc-i svg{width:19px;height:19px;display:block}
+.hc-t{flex:1;font-size:var(--t-sm);font-weight:600;letter-spacing:-.005em;color:rgba(244,238,232,.9);line-height:1.25;min-width:0}
+.hc[data-short] .hc-t{white-space:nowrap;overflow:hidden}
+.hc-v{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:4px;margin-top:auto;padding-top:14px;min-width:0;max-width:100%}
+.hc-v b{font-weight:650;letter-spacing:-.03em;line-height:1.08;color:#F7F2EC;font-variant-numeric:tabular-nums;white-space:nowrap}
+.hc-v small{font-size:var(--t-sm);font-weight:500;letter-spacing:-.005em;color:rgba(244,238,232,.66);white-space:nowrap}
+.hc-s{margin-top:3px;font-size:var(--t-cap);color:rgba(244,238,232,.7);line-height:1.3;min-height:1.3em}
+.hc-v b.nr{font-size:var(--t-body);font-weight:560;letter-spacing:-.01em;line-height:1.25;white-space:normal;color:rgba(244,238,232,.9)}
+/* grupo 1 · pilares: mais altos, número 28 */
+.hc.l1{min-height:124px}
 .hc.l1 .hc-v b{font-size:1.647rem}
 .hc.l1 .hc-v b.long{font-size:1.294rem;white-space:normal;line-height:1.15}
-/* nível 2: metabolismo */
-.hc.l2{min-height:106px}
-.hc.l2 .hc-v{padding-top:10px}
+/* grupo 2 · metabolismo: compacto, número 22 logo abaixo do título (alinhado entre os dois cartões mesmo se uma legenda quebrar) */
+.hc.l2 .hc-v{margin-top:0;padding-top:10px}
 .hc.l2 .hc-v b{font-size:1.294rem}
-/* nível 3: acompanhamento */
-.hc.l3{min-height:98px}
-.hc.l3 .hc-v{padding-top:10px}
-.hc.l3 .hc-v b{font-size:1.176rem}
-.hc.l1 .hc-v b.nr,.hc.l2 .hc-v b.nr,.hc.l3 .hc-v b.nr{font-size:var(--t-body);font-weight:560;letter-spacing:-.01em;line-height:1.25;white-space:normal;color:rgba(244,238,232,.9)}
-.hc.l3 .hc-v b.nr{font-size:var(--t-sm)}
-/* topo e barra: cobre como assinatura, sem brilho permanente */
-.icon-btn.accent{background:linear-gradient(150deg,#F2AA6E,#CF7B3E);box-shadow:inset 0 1px 0 rgba(255,255,255,.28),inset 0 0 0 1px rgba(255,214,176,.18),0 6px 16px -8px rgba(224,140,78,.55)}
-.who{background:linear-gradient(160deg,#1E1A16,#141210);border-color:rgba(224,140,78,.22)}
-.tab{position:relative}
-.tab.on::before{content:"";position:absolute;top:-7px;left:50%;width:26px;height:2px;margin-left:-13px;border-radius:0 0 2px 2px;background:linear-gradient(90deg,#C9773E,#F1B07A,#C9773E)}
-@media (max-width:370px){.hgrid{gap:8px}.hgrid + .hgrid{margin-top:8px}.hgrid.lv2{margin-top:14px}.hc{padding:11px 10px 12px 11px}.hc-h{gap:7px}.hc-i{width:26px;height:26px;border-radius:8px}
-  .hc.l1 .hc-v b{font-size:1.412rem}.hc.l1 .hc-v b.long{font-size:1.118rem}.hc-c{display:none}}
-html.big-text .hc-c{display:none}
-@media (prefers-reduced-motion:reduce){.hc{transition:none}.hc:active{transform:none}}
+/* grupo 3 · acompanhamento: compacto, número 22 logo abaixo do título (alinhado entre os dois cartões); legenda só quando existe */
+.hc.l3 .hc-v{margin-top:0;padding-top:10px}
+.hc.l3 .hc-v b{font-size:1.294rem}
+.hc.l3 .hc-s:empty{display:none}
+.hc.l1 .hc-v b.nr,.hc.l2 .hc-v b.nr{font-size:var(--t-body)}
+/* valores em texto ("Muito bem") nunca saem do cartão: quebram linha e, com texto ampliado, diminuem */
+.hc-v b.txt{white-space:normal}
+html.big-text .hc.l1 .hc-v b.txt{font-size:1.294rem;line-height:1.15}
+/* topo: botão "+" proporcional ao seletor (44 px, circular), sem halo */
+.icon-btn.accent{border-radius:50%;background:linear-gradient(160deg,#EB9E63,#CC7A3F);box-shadow:inset 0 1px 0 rgba(255,255,255,.24),inset 0 0 0 1px rgba(255,214,176,.12)}
+.icon-btn.accent:active{filter:brightness(.92)}
+.who{background:linear-gradient(160deg,#1C1815,#141210);border-color:rgba(224,140,78,.2)}
+/* barra inferior: divisória fina, aba ativa em cobre com traço curto na borda; toque com resposta imediata */
+.tabbar{border-top-color:rgba(255,255,255,.06)}
+.tab{position:relative;gap:4px;transition:transform .12s ease}
+.tab:active{transform:scale(.94)}
+.tab.on{color:#EEA36A}
+.tab.on::before{content:"";position:absolute;top:-7px;left:50%;width:22px;height:2px;margin-left:-11px;border-radius:0 0 2px 2px;background:#DE8C50}
+@media (max-width:370px){.home{--hc-gap:8px;--hc-group:16px;--hc-pad:12px}.hc.l1 .hc-v b{font-size:1.412rem}.hc.l1 .hc-v b.long{font-size:1.118rem}.hc.l1 .hc-v b.txt:not(.long){font-size:1.294rem}.hc.l1{min-height:118px}}
+@media (prefers-reduced-motion:reduce){.hc,.tab{transition:none}.hc:active,.tab:active{transform:none}}
 </style>
 
 <div class="app" id="app"></div>
@@ -1851,6 +1849,15 @@ const ICON = {
   bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3 5 13.5h6L10 21l8-10.5h-6z"/></svg>'
 };
 const ic = k => h("span", {html: ICON[k], style: "display:contents"});
+/* Resposta tátil sutil ao tocar cartões e abas. Android: vibração de 6 ms. iPhone: o Safari não expõe vibração;
+   a partir do iOS 18 ele emite um toque leve quando um interruptor nativo (<input switch>) muda — usamos um, invisível e descartado.
+   Em versões anteriores nada acontece (sem erro). Precisa ser confirmado no aparelho. */
+const haptic = (() => {
+  if (typeof navigator.vibrate === "function" && !/iP(hone|ad|od)/.test(navigator.userAgent)) return () => { try { navigator.vibrate(6); } catch (e) {} };
+  if (!/iP(hone|ad|od)/.test(navigator.userAgent)) return () => {};
+  return () => { try { const l = document.createElement("label"), i = document.createElement("input"); i.type = "checkbox"; i.setAttribute("switch", ""); l.setAttribute("aria-hidden", "true");
+    l.style.display = "none"; l.append(i); document.body.append(l); l.click(); l.remove(); } catch (e) {} };
+})();
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const uid = () => Math.random().toString(36).slice(2, 10);
 const {norm, normCh, words} = C;
@@ -2119,7 +2126,7 @@ function go(v, keepScroll){
 }
 function render(){
   put(tabbar, h("div", {class: "tabbar-in"}, TABS.map(([id, label, icon]) =>
-    h("button", {class: "tab" + (view.tab === id ? " on" : ""), "aria-current": view.tab === id ? "page" : null, onclick: () => go({tab: id, edit: null})}, ic(icon), label))));
+    h("button", {class: "tab" + (view.tab === id ? " on" : ""), "aria-current": view.tab === id ? "page" : null, onclick: () => { if (view.tab !== id) haptic(); go({tab: id, edit: null}); }}, ic(icon), label))));
   const p = active();
   if (!p) { renderWelcome(); return; }
   ({hoje: renderHome, alimentacao: view.sub === "alimentos" ? renderFoods : renderPlan, saude: renderHealth, perfil: renderProfile})[view.tab](p);
@@ -2250,31 +2257,45 @@ function renderHome(p){
   const sup = countOf(["suplemento", "formula"]), med = countOf(["medicamento"]);
   const paused = c => c.total > c.active ? `${c.total - c.active} ${c.total - c.active === 1 ? "pausado" : "pausados"}` : "";
   const cap = x => x ? x[0].toUpperCase() + x.slice(1) : x;
-  const card = (lv, cls, icon, title, value, unit, sub, fn, empty) => h("button", {class: `hc ${lv} ${cls}` + (value == null ? " empty" : ""), type: "button", onclick: fn,
-      "aria-label": `${title}: ${value == null ? `${empty[0]}. ${empty[1]}` : `${value}${unit ? " " + unit.replace("/", " por ").trim() : ""}${sub ? `. ${sub}` : ""}`}.`},
-    h("span", {class: "hc-h"}, h("span", {class: "hc-i", html: ICON[icon]}), h("span", {class: "hc-t"}, title), h("span", {class: "hc-c", html: ICON.right})),
-    h("span", {class: "hc-v"}, value == null ? h("b", {class: "nr"}, empty[0]) : [h("b", {class: String(value).length > 9 ? "long" : null}, value), unit ? h("small", null, unit) : null]),
-    h("span", {class: "hc-s"}, value == null ? empty[1] : sub || ""));
+  // componente único dos oito cartões; o material vem da classe do módulo (CSS), o tamanho do nível (l1/l2/l3)
+  const card = o => { const has = o.value != null;
+    return h("button", {class: `hc ${o.lv} ${o.cls}` + (has ? "" : " empty"), type: "button", "data-short": o.short || null, "data-full": o.short ? o.title : null, onclick: () => { haptic(); o.fn(); },
+        "aria-label": o.aria || `${o.title}: ${has ? `${o.value}${o.unit ? " " + o.unit.replace("/", " por ").trim() : ""}${o.sub ? `. ${o.sub}` : ""}` : `${o.empty[0]}. ${o.empty[1]}`}.`},
+      h("span", {class: "hc-h"}, h("span", {class: "hc-i", html: ICON[o.icon]}), h("span", {class: "hc-t"}, o.title)),
+      h("span", {class: "hc-v"}, has ? [h("b", {class: [String(o.value).length > 9 ? "long" : "", /^\d/.test(o.value) ? "" : "txt"].join(" ").trim() || null}, o.value), o.unit ? h("small", null, o.unit) : null] : h("b", {class: "nr"}, o.empty[0])),
+      h("span", {class: "hc-s"}, has ? o.sub || "" : o.empty[1])); };
   const openMeds = (c, cat) => () => c.total ? go({tab: "saude", hsub: "resumo", hfocus: "meds"}) : medSheet(p, null, cat);
+  // suplementos e medicamentos: sempre um número (ativos; "0 cadastrados" quando vazio); o cartão vazio abre o cadastro
+  const careCard = (cls, icon, title, c, cat) => card({lv: "l3", cls, icon, title, value: String(c.active), unit: c.total ? (c.active === 1 ? "ativo" : "ativos") : "cadastrados",
+    sub: c.total ? cap(paused(c)) : "Toque para adicionar", fn: openMeds(c, cat), aria: c.total ? null : `${title}: nenhum cadastrado. Toque para adicionar.`});
   const reg = ["Não registrado", "Toque para registrar"];
   const pillars = h("div", {class: "hgrid" + (adult ? "" : " odd")},
-    card("l1", "food", "utensils", "Nutrição", meals.length ? k0(t.kcal) : null, "kcal", "Plano alimentar", () => go({tab: "alimentacao", sub: "plano", open: [], edit: null}), ["Sem plano", "Toque para montar"]),
-    card("l1", "move", "dumbbell", "Exercício", mw.total > 0 ? fmtDur(mw.total) : null, "/semana", `${mw.activeDays} ${mw.activeDays === 1 ? "dia ativo" : "dias ativos"}`,
-      () => mw.total > 0 ? go({tab: "saude", hsub: "movimento"}) : moveSheet(p), reg),
-    card("l1", "sleep", "moon", "Sono", lastNight ? fmtDur(lastNight.min) : null, "", "Última noite", () => lastNight ? go({tab: "saude", hsub: "sono"}) : sleepSheet(p), reg),
-    adult ? card("l1", "wb", "smile", "Emocional", lastMood ? MOODS[lastMood.mood - 1] : null, "", lastMood ? `${relDay(lastMood.date)}${lastMood.time ? ", " + lastMood.time : ""}` : "",
-      () => lastMood ? go({tab: "saude", hsub: "bem-estar"}) : moodSheet(p), reg) : null);
-  const metab = h("div", {class: "hgrid lv2"},
-    card("l2", "water", "drop", "Hidratação", w.ml ? fmtL(w.ml) : null, "L/dia", w.src === "manual" ? "Definida por você" : "Recomendação diária", () => waterSheet(p), ["Não definida", "Toque para definir"]),
-    card("l2", "energy", "bolt", "Gasto energético", r.ok && r.get ? k0(r.get) : null, "kcal/dia", "GET estimado", () => r.ok ? go({tab: "perfil", eopen: true}) : bodySheet(p),
-      [r.ok ? "Só taxa basal" : "Faltam dados", r.ok ? "Abaixo de 3 anos" : "Informe peso e altura"]));
-  const care = h("div", {class: "hgrid"},
-    card("l3", "supp", "pill", "Suplementos", sup.total ? String(sup.active) : null, sup.active === 1 ? "ativo" : "ativos", cap(paused(sup)), openMeds(sup, "suplemento"), ["Nenhum cadastrado", "Toque para adicionar"]),
-    card("l3", "meds", "capsule", "Medicamentos", med.total ? String(med.active) : null, med.active === 1 ? "ativo" : "ativos", cap(paused(med)), openMeds(med, "medicamento"), ["Nenhum cadastrado", "Toque para adicionar"]));
+    card({lv: "l1", cls: "food", icon: "utensils", title: "Nutrição", value: meals.length ? k0(t.kcal) : null, unit: "kcal", sub: "Plano alimentar",
+      fn: () => go({tab: "alimentacao", sub: "plano", open: [], edit: null}), empty: ["Sem plano", "Toque para montar"]}),
+    card({lv: "l1", cls: "move", icon: "dumbbell", title: "Exercício", value: mw.total > 0 ? fmtDur(mw.total) : null, unit: "/semana", sub: `${mw.activeDays} ${mw.activeDays === 1 ? "dia ativo" : "dias ativos"}`,
+      fn: () => mw.total > 0 ? go({tab: "saude", hsub: "movimento"}) : moveSheet(p), empty: reg}),
+    card({lv: "l1", cls: "sleep", icon: "moon", title: "Sono", value: lastNight ? fmtDur(lastNight.min) : null, sub: "Última noite",
+      fn: () => lastNight ? go({tab: "saude", hsub: "sono"}) : sleepSheet(p), empty: reg}),
+    adult ? card({lv: "l1", cls: "wb", icon: "smile", title: "Emocional", value: lastMood ? MOODS[lastMood.mood - 1] : null, sub: lastMood ? `${relDay(lastMood.date)}${lastMood.time ? ", " + lastMood.time : ""}` : "",
+      fn: () => lastMood ? go({tab: "saude", hsub: "bem-estar"}) : moodSheet(p), empty: reg}) : null);
+  const metab = h("div", {class: "hgrid"},
+    card({lv: "l2", cls: "water", icon: "drop", title: "Hidratação", value: w.ml ? fmtL(w.ml) : null, unit: "L/dia", sub: w.src === "manual" ? "Definida por você" : "Recomendação diária",
+      fn: () => waterSheet(p), empty: ["Não definida", "Toque para definir"]}),
+    // título completo quando cabe em uma linha; senão "GET" (o nome completo segue no VoiceOver e no Perfil, com o método)
+    card({lv: "l2", cls: "energy", icon: "bolt", title: "Gasto energético", short: "GET", value: r.ok && r.get ? k0(r.get) : null, unit: "kcal/dia", sub: "Estimativa diária",
+      fn: () => r.ok ? go({tab: "perfil", eopen: true}) : bodySheet(p), empty: [r.ok ? "Só taxa basal" : "Faltam dados", r.ok ? "Abaixo de 3 anos" : "Informe peso e altura"]}));
+  const care = h("div", {class: "hgrid"}, careCard("supp", "pill", "Suplementos", sup, "suplemento"), careCard("meds", "capsule", "Medicamentos", med, "medicamento"));
   put(app, h("div", {class: "view home"}, topBar(quickBtn(p, "hoje")),
-    h("header", {class: "hi-h"}, h("div", {class: "wm", "aria-hidden": "true"}, "BRICEÑO"), h("h1", null, `${greetOf()}, ${firstName(p.name)}`), h("div", {class: "today"}, dayTxt)),
+    h("header", {class: "hi-h"}, h("div", {class: "wm", "aria-hidden": "true"}, h("span", null, "BRICEÑO")), h("h1", null, `${greetOf()}, ${firstName(p.name)}`), h("div", {class: "today"}, dayTxt)),
     pillars, metab, care));
+  fitTitles();
 }
+// título que não cabe em uma linha troca para a forma curta; observado continuamente (largura do aparelho, rotação, texto ampliado),
+// volta ao nome completo quando houver espaço
+const fitTitle = c => { const t = c.querySelector(".hc-t"); if (!t) return; if (t.textContent !== c.dataset.full) t.textContent = c.dataset.full;
+  if (t.scrollWidth > t.clientWidth + 0.5) t.textContent = c.dataset.short; };
+const fitRO = typeof ResizeObserver === "function" ? new ResizeObserver(es => es.forEach(e => fitTitle(e.target))) : null;
+function fitTitles(){ if (fitRO) fitRO.disconnect(); for (const c of document.querySelectorAll(".hc[data-short]")) { fitTitle(c); if (fitRO) fitRO.observe(c); } }
 // volta ao app ou virada de período/dia: a Home é redesenhada (só se nada estiver aberto por cima)
 function refreshHome(){ if (view.tab === "hoje" && active() && homeKey !== greetOf() + today() && !document.querySelector(".scrim")) render(); }
 document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshHome(); });
