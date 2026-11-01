@@ -668,3 +668,13 @@ Divergências intencionais da referência: sem subtítulos de página e sem a ab
 - **Textos**: Exercício "3 dias ativos"; Sono "Última noite"; Emocional "Ontem, 21:40"; Hidratação "Recomendação diária" / "Definida por você"; Gasto energético "GET estimado" (o método saiu da Home e fica no Perfil); Suplementos/Medicamentos "2 ativos" e só "1 pausado" quando houver; vazio "Nenhum cadastrado · Toque para adicionar".
 - **Saudação** pelo horário local: 5–11 h Bom dia, 12–17 h Boa tarde, 18–4 h Boa noite. A Home se redesenha ao voltar ao app e na virada de período ou de dia (verificação a cada minuto, só sem folha aberta).
 - **Toque**: estado pressionado discreto (escala 0,985 e fundo um pouco mais claro, 120 ms); respeita "reduzir movimento". Vibração ao toque não existe para apps web no iPhone, por isso não foi incluída.
+
+## 24. v15 — BRICEÑO 3.0 "Digital Jewelry" (Home)
+
+- **Material único, parametrizado**: os oito cartões usam a mesma classe `.hc` e cada um define só duas cores, `--g` (gema: ícone, aro e reflexo) e `--gd` (fundo profundo). Camadas em CSS puro, sem imagens nem animação contínua: corpo em gradiente com luz direcional do canto superior esquerdo · aro de 1 px em gradiente (metal acetinado) · três arcos finos presos ao canto inferior direito · brilho interno de 1 px no topo e sombra curta.
+- **Gemas**: Nutrição cobre #D98A4E/#22140B · Exercício esmeralda #3FBF9F/#0A1D18 · Sono ametista #A387F2/#171126 · Emocional rubi rosado #E3728C/#251018 · Hidratação safira-petróleo #3BAFD3/#091A22 · Gasto energético champanhe/bronze #D7B678/#1D170E · Suplementos peridoto #ABCB5C/#151A0B · Medicamentos safira-ardósia #7399E0/#0E1526. Os tokens globais dos módulos (usados nas outras abas) não mudaram.
+- **Cartão**: ícone em lâmina de 28 px com aro da gema; nome 14/600; seta discreta à direita; valor branco (28/22/20 px pelos três níveis), unidade e legenda em branco translúcido (60–64%). Raio 20. Entre cartões 10, entre pilares e o restante 18.
+- **Cabeçalho**: BRICEÑO centralizado em cobre (gradiente no texto), espaçamento largo, com um traço curto abaixo; três arcos de cobre muito finos no canto superior direito. Seletor familiar com borda cobre sutil; botão "+" em cobre com brilho interno.
+- **Barra inferior**: mesma navegação; a aba ativa ganhou um traço fino de cobre na borda superior (sem brilho, sem animação).
+- **Toque**: escala 0,982 e brilho +12% por 140 ms; desligado com "Reduzir movimento".
+- iPhone 13: conteúdo termina em 688 px (barra em 713), sem rolar. "Gasto energético" ocupa duas linhas em 390 px de largura por causa da seta; os valores dos dois cartões continuam alinhados.

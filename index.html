@@ -1216,48 +1216,82 @@ html.big-text .sc-m > span + span{border-left:0;border-top:1px solid var(--line)
 .st i:not([class]){width:14px;height:3px;border-radius:2px;margin:5px 0;background:color-mix(in srgb,var(--ink-2) 45%,transparent)}
 .hp.full .st i:not([class]){width:14px;height:3px}
 .hp .bar.fut i,.st i.fut{visibility:hidden}
-/* ===== Home v14 — painel em três níveis, um único componente =====
-   Escala: margem lateral 16 · entre cartões 10 · entre níveis 20 (2 × 10) · padding interno 14 · raio 18.
-   Superfície grafite com nuance mínima da cor do módulo (6–9%); a cor fica no ícone. Contorno neutro de 1 px.
-   Tipografia: nome 14/600 · valor 28 (nível 1), 22 (2) e 20 (3) · unidade 14/500 · legenda 13. */
-.hi-h{margin:var(--s1) 2px 20px}
-.hi-h .wm{margin:0 0 8px;font-size:var(--t-cap);font-weight:650;letter-spacing:.3em;color:var(--accent-2);line-height:1.2}
+/* ===== Home v15 — "Digital Jewelry": um único material parametrizado para os oito cartões =====
+   Cada cartão define só duas cores: --g (a gema: ícone, aro e reflexos) e --gd (o fundo profundo da pedra).
+   Camadas, todas em CSS (sem imagens, sem animação contínua):
+     1 · corpo: gradiente da gema ao fundo profundo, com luz direcional vinda do canto superior esquerdo;
+     2 · aro: contorno de 1 px em gradiente (metal acetinado: mais vivo nos cantos opostos, quase neutro no meio);
+     3 · reflexo: três arcos finos presos ao canto inferior direito (abaixo do número e da legenda);
+     4 · brilho interno de 1 px no topo e sombra curta, para a sensação de peça lapidada.
+   Escala: margem 16 · entre cartões 10 · entre níveis 18 · padding 14 · raio 20 · ícone em lâmina de 30 px. */
+.hi-h{position:relative;isolation:isolate;margin:2px 2px 18px}
+.hi-h::before{content:"";position:absolute;z-index:-1;pointer-events:none;right:-16px;top:-64px;width:230px;height:180px;
+  background:radial-gradient(circle at 100% 0,transparent 139px,rgba(224,140,78,.34) 140px,transparent 141.5px),
+    radial-gradient(circle at 104% -6%,transparent 158px,rgba(224,140,78,.18) 159px,transparent 160.5px),
+    radial-gradient(circle at 96% 4%,transparent 122px,rgba(224,140,78,.12) 123px,transparent 124.5px);
+  -webkit-mask:linear-gradient(205deg,#000 25%,transparent 78%);mask:linear-gradient(205deg,#000 25%,transparent 78%)}
+.hi-h .wm{display:flex;flex-direction:column;align-items:center;margin:-4px 0 12px;padding-top:4px;font-size:var(--t-cap);font-weight:600;letter-spacing:.46em;text-indent:.46em;line-height:1.3;
+  color:#E59A5E;background:linear-gradient(100deg,#C9773E,#F1B07A 50%,#C9773E);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hi-h .wm::after{content:"";width:22px;height:1px;margin-top:7px;background:linear-gradient(90deg,transparent,#D98A4E,transparent)}
 .hi-h h1{margin:0;font-size:1.647rem;font-weight:700;letter-spacing:-.03em;line-height:1.12}
 .hi-h .today{margin:4px 0 0;font-size:var(--t-sm);color:var(--muted);font-weight:500}
 .hgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.hgrid + .hgrid{margin-top:20px}
+.hgrid + .hgrid{margin-top:10px}
+.hgrid.lv2{margin-top:18px}
 .hgrid.odd .hc:last-child{grid-column:1 / -1}
-.hc{--c:var(--food);--k:6%;display:flex;flex-direction:column;align-items:flex-start;min-width:0;padding:14px;border-radius:18px;text-align:left;
-  background:color-mix(in srgb,var(--c) var(--k),#161412);border:1px solid rgba(255,255,255,.055);
-  transition:transform .12s ease,background-color .12s ease}
-.hc:active{transform:scale(.985);background:color-mix(in srgb,var(--c) calc(var(--k) + 5%),#1B1916)}
-.hc:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.hc.move{--c:var(--move)} .hc.sleep{--c:var(--sleep)} .hc.wb{--c:var(--mood)} .hc.water{--c:var(--water)} .hc.energy{--c:var(--energy)}
-.hc.supp{--c:var(--supp);--k:9%} .hc.meds{--c:var(--meds);--k:9%}
-.hc-h{display:flex;align-items:center;gap:8px;min-width:0;max-width:100%}
-.hc-i{display:grid;flex:none;color:var(--c)}
-.hc-i svg{width:18px;height:18px;display:block}
-.hc-t{font-size:var(--t-sm);font-weight:600;letter-spacing:-.005em;color:var(--ink-2);line-height:1.25;min-width:0}
-.hc-v{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:5px;margin-top:auto;padding-top:16px;min-width:0;max-width:100%}
-.hc-v b{font-weight:650;letter-spacing:-.035em;line-height:1.08;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
-.hc-v small{font-size:var(--t-sm);font-weight:500;letter-spacing:0;color:var(--muted);white-space:nowrap}
-.hc-v b.nr{font-size:var(--t-body);font-weight:550;letter-spacing:-.01em;color:var(--ink-2);line-height:1.25}
-.hc-s{margin-top:4px;font-size:var(--t-cap);color:var(--muted);line-height:1.3;min-height:1.3em}
+/* o material */
+.hc{--g:#D98A4E;--gd:#22140B;position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;align-items:stretch;min-width:0;padding:13px 12px 14px 13px;border-radius:20px;text-align:left;
+  border:1px solid transparent;
+  background:
+    radial-gradient(110% 85% at 0% 0%,color-mix(in srgb,var(--g) 15%,transparent),transparent 62%) padding-box,
+    linear-gradient(152deg,color-mix(in srgb,var(--g) 17%,var(--gd)) 0%,var(--gd) 52%,color-mix(in srgb,var(--gd) 55%,#080706) 100%) padding-box,
+    linear-gradient(135deg,color-mix(in srgb,var(--g) 58%,transparent) 0%,rgba(255,255,255,.07) 34%,rgba(255,255,255,.035) 62%,color-mix(in srgb,var(--g) 42%,transparent) 100%) border-box;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 12px 26px -16px rgba(0,0,0,.9);
+  transition:transform .14s cubic-bezier(.3,.7,.4,1),filter .14s ease}
+.hc::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(circle at calc(100% + 30px) calc(100% + 150px),transparent 172px,color-mix(in srgb,var(--g) 62%,transparent) 173px,transparent 174.6px),
+    radial-gradient(circle at calc(100% + 30px) calc(100% + 150px),transparent 179px,color-mix(in srgb,var(--g) 30%,transparent) 180px,transparent 181.5px),
+    radial-gradient(circle at calc(100% + 30px) calc(100% + 150px),transparent 165px,color-mix(in srgb,var(--g) 18%,transparent) 166px,transparent 167.5px),
+    radial-gradient(60% 55% at 104% 108%,color-mix(in srgb,var(--g) 20%,transparent),transparent 72%)}
+.hc:active{transform:scale(.982);filter:brightness(1.12)}
+.hc:focus-visible{outline:2px solid var(--g);outline-offset:2px}
+.hc.move{--g:#3FBF9F;--gd:#0A1D18} .hc.sleep{--g:#A387F2;--gd:#171126} .hc.wb{--g:#E3728C;--gd:#251018}
+.hc.water{--g:#3BAFD3;--gd:#091A22} .hc.energy{--g:#D7B678;--gd:#1D170E} .hc.supp{--g:#ABCB5C;--gd:#151A0B} .hc.meds{--g:#7399E0;--gd:#0E1526}
+.hc-h{display:flex;align-items:center;gap:8px;min-width:0}
+.hc-i{display:grid;place-items:center;flex:none;width:28px;height:28px;border-radius:9px;color:color-mix(in srgb,var(--g) 82%,#fff);
+  background:linear-gradient(150deg,color-mix(in srgb,var(--g) 30%,var(--gd)),color-mix(in srgb,var(--g) 9%,var(--gd)));
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--g) 38%,transparent),inset 0 1px 0 rgba(255,255,255,.1)}
+.hc-i svg{width:16px;height:16px;display:block}
+.hc-t{flex:1;font-size:var(--t-sm);font-weight:600;letter-spacing:-.02em;color:rgba(244,238,232,.92);line-height:1.25;min-width:0}
+.hc-c{display:grid;flex:none;margin:0 -4px 0 -6px;color:rgba(244,238,232,.42)}
+.hc-c svg{width:13px;height:13px;display:block}
+.hc-v{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:5px;margin-top:auto;padding-top:12px;min-width:0;max-width:100%}
+.hc-v b{font-weight:640;letter-spacing:-.035em;line-height:1.08;color:#F7F2EC;font-variant-numeric:tabular-nums;white-space:nowrap}
+.hc-v small{font-size:var(--t-sm);font-weight:500;letter-spacing:0;color:rgba(244,238,232,.6);white-space:nowrap}
+.hc-s{margin-top:4px;font-size:var(--t-cap);color:rgba(244,238,232,.64);line-height:1.3;min-height:1.3em}
 /* nível 1: pilares */
-.hc.l1{min-height:116px}
+.hc.l1{min-height:122px}
 .hc.l1 .hc-v b{font-size:1.647rem}
 .hc.l1 .hc-v b.long{font-size:1.294rem;white-space:normal;line-height:1.15}
 /* nível 2: metabolismo */
-.hc.l2{min-height:100px}
-.hc.l2 .hc-v{padding-top:12px}
+.hc.l2{min-height:106px}
+.hc.l2 .hc-v{padding-top:10px}
 .hc.l2 .hc-v b{font-size:1.294rem}
 /* nível 3: acompanhamento */
-.hc.l3{min-height:92px}
+.hc.l3{min-height:98px}
 .hc.l3 .hc-v{padding-top:10px}
 .hc.l3 .hc-v b{font-size:1.176rem}
-.hc.l1 .hc-v b.nr,.hc.l2 .hc-v b.nr,.hc.l3 .hc-v b.nr{font-size:var(--t-body);font-weight:550;letter-spacing:-.01em;line-height:1.25;white-space:normal}
+.hc.l1 .hc-v b.nr,.hc.l2 .hc-v b.nr,.hc.l3 .hc-v b.nr{font-size:var(--t-body);font-weight:560;letter-spacing:-.01em;line-height:1.25;white-space:normal;color:rgba(244,238,232,.9)}
 .hc.l3 .hc-v b.nr{font-size:var(--t-sm)}
-@media (max-width:370px){.hgrid{gap:8px}.hgrid + .hgrid{margin-top:16px}.hc{padding:12px}.hc.l1 .hc-v b{font-size:1.412rem}.hc.l1 .hc-v b.long{font-size:1.118rem}}
+/* topo e barra: cobre como assinatura, sem brilho permanente */
+.icon-btn.accent{background:linear-gradient(150deg,#F2AA6E,#CF7B3E);box-shadow:inset 0 1px 0 rgba(255,255,255,.28),inset 0 0 0 1px rgba(255,214,176,.18),0 6px 16px -8px rgba(224,140,78,.55)}
+.who{background:linear-gradient(160deg,#1E1A16,#141210);border-color:rgba(224,140,78,.22)}
+.tab{position:relative}
+.tab.on::before{content:"";position:absolute;top:-7px;left:50%;width:26px;height:2px;margin-left:-13px;border-radius:0 0 2px 2px;background:linear-gradient(90deg,#C9773E,#F1B07A,#C9773E)}
+@media (max-width:370px){.hgrid{gap:8px}.hgrid + .hgrid{margin-top:8px}.hgrid.lv2{margin-top:14px}.hc{padding:11px 10px 12px 11px}.hc-h{gap:7px}.hc-i{width:26px;height:26px;border-radius:8px}
+  .hc.l1 .hc-v b{font-size:1.412rem}.hc.l1 .hc-v b.long{font-size:1.118rem}.hc-c{display:none}}
+html.big-text .hc-c{display:none}
 @media (prefers-reduced-motion:reduce){.hc{transition:none}.hc:active{transform:none}}
 </style>
 
@@ -2218,7 +2252,7 @@ function renderHome(p){
   const cap = x => x ? x[0].toUpperCase() + x.slice(1) : x;
   const card = (lv, cls, icon, title, value, unit, sub, fn, empty) => h("button", {class: `hc ${lv} ${cls}` + (value == null ? " empty" : ""), type: "button", onclick: fn,
       "aria-label": `${title}: ${value == null ? `${empty[0]}. ${empty[1]}` : `${value}${unit ? " " + unit.replace("/", " por ").trim() : ""}${sub ? `. ${sub}` : ""}`}.`},
-    h("span", {class: "hc-h"}, h("span", {class: "hc-i", html: ICON[icon]}), h("span", {class: "hc-t"}, title)),
+    h("span", {class: "hc-h"}, h("span", {class: "hc-i", html: ICON[icon]}), h("span", {class: "hc-t"}, title), h("span", {class: "hc-c", html: ICON.right})),
     h("span", {class: "hc-v"}, value == null ? h("b", {class: "nr"}, empty[0]) : [h("b", {class: String(value).length > 9 ? "long" : null}, value), unit ? h("small", null, unit) : null]),
     h("span", {class: "hc-s"}, value == null ? empty[1] : sub || ""));
   const openMeds = (c, cat) => () => c.total ? go({tab: "saude", hsub: "resumo", hfocus: "meds"}) : medSheet(p, null, cat);
@@ -2230,7 +2264,7 @@ function renderHome(p){
     card("l1", "sleep", "moon", "Sono", lastNight ? fmtDur(lastNight.min) : null, "", "Última noite", () => lastNight ? go({tab: "saude", hsub: "sono"}) : sleepSheet(p), reg),
     adult ? card("l1", "wb", "smile", "Emocional", lastMood ? MOODS[lastMood.mood - 1] : null, "", lastMood ? `${relDay(lastMood.date)}${lastMood.time ? ", " + lastMood.time : ""}` : "",
       () => lastMood ? go({tab: "saude", hsub: "bem-estar"}) : moodSheet(p), reg) : null);
-  const metab = h("div", {class: "hgrid"},
+  const metab = h("div", {class: "hgrid lv2"},
     card("l2", "water", "drop", "Hidratação", w.ml ? fmtL(w.ml) : null, "L/dia", w.src === "manual" ? "Definida por você" : "Recomendação diária", () => waterSheet(p), ["Não definida", "Toque para definir"]),
     card("l2", "energy", "bolt", "Gasto energético", r.ok && r.get ? k0(r.get) : null, "kcal/dia", "GET estimado", () => r.ok ? go({tab: "perfil", eopen: true}) : bodySheet(p),
       [r.ok ? "Só taxa basal" : "Faltam dados", r.ok ? "Abaixo de 3 anos" : "Informe peso e altura"]));
