@@ -823,3 +823,43 @@ Divergências intencionais da referência: sem subtítulos de página e sem a ab
 - 27 testes de cálculo e e2e de navegação, módulos, saudação, painéis e áreas de toque sem erros.
 
 **Pendências.** Conferir no iPhone real (SF Pro, VoiceOver, vibração, divisória em 1 px físico). Campo do nome da refeição com 40 px de altura. Decisão sobre o protocolo "Média".
+
+## 30. Home v21 — Beyond Luxury
+
+**Causa do corte inferior (reproduzida).** A distribuição de espaço da v20 era calculada só quando mudavam a largura, o tamanho do texto ou a altura da janela. No iPhone, a área segura inferior (34 px) pode ser aplicada depois do primeiro desenho do app instalado. A barra crescia, a distribuição ficava com a medida antiga e a última linha ia 10 px para baixo da barra, sem rolagem para revelá-la. Simulado em teste: folga −10 px. O mesmo valia para a área segura superior aplicada depois.
+
+**Correção (layout como um conjunto).**
+- Um único cálculo (`fitTitles` + `spread`) mede, a cada mudança de geometria, a área entre o topo do conteúdo e a barra fixa.
+- Observa a caixa externa da Home, da barra e da página, além de redimensionar, girar, voltar à página e carregar fontes.
+- Uma assinatura da geometria evita passadas repetidas.
+- A margem inferior do conteúdo é calculada da altura real da barra: rolando até o fim, o último cartão fica sempre 16 px acima dela.
+- Distribuição em duas etapas:
+  1. respiro entre grupos (divisórias até +16 acima e abaixo, cabeçalho até +12);
+  2. só em telas altas, cartões (pilares até +8, indicadores até +4).
+- Sobra além disso fica no respiro, com alvo de 24 px acima da barra.
+
+**Arquitetura.** A · pilares 2 × 2 · Signature divider · B · Gasto diário + Hidratação · Signature divider · C · Suplementos + Medicamentos (altura de B). As duas divisórias são idênticas: 1 px físico, grafite quente com pontas esmaecidas e segmento cobre central.
+
+**Proporções (grade de 4).**
+- Entre cartões 12 (8 em telas estreitas); padding 12/14; pastilha 28.
+- Número dos pilares 26 px; entrelinha 1 nos números e 1,25 nas legendas.
+- Pilares de 125 → 108 px no iPhone 13 (−14%). Indicadores 100 px.
+- Mais que isso exigiria números menores que 26 px ou encostar número e título.
+
+**Outros ajustes.**
+- "3 h/semana" com 2 px entre número e unidade.
+- Reflexo dos cartões compactos um pouco mais atenuado na faixa da legenda (contraste mínimo de 4,25 → 5,04).
+- Perfil: frase explicando que o GET é estimativa por equações de grupo, não medição.
+
+**Verificações (Chromium/Playwright, áreas seguras simuladas).**
+- Respiro de 24 px acima da barra no iPhone 13/14 (com dados e vazio), mini e 16 Pro; 32 px no Pro Max.
+- Área segura inferior tardia, superior tardia e troca de fonte: 24 px, sem corte.
+- SE, Safari com barras e texto ampliado rolam, com o último cartão 16 px acima da barra no fim.
+- Nome extenso e valores longos sem cortes; troca de membro e mudança de altura recalculam.
+- 40 combinações de tela e texto sem palavra partida nem estouro; baselines exatas nos pares.
+- Contraste ≥ 5,04:1 em 65 textos; materiais com L\* p95 de 36,5 a 39,8.
+- Reduce Motion sem animação.
+- 27 testes de cálculo e e2e de navegação, módulos, saudação, painéis e áreas de toque sem erros.
+- Tempo até o quadro: p90 de 20–22 ms (v20: 19–20); mediana 2–5 ms maior pela medição de geometria.
+
+**Pendências.** Conferir no iPhone real a correção do corte (a causa foi reproduzida em simulação, não no aparelho), além de SF Pro, VoiceOver, vibração e divisórias em 1 px. Campo do nome da refeição com 40 px de altura. Decisão sobre o protocolo "Média".

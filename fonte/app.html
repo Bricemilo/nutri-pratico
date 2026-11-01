@@ -30,7 +30,7 @@ button{cursor:pointer;border:0;background:none;padding:0;text-align:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .num{font-variant-numeric:tabular-nums}
 .app{max-width:600px;margin:0 auto;padding-bottom:calc(var(--tabbar) + 28px + env(safe-area-inset-bottom,0px))}
-.app:has(> .home){padding-bottom:calc(var(--tabbar) + 16px)}
+.app:has(> .home){padding-bottom:var(--home-pb,calc(var(--tabbar) + 16px + env(safe-area-inset-bottom,0px)))}
 .view{animation:in .2s ease-out}
 @keyframes in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -1217,27 +1217,26 @@ html.big-text .sc-m > span + span{border-left:0;border-top:1px solid var(--line)
 .st i:not([class]){width:14px;height:3px;border-radius:2px;margin:5px 0;background:color-mix(in srgb,var(--ink-2) 45%,transparent)}
 .hp.full .st i:not([class]){width:14px;height:3px}
 .hp .bar.fut i,.st i.fut{visibility:hidden}
-/* ===== Home v18 — Precision & Elegance: Digital Jewelry sobre fundo preto, em dois grupos =====
-   Escala de espaço: 4 · 8 · 11 · 16 · 20. Margem 16 · entre cartões 11 · padding 14 · raio 18 · pastilha 30.
+/* ===== Home v21 — Beyond Luxury: Digital Jewelry sobre fundo preto, em três grupos =====
+   Grade de 4: margem 16 · entre cartões 12 (8 em telas estreitas) · padding 12 vertical / 14 horizontal · raio 18 · pastilha 28.
    Cabeçalho: seletor + "+" (barra fixa) · saudação e data, sem marca nem ornamento — os cartões são as joias, o fundo é a vitrine.
-   Grupo A (pilares): 2 × 2, linhas de altura igual (grid-auto-rows 1fr) e mínimo de 7rem (cresce com o texto do sistema).
-   Signature divider de 1 px físico entre os grupos (grafite quente, pontas esmaecidas, segmento cobre central), 20 acima e abaixo + crescimento adaptativo.
-   Grupo B (indicadores): 2 × 2 compactos, os quatro com a mesma altura; número logo abaixo do título.
+   A · pilares 2 × 2 (linhas iguais) · Signature divider · B · Gasto diário + Hidratação · Signature divider · C · Suplementos + Medicamentos (altura de B).
+   Alturas naturais pelo conteúdo, sem mínimos fixos; a sobra de tela vai sobretudo para o respiro das divisórias (ver spread no código).
    Camadas de cada cartão (.hc): 1 base cromática profunda · 2 luz ambiente · 3 reflexo curvo vetorial (.hc-fx, SVG de JEWEL)
    · 4 microtextura (estrias finas da lâmina) · 5 aro de 1 px que acende onde a luz incide · 6 conteúdo sobre a zona escura. */
-.home{--hc-gap:11px;--hc-pad:14px;--hc-r:18px}
+.home{--hc-gap:12px;--hc-pad:14px;--hc-pv:12px;--hc-r:18px}
 .hi-h{margin:2px 0 calc(16px + var(--xh,0px))}
 .hi-h h1{margin:0;font-size:1.647rem;font-weight:660;letter-spacing:-.028em;line-height:1.12}
 .hi-h .today{margin:4px 0 0;font-size:var(--t-sm);color:var(--muted);font-weight:500}
-.hgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:1fr;column-gap:var(--hc-gap);row-gap:calc(var(--hc-gap) + var(--xg,0px))}
-/* Signature divider: fio grafite quente que esmaece nas pontas + segmento cobre central de 44 (ecoa o filete da aba ativa), tudo em 1 px físico */
+.hgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:1fr;gap:var(--hc-gap)}
+/* Signature divider (duas, idênticas): fio grafite quente que esmaece nas pontas + segmento cobre acetinado central de 44 (ecoa o filete da aba ativa), em 1 px físico; 20 acima e abaixo + até 12 de respiro adaptativo */
 .hdiv{position:relative;height:1px;margin:calc(20px + var(--xd,0px)) 0;background:linear-gradient(90deg,rgba(150,136,124,0),rgba(150,136,124,.46) 16%,rgba(150,136,124,.46) 84%,rgba(150,136,124,0))}
 .hdiv::after{content:"";position:absolute;left:50%;top:0;width:44px;height:100%;margin-left:-22px;background:linear-gradient(90deg,rgba(222,140,80,0),rgba(226,154,102,.9),rgba(222,140,80,0))}
 @media (min-resolution:2dppx){.hdiv{transform:scaleY(.5)}}
 @media (min-resolution:3dppx){.hdiv{transform:scaleY(.3334)}}
 .hgrid.odd .hc:last-child{grid-column:1 / -1}
 .hc{--g:#D98A4E;--gd:#20130A;--ra:140deg;--rt:34%;--rb:80%;--lb:30%;--lt:16%;
-  position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;align-items:stretch;min-width:0;padding:var(--hc-pad);border-radius:var(--hc-r);text-align:left;
+  position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;align-items:stretch;min-width:0;padding:var(--hc-pv) var(--hc-pad);border-radius:var(--hc-r);text-align:left;
   border:1px solid transparent;
   background:
     radial-gradient(75% 85% at 100% 100%,color-mix(in srgb,var(--g) var(--lb),transparent),transparent 72%) padding-box,
@@ -1253,6 +1252,9 @@ html.big-text .sc-m > span + span{border-left:0;border-top:1px solid var(--line)
   -webkit-mask-image:linear-gradient(to bottom,#000 38%,transparent 56%),linear-gradient(to right,rgba(0,0,0,.22) 52%,rgba(0,0,0,.5) 84%,#000 100%);
   mask-image:linear-gradient(to bottom,#000 38%,transparent 56%),linear-gradient(to right,rgba(0,0,0,.22) 52%,rgba(0,0,0,.5) 84%,#000 100%)}
 .hc-fx svg{display:block;width:100%;height:100%}
+/* compactos: legenda mais perto do reflexo; a faixa direita do texto fica um pouco mais atenuada (o reflexo segue inteiro no alto e na borda) */
+.hc.l2 .hc-fx{-webkit-mask-image:linear-gradient(to bottom,#000 34%,transparent 54%),linear-gradient(to right,rgba(0,0,0,.2) 52%,rgba(0,0,0,.38) 84%,#000 100%);
+  mask-image:linear-gradient(to bottom,#000 34%,transparent 54%),linear-gradient(to right,rgba(0,0,0,.2) 52%,rgba(0,0,0,.38) 84%,#000 100%)}
 /* oito materiais: cor (--g), base (--gd), luz de canto (--lb), luz do alto (--lt), direção e força do aro (--ra/--rt/--rb); o reflexo vem de JEWEL */
 .hc.food  {--g:#DE8A4A;--gd:#1E1108;--lb:34%;--lt:26%;--ra:150deg;--rt:56%;--rb:96%}  /* cobre acetinado */
 .hc.move  {--g:#3FBFA0;--gd:#061B16;--lb:26%;--lt:15%;--ra:120deg;--rt:42%;--rb:90%}  /* titânio esmeralda */
@@ -1263,13 +1265,13 @@ html.big-text .sc-m > span + span{border-left:0;border-top:1px solid var(--line)
 .hc.supp  {--g:#A6C452;--gd:#0F1708;--lb:25%;--lt:22%;--ra:150deg;--rt:56%;--rb:84%}  /* peridoto oliva */
 .hc.meds  {--g:#6F98E6;--gd:#0B1430;--lb:36%;--lt:18%;--ra:135deg;--rt:42%;--rb:90%}  /* safira da meia-noite */
 /* ícone: pequena peça — pastilha tonal elevada, aro fino aceso no alto, sombra de contato mínima, símbolo nítido */
-.hc-h{display:flex;align-items:center;gap:9px;min-width:0}
-.hc-i{display:grid;place-items:center;flex:none;width:30px;height:30px;border-radius:9px;color:color-mix(in srgb,var(--g) 78%,#fff);
+.hc-h{display:flex;align-items:center;gap:10px;min-width:0}
+.hc-i{display:grid;place-items:center;flex:none;width:28px;height:28px;border-radius:8px;color:color-mix(in srgb,var(--g) 78%,#fff);
   border:1px solid transparent;
   background:linear-gradient(155deg,color-mix(in srgb,var(--g) 30%,var(--gd)),color-mix(in srgb,var(--g) 10%,var(--gd))) padding-box,
     linear-gradient(160deg,color-mix(in srgb,var(--g) 72%,#fff),color-mix(in srgb,var(--g) 22%,transparent) 55%,color-mix(in srgb,var(--g) 40%,transparent)) border-box;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 1px 2px rgba(0,0,0,.55)}
-.hc-i svg{width:18px;height:18px;display:block}
+.hc-i svg{width:17px;height:17px;display:block}
 .hc-t{flex:1;font-size:var(--t-sm);font-weight:580;letter-spacing:-.012em;color:rgba(247,242,236,.94);line-height:1.25;min-width:0}
 /* sem espaço para título ao lado da pastilha (texto ampliado, telas estreitas): ícone sobre o título, em todos os cartões */
 .home.stack .hc-h{flex-direction:column;align-items:flex-start;gap:8px}
@@ -1286,19 +1288,23 @@ html.big-text .sc-m > span + span{border-left:0;border-top:1px solid var(--line)
 .hc-v b{display:inline-block;max-width:100%;vertical-align:baseline}
 .hc-v b{font-weight:580;letter-spacing:-.025em;line-height:1.08;color:#F8F3ED;font-variant-numeric:tabular-nums;white-space:nowrap}
 .hc-v small{font-size:var(--t-sm);font-weight:500;letter-spacing:-.005em;color:rgba(244,238,232,.7);white-space:nowrap}
-.hc-s{margin-top:4px;font-size:var(--t-cap);color:rgba(244,238,232,.86);line-height:1.3;min-height:1.3em}
+.hc-s{margin-top:3px;font-size:var(--t-cap);color:rgba(244,238,232,.86);line-height:1.25;min-height:1.25em}
 .hc-v b.nr{font-size:var(--t-body);font-weight:560;letter-spacing:-.01em;line-height:1.25;white-space:normal;color:rgba(244,238,232,.92)}
 /* nível 1 · pilares: número 28, valor e legenda ancorados na base (se um valor em texto quebrar, a última linha segue alinhada com o vizinho)
    nível 2 · indicadores: padding vertical 12, número 22 logo abaixo do título (alinhado no par mesmo se uma legenda quebrar em duas linhas);
    na linha de Suplementos e Medicamentos, sem legenda nos dois, o número fica centrado no espaço abaixo do título (nem colado ao topo, nem isolado no rodapé) */
-.hc.l1{min-height:max(7rem,var(--l1-min,0px),var(--ha,0px))}
-.hc.l1 .hc-v{padding-top:8px}
-.hc.l2{padding-top:12px;padding-bottom:12px}
+.hc.l1{min-height:max(var(--l1-min,0px),var(--ha,0px))}
+.hc.l1 .hc-v{padding-top:6px}
 .hc .hc-v{margin-top:auto}
-.hc.l1 .hc-v b{font-size:1.647rem}
+.hc.l1 .hc-v b{font-size:var(--t-num)}
+.hc-v small.per{margin-left:2px}
+/* números: entrelinha 1 (algarismos sem descendentes); valores em texto, que podem quebrar, mantêm 1,15 */
+.hc-v b:not(.txt):not(.nr){line-height:1}
 .hc.l1 .hc-v b.long{font-size:1.294rem;white-space:normal;line-height:1.15}
-.hc.l2 .hc-v{padding-top:calc(8px + var(--xb,0px));margin-top:0}
-.hg-b:not(:has(> .hc:nth-child(n+3) .hc-s:not(:empty))) > .hc:nth-child(n+3) .hc-v{margin-block:auto}
+.hc.l2 .hc-v{padding-top:calc(6px + var(--xb,0px));margin-top:0}
+/* grupo C: altura do grupo B; sem legenda nos dois, o número fica centrado no espaço abaixo do título */
+.hg-c .hc{min-height:calc(var(--hbc,0px) + var(--xb,0px))}
+.hg-c:not(:has(.hc-s:not(:empty))) .hc-v{margin-block:auto}
 .hc.l2 .hc-v b{font-size:1.294rem}
 .hc.l2 .hc-s{margin-top:2px}
 .hc.l2 .hc-s:empty{display:none}
@@ -1325,7 +1331,7 @@ html.big-text .hc.l1 .hc-v b.txt{font-size:1.294rem;line-height:1.15}
 .tab:active{transform:scale(.94)}
 .tab.on{color:#EEA36A}
 .tab.on::after{content:"";position:absolute;bottom:-3px;left:50%;width:34px;height:2px;margin-left:-17px;border-radius:2px;background:linear-gradient(90deg,rgba(222,140,80,0),#E39A60,rgba(222,140,80,0))}
-@media (max-width:380px){.home{--hc-gap:9px;--hc-pad:12px}.hc.l1{min-height:max(6.5rem,var(--l1-min,0px),var(--ha,0px))}.hc.l2{padding-top:11px;padding-bottom:11px}.hc-i{width:28px;height:28px;border-radius:8px}.hc-h{gap:8px}.hc.l1 .hc-v b{font-size:1.412rem}.hc.l1 .hc-v b.long{font-size:1.118rem}.hc.l1 .hc-v b.txt:not(.long){font-size:1.294rem}}
+@media (max-width:380px){.home{--hc-gap:8px;--hc-pad:12px}.hc-h{gap:8px}.hc.l1 .hc-v b{font-size:1.412rem}.hc.l1 .hc-v b.long{font-size:1.118rem}.hc.l1 .hc-v b.txt:not(.long){font-size:1.294rem}}
 @media (prefers-reduced-motion:reduce){.hc,.tab{transition:none}.hc:active,.tab:active{transform:none}}
 </style>
 
@@ -1839,8 +1845,8 @@ const JEWEL = (() => {
 })();
 /* luz curva do cabeçalho (conceito original), bem atenuada: três fios de cobre atrás da metade direita, longe do texto */
 function renderHome(p){
-  /* Painel de saúde em dois grupos, mesmo componente em dois tamanhos, separados por uma linha fina:
-     A · pilares (Nutrição, Exercício, Sono, Emocional), cartões altos · B · indicadores complementares (Hidratação, GET, Suplementos, Medicamentos), compactos.
+  /* Painel de saúde em três grupos, mesmo componente em dois tamanhos, separados por duas Signature dividers:
+     A · pilares (Nutrição, Exercício, Sono, Emocional) · B · energia e hidratação (Gasto diário, Hidratação) · C · acompanhamento (Suplementos, Medicamentos).
      Cor só no ícone e numa nuance mínima do fundo; números em destaque, unidades subordinadas, legendas curtas.
      Cada cartão leva ao módulo; sem dado, estado vazio que abre o cadastro. O detalhe nutricional fica na aba Nutrição. */
   const plan = p.plan, r = C.energyOf(p), t = planTotal(plan), L = logsOf(p), ctx = healthCtx(p), adult = adultOf(p), w = waterOf(p), cr = careOf(p);
@@ -1862,7 +1868,7 @@ function renderHome(p){
         "aria-label": o.aria || `${o.title}: ${has ? `${o.value}${o.unit ? " " + o.unit.replace("/", " por ").trim() : ""}${o.sub ? `. ${o.sub}` : ""}` : `${o.empty[0]}. ${o.empty[1]}`}.`},
       h("span", {class: "hc-fx", "aria-hidden": "true"}, JEWEL(o.cls)),
       h("span", {class: "hc-h"}, h("span", {class: "hc-i", html: ICON[o.icon]}), h("span", {class: "hc-t"}, o.title)),
-      h("span", {class: "hc-v"}, has ? [h("b", {class: [String(o.value).length > 9 ? "long" : "", /^\d/.test(o.value) ? "" : "txt"].join(" ").trim() || null}, o.value), o.unit ? [o.unit[0] === "/" ? h("wbr") : " ", h("small", null, o.unit)] : null] : h("b", {class: "nr"}, o.empty[0])),
+      h("span", {class: "hc-v"}, has ? [h("b", {class: [String(o.value).length > 9 ? "long" : "", /^\d/.test(o.value) ? "" : "txt"].join(" ").trim() || null}, o.value), o.unit ? [o.unit[0] === "/" ? h("wbr") : " ", h("small", {class: o.unit[0] === "/" ? "per" : null}, o.unit)] : null] : h("b", {class: "nr"}, o.empty[0])),
       h("span", {class: "hc-s"}, has ? o.sub || "" : o.empty[1])); };
   const openMeds = (c, cat) => () => c.total ? go({tab: "saude", hsub: "resumo", hfocus: "meds"}) : medSheet(p, null, cat);
   // suplementos e medicamentos: número e palavra na mesma linha — "2 ativos" (pausados na legenda, se houver) ou, sem cadastro, "0 cadastrados" (o cartão abre o cadastro)
@@ -1878,53 +1884,71 @@ function renderHome(p){
       fn: () => lastNight ? go({tab: "saude", hsub: "sono"}) : sleepSheet(p), empty: reg}),
     adult ? card({lv: "l1", cls: "wb", icon: "smile", title: "Emocional", value: lastMood ? MOODS[lastMood.mood - 1] : null, sub: lastMood ? `${relDay(lastMood.date)}${lastMood.time ? ", " + lastMood.time : ""}` : "",
       fn: () => lastMood ? go({tab: "saude", hsub: "bem-estar"}) : moodSheet(p), empty: reg}) : null);
-  const extra = h("div", {class: "hgrid hg-b"},
+  const energyWater = h("div", {class: "hgrid hg-b"},
     // "Gasto diário": nome intuitivo; "Estimativa energética" deixa claro que é cálculo, não medida; ao tocar, o Perfil abre "Gasto energético total (GET)" com protocolo e fórmulas
     card({lv: "l2", cls: "energy", icon: "bolt", title: "Gasto diário", value: r.ok && r.get ? k0(r.get) : null, unit: "kcal/dia", sub: "Estimativa energética",
       fn: () => r.ok ? go({tab: "perfil", eopen: true}) : bodySheet(p), empty: [r.ok ? "Só taxa basal" : "Faltam dados", r.ok ? "Abaixo de 3 anos" : "Informe peso e altura"],
       aria: r.ok && r.get ? `Gasto diário: ${k0(r.get)} kcal por dia. Estimativa do gasto energético total, GET.` : `Gasto diário, gasto energético total: ${r.ok ? "só taxa basal, abaixo de 3 anos" : "faltam dados. Informe peso e altura"}.`}),
     card({lv: "l2", cls: "water", icon: "drop", title: "Hidratação", value: w.ml ? fmtL(w.ml) : null, unit: "L/dia", sub: w.src === "manual" ? "Definida por você" : "Recomendação diária",
-      fn: () => waterSheet(p), empty: ["Não definida", "Toque para definir"]}),
-    careCard("supp", "pill", "Suplementos", sup, "suplemento"), careCard("meds", "capsule", "Medicamentos", med, "medicamento"));
+      fn: () => waterSheet(p), empty: ["Não definida", "Toque para definir"]}));
+  const care = h("div", {class: "hgrid hg-c"}, careCard("supp", "pill", "Suplementos", sup, "suplemento"), careCard("meds", "capsule", "Medicamentos", med, "medicamento"));
+  const divider = () => h("div", {class: "hdiv", "aria-hidden": "true"});
   put(app, h("div", {class: "view home"}, topBar(quickBtn(p, "hoje")),
     h("header", {class: "hi-h"}, h("h1", null, `${greetOf()}, ${firstName(p.name)}`), h("div", {class: "today"}, dayTxt)),
-    pillars, h("div", {class: "hdiv", "aria-hidden": "true"}), extra));
+    pillars, divider(), energyWater, divider(), care));
   fitTitlesNow();
 }
-// Títulos sempre inteiros, em uma linha: se algum (palavra única, ex.: "Medicamentos" com texto ampliado) não cabe ao lado da pastilha,
-// todos os cartões passam a ícone sobre o título (.stack); se ainda assim alguma palavra não cabe inteira, uma coluna (.one); os pilares nunca ficam mais baixos que os indicadores. Recalcula quando muda a largura dos cartões ou o tamanho do texto do sistema.
+// Layout da Home calculado como um conjunto, sempre a partir da geometria real do momento:
+// 1 · títulos inteiros: se algum não cabe ao lado da pastilha, ícone sobre o título (.stack); se ainda há palavra que não cabe, uma coluna (.one).
+//     Só refeito quando muda a largura dos cartões ou o tamanho do texto.
+// 2 · hierarquia: pilares nunca mais baixos que os indicadores (+8); Suplementos e Medicamentos com a altura de Gasto diário e Hidratação.
+// 3 · espaço vertical (spread): mede a área entre o topo do conteúdo e a barra fixa e reparte a sobra.
+// 4 · margem inferior: calculada da altura real da barra, de modo que, rolando até o fim, o último cartão fica 16 acima dela.
+// Refeito a cada mudança de geometria — tamanho da janela, da Home ou da barra (área segura aplicada depois do primeiro desenho, rotação, fonte).
 const over = t => t.scrollWidth > t.clientWidth + 0.5;
 let fitKey = "";
 function fitTitles(force){ const home = document.querySelector(".home"), c0 = home && home.querySelector(".hc"); if (!c0) return;
-  const key = c0.getBoundingClientRect().width.toFixed(1) + "|" + getComputedStyle(document.documentElement).fontSize + "|" + innerHeight; if (!force && key === fitKey) return; fitKey = key;
-  home.classList.remove("stack", "one"); const fitT = () => { home.classList.remove("stack"); if ([...home.querySelectorAll(".hc-t")].some(over)) home.classList.add("stack"); };
-  fitT(); if ([...home.querySelectorAll(".hc-t,.hc-v,.hc-s")].some(over)) { home.classList.add("one"); fitT(); }
-  // hierarquia: com texto ampliado, uma legenda em duas linhas pode deixar os indicadores mais altos que os pilares; os pilares acompanham (+8)
-  home.style.removeProperty("--l1-min"); const a = home.querySelector(".hg-a .hc"), b = home.querySelector(".hg-b .hc");
-  if (a && b && b.offsetHeight + 8 > a.offsetHeight) home.style.setProperty("--l1-min", b.offsetHeight + 8 + "px");
-  spread(home); }
-// Espaço vertical adaptativo. Referência: a área entre o topo do conteúdo e a barra inferior fixa (já descontadas as áreas seguras).
-// Com tudo no tamanho mínimo, mede-se a sobra até um respiro de 24 acima da barra e distribui-se proporcionalmente, com limite por intervalo:
-// pilares até +20 cada · indicadores até +10 · entre linhas até +4 · divisória até +10 acima e abaixo · cabeçalho até +8.
-// Passou da soma dos limites, o restante fica no respiro inferior (nada cresce sem limite). Sem sobra (tela menor, texto ampliado): rolagem natural.
-const GROW = {a: 20, b: 10, g: 4, d: 10, h: 8};
-function spread(home){ const st = home.style; for (const k of ["--ha", "--xb", "--xg", "--xd", "--xh"]) st.removeProperty(k);
-  const tb = document.getElementById("tabbar"), cards = [...home.querySelectorAll(".hc")]; if (!tb || !cards.length || document.body.classList.contains("typing")) return;
+  const st = home.style; for (const k of ["--ha", "--xb", "--xd", "--xh", "--l1-min", "--hbc"]) st.removeProperty(k);
+  const key = c0.getBoundingClientRect().width.toFixed(1) + "|" + getComputedStyle(document.documentElement).fontSize;
+  if (force || key !== fitKey) { fitKey = key;
+    home.classList.remove("stack", "one"); const fitT = () => { home.classList.remove("stack"); if ([...home.querySelectorAll(".hc-t")].some(over)) home.classList.add("stack"); };
+    fitT(); if ([...home.querySelectorAll(".hc-t,.hc-v,.hc-s")].some(over)) { home.classList.add("one"); fitT(); } }
+  const a = home.querySelector(".hg-a .hc"), b = home.querySelector(".hg-b .hc"), hb = b ? b.getBoundingClientRect().height : 0;
+  if (b) st.setProperty("--hbc", hb.toFixed(2) + "px");
+  if (a && b && hb + 8 > a.getBoundingClientRect().height) st.setProperty("--l1-min", (hb + 8).toFixed(2) + "px");
+  spread(home); lastSig = sigOf(home); }
+// assinatura da geometria que importa ao layout; as notificações do observador que não a alteram (a inicial, ou a causada pela própria distribuição) são ignoradas
+let lastSig = "";
+const sigOf = home => { const tb = document.getElementById("tabbar"), c0 = home.querySelector(".hc"); return [innerHeight, tb ? tb.getBoundingClientRect().top : 0, home.getBoundingClientRect().height,
+  home.getBoundingClientRect().top + scrollY, c0 ? c0.getBoundingClientRect().width : 0, getComputedStyle(document.documentElement).fontSize].map(v => typeof v === "number" ? v.toFixed(1) : v).join("|"); };
+// Espaço vertical, em duas etapas. Com tudo no tamanho natural, mede-se a sobra até um respiro de 24 acima da barra:
+// 1 · respiro entre os grupos, proporcional: divisórias até +16 acima e abaixo · cabeçalho até +12;
+// 2 · só se ainda sobrar (telas altas): cartões, pouco — pilares até +8, indicadores até +4.
+// Passou dos dois limites, o restante fica no respiro inferior. Sem sobra (tela menor, texto ampliado): tamanhos naturais e rolagem.
+const GROW = {d: 16, h: 12, a: 8, b: 4};
+function spread(home){ const st = home.style, tb = document.getElementById("tabbar"), cards = [...home.querySelectorAll(".hc")];
+  if (!tb || !cards.length || document.body.classList.contains("typing")) return;
+  const tbTop = tb.getBoundingClientRect().top, rootPB = parseFloat(getComputedStyle(document.documentElement).paddingBottom) || 0;
+  app.style.setProperty("--home-pb", Math.max(0, innerHeight - tbTop + 16 - rootPB).toFixed(2) + "px");
   // a entrada da tela desliza 4 px (animação "in"): mede-se a posição final, descontando o deslocamento do momento
   const shift = () => { const t = getComputedStyle(home).transform; return t && t !== "none" ? new DOMMatrixReadOnly(t).m42 : 0; };
-  const room = () => tb.getBoundingClientRect().top - 24 - (cards[cards.length - 1].getBoundingClientRect().bottom - shift() + scrollY);
+  const room = () => tbTop - 24 - (cards[cards.length - 1].getBoundingClientRect().bottom - shift() + scrollY);
   const free = room(); if (free < 2) return;
-  const rows = sel => new Set([...home.querySelectorAll(sel)].map(c => Math.round(c.getBoundingClientRect().top))).size, ra = rows(".hg-a .hc"), rb = rows(".hg-b .hc");
-  const cap = ra * GROW.a + rb * GROW.b + (ra + rb - 2) * GROW.g + 2 * GROW.d + GROW.h, h0 = home.querySelector(".hg-a .hc").getBoundingClientRect().height;
-  const apply = k => { const px = v => (v * k).toFixed(2) + "px"; st.setProperty("--ha", (h0 + GROW.a * k).toFixed(2) + "px");
-    st.setProperty("--xb", px(GROW.b)); st.setProperty("--xg", px(GROW.g)); st.setProperty("--xd", px(GROW.d)); st.setProperty("--xh", px(GROW.h)); };
-  // segunda medição: o mínimo dos pilares e os arredondamentos de grade podem absorver parte do acréscimo; corrige a proporção uma vez
-  let k = Math.min(1, free / cap); apply(k); const got = free - room();
-  if (k < 1 && got > 1 && free - got > 1) apply(Math.min(1, k * free / got)); }
-window.addEventListener("resize", () => fitTitles());
-const fitRO = typeof ResizeObserver === "function" ? new ResizeObserver(() => fitTitles()) : null;
-// observa a largura do cartão (tela, rotação) e a altura do título (muda com o tamanho do texto, mesmo quando a altura do cartão está fixada pela distribuição)
-function fitTitlesNow(){ fitKey = ""; if (fitRO) { fitRO.disconnect(); for (const e of [document.querySelector(".home .hc"), document.querySelector(".home .hc-t")]) if (e) fitRO.observe(e); } fitTitles(true); }
+  const ra = new Set([...home.querySelectorAll(".hg-a .hc")].map(c => Math.round(c.getBoundingClientRect().top))).size, nd = home.querySelectorAll(".hdiv").length;
+  const rb = home.querySelectorAll(".hg-b, .hg-c").length, h0 = home.querySelector(".hg-a .hc").getBoundingClientRect().height;
+  const cap1 = nd * 2 * GROW.d + GROW.h, cap2 = ra * GROW.a + rb * GROW.b;
+  const apply = (k1, k2) => { st.setProperty("--xd", (GROW.d * k1).toFixed(2) + "px"); st.setProperty("--xh", (GROW.h * k1).toFixed(2) + "px");
+    st.setProperty("--ha", (h0 + GROW.a * k2).toFixed(2) + "px"); st.setProperty("--xb", (GROW.b * k2).toFixed(2) + "px"); };
+  let k1 = Math.min(1, free / cap1), k2 = Math.min(1, Math.max(0, free - cap1) / cap2); apply(k1, k2);
+  // segunda medição: arredondamentos de grade podem absorver parte do acréscimo; corrige a etapa ativa uma vez
+  const got = free - room(); if (got > 1 && Math.abs(free - got) > 1) { if (k2 > 0 && k2 < 1) k2 = Math.min(1, k2 + (free - got) / cap2); else if (k1 < 1) k1 = Math.min(1, k1 * free / got); apply(k1, k2); } }
+const homeRO = typeof ResizeObserver === "function" ? new ResizeObserver(() => { const home = document.querySelector(".home"); if (home && sigOf(home) !== lastSig) fitTitles(); }) : null;
+for (const ev of ["resize", "orientationchange", "pageshow"]) window.addEventListener(ev, () => fitTitles());
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => fitTitles(true));
+// observa (caixa externa) a Home (conteúdo, fonte, texto ampliado), a barra inferior (altura muda quando a área segura chega depois do primeiro desenho)
+// e a página (área segura superior aplicada depois desloca tudo para baixo);
+// cada passada é idempotente: as próprias mudanças de altura geram no máximo uma confirmação, sem ciclo
+function fitTitlesNow(){ fitKey = ""; if (homeRO) { homeRO.disconnect(); for (const e of [document.querySelector(".home"), document.getElementById("tabbar"), document.documentElement]) if (e) homeRO.observe(e, {box: "border-box"}); } fitTitles(true); }
 // volta ao app ou virada de período/dia: a Home é redesenhada (só se nada estiver aberto por cima)
 function refreshHome(){ if (view.tab === "hoje" && active() && homeKey !== greetOf() + today() && !document.querySelector(".scrim")) render(); }
 document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshHome(); });
@@ -3168,6 +3192,7 @@ function energyCard(p){
   return h("div", {class: "ecard fold open"}, head, h("div", {class: "ec-b"},
     seg, adult ? h("p", {class: "eq-n", style: "margin:6px 2px 0"}, METHOD_NOTE[pick]) : null,
     h("div", {class: "etiles"}, tile("TMB", r.ok ? r.tmb : null), tile("GET", r.ok ? r.get : null, true)),
+    h("p", {class: "eq-n", style: "margin:8px 2px 0"}, "GET é a estimativa das calorias gastas em um dia (taxa basal + atividade), feita por equações de referência para grupos de pessoas. Não é uma medição individual."),
     r.ok ? h("div", {class: "eline"}, h("span", null, `IMC ${g1(r.imc)}`), h("span", null, `${fq.format(e.weight)} kg · ${fq.format(e.height)} cm`), h("span", null, ageLabel(r.age)))
       : h("button", {class: "btn ghost block", type: "button", style: "margin-top:10px", onclick: () => bodySheet(p)}, "Informar peso e altura"),
     r.child ? h("p", {class: "note warn"}, "Para crianças e adolescentes vale a DRI 2005, que inclui a energia do crescimento. O IMC é avaliado pelas curvas de crescimento, não pelos cortes de adultos.") : null,
