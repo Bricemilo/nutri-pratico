@@ -659,3 +659,12 @@ Divergências intencionais da referência: sem subtítulos de página e sem a ab
 **Ícones**: a aba Nutrição passou a usar os mesmos talheres da Home; Exercício usa o halter em todo o app; Medicamentos ganhou ícone de frasco (o anterior parecia um sinal de proibido).
 
 **Nome**: "BRICEÑO" no título da página, no nome do app instalado (manifest e apple-mobile-web-app-title), na marca da Home e nos textos que citavam o nome. Chave de armazenamento, URL, identificadores e arquivos internos não mudaram; não há logotipo definitivo.
+
+## 23. v14 — Home 2.0: refinamento visual
+
+- **Menos cor**: os oito cartões passam a ser grafite com uma nuance mínima da cor do módulo (6%; 9% em Suplementos e Medicamentos) e contorno neutro de 1 px. Sem gradientes nem bordas coloridas. A cor fica no ícone (18 px, sem fundo).
+- **Três níveis**, mesmo componente: pilares (valor 28 px, 116 px de altura) · metabolismo (22 px, ~100 px) · acompanhamento (20 px, ~92 px). Nome do módulo em cinza claro 14/600; unidade 14/500 em cinza; legenda 13 px.
+- **Espaçamento**: margem 16 · entre cartões 10 · entre níveis 20 · padding 14 · raio 18 (SE: 8 · 16 · 12).
+- **Textos**: Exercício "3 dias ativos"; Sono "Última noite"; Emocional "Ontem, 21:40"; Hidratação "Recomendação diária" / "Definida por você"; Gasto energético "GET estimado" (o método saiu da Home e fica no Perfil); Suplementos/Medicamentos "2 ativos" e só "1 pausado" quando houver; vazio "Nenhum cadastrado · Toque para adicionar".
+- **Saudação** pelo horário local: 5–11 h Bom dia, 12–17 h Boa tarde, 18–4 h Boa noite. A Home se redesenha ao voltar ao app e na virada de período ou de dia (verificação a cada minuto, só sem folha aberta).
+- **Toque**: estado pressionado discreto (escala 0,985 e fundo um pouco mais claro, 120 ms); respeita "reduzir movimento". Vibração ao toque não existe para apps web no iPhone, por isso não foi incluída.
