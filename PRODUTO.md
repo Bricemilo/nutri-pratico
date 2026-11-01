@@ -647,3 +647,15 @@ Divergências intencionais da referência: sem subtítulos de página e sem a ab
 **Perfil**: Você (dados pessoais, dados corporais, objetivos e metas, família) · Planejamento (GET, hidratação) · Saúde e acompanhamento (atalhos para as seções da Saúde e prioridades) · Aplicativo (backup, configurações, fontes e metodologia). "Preferências" virou "Configurações" (registro do consumo, sugestões e recentes); não foram criadas "preferências alimentares" porque o app não tem esses dados.
 
 **Dados**: os novos campos ficam em `p.care` de cada perfil; perfis antigos ganham `care` vazio ao abrir; entram no backup (o backup exporta o estado inteiro). Nada existente foi alterado.
+
+## 22. v13 — Home como painel de saúde (nome provisório BRICEÑO)
+
+**Home**: oito cartões do mesmo componente, em três grupos separados por espaço (sem títulos): Nutrição · Exercício · Sono · Emocional | Hidratação · Gasto energético | Suplementos · Medicamentos. Cada cartão: ícone e nome na cor do pilar, valor em destaque, contexto discreto; toque leva ao módulo; sem dado, estado vazio ("Não registrado", "Não cadastrado"…) que abre o cadastro.
+- Nutrição: kcal totais do plano ativo ("Plano alimentar") → Nutrição. Exercício: total da semana "/semana" e dias com registro → detalhe (vazio: registrar). Sono: última noite → detalhe. Emocional: registro mais recente, com dia e hora → detalhe (menores de 18: sem o cartão, como antes). Hidratação: recomendação (35 mL/kg ou valor definido) → ajuste. Gasto energético: GET do cálculo existente, com o método → Perfil com o GET aberto (sem peso/altura: Dados corporais). Suplementos (inclui fórmulas manipuladas) e Medicamentos: ativos e cadastrados, contando nomes únicos, pausados fora dos ativos → lista em Saúde (vazio: cadastro já na categoria certa).
+- Saiu da Home: anel de calorias, macronutrientes, fibras e comparação planejado × GET. Continuam na Nutrição (resumo e "Resumo nutricional").
+- iPhone 13: as quatro linhas cabem sem rolar (fim em 672 px; barra em 713), todas com 114 px. SE e texto ampliado: rolagem, sem cortes.
+- Cores novas (tokens): --energy #D9B872 sobre fundo grafite-azulado, --supp #AFC274 (oliva), --meds #8EAAD8 (ardósia). Contraste dos títulos ≥ 5,3:1 sobre o próprio fundo.
+
+**Ícones**: a aba Nutrição passou a usar os mesmos talheres da Home; Exercício usa o halter em todo o app; Medicamentos ganhou ícone de frasco (o anterior parecia um sinal de proibido).
+
+**Nome**: "BRICEÑO" no título da página, no nome do app instalado (manifest e apple-mobile-web-app-title), na marca da Home e nos textos que citavam o nome. Chave de armazenamento, URL, identificadores e arquivos internos não mudaram; não há logotipo definitivo.

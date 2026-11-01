@@ -1,7 +1,7 @@
-<title>Nutri Prático</title>
+<title>BRICEÑO</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Nutri Prático">
+<meta name="apple-mobile-web-app-title" content="BRICEÑO">
 <style>
 /* Layout: uma coluna de app nativo (máx. 600px) sobre preto quente, barra de abas no rodapé.
    Superfícies em grafite separam os blocos; o cobre marca só o essencial; macros em champanhe, pátina, rosé e sálvia. */
@@ -9,7 +9,7 @@
   --bg:#0A0908; --surface:#191614; --surface-2:#221E1B; --surface-3:#2B2622;
   --ink:#F4EEE8; --ink-2:#CDC3B9; --muted:#968B81; --line:#2D2824; --line-2:#3B352F;
   --accent:#E08C4E; --accent-2:#F2A468; --accent-ink:#1C0E05; --accent-soft:#2F1E12; --accent-line:#6B4226;
-  --carb:#E58D4D; --prot:#AE625C; --prot-ink:#CB8078; --fat:#E9C56F; --fib:#86AB91; --ring:#CDC3B9; --food:#E08C4E; --move:#5FC4B8; --sleep:#9C93EE; --mood:#E58BB0; --water:#62B8D6; --danger:#FF7D74; --danger-soft:#33191A; --ok:#8FCB9B;
+  --carb:#E58D4D; --prot:#AE625C; --prot-ink:#CB8078; --fat:#E9C56F; --fib:#86AB91; --ring:#CDC3B9; --food:#E08C4E; --move:#5FC4B8; --sleep:#9C93EE; --mood:#E58BB0; --water:#62B8D6; --energy:#D9B872; --supp:#AFC274; --meds:#8EAAD8; --danger:#FF7D74; --danger-soft:#33191A; --ok:#8FCB9B;
   --hero-1:#2E1D11; --hero-2:#181513; --scrim:rgba(0,0,0,.62); --shadow:0 14px 36px rgba(0,0,0,.5);
   --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Inter","Helvetica Neue","Segoe UI",Roboto,Arial,sans-serif;
   --r:18px; --tabbar:64px;
@@ -725,7 +725,7 @@ h1.pg{font-size:1.765rem;margin:6px 2px 2px}
 .dur-out{margin:-4px 2px 0;font-size:var(--t-sm);color:var(--accent-2);font-weight:600;font-variant-numeric:tabular-nums}
 @media (max-height:700px){.dial.compact .dial-wrap{width:min(100%,196px)}.dial.compact .dial-k{font-size:2rem}.dial.compact .dial-m{font-size:var(--t-cap)}.dial.compact .dial-p{font-size:var(--t-cap);padding:2px 8px;margin-top:6px}.hello{margin:10px 0 12px}.hello h1{font-size:1.647rem}}
 .chips button{height:36px}
-@media (max-width:370px){.mood{font-size:var(--t-cap)}.qa{font-size:var(--t-cap)}.tile{padding:10px}.tile b{font-size:var(--t-body)}}
+@media (max-width:370px){.mood{font-size:var(--t-cap)}.qa{font-size:var(--t-cap)}}
 /* Alimentação compacta */
 .subnav{margin-top:10px}
 .subnav button{height:34px;font-size:var(--t-sm)}
@@ -906,77 +906,72 @@ details.src.more p + p{margin-top:var(--s2)}
 .hist details.hmore[open] summary{border-bottom:1px solid var(--line)}
 /* ===== Home v11 — bloco único =====
    Cabeçalho (data + saudação) · pilares 2 × 2 · plano nutricional (anel dos macronutrientes + legenda + faixa de meta e necessidade) · próximo passo */
-.hi-h{margin:var(--s1) 2px var(--s3)}
-.hi-h .today{margin:0 0 2px;font-size:var(--t-sm);color:var(--muted);font-weight:500}
-.hi-h h1{margin:0;font-size:var(--t-page);font-weight:700;letter-spacing:-.03em;line-height:1.12}
-.mods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.mods.three .mod:last-child{grid-column:1 / -1}
-.mod{--c:var(--food);display:flex;flex-direction:column;align-items:flex-start;min-width:0;min-height:44px;padding:11px 14px 12px;border-radius:var(--r-l);text-align:left;
-  background:linear-gradient(155deg,color-mix(in srgb,var(--c) 15%,var(--surface)),color-mix(in srgb,var(--c) 5%,var(--surface)) 70%);
-  border:1px solid color-mix(in srgb,var(--c) 24%,transparent);transition:transform .15s}
-.mod.move{--c:var(--move)} .mod.sleep{--c:var(--sleep)} .mod.wb{--c:var(--mood)}
-.mod:active{transform:scale(.98)}
-.mod-h{display:flex;align-items:center;gap:8px;min-width:0;max-width:100%}
-.mod-i{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:none;color:var(--c);background:color-mix(in srgb,var(--c) 18%,transparent)}
-.mod-i svg{width:18px;height:18px;display:block}
-.mod-l{font-size:var(--t-body);font-weight:600;color:var(--c);line-height:1.2;min-width:0}
-.mods .mod b{margin-top:7px;font-size:var(--t-num);font-weight:650;letter-spacing:-.025em;line-height:1.12;white-space:nowrap;font-variant-numeric:tabular-nums}
-.mods .mod b.long{font-size:1.18rem;line-height:1.25;white-space:normal;padding-top:2px}
-.mods .mod b.nr{font-size:var(--t-body);font-weight:500;color:var(--muted);letter-spacing:0;line-height:1.12;padding:4px 0 2px}
-.mod-s{margin-top:1px;font-size:var(--t-sm);color:var(--ink-2);line-height:1.3}
-.mod.empty .mod-s{color:var(--muted)}
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
 /* plano nutricional */
-.np{display:block;width:100%;margin-top:10px;padding:14px var(--s4) var(--s4);border-radius:var(--r-xl);background:var(--surface);text-align:left}
-.np-h{display:flex;align-items:center;justify-content:space-between;gap:var(--s2);width:100%;min-height:44px;margin:-10px 0 -6px;font-size:var(--t-h);font-weight:620;letter-spacing:-.01em;color:var(--ink);text-align:left}
-.np-h .li-go svg{width:18px;height:18px;color:var(--muted);display:block}
-.np-b{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:center;width:100%;margin-top:10px;text-align:left}
-.np .dial-wrap.mini.gx{width:clamp(128px,42vw,172px);margin:0}
+
+
+
+
+
 .dial-wrap.mini .ticks,.dial-wrap.mini .prog,.dial-wrap.mini .eatarc,.dial-wrap.mini .trk:not(.in){display:none}
-.np .dial-wrap.mini .trk.in,.np .dial-wrap.mini .arc{stroke-width:18}
-.np .dial-wrap.mini .dial-c{inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.np .dial-wrap.mini .dial-k{font-size:clamp(1.85rem,9.6vw,var(--t-num-l));font-weight:680;letter-spacing:-.045em;line-height:1;font-variant-numeric:tabular-nums}
-.np .dial-wrap.mini .dial-m{margin-top:5px;font-size:var(--t-cap);color:var(--ink-2);white-space:nowrap;line-height:1.15}
-.np-l{display:flex;flex-direction:column;gap:8px;min-width:0}
-.nl{display:grid;grid-template-columns:10px minmax(0,1fr);column-gap:10px;align-items:start;font-variant-numeric:tabular-nums}
-.nl .sw{width:10px;height:10px;border-radius:3px;margin-top:4px}
-.sw.c{background:var(--carb)} .sw.p{background:var(--prot)} .sw.g{background:var(--fat)} .sw.f{background:var(--fib)}
-.nl > div{display:flex;flex-direction:column;min-width:0}
-.nl span{font-size:var(--t-sm);color:var(--ink-2);line-height:1.25}
-.nl b{font-size:var(--t-body);font-weight:650;line-height:1.3;white-space:nowrap}
-.nl b small{font-size:var(--t-sm);font-weight:500;color:var(--muted)}
+
+
+
+
+
+
+
+   
+
+
+
+
 /* faixa: meta diária | necessidade estimada (método); consumido ocupa a linha inteira */
-.band{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin:var(--s4) calc(-1 * var(--s4)) calc(-1 * var(--s4));border-top:1px solid var(--line)}
-.band.n1{grid-template-columns:1fr}
-.fig{display:flex;flex-direction:column;gap:1px;min-width:0;padding:var(--s3) 14px 13px}
-.fig + .fig.f-get{border-left:1px solid var(--line)}
-.fig.f-eat{grid-column:1 / -1;border-top:1px solid var(--line)}
-.fig > span{font-size:var(--t-cap);color:var(--ink-2);line-height:1.25}
-.fig b{font-size:1.294rem;font-weight:650;letter-spacing:-.02em;line-height:1.2;font-variant-numeric:tabular-nums;white-space:nowrap}
-.fig b small{font-size:var(--t-sm);font-weight:500;color:var(--muted);letter-spacing:0}
-.fig b.nr{font-size:var(--t-body);font-weight:500;color:var(--muted)}
-.fig em{font-style:normal;font-size:var(--t-cap);color:var(--muted);line-height:1.3}
-.np-empty{display:flex;align-items:center;gap:var(--s3)}
-.np-empty > div{flex:1;min-width:0}
-.np-empty b{display:block;font-size:var(--t-h);font-weight:600}
-.np-empty span{display:block;font-size:var(--t-sm);color:var(--muted)}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* próximo passo: só quando core.nextAction tem uma sugestão real */
-.step{display:flex;align-items:center;gap:14px;width:100%;margin-top:var(--s3);padding:14px var(--s4);border-radius:var(--r-l);background:var(--surface);text-align:left}
-.step > div{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
-.step em{font-style:normal;font-size:var(--t-cap);font-weight:650;color:var(--accent-2)}
-.step b{font-size:var(--t-body);font-weight:600;line-height:1.3}
-.step span{font-size:var(--t-sm);color:var(--ink-2);line-height:1.35}
-.step-i{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;flex:none;color:var(--accent-2);background:color-mix(in srgb,var(--accent) 18%,transparent)}
-.step-i svg{width:22px;height:22px}
-.step .li-go svg{width:18px;height:18px;color:var(--muted);display:block}
-@media (max-width:370px){
-  .mods{gap:8px}.mod{padding:10px 10px 11px}.mod-h{gap:6px}.mod-i{width:26px;height:26px;border-radius:8px}.mod-i svg{width:16px;height:16px}
-  .np{padding:14px 12px var(--s4)}.np-b{gap:14px}.band{margin-left:-12px;margin-right:-12px}.fig{padding-left:12px;padding-right:12px}
-}
-@media (max-height:600px){.hi-h .today{display:none}}
-html.big-text .np-b{grid-template-columns:1fr;justify-items:center}
-html.big-text .np-l{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px;width:100%}
-html.big-text .band{grid-template-columns:1fr}
-html.big-text .fig + .fig.f-get{border-left:0;border-top:1px solid var(--line)}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* ===== Nutrição v11: resumo · objetivo (cartão próprio) · refeições em lista agrupada ===== */
 .sec-t{margin:var(--s6) 4px var(--s3);font-size:var(--t-sec);font-weight:650;letter-spacing:-.015em;color:var(--ink);line-height:1.2}
 .sumcard{margin-top:var(--s3);padding:0;overflow:hidden}
@@ -1133,37 +1128,37 @@ html.big-text .seg.seg4 button{height:auto;min-height:44px;white-space:normal}
 .mh-s{white-space:normal;overflow:visible}
 .meal-name{min-height:40px}
 /* contraste ≥ 4,5:1 sobre o fundo tingido dos pilares: textos de apoio em --ink-2, não em --muted */
-.mods .mod b.nr,.mod.empty .mod-s{color:var(--ink-2)}
+
 /* ===== v12: pilares em duas linhas · fibras complementares · rodapé Hidratação | GET · Saúde compacta · cuidados ===== */
-.hi-h .today{color:var(--accent-2)}
-.hi-h h1{font-size:1.647rem}
-.mod{padding:12px 12px 13px}
-.mod-i{width:28px;height:28px;border-radius:8px}
-.mod-i svg{width:17px;height:17px}
-.mod-v{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:6px;row-gap:0;margin-top:9px;min-width:0}
-.mods .mod b{margin:0;font-size:1.412rem;line-height:1.15}
-.mods .mod b.long{font-size:1.118rem;line-height:1.25;padding:0}
-.mods .mod b.nr{font-size:var(--t-body);padding:3px 0 2px;color:var(--ink-2)}
-.mod-s{margin:0;font-size:var(--t-sm);color:var(--ink-2)}
+
+
+
+
+
+
+
+
+
+
 /* fibras: informação complementar, sem marcador de cor (não há segmento de fibras no anel) */
-.nf{display:flex;align-items:baseline;gap:8px;margin:2px 0 0 20px;padding-top:9px;border-top:1px solid var(--line)}
-.nf span{font-size:var(--t-sm);color:var(--ink-2)}
-.nf b{font-size:var(--t-body);font-weight:650;font-variant-numeric:tabular-nums}
+
+
+
 /* rodapé do plano: hidratação (esquerda) e gasto energético estimado (direita), mesma altura */
-.tiles{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:8px;margin-top:14px}
-.tile{display:flex;flex-direction:column;justify-content:space-between;gap:6px;min-width:0;min-height:44px;padding:10px 12px 11px;border-radius:var(--r-m);text-align:left}
-.tile.t-water{background:color-mix(in srgb,var(--water) 14%,var(--surface));border:1px solid color-mix(in srgb,var(--water) 24%,transparent)}
-.tile.t-get{background:color-mix(in srgb,var(--accent) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 20%,transparent)}
-.tile:active{transform:scale(.98)}
-.tile-h{display:flex;align-items:flex-start;gap:6px;font-size:var(--t-sm);font-weight:600;line-height:1.25}
-.t-water .tile-h{color:var(--water)} .t-get .tile-h{color:var(--accent-2)}
-.tile-i{flex:none;display:grid}
-.tile-i svg{width:16px;height:16px;margin-top:1px}
-.tile-v b{display:block;font-size:1.294rem;font-weight:650;letter-spacing:-.02em;line-height:1.2;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
-.tile-v b small{font-size:var(--t-sm);font-weight:500;color:var(--ink-2);letter-spacing:0}
-.tile-v b.nr{font-size:var(--t-body);font-weight:550;color:var(--ink-2)}
-.tile-v em{display:block;font-style:normal;font-size:var(--t-cap);color:var(--ink-2);line-height:1.3;margin-top:1px}
-html.big-text .tiles{grid-template-columns:1fr}
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
 /* Nutrição: três macronutrientes + fibras em linha própria */
 .sc-m{grid-template-columns:repeat(3,minmax(0,1fr))}
 .sc-m em{white-space:normal}
@@ -1221,6 +1216,34 @@ html.big-text .sc-m > span + span{border-left:0;border-top:1px solid var(--line)
 .st i:not([class]){width:14px;height:3px;border-radius:2px;margin:5px 0;background:color-mix(in srgb,var(--ink-2) 45%,transparent)}
 .hp.full .st i:not([class]){width:14px;height:3px}
 .hp .bar.fut i,.st i.fut{visibility:hidden}
+/* ===== Home v13 — painel de saúde: oito cartões em três grupos =====
+   Mesmo componente para todos: ícone e nome na cor do pilar, valor em destaque, contexto discreto.
+   Fundos escuros tingidos com saturação controlada; o espaço entre grupos separa pilares, energia e cuidados sem títulos extras. */
+.hi-h{margin:var(--s1) 2px 18px}
+.hi-h .wm{margin:0 0 6px;font-size:var(--t-cap);font-weight:700;letter-spacing:.28em;color:var(--accent-2);line-height:1.2}
+.hi-h h1{margin:0;font-size:1.647rem;font-weight:700;letter-spacing:-.03em;line-height:1.12}
+.hi-h .today{margin:4px 0 0;font-size:var(--t-sm);color:var(--ink-2);font-weight:500}
+.hgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.hgrid + .hgrid{margin-top:22px}
+.hgrid.odd .hc:last-child{grid-column:1 / -1}
+.hc{--c:var(--food);--t:var(--c);display:flex;flex-direction:column;align-items:flex-start;min-width:0;min-height:108px;padding:13px 13px 14px;border-radius:var(--r-l);text-align:left;
+  background:linear-gradient(160deg,color-mix(in srgb,var(--t) 17%,#141210),color-mix(in srgb,var(--t) 6%,#141210) 78%);
+  border:1px solid color-mix(in srgb,var(--t) 22%,transparent);transition:transform .15s ease}
+.hc:active{transform:scale(.98)}
+.hc.move{--c:var(--move)} .hc.sleep{--c:var(--sleep)} .hc.wb{--c:var(--mood)} .hc.water{--c:var(--water)}
+.hc.energy{--c:var(--energy);--t:#8D9AB4} .hc.supp{--c:var(--supp)} .hc.meds{--c:var(--meds)}
+.hc-h{display:flex;align-items:center;gap:6px;min-width:0;max-width:100%}
+.hc-i{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;flex:none;color:var(--c);background:color-mix(in srgb,var(--c) 18%,transparent)}
+.hc-i svg{width:16px;height:16px;display:block}
+.hc-t{font-size:var(--t-sm);font-weight:600;letter-spacing:-.01em;color:var(--c);line-height:1.25;min-width:0}
+.hc-v{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:4px;margin-top:auto;padding-top:12px;min-width:0;max-width:100%}
+.hc-v b{font-size:var(--t-num);font-weight:680;letter-spacing:-.03em;line-height:1.1;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.hc-v b.long{font-size:1.294rem;line-height:1.15;white-space:normal}
+.hc-v small{font-size:var(--t-sm);font-weight:500;color:var(--ink-2);white-space:nowrap}
+.hc-v b.nr{font-size:var(--t-body);font-weight:550;color:var(--ink-2);letter-spacing:0;line-height:1.25}
+.hc-s{margin-top:3px;font-size:var(--t-cap);color:var(--ink-2);line-height:1.3;min-height:1.3em}
+@media (max-width:370px){.hgrid{gap:8px}.hgrid + .hgrid{margin-top:18px}.hc{padding:12px 12px 13px;min-height:100px}.hc-v b{font-size:1.412rem}.hc-v b.long{font-size:1.176rem}.hc-h{gap:7px}}
+@media (prefers-reduced-motion:reduce){.hc{transition:none}.hc:active{transform:none}}
 </style>
 
 <div class="app" id="app"></div>
@@ -1775,6 +1798,7 @@ const ICON = {
   pill:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>',
   flask:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 3v6.2L4.6 19a1.4 1.4 0 0 0 1.3 2h12.2a1.4 1.4 0 0 0 1.3-2l-4.9-9.8V3M8 3h8M7 15.5h10"/></svg>',
   heart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.4a4.3 4.3 0 0 1 7.5 2.4C19.5 15.4 12 20 12 20Z"/></svg>',
+  capsule:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="2.5" width="15" height="4.5" rx="1.2"/><path d="M6 7v12.5A2 2 0 0 0 8 21.5h8a2 2 0 0 0 2-2V7M10 11.5h4v6h-4z"/></svg>',
   bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3 5 13.5h6L10 21l8-10.5h-6z"/></svg>'
 };
 const ic = k => h("span", {html: ICON[k], style: "display:contents"});
@@ -2036,7 +2060,7 @@ const foodTitle = q => !words(q).length && (S.prefs.fav.length || S.prefs.recent
 /* ---------- navegação ---------- */
 const app = $("#app"), tabbar = $("#tabbar");
 // Quatro abas: Hoje (resumo), Alimentação (plano + banco de alimentos), Saúde (movimento, sono, bem-estar), Perfil.
-const TABS = [["hoje", "Hoje", "home"], ["alimentacao", "Nutrição", "food"], ["saude", "Saúde", "pulse"], ["perfil", "Perfil", "user"]];
+const TABS = [["hoje", "Hoje", "home"], ["alimentacao", "Nutrição", "utensils"], ["saude", "Saúde", "pulse"], ["perfil", "Perfil", "user"]];
 let view = {tab: "hoje", sub: "plano", open: [], edit: null, focusMeal: null, foodSeg: "fav"};
 function go(v, keepScroll){
   view = Object.assign({}, view, v);
@@ -2065,7 +2089,7 @@ function topBar(...right){
   const p = active();
   return h("header", {class: "top"}, h("div", {class: "top-row"},
     p ? h("button", {class: "who", "aria-label": `Perfil ativo: ${p.name}. Trocar de perfil`, onclick: switcher}, avatar(p), h("b", null, firstName(p.name)), ic("chev"))
-      : h("div", {class: "brand"}, h("span", {class: "mark", html: ICON.mark}), "Nutri Prático"),
+      : h("div", {class: "brand"}, h("span", {class: "mark", html: ICON.mark}), "BRICEÑO"),
     h("div", {class: "spacer"}), right));
 }
 function switcher(){
@@ -2157,57 +2181,44 @@ function healthCtx(p){
 // para quem ativa (ou já usava) o acompanhamento; ausência de marcação nunca significa que a pessoa não comeu.
 const tracks = p => !!p.trackEaten;
 function renderHome(p){
-  const plan = p.plan, r = C.energyOf(p), tg = plan.target || (r.ok && r.get ? Math.round(r.get) : null);
-  const t = planTotal(plan), L = logsOf(p), ctx = healthCtx(p), adult = adultOf(p), sp = C.macroSplit(t);
+  /* Painel de saúde: oito cartões em três grupos (pilares · hidratação e energia · suplementos e medicamentos).
+     Cada cartão mostra o dado real do perfil selecionado e leva ao módulo; sem dado, um estado vazio que abre o cadastro.
+     O detalhe nutricional (anel, macronutrientes, fibras) fica na aba Nutrição. */
+  const plan = p.plan, r = C.energyOf(p), t = planTotal(plan), L = logsOf(p), ctx = healthCtx(p), adult = adultOf(p), w = waterOf(p), cr = careOf(p);
   const hr = new Date().getHours();
   const dayTxt = new Date().toLocaleDateString("pt-BR", {weekday: "long", day: "numeric", month: "long"});
-  const openPlan = () => go({tab: "alimentacao", sub: "plano", open: [], edit: null});
-  const eaten = C.eatenDay(L.eaten, today());
   const meals = plan.meals.filter(m => filled(m).length);
   const sl = ctx.sleep.stats.last, lastNight = sl && C.addDays(sl.date, 1) >= today() ? sl : null;
-  const moodToday = [...L.mood].reverse().find(x => x.date === today());
-  const wk = ctx.move.week.total;
-  // pilares: valor com unidade e período; sem registro, "Não registrado" (nunca zero presumido)
-  const mod = (cls, icon, label, value, period, fn) => h("button", {class: "mod " + cls + (value == null ? " empty" : ""), type: "button", onclick: fn,
-      "aria-label": `${label}, ${period || "última noite"}: ${value == null ? "sem registro" : value}`},
-    h("span", {class: "mod-h"}, h("span", {class: "mod-i", html: ICON[icon]}), h("span", {class: "mod-l"}, label)),
-    h("span", {class: "mod-v"}, value == null ? h("b", {class: "nr"}, cls === "food" ? "Sem plano" : "Sem registro") : h("b", {class: cls === "wb" && value.length > 6 ? "long" : null}, value), (value == null && cls !== "food") || !period ? null : h("span", {class: "mod-s"}, period)));
-  const mods = h("div", {class: "mods" + (adult ? "" : " three")},
-    mod("food", "utensils", "Nutrição", meals.length ? String(meals.length) : null, meals.length === 1 ? "refeição" : meals.length ? "refeições" : "hoje", openPlan),
-    mod("move", "dumbbell", "Exercício", wk > 0 ? fmtDur(wk) : null, "na semana", () => wk > 0 ? go({tab: "saude", hsub: "movimento"}) : moveSheet(p)),
-    mod("sleep", "moon", "Sono", lastNight ? fmtDur(lastNight.min) : null, "", () => lastNight ? go({tab: "saude", hsub: "sono"}) : sleepSheet(p)),
-    adult ? mod("wb", "smile", "Emocional", moodToday ? MOODS[moodToday.mood - 1] : null, "hoje", () => moodToday ? go({tab: "saude", hsub: "bem-estar"}) : moodSheet(p)) : null);
-  // plano nutricional: anel compacto (planejado no centro; macros no anel) + legenda; abaixo, os três conceitos que não se confundem
-  // Meta, necessidade e consumo: rótulo e valor com unidade; o protocolo da estimativa vai junto do valor
-  // rodapé: hidratação (recomendação, sem registro de copos) e gasto energético estimado; a meta calórica fica na Nutrição
-  const w = waterOf(p), protoFull = {media: "média FAO/OMS e DRI", fao: "FAO/OMS 1985", dri: "DRI 2005"}[r.method] || "";
-  const tile = (cls, icon, label, value, unit, sub, fn, aria) => h("button", {class: "tile " + cls, type: "button", onclick: fn, "aria-label": aria},
-    h("span", {class: "tile-h"}, h("span", {class: "tile-i", html: ICON[icon]}), h("span", null, label)),
-    h("span", {class: "tile-v"}, value == null ? h("b", {class: "nr"}, unit) : h("b", null, value, h("small", null, unit)), sub ? h("em", null, sub) : null));
-  const foot = h("div", {class: "tiles"},
-    tile("t-water", "drop", "Hidratação", w.ml ? fmtL(w.ml) : null, w.ml ? " L/dia" : "Definir", w.ml ? (w.src === "manual" ? "definida por você" : "recomendação") : null, () => waterSheet(p),
-      w.ml ? `Hidratação: ${fmtL(w.ml)} litros por dia, ${w.src === "manual" ? "valor definido por você" : "recomendação estimada"}. Toque para ver o cálculo.` : "Hidratação: sem recomendação. Toque para definir."),
-    tile("t-get", "bolt", "Gasto energético", r.ok && r.get ? k0(r.get) : null, r.ok && r.get ? " kcal" : r.ok ? "Só taxa basal" : "Faltam dados", r.ok && r.get ? protoFull : null, () => go({tab: "perfil", eopen: true}),
-      r.ok && r.get ? `Gasto energético estimado: ${k0(r.get)} quilocalorias por dia, ${protoFull}.` : "Gasto energético: faltam peso e altura."));
-  const plano = meals.length ? h("section", {class: "np"},
-    h("button", {class: "np-h", type: "button", onclick: () => nutritionSheet(p)}, h("span", null, "Plano nutricional do dia"), h("span", {class: "li-go", html: ICON.right})),
-    h("button", {class: "np-b", type: "button", onclick: () => nutritionSheet(p),
-        "aria-label": `${k0(t.kcal)} quilocalorias planejadas. Carboidratos ${fmtG(t.c)} gramas, ${Math.round(sp.c)}% da energia. Proteínas ${fmtG(t.p)} gramas, ${Math.round(sp.p)}%. Gorduras ${fmtG(t.l)} gramas, ${Math.round(sp.l)}%. Fibras ${fmtG(t.f)} gramas. Toque para ver o detalhe.`},
-      dial(t, tg, p.energy.weight, {mini: true, big: true, eaten: eaten.t.kcal > 0 ? eaten.t.kcal : null}),
-      h("div", {class: "np-l"}, [["c", "Carboidratos", t.c, sp.c], ["p", "Proteínas", t.p, sp.p], ["g", "Gorduras", t.l, sp.l]].map(([k, n, g, pc]) =>
-          h("div", {class: "nl"}, h("i", {class: "sw " + k}), h("div", null, h("span", null, n), h("b", null, `${fmtG(g)} g`, h("small", null, ` · ${Math.round(pc)}%`))))),
-        h("div", {class: "nf"}, h("span", null, "Fibras"), h("b", null, `${fmtG(t.f)} g`)))),
-    foot)
-    : h("button", {class: "np np-empty", type: "button", onclick: openPlan}, h("span", {class: "qa-i", html: ICON.food}),
-        h("div", null, h("b", null, "Monte o plano do dia"), h("span", null, "Refeições, energia e macronutrientes em poucos toques.")), h("span", {class: "li-go", html: ICON.right}));
-  // próximo passo: só quando há dados e uma sugestão apropriada; uma linha, sem cobrança
-  const na = C.nextAction(ctx);
-  const naGo = {perfil: () => go({tab: "perfil"}), plano: openPlan, mover: () => moveSheet(p), sono: () => go({tab: "saude", hsub: "sono"})};
-  const step = na && !(na.id === "plano" && !meals.length) ? h("button", {class: "step", type: "button", onclick: naGo[na.go]}, h("span", {class: "step-i", html: ICON.spark}),
-    h("div", null, h("em", null, "Próximo passo"), h("b", null, na.title), h("span", null, na.text)), h("span", {class: "li-go", html: ICON.right})) : null;
+  const lastMood = [...L.mood].sort((a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : (b.at || 0) - (a.at || 0))[0];
+  const mw = ctx.move.week;
+  const protoFull = {media: "média FAO/OMS e DRI", fao: "FAO/OMS 1985", dri: "DRI 2005"}[r.method] || "";
+  // suplementos (inclui fórmulas manipuladas) e medicamentos: itens únicos por nome; "ativos" exclui os pausados
+  const countOf = cats => { const seen = new Map(); for (const m of cr.meds) if (cats.includes(m.cat || "suplemento")) { const k = norm(m.name); if (!seen.has(k) || !m.paused) seen.set(k, m); }
+    const all = [...seen.values()]; return {total: all.length, active: all.filter(m => !m.paused).length}; };
+  const sup = countOf(["suplemento", "formula"]), med = countOf(["medicamento"]);
+  const card = (cls, icon, title, value, unit, sub, fn, empty, aria) => h("button", {class: "hc " + cls + (value == null ? " empty" : ""), type: "button", onclick: fn,
+      "aria-label": aria || `${title}: ${value == null ? empty[0] : `${value}${unit || ""}`}${sub || (value == null ? `. ${empty[1]}` : "") ? `, ${value == null ? empty[1] : sub}` : ""}.`},
+    h("span", {class: "hc-h"}, h("span", {class: "hc-i", html: ICON[icon]}), h("span", {class: "hc-t"}, title)),
+    h("span", {class: "hc-v"}, value == null ? h("b", {class: "nr"}, empty[0]) : [h("b", {class: String(value).length > 7 ? "long" : null}, value), unit ? h("small", null, unit) : null]),
+    h("span", {class: "hc-s"}, value == null ? empty[1] : sub || ""));
+  const openMeds = cat => () => cat.total ? go({tab: "saude", hsub: "resumo", hfocus: "meds"}) : medSheet(p, null, cat === med ? "medicamento" : "suplemento");
+  const pillars = h("div", {class: "hgrid" + (adult ? "" : " odd")},
+    card("food", "utensils", "Nutrição", meals.length ? k0(t.kcal) : null, " kcal", "Plano alimentar", () => go({tab: "alimentacao", sub: "plano", open: [], edit: null}), ["Sem plano", "Toque para montar"]),
+    card("move", "dumbbell", "Exercício", mw.total > 0 ? fmtDur(mw.total) : null, "/semana", `${mw.activeDays} ${mw.activeDays === 1 ? "dia" : "dias"} com registro`,
+      () => mw.total > 0 ? go({tab: "saude", hsub: "movimento"}) : moveSheet(p), ["Não registrado", "Toque para registrar"]),
+    card("sleep", "moon", "Sono", lastNight ? fmtDur(lastNight.min) : null, "", "última noite", () => lastNight ? go({tab: "saude", hsub: "sono"}) : sleepSheet(p), ["Não registrado", "Toque para registrar"]),
+    adult ? card("wb", "smile", "Emocional", lastMood ? MOODS[lastMood.mood - 1] : null, "", lastMood ? `${relDay(lastMood.date).toLowerCase()}${lastMood.time ? " às " + lastMood.time : ""}` : "",
+      () => lastMood ? go({tab: "saude", hsub: "bem-estar"}) : moodSheet(p), ["Não registrado", "Toque para registrar"]) : null);
+  const energy = h("div", {class: "hgrid"},
+    card("water", "drop", "Hidratação", w.ml ? fmtL(w.ml) : null, " L/dia", w.src === "manual" ? "definida por você" : "recomendação", () => waterSheet(p), ["Não definida", "Toque para definir"]),
+    card("energy", "bolt", "Gasto energético", r.ok && r.get ? k0(r.get) : null, " kcal/dia", protoFull, () => r.ok ? go({tab: "perfil", eopen: true}) : bodySheet(p),
+      [r.ok ? "Só taxa basal" : "Faltam dados", r.ok ? "Abaixo de 3 anos" : "Informe peso e altura"]));
+  const care = h("div", {class: "hgrid"},
+    card("supp", "pill", "Suplementos", sup.total ? String(sup.active) : null, sup.active === 1 ? " ativo" : " ativos", `${sup.total} ${sup.total === 1 ? "cadastrado" : "cadastrados"}`, openMeds(sup), ["Não cadastrado", "Toque para adicionar"]),
+    card("meds", "capsule", "Medicamentos", med.total ? String(med.active) : null, med.active === 1 ? " ativo" : " ativos", `${med.total} ${med.total === 1 ? "cadastrado" : "cadastrados"}`, openMeds(med), ["Não cadastrado", "Toque para adicionar"]));
   put(app, h("div", {class: "view home"}, topBar(quickBtn(p, "hoje")),
-    h("header", {class: "hi-h"}, h("div", {class: "today"}, dayTxt), h("h1", null, `${hr < 12 ? "Bom dia" : hr < 18 ? "Boa tarde" : "Boa noite"}, ${firstName(p.name)}`)),
-    mods, plano, step));
+    h("header", {class: "hi-h"}, h("div", {class: "wm", "aria-hidden": "true"}, "BRICEÑO"), h("h1", null, `${hr < 12 ? "Bom dia" : hr < 18 ? "Boa tarde" : "Boa noite"}, ${firstName(p.name)}`), h("div", {class: "today"}, dayTxt)),
+    pillars, energy, care));
 }
 // Resumo nutricional completo (Hoje e Alimentação): painel com macros, g/kg, fibras, planejado e consumido.
 function nutritionSheet(p){
@@ -2234,7 +2245,7 @@ function quickSheet(p, ctx){
         h("span", {class: "done"}), h("span", {class: "tm"}, m.time || "—"), h("span", {class: "nm"}, m.name.trim() || "Refeição"), h("span", {class: "kc"}, `${k0(mealTotal(m).kcal)} kcal`)))) : null;
     const big = (cls, icon, label, fn) => h("button", {class: "qbig " + cls, type: "button", onclick: () => { close(); setTimeout(fn, 60); }}, h("span", {html: ICON[icon], style: "display:contents"}), label);
     const health = h("div", {class: "qbigs" + (adult ? "" : " three")},
-      big("food", "food", "Nutrição", () => go({tab: "alimentacao", sub: "plano"})), big("move", "walk", "Exercício", () => moveSheet(p)),
+      big("food", "utensils", "Nutrição", () => go({tab: "alimentacao", sub: "plano"})), big("move", "dumbbell", "Exercício", () => moveSheet(p)),
       big("sleep", "moon", "Sono", () => sleepSheet(p)), adult ? big("wb", "smile", "Emocional", () => moodSheet(p)) : null);
     const food = [row("food", "Alimento no plano", "Buscar e adicionar a uma refeição", () => { go({tab: "alimentacao", sub: "alimentos"}); setTimeout(() => { const i = $("#busca-alimento"); if (i) i.focus(); }, 80); }),
       row("camera", "Novo alimento", embedded ? "Digitar os dados do rótulo" : "Foto da tabela nutricional ou digitação", () => addFoodChooser("", () => render()))];
@@ -2296,7 +2307,7 @@ function renderHealth(p){
   const more = (title, ...ps) => h("details", {class: "src more"}, h("summary", null, title), ...ps.filter(Boolean).map(x => h("p", null, x)));
   // o número principal de cada pilar; médias só com dados suficientes
   const P = {
-    movimento: {cls: "move", icon: "walk", title: "Exercício", has: L.move.length > 0, value: fmtDur(mw.total), ctx: mw.activeDays ? `nesta semana · ${mw.activeDays} ${mw.activeDays === 1 ? "dia" : "dias"}` : mw.last ? `nesta semana · último ${relDay(mw.last).toLowerCase()}` : "nesta semana",
+    movimento: {cls: "move", icon: "dumbbell", title: "Exercício", has: L.move.length > 0, value: fmtDur(mw.total), ctx: mw.activeDays ? `nesta semana · ${mw.activeDays} ${mw.activeDays === 1 ? "dia" : "dias"}` : mw.last ? `nesta semana · último ${relDay(mw.last).toLowerCase()}` : "nesta semana",
       empty: "Caminhada, musculação, tênis… registre em segundos.", chart: moveBars, add: () => moveSheet(p), addL: "Registrar exercício"},
     sono: {cls: "sleep", icon: "moon", title: "Sono", has: L.sleep.length > 0, value: ss.count >= 3 ? fmtDur(ss.avg) : ss.last ? fmtDur(ss.last.min) : "—",
       ctx: ss.count >= 3 ? `média de ${ss.count} noites` : ss.last ? `última noite registrada · ${relDay(ss.last.date).toLowerCase()}` : "",
@@ -2358,15 +2369,15 @@ function medsSection(p){
   const list = careOf(p).meds, sorted = [...list].sort((a, b) => (a.paused ? 1 : 0) - (b.paused ? 1 : 0) || MED_WHEN.indexOf(a.when) - MED_WHEN.indexOf(b.when));
   return h("div", {class: "care"}, secHead("Suplementos e medicamentos", "Adicionar suplemento, fórmula ou medicamento", () => medSheet(p), "meds"),
     list.length ? h("div", {class: "glist"}, sorted.map(m => h("button", {class: "grow" + (m.paused ? " off" : ""), type: "button", onclick: () => medSheet(p, m)},
-        h("span", {class: "gr-i c-" + (m.cat || "suplemento"), html: ICON.pill}),
+        h("span", {class: "gr-i c-" + (m.cat || "suplemento"), html: m.cat === "medicamento" ? ICON.capsule : ICON.pill}),
         h("span", {class: "gr-m"}, h("b", null, m.name, m.paused ? h("span", {class: "chip"}, "pausado") : null), h("span", null, medLine(m) || (MED_CAT.find(c => c[0] === m.cat) || MED_CAT[0])[1])),
         h("span", {class: "li-go", html: ICON.right}))))
       : h("button", {class: "gempty", type: "button", onclick: () => medSheet(p)}, "Organize o que você usa: nome, dose e momento do dia. Sem lembretes nem marcação diária."),
     list.length ? h("p", {class: "care-n"}, "O app não recomenda doses. Siga a orientação de quem prescreveu.") : null);
 }
-function medSheet(p, m){
+function medSheet(p, m, cat0){
   const c = careOf(p), editing = !!m;
-  const d = Object.assign({name: "", cat: "suplemento", dose: "", unit: "", when: "", freq: "Diário", notes: ""}, m || {});
+  const d = Object.assign({name: "", cat: cat0 || "suplemento", dose: "", unit: "", when: "", freq: "Diário", notes: ""}, m || {});
   sheet(editing ? "Editar item" : "Novo item", (el, close) => {
     const name = h("input", {class: "input", id: "md-nome", value: d.name, placeholder: "Ex.: Vitamina D", autocomplete: "off", autocapitalize: "sentences", enterkeyhint: "next"});
     const dose = h("input", {class: "input num", id: "md-dose", value: d.dose, placeholder: "Ex.: 2.000", inputmode: "decimal", autocomplete: "off"});
@@ -3429,7 +3440,7 @@ function renderProfile(p){
       row("lock", "Backup e segurança", days == null ? "Só neste aparelho · nenhum backup ainda" : `Só neste aparelho · backup ${days === 0 ? "hoje" : days === 1 ? "ontem" : `há ${days} dias`}`, () => backupSheet(), null,
         S.patients.some(x => !x.example) && (days == null || days >= 7)),
       row("sliders", "Configurações", tracks(p) ? "Registro do consumo ligado · sugestões" : "Só planejamento · sugestões", () => prefsSheet()),
-      row("book", "Fontes e metodologia", "Como o Nutri Prático calcula", () => scienceSheet(p)))));
+      row("book", "Fontes e metodologia", "Como o BRICEÑO calcula", () => scienceSheet(p)))));
 }
 // Necessidade energética: seção recolhível. Fechada mostra só o GET e o protocolo; aberta, o seletor de protocolo,
 // TMB, GET, IMC e a ação de usar como meta. As fórmulas ficam em scienceSheet.
@@ -3569,8 +3580,8 @@ function scienceSheet(p){
     h("div", null, h("div", {class: "k"}, "TMB"), h("div", {class: "v"}, tmb == null ? "—" : k0(tmb))),
     h("div", null, h("div", {class: "k"}, fl), h("div", {class: "v"}, fator == null ? "—" : nf2.format(fator))),
     h("div", null, h("div", {class: "k"}, "GET"), h("div", {class: "v acc"}, get == null ? "—" : k0(get))));
-  sheet("Como o Nutri Prático calcula", el => {
-    el.append(h("h2", null, "Como o Nutri Prático calcula"));
+  sheet("Como o BRICEÑO calcula", el => {
+    el.append(h("h2", null, "Como o BRICEÑO calcula"));
     if (r.ok){
       el.append(h("p", {class: "sh-sub"}, `Cálculo de ${firstName(p.name)}: ${fq.format(e.weight)} kg, ${fq.format(e.height)} cm, ${ageLabel(r.age)}.`),
         h("div", {class: "card-t"}, "FAO/OMS 1985"), resGrid(r.fao.tmb, r.fao.fa, "FA", r.child ? null : r.fao.get),
@@ -3585,7 +3596,7 @@ function scienceSheet(p){
     el.append(methodProse());
   });
 }
-function methodSheet(){ sheet("Como o Nutri Prático calcula", el => el.append(h("h2", null, "Como o Nutri Prático calcula"), methodProse())); }
+function methodSheet(){ sheet("Como o BRICEÑO calcula", el => el.append(h("h2", null, "Como o BRICEÑO calcula"), methodProse())); }
 function methodProse(){
   return h("div", {class: "prose"},
     h("h3", null, "Gasto energético"),
@@ -3608,7 +3619,7 @@ function methodProse(){
 
 /* ---------- Necessidade energética ----------
    Resumo primeiro (TMB, GET e protocolo escolhido); as equações ficam em "Fórmulas e cálculos". */
-// Limitações em uma frase, exibidas sob o seletor (o detalhe fica em "Como o Nutri Prático calcula").
+// Limitações em uma frase, exibidas sob o seletor (o detalhe fica em "Como o BRICEÑO calcula").
 const METHOD_NOTE = {
   dri: "Padrão. Estima o gasto total por idade, peso, altura e atividade. Feita para pessoas saudáveis; em sobrepeso, gestação ou doenças é menos precisa.",
   fao: "Taxa basal pelo peso (Schofield) × fator de atividade. Não usa a altura; os fatores descrevem grupos, não indivíduos.",
@@ -3697,7 +3708,7 @@ function backupSheet(){
       const done = () => { marked(); status.textContent = "Backup gerado. Guarde o arquivo em Arquivos, iCloud ou e-mail."; };
       try {
         const f = new File([blob], name, {type: "application/json"});
-        if (navigator.canShare && navigator.canShare({files: [f]})) { await navigator.share({files: [f], title: "Backup Nutri Prático"}); done(); return; }
+        if (navigator.canShare && navigator.canShare({files: [f]})) { await navigator.share({files: [f], title: "Backup BRICEÑO"}); done(); return; }
       } catch (e) { if (e && e.name === "AbortError") return; }
       try { const a = h("a", {href: URL.createObjectURL(blob), download: name}); document.body.append(a); a.click(); a.remove(); done(); }
       catch (e) { status.textContent = "Não foi possível gerar o arquivo neste navegador."; }
@@ -3722,7 +3733,7 @@ function backupSheet(){
     function offerRestore(text, label){
       let b; try { b = JSON.parse(String(text).trim()); } catch (e) {}
       const d = b && (b.data || (Array.isArray(b.patients) ? b : null));
-      if (!d || !Array.isArray(d.patients) || !d.prefs) { status.textContent = "Esse conteúdo não é um backup do Nutri Prático."; return; }
+      if (!d || !Array.isArray(d.patients) || !d.prefs) { status.textContent = "Esse conteúdo não é um backup do BRICEÑO."; return; }
       put(confirmBox, h("div", {class: "confirm", style: "flex-wrap:wrap"},
         h("span", {style: "flex:1 1 100%"}, `Substituir ${nPeople(S.patients.length)} deste aparelho por ${nPeople(d.patients.length)} ${label || (b.exported ? "do backup de " + new Date(b.exported).toLocaleDateString("pt-BR") : "do backup")}?`),
         h("button", {class: "btn ghost", type: "button", style: "flex:1", onclick: () => confirmBox.replaceChildren()}, "Cancelar"),
