@@ -746,3 +746,23 @@ Divergências intencionais da referência: sem subtítulos de página e sem a ab
 - A ainda é mais luminosa nos reflexos; aumentar mais derruba o contraste das legendas que alcançam a luz.
 - Chevrons de A não foram reproduzidos: sem eles, "Medicamentos" cabe ao lado da pastilha.
 - O traço vertical antes das legendas em A não foi reproduzido: inconsistente na própria referência.
+
+## 27. Home v18 — Precision & Elegance
+
+**Auditoria.** Medida em tela cheia com as áreas seguras reais (iPhone 13: 47 px no topo, 34 px na base), a v17 escondia 13 px da última linha sob a barra inferior; os testes anteriores não simulavam as áreas seguras e não pegaram o problema. Suplementos e Medicamentos ficavam mais altos que os pilares (132 × 124 px) por causa da legenda "Medicamentos cadastrados" em duas linhas.
+
+**Alterações (só `fonte/app.html`; dados, persistência e cálculos intactos).**
+- Cabeçalho sem a palavra BRICEÑO, sem o filete e sem a luz curva; ficam seletor, "+", saudação (hora local, atualiza a cada minuto e ao voltar ao app) e data, alinhados à margem de 16.
+- Seletor e "+" com 44 px de altura, centrados na mesma linha; "+" em cobre acetinado mais escuro, com aro e sombra contidos (contraste do símbolo de 4,0:1 a 5,6:1).
+- Dois grupos: pilares (2 × 2, linhas iguais, mínimo de 7,8rem) · linha de 1 px físico (escala por densidade de tela), cobre dessaturado com 34% de opacidade, alinhada à coluna de texto dos cartões, 16 px acima e abaixo · indicadores (2 × 2 compactos, os quatro com a mesma altura).
+- Pilares nunca mais baixos que os indicadores: com texto ampliado, se uma legenda quebra, os pilares acompanham (+8 px).
+- Suplementos e Medicamentos: "2 ativos" / "0 cadastrados" na mesma linha (pausados na legenda); sem hifenização.
+- GET: título curto fixo, legenda "Gasto energético"; VoiceOver lê "Gasto energético total, GET"; o Perfil passa a mostrar "Gasto energético total (GET)".
+- Exercício: "3 h/semana" (unidade encostada no número).
+- Emocional: ícone de rosto sorridente (traço 1,9, como os demais) no lugar da flor de lótus; raio com traço 1,9.
+- Barra inferior um pouco mais baixa (5/4 px de respiro, rótulo com entrelinha 1,2), área de toque das abas de 51 px.
+- Legendas um pouco mais claras (86%; vazias 92%) para manter 4,5:1 sobre os reflexos nos cartões compactos.
+
+**Verificações (Chromium/Playwright, áreas seguras simuladas).** Os oito cartões cabem sem rolar no iPhone 13/14 (folga de 26 px com dados, 21 px vazio), 12/13 mini (23), 16 Pro (44) e Pro Max (102). O SE e o texto ampliado rolam, e o último cartão fica inteiro acima da barra ao fim da rolagem. Nenhum texto passa da borda dos cartões (oito combinações de tela e texto). Os números ficam alinhados em cada par, inclusive com suplemento pausado, exceto 2 px nos pilares do SE com texto ampliado. Contraste no pior pixel ≥ 4,54:1 em 65 textos. Tempo até o quadro igual ou menor que o da v17. 27 testes de cálculo e e2e de navegação, módulos, saudação, painéis e áreas de toque sem erros.
+
+**Pendências.** Conferir no iPhone real (SF Pro, VoiceOver, vibração, linha de 1 px físico). Campo do nome da refeição com 40 px de altura. Decisão sobre o protocolo "Média".
