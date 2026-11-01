@@ -697,3 +697,52 @@ Divergências intencionais da referência: sem subtítulos de página e sem a ab
 **Barra**: divisória mais fina, aba ativa em cobre com traço curto; resposta ao toque (escala 0,94).
 **Toque**: cartões 0,98 + brilho 10% (160 ms); tudo desligado com "Reduzir movimento". Resposta tátil: vibração de 6 ms no Android; no iPhone, interruptor nativo invisível (comportamento do Safari a partir do iOS 18) — não verificável fora do aparelho.
 **Medições** (Playwright): iPhone 13 termina em 683 px (barra 712); contraste mínimo 5,3:1 medido sobre o fundo renderizado (35 textos); sem cortes nem estouros em 13, SE, Pro Max e texto ampliado.
+
+## 26. Home v17 — Digital Jewelry (fidelidade ao conceito original)
+
+**Referência.** Imagem A = conceito aprovado (cartões-joia com reflexos curvos, aros luminosos, ícones em pastilha). Imagem B = Home v16 (captura real).
+
+**Auditoria A × B (o que faltava).**
+1. Volume: na v16 a luz era só um gradiente radial; em A há uma lâmina curva de luz com estrias, brilho e ponto quente.
+2. Aros: em A o contorno inteiro acende na cor da gema; na v16 era quase invisível.
+3. Saturação: em A o corpo do cartão tem cor; na v16 era quase preto.
+4. Ícones: em A são pequenas peças (pastilha tonal com aro); na v16, símbolo solto.
+5. Cabeçalho: em A a marca é centralizada com filete curto e há uma luz curva atrás do cabeçalho.
+6. "+" em A é quadrado arredondado de cobre polido; Emocional usa lótus; aba ativa tem filete sob o rótulo.
+
+**Sistema (fonte/app.html).**
+- `.hc` = material em 6 camadas: base cromática (`--g`, `--gd`), luz ambiente (alto à esquerda `--lt`, canto inferior direito `--lb`), reflexo vetorial (`.hc-fx`), microtextura (estrias da lâmina), aro (`--ra`, `--rt`, `--rb`) e conteúdo.
+- `JEWEL(cls)`: gera, uma vez por material, um SVG estático (viewBox 180×120, `xMaxYMax slice`, sem filtros) e o clona a cada desenho. O SVG tem:
+  - corpo translúcido da lâmina;
+  - dois brilhos largos;
+  - estrias em três grupos de intensidade;
+  - fio de luz nítido e ponto quente.
+- Metais (cobre, titânio, bronze): 14–15 estrias densas.
+- Gemas (ametista, rubi, safiras, peridoto): 8–9 estrias espaçadas e um segundo reflexo fraco.
+- Cada material tem curvatura, altura e posição do ponto quente próprias.
+- Proteção de leitura:
+  - máscara que atenua o reflexo na metade inferior esquerda (número e legenda);
+  - halo na cor-base atrás de valor e legenda.
+- Ícones: pastilha de 30 px (28 px em telas de até 380 px), raio 9, aro aceso no alto, sombra de contato mínima.
+- Grade:
+  - 11 px entre linhas e colunas (como em A), raio 18, padding 14 (12 em telas de até 380 px);
+  - pilares com número de 28 px, ancorados na base;
+  - níveis 2 e 3 com número de 22 px, alinhados pelo topo.
+- Títulos sempre inteiros, nunca truncados:
+  - se um título não cabe ao lado da pastilha (texto ampliado, 320 px), todos os cartões passam a ícone sobre o título (`.home.stack`);
+  - "Gasto energético" aparece por extenso quando cabe; senão "GET", com a legenda "Gasto energético" (com o título completo, a legenda é "GET estimado").
+- Suplementos e Medicamentos vazios: "0" e a legenda "<Módulo> cadastrados" (abrem o cadastro).
+- Cabeçalho: BRICEÑO centralizado com filete de 28 px; luz curva atrás da metade direita, com opacidade de .7; "+" em cobre polido, 44 px, raio 13.
+
+**Verificações executadas (Chromium/Playwright, emulação de iPhone).**
+- Encaixe: no iPhone 13 (app instalado), a Home termina em 691 px, antes da barra (712). Sem estouros nem cortes em 320, 375, 390 e 430 px, nem com texto ampliado (21 e 23 px).
+- Contraste: pior pixel do fundo real sob cada texto. O mínimo é 4,79:1 com dados e 4,52:1 no estado vazio; não há falhas.
+- Linhas de base: alinhadas por par em 390, 375 e 320 px, e em 390 e 375 px com texto ampliado. Em 320 px com texto ampliado ficam diferenças de 2 px (pilares) e 21 px (Suplementos/Medicamentos, título hifenizado em duas linhas).
+- Desempenho: abrir a Home cabe em um quadro (mediana de 14 ms contra 18 ms da v16, ambos presos ao quadro de 16 ms). O SVG soma 347 nós; sem animação contínua.
+- Regressão: 27 testes unitários, e2e, navegação (inclui cartões vazios → cadastro), módulos, saudação, auditoria de telas e folhas, e alvos de toque. GET continua 2.730.
+
+**Pendências.**
+- Medir em iPhone real: fonte SF Pro, VoiceOver, vibração, fluidez e memória.
+- A ainda é mais luminosa nos reflexos; aumentar mais derruba o contraste das legendas que alcançam a luz.
+- Chevrons de A não foram reproduzidos: sem eles, "Medicamentos" cabe ao lado da pastilha.
+- O traço vertical antes das legendas em A não foi reproduzido: inconsistente na própria referência.
