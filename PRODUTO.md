@@ -787,3 +787,39 @@ Divergências intencionais da referência: sem subtítulos de página e sem a ab
 - 27 testes de cálculo e e2e de navegação, módulos, saudação, painéis e áreas de toque sem erros.
 
 **Pendências.** Conferir no iPhone real (SF Pro, VoiceOver, vibração, linha de 1 px físico). Campo do nome da refeição com 40 px de altura. Decisão sobre o protocolo "Média".
+
+## 29. Home v20 — Ultimate Precision
+
+**Alterações (só `fonte/app.html`; dados, persistência, cálculos e destinos de navegação intactos).**
+- Ordem do grupo B: Gasto diário, Hidratação / Suplementos, Medicamentos.
+- Gasto diário: legenda "Estimativa energética" (cálculo, não medida). O VoiceOver lê "Estimativa do gasto energético total, GET", e o toque abre o Perfil em "Gasto energético total (GET)" com protocolo e fórmulas.
+- Espaço vertical adaptativo (`spread`):
+  - A referência é a área entre o topo do conteúdo e a barra fixa, já descontadas as áreas seguras.
+  - A sobra até um respiro de 24 px acima da barra é distribuída proporcionalmente, com limites: pilares +20, indicadores +10, entre linhas +4, divisória +10 acima e abaixo, cabeçalho +8.
+  - Acima da soma dos limites, o restante fica no respiro.
+  - Sem sobra, rolagem natural, e a margem mínima antes da barra é 16 px.
+  - Recalcula com mudança de largura, altura, tamanho de texto e troca de membro.
+  - A medição desconta o deslizamento de 4 px da animação de entrada.
+- Signature divider: fio de 1 px físico em grafite quente, com as pontas esmaecidas, e um segmento cobre central de 44 px que ecoa o filete da aba ativa. Comparado lado a lado com a linha simples, foi escolhido.
+- Materiais equilibrados por medição (L\*, croma, área clara):
+  - Esmeralda e oliva com reflexo e base levemente mais contidos.
+  - Bronze com ponto quente menos branco.
+  - Ametista levemente dessaturada.
+  - Safira da meia-noite com luz de canto um pouco maior.
+  - L\* médio de 17,0–21,2 para 17,1–19,6; p95 de 35,8–43,6 para 37,1–40,5; área clara de 2,1–4,5% para 2,4–3,4%. A média geral caiu (18,85 → 18,4).
+- Valor e unidade em texto corrido: espaço de 4 px, unidade por período encostada ("3 h/semana") com ponto de quebra. Se a unidade descer de linha, começa na coluna do número (antes ficava 4 px à esquerda). O valor é um bloco em linha, de modo que valores em duas linhas ("Mais ou menos") alinham pela última linha.
+- O ajuste de títulos também observa a altura do título, para reagir a mudanças de tamanho de texto quando a altura do cartão está fixada pela distribuição.
+
+**Verificações (Chromium/Playwright, áreas seguras simuladas).**
+- Respiro de 24 px exatos acima da barra no iPhone 13/14 (com dados e vazio), mini e 16 Pro; 33 px no Pro Max (limites atingidos).
+- Nenhuma rolagem à toa quando cabe. SE e texto ampliado rolam, com o último cartão inteiro acima da barra.
+- Altura de 844 → 760 → 900 recalcula, e a troca de membro mantém o respiro.
+- Nome extenso e valores longos ("15 h 30/semana", "Mais ou menos", "9 ativos / 3 pausados") sem cortes.
+- 40 combinações de tela e texto sem palavra partida, estouro ou indicador mais alto que pilar.
+- Baselines exatas em todos os pares lado a lado.
+- Contraste no pior pixel ≥ 4,5:1 em 65 textos.
+- Reduce Motion sem transição nem animação.
+- Tempo até o quadro igual ou menor que o da v19.
+- 27 testes de cálculo e e2e de navegação, módulos, saudação, painéis e áreas de toque sem erros.
+
+**Pendências.** Conferir no iPhone real (SF Pro, VoiceOver, vibração, divisória em 1 px físico). Campo do nome da refeição com 40 px de altura. Decisão sobre o protocolo "Média".

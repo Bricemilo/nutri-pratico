@@ -12,7 +12,7 @@
   --carb:#E58D4D; --prot:#AE625C; --prot-ink:#CB8078; --fat:#E9C56F; --fib:#86AB91; --ring:#CDC3B9; --food:#E08C4E; --move:#5FC4B8; --sleep:#9C93EE; --mood:#E58BB0; --water:#62B8D6; --energy:#D9B872; --supp:#AFC274; --meds:#8EAAD8; --danger:#FF7D74; --danger-soft:#33191A; --ok:#8FCB9B;
   --hero-1:#2E1D11; --hero-2:#181513; --scrim:rgba(0,0,0,.62); --shadow:0 14px 36px rgba(0,0,0,.5);
   --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Inter","Helvetica Neue","Segoe UI",Roboto,Arial,sans-serif;
-  --r:18px; --tabbar:64px;
+  --r:18px; --tabbar:62px;
   /* Design system: espaçamento em base 4, raios e escala tipográfica (em rem: acompanha o tamanho de texto do iPhone) */
   --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px; --s6:24px; --s8:32px;
   --r-s:12px; --r-m:16px; --r-l:20px; --r-xl:24px;
@@ -30,6 +30,7 @@ button{cursor:pointer;border:0;background:none;padding:0;text-align:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .num{font-variant-numeric:tabular-nums}
 .app{max-width:600px;margin:0 auto;padding-bottom:calc(var(--tabbar) + 28px + env(safe-area-inset-bottom,0px))}
+.app:has(> .home){padding-bottom:calc(var(--tabbar) + 16px)}
 .view{animation:in .2s ease-out}
 @keyframes in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -1220,16 +1221,18 @@ html.big-text .sc-m > span + span{border-left:0;border-top:1px solid var(--line)
    Escala de espaço: 4 · 8 · 11 · 16 · 20. Margem 16 · entre cartões 11 · padding 14 · raio 18 · pastilha 30.
    Cabeçalho: seletor + "+" (barra fixa) · saudação e data, sem marca nem ornamento — os cartões são as joias, o fundo é a vitrine.
    Grupo A (pilares): 2 × 2, linhas de altura igual (grid-auto-rows 1fr) e mínimo de 7rem (cresce com o texto do sistema).
-   Linha de 1 px físico entre os grupos, grafite quente, de margem a margem da grade, 20 acima e 20 abaixo.
+   Signature divider de 1 px físico entre os grupos (grafite quente, pontas esmaecidas, segmento cobre central), 20 acima e abaixo + crescimento adaptativo.
    Grupo B (indicadores): 2 × 2 compactos, os quatro com a mesma altura; número logo abaixo do título.
    Camadas de cada cartão (.hc): 1 base cromática profunda · 2 luz ambiente · 3 reflexo curvo vetorial (.hc-fx, SVG de JEWEL)
    · 4 microtextura (estrias finas da lâmina) · 5 aro de 1 px que acende onde a luz incide · 6 conteúdo sobre a zona escura. */
 .home{--hc-gap:11px;--hc-pad:14px;--hc-r:18px}
-.hi-h{margin:2px 0 16px}
+.hi-h{margin:2px 0 calc(16px + var(--xh,0px))}
 .hi-h h1{margin:0;font-size:1.647rem;font-weight:660;letter-spacing:-.028em;line-height:1.12}
 .hi-h .today{margin:4px 0 0;font-size:var(--t-sm);color:var(--muted);font-weight:500}
-.hgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:1fr;gap:var(--hc-gap)}
-.hdiv{height:1px;margin:20px 0;background:rgba(150,136,124,.42)}
+.hgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:1fr;column-gap:var(--hc-gap);row-gap:calc(var(--hc-gap) + var(--xg,0px))}
+/* Signature divider: fio grafite quente que esmaece nas pontas + segmento cobre central de 44 (ecoa o filete da aba ativa), tudo em 1 px físico */
+.hdiv{position:relative;height:1px;margin:calc(20px + var(--xd,0px)) 0;background:linear-gradient(90deg,rgba(150,136,124,0),rgba(150,136,124,.46) 16%,rgba(150,136,124,.46) 84%,rgba(150,136,124,0))}
+.hdiv::after{content:"";position:absolute;left:50%;top:0;width:44px;height:100%;margin-left:-22px;background:linear-gradient(90deg,rgba(222,140,80,0),rgba(226,154,102,.9),rgba(222,140,80,0))}
 @media (min-resolution:2dppx){.hdiv{transform:scaleY(.5)}}
 @media (min-resolution:3dppx){.hdiv{transform:scaleY(.3334)}}
 .hgrid.odd .hc:last-child{grid-column:1 / -1}
@@ -1252,13 +1255,13 @@ html.big-text .sc-m > span + span{border-left:0;border-top:1px solid var(--line)
 .hc-fx svg{display:block;width:100%;height:100%}
 /* oito materiais: cor (--g), base (--gd), luz de canto (--lb), luz do alto (--lt), direção e força do aro (--ra/--rt/--rb); o reflexo vem de JEWEL */
 .hc.food  {--g:#DE8A4A;--gd:#1E1108;--lb:34%;--lt:26%;--ra:150deg;--rt:56%;--rb:96%}  /* cobre acetinado */
-.hc.move  {--g:#3FBFA0;--gd:#07201A;--lb:30%;--lt:18%;--ra:120deg;--rt:42%;--rb:90%}  /* titânio esmeralda */
-.hc.sleep {--g:#A283F2;--gd:#170F2C;--lb:34%;--lt:26%;--ra:145deg;--rt:52%;--rb:88%}  /* ametista profunda */
+.hc.move  {--g:#3FBFA0;--gd:#061B16;--lb:26%;--lt:15%;--ra:120deg;--rt:42%;--rb:90%}  /* titânio esmeralda */
+.hc.sleep {--g:#9F86EA;--gd:#170F2C;--lb:34%;--lt:26%;--ra:145deg;--rt:52%;--rb:88%}  /* ametista profunda */
 .hc.wb    {--g:#E66F8E;--gd:#250D17;--lb:34%;--lt:24%;--ra:140deg;--rt:52%;--rb:94%}  /* rubi rosado */
 .hc.water {--g:#35A9E0;--gd:#06172A;--lb:34%;--lt:20%;--ra:130deg;--rt:46%;--rb:98%}  /* safira azul */
 .hc.energy{--g:#D7B378;--gd:#19130B;--lb:28%;--lt:22%;--ra:155deg;--rt:58%;--rb:88%}  /* bronze champanhe */
-.hc.supp  {--g:#A6C452;--gd:#121A08;--lb:30%;--lt:22%;--ra:150deg;--rt:56%;--rb:84%}  /* peridoto oliva */
-.hc.meds  {--g:#6F98E6;--gd:#0B1430;--lb:32%;--lt:18%;--ra:135deg;--rt:42%;--rb:90%}  /* safira da meia-noite */
+.hc.supp  {--g:#A6C452;--gd:#0F1708;--lb:25%;--lt:22%;--ra:150deg;--rt:56%;--rb:84%}  /* peridoto oliva */
+.hc.meds  {--g:#6F98E6;--gd:#0B1430;--lb:36%;--lt:18%;--ra:135deg;--rt:42%;--rb:90%}  /* safira da meia-noite */
 /* ícone: pequena peça — pastilha tonal elevada, aro fino aceso no alto, sombra de contato mínima, símbolo nítido */
 .hc-h{display:flex;align-items:center;gap:9px;min-width:0}
 .hc-i{display:grid;place-items:center;flex:none;width:30px;height:30px;border-radius:9px;color:color-mix(in srgb,var(--g) 78%,#fff);
@@ -1277,7 +1280,10 @@ html.big-text .sc-m > span + span{border-left:0;border-top:1px solid var(--line)
 .hc-s,.hc-v,.hc-t{-webkit-hyphens:manual;hyphens:manual}
 .home.one .hgrid{grid-template-columns:minmax(0,1fr)}
 .home.one .hc-s,.home.one .hc-v b.txt,.home.one .hc-t{overflow-wrap:anywhere}
-.hc-v{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:4px;padding-top:12px;min-width:0;max-width:100%}
+/* valor e unidade em texto corrido, na mesma linha de base: espaço normal antes da unidade ("875 kcal"); unidade por período encostada ("3 h/semana"),
+   com ponto de quebra sem espaço — se a unidade descer de linha, começa exatamente na coluna do número */
+.hc-v{display:block;font-size:var(--t-sm);line-height:1.08;padding-top:12px;min-width:0;max-width:100%}
+.hc-v b{display:inline-block;max-width:100%;vertical-align:baseline}
 .hc-v b{font-weight:580;letter-spacing:-.025em;line-height:1.08;color:#F8F3ED;font-variant-numeric:tabular-nums;white-space:nowrap}
 .hc-v small{font-size:var(--t-sm);font-weight:500;letter-spacing:-.005em;color:rgba(244,238,232,.7);white-space:nowrap}
 .hc-s{margin-top:4px;font-size:var(--t-cap);color:rgba(244,238,232,.86);line-height:1.3;min-height:1.3em}
@@ -1285,18 +1291,17 @@ html.big-text .sc-m > span + span{border-left:0;border-top:1px solid var(--line)
 /* nível 1 · pilares: número 28, valor e legenda ancorados na base (se um valor em texto quebrar, a última linha segue alinhada com o vizinho)
    nível 2 · indicadores: padding vertical 12, número 22 logo abaixo do título (alinhado no par mesmo se uma legenda quebrar em duas linhas);
    na linha de Suplementos e Medicamentos, sem legenda nos dois, o número fica centrado no espaço abaixo do título (nem colado ao topo, nem isolado no rodapé) */
-.hc.l1{min-height:max(7rem,var(--l1-min,0px))}
+.hc.l1{min-height:max(7rem,var(--l1-min,0px),var(--ha,0px))}
 .hc.l1 .hc-v{padding-top:8px}
 .hc.l2{padding-top:12px;padding-bottom:12px}
 .hc .hc-v{margin-top:auto}
 .hc.l1 .hc-v b{font-size:1.647rem}
 .hc.l1 .hc-v b.long{font-size:1.294rem;white-space:normal;line-height:1.15}
-.hc.l2 .hc-v{padding-top:8px;margin-top:0}
+.hc.l2 .hc-v{padding-top:calc(8px + var(--xb,0px));margin-top:0}
 .hg-b:not(:has(> .hc:nth-child(n+3) .hc-s:not(:empty))) > .hc:nth-child(n+3) .hc-v{margin-block:auto}
 .hc.l2 .hc-v b{font-size:1.294rem}
 .hc.l2 .hc-s{margin-top:2px}
 .hc.l2 .hc-s:empty{display:none}
-.hc-v small.per{margin-left:-4px}
 .hc.empty .hc-s{color:rgba(244,238,232,.92)}
 /* proteção de leitura: quando um texto longo alcança o reflexo, um halo na cor-base do cartão escurece só o entorno das letras */
 .hc-v,.hc-s{text-shadow:0 0 2px var(--gd),0 0 6px var(--gd),0 0 12px var(--gd),0 0 18px color-mix(in srgb,var(--gd) 80%,transparent)}
@@ -1320,7 +1325,7 @@ html.big-text .hc.l1 .hc-v b.txt{font-size:1.294rem;line-height:1.15}
 .tab:active{transform:scale(.94)}
 .tab.on{color:#EEA36A}
 .tab.on::after{content:"";position:absolute;bottom:-3px;left:50%;width:34px;height:2px;margin-left:-17px;border-radius:2px;background:linear-gradient(90deg,rgba(222,140,80,0),#E39A60,rgba(222,140,80,0))}
-@media (max-width:380px){.home{--hc-gap:9px;--hc-pad:12px}.hc.l1{min-height:max(6.5rem,var(--l1-min,0px))}.hc.l2{padding-top:11px;padding-bottom:11px}.hc-i{width:28px;height:28px;border-radius:8px}.hc-h{gap:8px}.hc.l1 .hc-v b{font-size:1.412rem}.hc.l1 .hc-v b.long{font-size:1.118rem}.hc.l1 .hc-v b.txt:not(.long){font-size:1.294rem}}
+@media (max-width:380px){.home{--hc-gap:9px;--hc-pad:12px}.hc.l1{min-height:max(6.5rem,var(--l1-min,0px),var(--ha,0px))}.hc.l2{padding-top:11px;padding-bottom:11px}.hc-i{width:28px;height:28px;border-radius:8px}.hc-h{gap:8px}.hc.l1 .hc-v b{font-size:1.412rem}.hc.l1 .hc-v b.long{font-size:1.118rem}.hc.l1 .hc-v b.txt:not(.long){font-size:1.294rem}}
 @media (prefers-reduced-motion:reduce){.hc,.tab{transition:none}.hc:active,.tab:active{transform:none}}
 </style>
 
@@ -1796,13 +1801,13 @@ let homeKey = "";   // período do dia + data em que a Home foi desenhada; muda 
 const JEWEL = (() => {
   const M = {
     food:  {c: "#E8904C", hi: "#FFE3C4", sx: 52, ey: 12, c1: [112, 126], c2: [148, 66], n: 15, ox: 2.0, oy: 1.6, pk: .74, fill: 0.47, glow: 0.41},
-    move:  {c: "#3CCFAA", hi: "#E2FFF6", sx: 48, ey: 34, c1: [110, 124], c2: [152, 88], n: 14, ox: 1.8, oy: 1.9, pk: .78, fill: 0.39, glow: 0.38},
-    sleep: {c: "#A98BFF", hi: "#EEE6FF", sx: 58, ey: 26, c1: [118, 126], c2: [152, 78], n: 8, ox: 3.4, oy: 2.8, pk: .76, fill: 0.47, glow: 0.43, sec: .5},
+    move:  {c: "#3CCFAA", hi: "#E2FFF6", sx: 48, ey: 34, c1: [110, 124], c2: [152, 88], n: 14, ox: 1.8, oy: 1.9, pk: .78, fill: 0.34, glow: 0.34},
+    sleep: {c: "#A48EF2", hi: "#EEE6FF", sx: 58, ey: 26, c1: [118, 126], c2: [152, 78], n: 8, ox: 3.4, oy: 2.8, pk: .76, fill: 0.47, glow: 0.43, sec: .5},
     wb:    {c: "#F07595", hi: "#FFE4EA", sx: 66, ey: 18, c1: [122, 124], c2: [150, 64], n: 8, ox: 3.2, oy: 3.0, pk: .72, fill: 0.47, glow: 0.43, sec: .45},
     water: {c: "#38B4F0", hi: "#E2F6FF", sx: 56, ey: 34, c1: [116, 126], c2: [156, 84], n: 9, ox: 2.8, oy: 2.4, pk: .8, fill: 0.44, glow: 0.49, sec: .55},
-    energy:{c: "#DDBB7E", hi: "#FFF1D6", sx: 80, ey: 8, c1: [130, 124], c2: [154, 56], n: 15, ox: 1.9, oy: 1.4, pk: .7, fill: 0.42, glow: 0.35},
-    supp:  {c: "#AFD054", hi: "#F3FFD6", sx: 44, ey: 44, c1: [104, 124], c2: [148, 92], n: 8, ox: 3.2, oy: 2.6, pk: .78, fill: 0.42, glow: 0.41, sec: .4},
-    meds:  {c: "#6E9DF4", hi: "#E3EEFF", sx: 54, ey: 50, c1: [116, 126], c2: [158, 98], n: 8, ox: 3.2, oy: 2.4, pk: .82, fill: 0.44, glow: 0.46, sec: .5}
+    energy:{c: "#DDBB7E", hi: "#F4E4C4", sx: 80, ey: 8, c1: [130, 124], c2: [154, 56], n: 15, ox: 1.9, oy: 1.4, pk: .7, fill: 0.42, glow: 0.31},
+    supp:  {c: "#AFD054", hi: "#F3FFD6", sx: 44, ey: 44, c1: [104, 124], c2: [148, 92], n: 8, ox: 3.2, oy: 2.6, pk: .78, fill: 0.36, glow: 0.35, sec: .32},
+    meds:  {c: "#6E9DF4", hi: "#E3EEFF", sx: 54, ey: 50, c1: [116, 126], c2: [158, 98], n: 8, ox: 3.2, oy: 2.4, pk: .82, fill: 0.47, glow: 0.46, sec: .5}
   };
   const f = v => +v.toFixed(1);
   const curve = (o, dx, dy) => [[o.sx + dx, 126 + dy], [o.c1[0] + dx, o.c1[1] + dy], [o.c2[0] + dx, o.c2[1] + dy], [186 + dx, o.ey + dy]];
@@ -1857,7 +1862,7 @@ function renderHome(p){
         "aria-label": o.aria || `${o.title}: ${has ? `${o.value}${o.unit ? " " + o.unit.replace("/", " por ").trim() : ""}${o.sub ? `. ${o.sub}` : ""}` : `${o.empty[0]}. ${o.empty[1]}`}.`},
       h("span", {class: "hc-fx", "aria-hidden": "true"}, JEWEL(o.cls)),
       h("span", {class: "hc-h"}, h("span", {class: "hc-i", html: ICON[o.icon]}), h("span", {class: "hc-t"}, o.title)),
-      h("span", {class: "hc-v"}, has ? [h("b", {class: [String(o.value).length > 9 ? "long" : "", /^\d/.test(o.value) ? "" : "txt"].join(" ").trim() || null}, o.value), o.unit ? h("small", {class: o.unit[0] === "/" ? "per" : null}, o.unit) : null] : h("b", {class: "nr"}, o.empty[0])),
+      h("span", {class: "hc-v"}, has ? [h("b", {class: [String(o.value).length > 9 ? "long" : "", /^\d/.test(o.value) ? "" : "txt"].join(" ").trim() || null}, o.value), o.unit ? [o.unit[0] === "/" ? h("wbr") : " ", h("small", null, o.unit)] : null] : h("b", {class: "nr"}, o.empty[0])),
       h("span", {class: "hc-s"}, has ? o.sub || "" : o.empty[1])); };
   const openMeds = (c, cat) => () => c.total ? go({tab: "saude", hsub: "resumo", hfocus: "meds"}) : medSheet(p, null, cat);
   // suplementos e medicamentos: número e palavra na mesma linha — "2 ativos" (pausados na legenda, se houver) ou, sem cadastro, "0 cadastrados" (o cartão abre o cadastro)
@@ -1874,12 +1879,12 @@ function renderHome(p){
     adult ? card({lv: "l1", cls: "wb", icon: "smile", title: "Emocional", value: lastMood ? MOODS[lastMood.mood - 1] : null, sub: lastMood ? `${relDay(lastMood.date)}${lastMood.time ? ", " + lastMood.time : ""}` : "",
       fn: () => lastMood ? go({tab: "saude", hsub: "bem-estar"}) : moodSheet(p), empty: reg}) : null);
   const extra = h("div", {class: "hgrid hg-b"},
+    // "Gasto diário": nome intuitivo; "Estimativa energética" deixa claro que é cálculo, não medida; ao tocar, o Perfil abre "Gasto energético total (GET)" com protocolo e fórmulas
+    card({lv: "l2", cls: "energy", icon: "bolt", title: "Gasto diário", value: r.ok && r.get ? k0(r.get) : null, unit: "kcal/dia", sub: "Estimativa energética",
+      fn: () => r.ok ? go({tab: "perfil", eopen: true}) : bodySheet(p), empty: [r.ok ? "Só taxa basal" : "Faltam dados", r.ok ? "Abaixo de 3 anos" : "Informe peso e altura"],
+      aria: r.ok && r.get ? `Gasto diário: ${k0(r.get)} kcal por dia. Estimativa do gasto energético total, GET.` : `Gasto diário, gasto energético total: ${r.ok ? "só taxa basal, abaixo de 3 anos" : "faltam dados. Informe peso e altura"}.`}),
     card({lv: "l2", cls: "water", icon: "drop", title: "Hidratação", value: w.ml ? fmtL(w.ml) : null, unit: "L/dia", sub: w.src === "manual" ? "Definida por você" : "Recomendação diária",
       fn: () => waterSheet(p), empty: ["Não definida", "Toque para definir"]}),
-    // "Gasto diário": nome intuitivo; a sigla GET, o protocolo e as fórmulas ficam no Perfil (Gasto energético total (GET))
-    card({lv: "l2", cls: "energy", icon: "bolt", title: "Gasto diário", value: r.ok && r.get ? k0(r.get) : null, unit: "kcal/dia", sub: "Gasto energético total",
-      fn: () => r.ok ? go({tab: "perfil", eopen: true}) : bodySheet(p), empty: [r.ok ? "Só taxa basal" : "Faltam dados", r.ok ? "Abaixo de 3 anos" : "Informe peso e altura"],
-      aria: r.ok && r.get ? `Gasto diário: ${k0(r.get)} kcal por dia. Gasto energético total, GET.` : `Gasto diário, gasto energético total: ${r.ok ? "só taxa basal, abaixo de 3 anos" : "faltam dados. Informe peso e altura"}.`}),
     careCard("supp", "pill", "Suplementos", sup, "suplemento"), careCard("meds", "capsule", "Medicamentos", med, "medicamento"));
   put(app, h("div", {class: "view home"}, topBar(quickBtn(p, "hoje")),
     h("header", {class: "hi-h"}, h("h1", null, `${greetOf()}, ${firstName(p.name)}`), h("div", {class: "today"}, dayTxt)),
@@ -1891,14 +1896,35 @@ function renderHome(p){
 const over = t => t.scrollWidth > t.clientWidth + 0.5;
 let fitKey = "";
 function fitTitles(force){ const home = document.querySelector(".home"), c0 = home && home.querySelector(".hc"); if (!c0) return;
-  const key = c0.getBoundingClientRect().width.toFixed(1) + "|" + getComputedStyle(document.documentElement).fontSize; if (!force && key === fitKey) return; fitKey = key;
+  const key = c0.getBoundingClientRect().width.toFixed(1) + "|" + getComputedStyle(document.documentElement).fontSize + "|" + innerHeight; if (!force && key === fitKey) return; fitKey = key;
   home.classList.remove("stack", "one"); const fitT = () => { home.classList.remove("stack"); if ([...home.querySelectorAll(".hc-t")].some(over)) home.classList.add("stack"); };
   fitT(); if ([...home.querySelectorAll(".hc-t,.hc-v,.hc-s")].some(over)) { home.classList.add("one"); fitT(); }
   // hierarquia: com texto ampliado, uma legenda em duas linhas pode deixar os indicadores mais altos que os pilares; os pilares acompanham (+8)
   home.style.removeProperty("--l1-min"); const a = home.querySelector(".hg-a .hc"), b = home.querySelector(".hg-b .hc");
-  if (a && b && b.offsetHeight + 8 > a.offsetHeight) home.style.setProperty("--l1-min", b.offsetHeight + 8 + "px"); }
+  if (a && b && b.offsetHeight + 8 > a.offsetHeight) home.style.setProperty("--l1-min", b.offsetHeight + 8 + "px");
+  spread(home); }
+// Espaço vertical adaptativo. Referência: a área entre o topo do conteúdo e a barra inferior fixa (já descontadas as áreas seguras).
+// Com tudo no tamanho mínimo, mede-se a sobra até um respiro de 24 acima da barra e distribui-se proporcionalmente, com limite por intervalo:
+// pilares até +20 cada · indicadores até +10 · entre linhas até +4 · divisória até +10 acima e abaixo · cabeçalho até +8.
+// Passou da soma dos limites, o restante fica no respiro inferior (nada cresce sem limite). Sem sobra (tela menor, texto ampliado): rolagem natural.
+const GROW = {a: 20, b: 10, g: 4, d: 10, h: 8};
+function spread(home){ const st = home.style; for (const k of ["--ha", "--xb", "--xg", "--xd", "--xh"]) st.removeProperty(k);
+  const tb = document.getElementById("tabbar"), cards = [...home.querySelectorAll(".hc")]; if (!tb || !cards.length || document.body.classList.contains("typing")) return;
+  // a entrada da tela desliza 4 px (animação "in"): mede-se a posição final, descontando o deslocamento do momento
+  const shift = () => { const t = getComputedStyle(home).transform; return t && t !== "none" ? new DOMMatrixReadOnly(t).m42 : 0; };
+  const room = () => tb.getBoundingClientRect().top - 24 - (cards[cards.length - 1].getBoundingClientRect().bottom - shift() + scrollY);
+  const free = room(); if (free < 2) return;
+  const rows = sel => new Set([...home.querySelectorAll(sel)].map(c => Math.round(c.getBoundingClientRect().top))).size, ra = rows(".hg-a .hc"), rb = rows(".hg-b .hc");
+  const cap = ra * GROW.a + rb * GROW.b + (ra + rb - 2) * GROW.g + 2 * GROW.d + GROW.h, h0 = home.querySelector(".hg-a .hc").getBoundingClientRect().height;
+  const apply = k => { const px = v => (v * k).toFixed(2) + "px"; st.setProperty("--ha", (h0 + GROW.a * k).toFixed(2) + "px");
+    st.setProperty("--xb", px(GROW.b)); st.setProperty("--xg", px(GROW.g)); st.setProperty("--xd", px(GROW.d)); st.setProperty("--xh", px(GROW.h)); };
+  // segunda medição: o mínimo dos pilares e os arredondamentos de grade podem absorver parte do acréscimo; corrige a proporção uma vez
+  let k = Math.min(1, free / cap); apply(k); const got = free - room();
+  if (k < 1 && got > 1 && free - got > 1) apply(Math.min(1, k * free / got)); }
+window.addEventListener("resize", () => fitTitles());
 const fitRO = typeof ResizeObserver === "function" ? new ResizeObserver(() => fitTitles()) : null;
-function fitTitlesNow(){ fitKey = ""; if (fitRO) { fitRO.disconnect(); const c0 = document.querySelector(".home .hc"); if (c0) fitRO.observe(c0); } fitTitles(true); }
+// observa a largura do cartão (tela, rotação) e a altura do título (muda com o tamanho do texto, mesmo quando a altura do cartão está fixada pela distribuição)
+function fitTitlesNow(){ fitKey = ""; if (fitRO) { fitRO.disconnect(); for (const e of [document.querySelector(".home .hc"), document.querySelector(".home .hc-t")]) if (e) fitRO.observe(e); } fitTitles(true); }
 // volta ao app ou virada de período/dia: a Home é redesenhada (só se nada estiver aberto por cima)
 function refreshHome(){ if (view.tab === "hoje" && active() && homeKey !== greetOf() + today() && !document.querySelector(".scrim")) render(); }
 document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshHome(); });
