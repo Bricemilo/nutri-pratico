@@ -766,3 +766,24 @@ Divergências intencionais da referência: sem subtítulos de página e sem a ab
 **Verificações (Chromium/Playwright, áreas seguras simuladas).** Os oito cartões cabem sem rolar no iPhone 13/14 (folga de 26 px com dados, 21 px vazio), 12/13 mini (23), 16 Pro (44) e Pro Max (102). O SE e o texto ampliado rolam, e o último cartão fica inteiro acima da barra ao fim da rolagem. Nenhum texto passa da borda dos cartões (oito combinações de tela e texto). Os números ficam alinhados em cada par, inclusive com suplemento pausado, exceto 2 px nos pilares do SE com texto ampliado. Contraste no pior pixel ≥ 4,54:1 em 65 textos. Tempo até o quadro igual ou menor que o da v17. 27 testes de cálculo e e2e de navegação, módulos, saudação, painéis e áreas de toque sem erros.
 
 **Pendências.** Conferir no iPhone real (SF Pro, VoiceOver, vibração, linha de 1 px físico). Campo do nome da refeição com 40 px de altura. Decisão sobre o protocolo "Média".
+
+## 28. Home v19 — Balanced Luxury
+
+**Alterações (só `fonte/app.html`; dados, persistência e cálculos intactos).**
+- Pilares 10% mais baixos: mínimo de 7rem (antes 7,8rem) e 8 px entre título e número; 133 → 120 px no iPhone 13 e 124 → 111 px nas telas de 375.
+- Indicadores: 8 px entre título e número; 109 → 107 px. Os quatro têm a mesma altura e são sempre mais baixos ou iguais aos pilares.
+- Suplementos e Medicamentos sem legenda: o número fica centrado no espaço abaixo do título.
+- Divisória: 1 px físico em grafite quente (42% de opacidade), de margem a margem da grade, 20 px acima e abaixo, sem detalhe central.
+- "GET" → "Gasto diário" (kcal/dia) com a legenda "Gasto energético total". O VoiceOver lê também "GET", e a sigla, o protocolo e as fórmulas seguem no Perfil.
+- Cabeçalho 4 px mais próximo dos controles do topo.
+- Palavras nunca partidas: sem hifenização automática. Quando uma palavra não cabe inteira em meia largura (tela estreita com texto muito ampliado), a grade passa a uma coluna.
+
+**Verificações (Chromium/Playwright, áreas seguras simuladas).**
+- Os oito cartões cabem sem rolar: iPhone 13/14 com folga de 52 px (49 px vazio), mini 50, 16 Pro 70, Pro Max 128.
+- SE e texto ampliado rolam, com o último cartão inteiro acima da barra.
+- Varredura de 40 combinações (320–430 pt × 17–26 px, com dados e vazio): nenhuma palavra partida, nenhum estouro, pilares ≥ indicadores.
+- Baselines alinhadas em todos os pares lado a lado.
+- Contraste no pior pixel ≥ 4,5:1 em 65 textos.
+- 27 testes de cálculo e e2e de navegação, módulos, saudação, painéis e áreas de toque sem erros.
+
+**Pendências.** Conferir no iPhone real (SF Pro, VoiceOver, vibração, linha de 1 px físico). Campo do nome da refeição com 40 px de altura. Decisão sobre o protocolo "Média".
