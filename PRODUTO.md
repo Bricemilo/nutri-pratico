@@ -863,3 +863,56 @@ Divergências intencionais da referência: sem subtítulos de página e sem a ab
 - Tempo até o quadro: p90 de 20–22 ms (v20: 19–20); mediana 2–5 ms maior pela medição de geometria.
 
 **Pendências.** Conferir no iPhone real a correção do corte (a causa foi reproduzida em simulação, não no aparelho), além de SF Pro, VoiceOver, vibração e divisórias em 1 px. Campo do nome da refeição com 40 px de altura. Decisão sobre o protocolo "Média".
+
+## 31. Home v22 — The Masterpiece (acabamento)
+
+**Origem da área abaixo da navegação (medida no iPhone 13 em tela cheia).** Abaixo do rótulo das abas havia 43 px:
+- 34 px são a área do indicador de início do iOS (`env(safe-area-inset-bottom)`). Pertence ao sistema e é preservada: conteúdo ali conflita com o gesto de voltar ao início, e capturas de tela não mostram o indicador, por isso parece vazio.
+- 8 px eram do app: 4 px de padding inferior da aba e 4 px extras somados à área segura.
+
+A barra tinha 95,6 px (a nativa tem cerca de 83). Correção: padding da barra 4 em cima e só a área segura embaixo; o filete da aba ativa fica dentro da aba, 4 px abaixo do rótulo. Barra de 95,6 → 91,6 px, devolvidos à composição. Nenhum outro elemento ocupa a área inferior.
+
+**Geometria.**
+- Tokens únicos em `.home` (`--hc-gap`, `--hc-pad`, `--hc-pv`, `--sp-head`, `--sp-div`, `--air`, `--air-min`); o código de distribuição lê `--air` e `--air-min`.
+- Auditoria (mini, 13, Pro Max):
+  - margens 16/16;
+  - colunas idênticas;
+  - quatro distâncias em torno das divisórias iguais (22 / 28 / 36 px);
+  - divisórias com o mesmo comprimento e alinhamento;
+  - ícones a 15/13 px do canto e centrados no título;
+  - alturas idênticas por grupo.
+- Corrigido: Sono × Emocional desalinhados em 1,1–1,7 px ("Bem" com entrelinha 1,08, números com 1). Todos os valores passam a usar entrelinha 1.
+
+**Divisórias.** Comparadas lado a lado. Adotada a variante com transição de opacidade mais longa (22%), leve aquecimento central e segmento cobre de 32 px (antes 44), mais suave. Mesmos elementos, nada acrescentado.
+
+**Reflexos.**
+- Mesma linguagem (lâmina curva), incidência própria por material:
+
+| Material | Incidência |
+|---|---|
+| Cobre e bronze | mantidos |
+| Esmeralda | faixa íngreme colada à borda, saindo pelo alto |
+| Ametista | arco baixo e difuso |
+| Rubi | arco curto no canto superior direito |
+| Safira azul | faixa quase reta e nítida |
+| Peridoto | curva em S |
+| Safira da meia-noite | lâmina baixa na borda |
+
+- Cobre, bronze, esmeralda e safira levemente atenuados. Área clara total de 2,2–3,4% para 1,0–2,6%; picos (p99) mais próximos entre si.
+- O reflexo do rubi foi recolhido ao canto depois de reprovar o contraste de "Muito bem" (1,95:1).
+- Contraste mínimo de 5,04 para 5,98:1.
+
+**Tipografia.** Espaço uniforme (~4 px) entre valor e unidade em todos os cartões ("1 h 30 /semana" não fica mais comprimido); se a unidade descer de linha, começa na coluna do número.
+
+**Verificações (Chromium/Playwright, áreas seguras simuladas).**
+- Respiro de 24 px acima da barra no iPhone 13/14 (com dados e vazio), mini e 16 Pro; 36 px no Pro Max.
+- Área segura tardia (inferior e superior) e troca de fonte sem corte.
+- SE, Safari e texto ampliado rolam, com o último cartão 16 px acima da barra.
+- Nomes e valores longos sem corte.
+- 40 combinações de tela e texto sem palavra partida nem estouro; baselines exatas em todos os pares.
+- Contraste ≥ 5,98:1 em 65 textos.
+- Reduce Motion sem animação.
+- 27 testes de cálculo e e2e de navegação, troca de membro, módulos, saudação, painéis e áreas de toque sem erros.
+- Tempo até o quadro: mediana cerca de 2 ms maior que a v21 (16,6–18,9 → 19,1–19,8 ms); p90 igual ou melhor (20,4–21 ms; v21 20–33).
+
+**Pendências.** Conferir no iPhone real: corte, área inferior, SF Pro, VoiceOver, vibração, divisórias em 1 px. Campo do nome da refeição com 40 px de altura. Decisão sobre o protocolo "Média".

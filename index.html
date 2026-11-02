@@ -12,7 +12,7 @@
   --carb:#E58D4D; --prot:#AE625C; --prot-ink:#CB8078; --fat:#E9C56F; --fib:#86AB91; --ring:#CDC3B9; --food:#E08C4E; --move:#5FC4B8; --sleep:#9C93EE; --mood:#E58BB0; --water:#62B8D6; --energy:#D9B872; --supp:#AFC274; --meds:#8EAAD8; --danger:#FF7D74; --danger-soft:#33191A; --ok:#8FCB9B;
   --hero-1:#2E1D11; --hero-2:#181513; --scrim:rgba(0,0,0,.62); --shadow:0 14px 36px rgba(0,0,0,.5);
   --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Inter","Helvetica Neue","Segoe UI",Roboto,Arial,sans-serif;
-  --r:18px; --tabbar:62px;
+  --r:18px; --tabbar:58px;
   /* Design system: espaçamento em base 4, raios e escala tipográfica (em rem: acompanha o tamanho de texto do iPhone) */
   --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px; --s6:24px; --s8:32px;
   --r-s:12px; --r-m:16px; --r-l:20px; --r-xl:24px;
@@ -1224,14 +1224,15 @@ html.big-text .sc-m > span + span{border-left:0;border-top:1px solid var(--line)
    Alturas naturais pelo conteúdo, sem mínimos fixos; a sobra de tela vai sobretudo para o respiro das divisórias (ver spread no código).
    Camadas de cada cartão (.hc): 1 base cromática profunda · 2 luz ambiente · 3 reflexo curvo vetorial (.hc-fx, SVG de JEWEL)
    · 4 microtextura (estrias finas da lâmina) · 5 aro de 1 px que acende onde a luz incide · 6 conteúdo sobre a zona escura. */
-.home{--hc-gap:12px;--hc-pad:14px;--hc-pv:12px;--hc-r:18px}
-.hi-h{margin:2px 0 calc(16px + var(--xh,0px))}
+/* tokens de espaço da Home (grade de 4): todos os intervalos vêm daqui; o código (spread) lê --air e --air-min */
+.home{--hc-gap:12px;--hc-pad:14px;--hc-pv:12px;--hc-r:18px;--sp-head:16px;--sp-div:20px;--air:24px;--air-min:16px}
+.hi-h{margin:2px 0 calc(var(--sp-head) + var(--xh,0px))}
 .hi-h h1{margin:0;font-size:1.647rem;font-weight:660;letter-spacing:-.028em;line-height:1.12}
 .hi-h .today{margin:4px 0 0;font-size:var(--t-sm);color:var(--muted);font-weight:500}
 .hgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:1fr;gap:var(--hc-gap)}
-/* Signature divider (duas, idênticas): fio grafite quente que esmaece nas pontas + segmento cobre acetinado central de 44 (ecoa o filete da aba ativa), em 1 px físico; 20 acima e abaixo + até 12 de respiro adaptativo */
-.hdiv{position:relative;height:1px;margin:calc(20px + var(--xd,0px)) 0;background:linear-gradient(90deg,rgba(150,136,124,0),rgba(150,136,124,.46) 16%,rgba(150,136,124,.46) 84%,rgba(150,136,124,0))}
-.hdiv::after{content:"";position:absolute;left:50%;top:0;width:44px;height:100%;margin-left:-22px;background:linear-gradient(90deg,rgba(222,140,80,0),rgba(226,154,102,.9),rgba(222,140,80,0))}
+/* Signature divider (duas, idênticas): fio grafite quente que esmaece em transição longa (22%) e aquece levemente ao centro + segmento cobre acetinado de 32 (ecoa o filete da aba ativa), em 1 px físico */
+.hdiv{position:relative;height:1px;margin:calc(var(--sp-div) + var(--xd,0px)) 0;background:linear-gradient(90deg,rgba(150,136,124,0),rgba(150,136,124,.40) 22%,rgba(160,138,118,.44) 50%,rgba(150,136,124,.40) 78%,rgba(150,136,124,0))}
+.hdiv::after{content:"";position:absolute;left:50%;top:0;width:32px;height:100%;margin-left:-16px;background:linear-gradient(90deg,rgba(214,150,104,0),rgba(214,150,104,.78) 50%,rgba(214,150,104,0))}
 @media (min-resolution:2dppx){.hdiv{transform:scaleY(.5)}}
 @media (min-resolution:3dppx){.hdiv{transform:scaleY(.3334)}}
 .hgrid.odd .hc:last-child{grid-column:1 / -1}
@@ -1282,8 +1283,8 @@ html.big-text .sc-m > span + span{border-left:0;border-top:1px solid var(--line)
 .hc-s,.hc-v,.hc-t{-webkit-hyphens:manual;hyphens:manual}
 .home.one .hgrid{grid-template-columns:minmax(0,1fr)}
 .home.one .hc-s,.home.one .hc-v b.txt,.home.one .hc-t{overflow-wrap:anywhere}
-/* valor e unidade em texto corrido, na mesma linha de base: espaço normal antes da unidade ("875 kcal"); unidade por período encostada ("3 h/semana"),
-   com ponto de quebra sem espaço — se a unidade descer de linha, começa exatamente na coluna do número */
+/* valor e unidade em texto corrido, na mesma linha de base, com o mesmo espaço (~4) antes de toda unidade ("875 kcal", "3 h /semana", "2.730 kcal/dia");
+   se a unidade descer de linha, o espaço some e ela começa exatamente na coluna do número */
 .hc-v{display:block;font-size:var(--t-sm);line-height:1.08;padding-top:12px;min-width:0;max-width:100%}
 .hc-v b{display:inline-block;max-width:100%;vertical-align:baseline}
 .hc-v b{font-weight:580;letter-spacing:-.025em;line-height:1.08;color:#F8F3ED;font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -1297,10 +1298,9 @@ html.big-text .sc-m > span + span{border-left:0;border-top:1px solid var(--line)
 .hc.l1 .hc-v{padding-top:6px}
 .hc .hc-v{margin-top:auto}
 .hc.l1 .hc-v b{font-size:var(--t-num)}
-.hc-v small.per{margin-left:2px}
-/* números: entrelinha 1 (algarismos sem descendentes); valores em texto, que podem quebrar, mantêm 1,15 */
-.hc-v b:not(.txt):not(.nr){line-height:1}
-.hc.l1 .hc-v b.long{font-size:1.294rem;white-space:normal;line-height:1.15}
+/* valores (números e estados como "Bem"): entrelinha 1 em todos, para que as linhas de base coincidam nos pares; mensagens de estado vazio (.nr) mantêm 1,25 */
+.hc-v b:not(.nr){line-height:1}
+.hc.l1 .hc-v b.long{font-size:1.294rem;white-space:normal}
 .hc.l2 .hc-v{padding-top:calc(6px + var(--xb,0px));margin-top:0}
 /* grupo C: altura do grupo B; sem legenda nos dois, o número fica centrado no espaço abaixo do título */
 .hg-c .hc{min-height:calc(var(--hbc,0px) + var(--xb,0px))}
@@ -1313,7 +1313,7 @@ html.big-text .sc-m > span + span{border-left:0;border-top:1px solid var(--line)
 .hc-v,.hc-s{text-shadow:0 0 2px var(--gd),0 0 6px var(--gd),0 0 12px var(--gd),0 0 18px color-mix(in srgb,var(--gd) 80%,transparent)}
 .hc.l1 .hc-v b.nr,.hc.l2 .hc-v b.nr{font-size:var(--t-body)}
 .hc-v b.txt{white-space:normal}
-html.big-text .hc.l1 .hc-v b.txt{font-size:1.294rem;line-height:1.15}
+html.big-text .hc.l1 .hc-v b.txt{font-size:1.294rem}
 /* topo: "+" em cobre acetinado — ferramenta, não protagonista: brilho contido, aro discreto, sombra curta */
 .icon-btn.accent{border-radius:13px;color:#22120A;border:1px solid transparent;
   background:linear-gradient(170deg,#C3804E,#A9663A 55%,#94562A) padding-box,linear-gradient(170deg,rgba(236,188,148,.6),rgba(169,102,58,.35) 50%,rgba(96,52,22,.8)) border-box;
@@ -1326,11 +1326,13 @@ html.big-text .hc.l1 .hc-v b.txt{font-size:1.294rem;line-height:1.15}
 .icon-btn.accent:active{filter:brightness(.92)}
 .who{background:linear-gradient(160deg,#1C1815,#141210);border-color:rgba(224,140,78,.22)}
 /* barra inferior: divisória fina; aba ativa em cobre com filete que esmaece nas pontas, sob o rótulo */
-.tabbar{border-top-color:rgba(255,255,255,.07);padding-top:5px;padding-bottom:calc(4px + env(safe-area-inset-bottom,0px));}
-.tab{position:relative;gap:4px;padding:5px 0 4px;line-height:1.2;transition:transform .12s ease}
+/* barra inferior: 58 de conteúdo (como a barra nativa, com rótulo de 13 legível) + a área do indicador de início do iOS (env), que fica livre;
+   o filete da aba ativa fica dentro da aba, 4 abaixo do rótulo — nenhum espaço do app abaixo dele além da área segura do sistema */
+.tabbar{border-top-color:rgba(255,255,255,.07);padding-top:4px;padding-bottom:env(safe-area-inset-bottom,0px)}
+.tab{position:relative;gap:4px;padding:4px 0 6px;line-height:1.2;transition:transform .12s ease}
 .tab:active{transform:scale(.94)}
 .tab.on{color:#EEA36A}
-.tab.on::after{content:"";position:absolute;bottom:-3px;left:50%;width:34px;height:2px;margin-left:-17px;border-radius:2px;background:linear-gradient(90deg,rgba(222,140,80,0),#E39A60,rgba(222,140,80,0))}
+.tab.on::after{content:"";position:absolute;bottom:0;left:50%;width:34px;height:2px;margin-left:-17px;border-radius:2px;background:linear-gradient(90deg,rgba(222,140,80,0),#E39A60,rgba(222,140,80,0))}
 @media (max-width:380px){.home{--hc-gap:8px;--hc-pad:12px}.hc-h{gap:8px}.hc.l1 .hc-v b{font-size:1.412rem}.hc.l1 .hc-v b.long{font-size:1.118rem}.hc.l1 .hc-v b.txt:not(.long){font-size:1.294rem}}
 @media (prefers-reduced-motion:reduce){.hc,.tab{transition:none}.hc:active,.tab:active{transform:none}}
 </style>
@@ -2290,24 +2292,24 @@ let homeKey = "";   // período do dia + data em que a Home foi desenhada; muda 
    · fill corpo · glow brilho · sec segundo reflexo (gemas). Sem filtros nem animação; montado uma vez por material e clonado a cada desenho da Home. */
 const JEWEL = (() => {
   const M = {
-    food:  {c: "#E8904C", hi: "#FFE3C4", sx: 52, ey: 12, c1: [112, 126], c2: [148, 66], n: 15, ox: 2.0, oy: 1.6, pk: .74, fill: 0.47, glow: 0.41},
-    move:  {c: "#3CCFAA", hi: "#E2FFF6", sx: 48, ey: 34, c1: [110, 124], c2: [152, 88], n: 14, ox: 1.8, oy: 1.9, pk: .78, fill: 0.34, glow: 0.34},
-    sleep: {c: "#A48EF2", hi: "#EEE6FF", sx: 58, ey: 26, c1: [118, 126], c2: [152, 78], n: 8, ox: 3.4, oy: 2.8, pk: .76, fill: 0.47, glow: 0.43, sec: .5},
-    wb:    {c: "#F07595", hi: "#FFE4EA", sx: 66, ey: 18, c1: [122, 124], c2: [150, 64], n: 8, ox: 3.2, oy: 3.0, pk: .72, fill: 0.47, glow: 0.43, sec: .45},
-    water: {c: "#38B4F0", hi: "#E2F6FF", sx: 56, ey: 34, c1: [116, 126], c2: [156, 84], n: 9, ox: 2.8, oy: 2.4, pk: .8, fill: 0.44, glow: 0.49, sec: .55},
-    energy:{c: "#DDBB7E", hi: "#F4E4C4", sx: 80, ey: 8, c1: [130, 124], c2: [154, 56], n: 15, ox: 1.9, oy: 1.4, pk: .7, fill: 0.42, glow: 0.31},
-    supp:  {c: "#AFD054", hi: "#F3FFD6", sx: 44, ey: 44, c1: [104, 124], c2: [148, 92], n: 8, ox: 3.2, oy: 2.6, pk: .78, fill: 0.36, glow: 0.35, sec: .32},
-    meds:  {c: "#6E9DF4", hi: "#E3EEFF", sx: 54, ey: 50, c1: [116, 126], c2: [158, 98], n: 8, ox: 3.2, oy: 2.4, pk: .82, fill: 0.47, glow: 0.46, sec: .5}
+    food:  {c: "#E8904C", hi: "#FFE3C4", sx: 52, ey: 12, c1: [112, 126], c2: [148, 66], n: 15, ox: 2.0, oy: 1.6, pk: .74, fill: 0.39, glow: 0.34},
+    move:  {c: "#3CCFAA", hi: "#E2FFF6", sx: 112, ey: -6, ex: 176, c1: [138, 118], c2: [166, 58], n: 9, ox: 2.2, oy: 0.5, pk: 0.72, fill: 0.30, glow: 0.26},
+    sleep: {c: "#A48EF2", hi: "#EEE6FF", sx: 70, ey: 38, c1: [138, 128], c2: [170, 84], n: 8, ox: 3.6, oy: 2.4, pk: 0.76, fill: 0.44, glow: 0.36, sec: 0.42},
+    wb:    {c: "#F07595", hi: "#FFE4EA", sx: 128, ey: -6, ex: 172, c1: [152, 112], c2: [156, 40], n: 6, ox: 2.6, oy: 1.0, pk: 0.6, fill: 0.34, glow: 0.28, sec: 0.24},
+    water: {c: "#38B4F0", hi: "#E2F6FF", sx: 64, ey: 22, c1: [110, 88], c2: [150, 54], n: 6, ox: 2.4, oy: 2.0, pk: 0.8, fill: 0.36, glow: 0.38, sec: 0.4},
+    energy:{c: "#DDBB7E", hi: "#F4E4C4", sx: 80, ey: 8, c1: [130, 124], c2: [154, 56], n: 15, ox: 1.9, oy: 1.4, pk: .7, fill: 0.35, glow: 0.27},
+    supp:  {c: "#AFD054", hi: "#F3FFD6", sx: 56, ey: 30, c1: [118, 140], c2: [142, 38], n: 8, ox: 3.0, oy: 2.4, pk: 0.66, fill: 0.32, glow: 0.27, sec: 0.26},
+    meds:  {c: "#6E9DF4", hi: "#E3EEFF", sx: 62, ey: 66, c1: [130, 128], c2: [166, 108], n: 8, ox: 3.2, oy: 2.4, pk: 0.82, fill: 0.47, glow: 0.46, sec: 0.5}
   };
   const f = v => +v.toFixed(1);
-  const curve = (o, dx, dy) => [[o.sx + dx, 126 + dy], [o.c1[0] + dx, o.c1[1] + dy], [o.c2[0] + dx, o.c2[1] + dy], [186 + dx, o.ey + dy]];
+  const curve = (o, dx, dy) => [[o.sx + dx, 126 + dy], [o.c1[0] + dx, o.c1[1] + dy], [o.c2[0] + dx, o.c2[1] + dy], [(o.ex || 186) + dx, o.ey + dy]];
   const d = P => `M${f(P[0][0])} ${f(P[0][1])}C${P.slice(1).map(q => `${f(q[0])} ${f(q[1])}`).join(" ")}`;
   const at = (P, t) => [0, 1].map(i => (1 - t) ** 3 * P[0][i] + 3 * (1 - t) ** 2 * t * P[1][i] + 3 * (1 - t) * t * t * P[2][i] + t ** 3 * P[3][i]);
   const cache = {};
   function ribbon(k, o, id, dx, dy, a){
     const n = o.n, A = curve(o, dx, dy), B = curve(o, dx + (n - 1) * o.ox, dy + (n - 1) * o.oy), x1 = f(o.sx + dx), y1 = 126 + dy, y2 = f(o.ey + dy);
-    const g = `<linearGradient id="${id}s" gradientUnits="userSpaceOnUse" x1="${x1}" y1="${y1}" x2="186" y2="${y2}"><stop offset="0" stop-color="${o.c}" stop-opacity="0"/><stop offset="${f(o.pk - .34)}" stop-color="${o.c}" stop-opacity=".3"/><stop offset="${o.pk}" stop-color="${o.hi}"/><stop offset="${f(Math.min(o.pk + .16, .97))}" stop-color="${o.c}" stop-opacity=".6"/><stop offset="1" stop-color="${o.c}" stop-opacity=".35"/></linearGradient>`
-      + `<linearGradient id="${id}f" gradientUnits="userSpaceOnUse" x1="${x1}" y1="${y1}" x2="186" y2="${y2}"><stop offset="0" stop-color="${o.c}" stop-opacity="0"/><stop offset="${o.pk}" stop-color="${o.c}" stop-opacity="${o.fill}"/><stop offset="1" stop-color="${o.c}" stop-opacity="${f(o.fill * .55)}"/></linearGradient>`
+    const g = `<linearGradient id="${id}s" gradientUnits="userSpaceOnUse" x1="${x1}" y1="${y1}" x2="${o.ex || 186}" y2="${y2}"><stop offset="0" stop-color="${o.c}" stop-opacity="0"/><stop offset="${f(o.pk - .34)}" stop-color="${o.c}" stop-opacity=".3"/><stop offset="${o.pk}" stop-color="${o.hi}"/><stop offset="${f(Math.min(o.pk + .16, .97))}" stop-color="${o.c}" stop-opacity=".6"/><stop offset="1" stop-color="${o.c}" stop-opacity=".35"/></linearGradient>`
+      + `<linearGradient id="${id}f" gradientUnits="userSpaceOnUse" x1="${x1}" y1="${y1}" x2="${o.ex || 186}" y2="${y2}"><stop offset="0" stop-color="${o.c}" stop-opacity="0"/><stop offset="${o.pk}" stop-color="${o.c}" stop-opacity="${o.fill}"/><stop offset="1" stop-color="${o.c}" stop-opacity="${f(o.fill * .55)}"/></linearGradient>`
       + `<radialGradient id="${id}h"><stop offset="0" stop-color="${o.hi}" stop-opacity=".62"/><stop offset=".35" stop-color="${o.c}" stop-opacity=".24"/><stop offset="1" stop-color="${o.c}" stop-opacity="0"/></radialGradient>`;
     const rev = [B[3], B[2], B[1], B[0]];
     let s = `<path d="${d(A)}L${f(B[3][0])} ${f(B[3][1])}C${rev.slice(1).map(q => `${f(q[0])} ${f(q[1])}`).join(" ")}Z" fill="url(#${id}f)"/>`;
@@ -2352,7 +2354,7 @@ function renderHome(p){
         "aria-label": o.aria || `${o.title}: ${has ? `${o.value}${o.unit ? " " + o.unit.replace("/", " por ").trim() : ""}${o.sub ? `. ${o.sub}` : ""}` : `${o.empty[0]}. ${o.empty[1]}`}.`},
       h("span", {class: "hc-fx", "aria-hidden": "true"}, JEWEL(o.cls)),
       h("span", {class: "hc-h"}, h("span", {class: "hc-i", html: ICON[o.icon]}), h("span", {class: "hc-t"}, o.title)),
-      h("span", {class: "hc-v"}, has ? [h("b", {class: [String(o.value).length > 9 ? "long" : "", /^\d/.test(o.value) ? "" : "txt"].join(" ").trim() || null}, o.value), o.unit ? [o.unit[0] === "/" ? h("wbr") : " ", h("small", {class: o.unit[0] === "/" ? "per" : null}, o.unit)] : null] : h("b", {class: "nr"}, o.empty[0])),
+      h("span", {class: "hc-v"}, has ? [h("b", {class: [String(o.value).length > 9 ? "long" : "", /^\d/.test(o.value) ? "" : "txt"].join(" ").trim() || null}, o.value), o.unit ? [" ", h("small", null, o.unit)] : null] : h("b", {class: "nr"}, o.empty[0])),
       h("span", {class: "hc-s"}, has ? o.sub || "" : o.empty[1])); };
   const openMeds = (c, cat) => () => c.total ? go({tab: "saude", hsub: "resumo", hfocus: "meds"}) : medSheet(p, null, cat);
   // suplementos e medicamentos: número e palavra na mesma linha — "2 ativos" (pausados na legenda, se houver) ou, sem cadastro, "0 cadastrados" (o cartão abre o cadastro)
@@ -2412,11 +2414,12 @@ const sigOf = home => { const tb = document.getElementById("tabbar"), c0 = home.
 const GROW = {d: 16, h: 12, a: 8, b: 4};
 function spread(home){ const st = home.style, tb = document.getElementById("tabbar"), cards = [...home.querySelectorAll(".hc")];
   if (!tb || !cards.length || document.body.classList.contains("typing")) return;
-  const tbTop = tb.getBoundingClientRect().top, rootPB = parseFloat(getComputedStyle(document.documentElement).paddingBottom) || 0;
-  app.style.setProperty("--home-pb", Math.max(0, innerHeight - tbTop + 16 - rootPB).toFixed(2) + "px");
+  const tbTop = tb.getBoundingClientRect().top, rootPB = parseFloat(getComputedStyle(document.documentElement).paddingBottom) || 0, hs = getComputedStyle(home);
+  const air = parseFloat(hs.getPropertyValue("--air")) || 24, airMin = parseFloat(hs.getPropertyValue("--air-min")) || 16;
+  app.style.setProperty("--home-pb", Math.max(0, innerHeight - tbTop + airMin - rootPB).toFixed(2) + "px");
   // a entrada da tela desliza 4 px (animação "in"): mede-se a posição final, descontando o deslocamento do momento
   const shift = () => { const t = getComputedStyle(home).transform; return t && t !== "none" ? new DOMMatrixReadOnly(t).m42 : 0; };
-  const room = () => tbTop - 24 - (cards[cards.length - 1].getBoundingClientRect().bottom - shift() + scrollY);
+  const room = () => tbTop - air - (cards[cards.length - 1].getBoundingClientRect().bottom - shift() + scrollY);
   const free = room(); if (free < 2) return;
   const ra = new Set([...home.querySelectorAll(".hg-a .hc")].map(c => Math.round(c.getBoundingClientRect().top))).size, nd = home.querySelectorAll(".hdiv").length;
   const rb = home.querySelectorAll(".hg-b, .hg-c").length, h0 = home.querySelector(".hg-a .hc").getBoundingClientRect().height;
