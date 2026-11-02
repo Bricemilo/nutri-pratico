@@ -1054,3 +1054,31 @@ A barra tinha 95,6 px (a nativa tem cerca de 83). Correção: padding da barra 4
 **Geometria da Home.**
 - Sem o defeito: idêntica à aprovada, pixel a pixel.
 - No iPhone com defeito, data → cartões 19,7 pt (aprovada 21,8) e divisórias 25,3 pt (aprovada 28), pela mesma distribuição. Há 13 pt a menos de área desenhável; cartões inalterados.
+
+## 37. v28 — Home estável em todas as navegações
+
+**Sintoma relatado.** A Home tinha uma geometria ao abrir o app e outra, mais compacta, depois de ir à Nutrição e voltar. As capturas não chegaram; a causa foi encontrada no código e reproduzida.
+
+**Causa.** Havia duas fontes de medida com momentos diferentes:
+- A compensação de altura do iOS (`--vgap`) era medida só ao abrir e em eventos de redimensionar.
+- A distribuição da Home era recalculada a cada visita, pela posição atual da barra.
+
+O iOS muda a altura informada logo depois de abrir o app instalado sem disparar evento. Na abertura, a Home era distribuída para 844 pt: a última linha terminava a 728 pt, sob a barra (705 pt). Na volta, era redistribuída com a barra na posição nova, porém com `--vgap` congelado em 0: composição compacta, com a faixa preta de 81 pt sob as abas de volta.
+
+**Reprodução.** Tela física de 844 pt; app abre com 844 e passa a 797 sem evento. Na v27, a Home inicial difere da Home após Nutrição, Saúde, Perfil e segundo plano. Se o app já abre com 797, fica estável.
+
+**Correção (só `fonte/app.html`).**
+- `measureViewport()` é a fonte única da altura útil, medida no início de toda passada de layout (`fitTitles`), antes do primeiro desenho e em todas as abas. Nenhuma medida anterior é reaproveitada.
+- `syncLayout()` refaz o layout só se a altura útil ou a assinatura da geometria mudou.
+- `settleLayout()` acompanha a geometria quadro a quadro por 2,5 s ao abrir, ao voltar do segundo plano e em redimensionar, girar, foco e mudança do visualViewport, porque o iOS muda a altura sem avisar.
+- O redimensionamento passou a usar o mesmo caminho. A exclusão "digitando" foi removida da medição: a altura informada não muda com o teclado no iOS.
+
+**Verificação.**
+- Estabilidade (iPhone 13 e Pro Max, abrindo com a altura cheia e reduzindo sem evento, ou já abrindo reduzida): Home idêntica ao abrir, ao voltar de Nutrição, Saúde e Perfil e ao voltar do segundo plano.
+- Os dois casos convergem para a mesma geometria: barra a 739,4, rótulos a 790,4 de 797, cartões 108,3/100,3.
+- Quatro abas × três iPhones × com e sem defeito × texto 17/21 px: 0 falhas.
+- iPhones sem defeito: capturas idênticas pixel a pixel.
+- 27 testes de cálculo, e2e, palavras, bordas, área segura tardia, registro, persistência e seletor sem falhas.
+- Processamento ~11 ms (igual).
+
+**Limitação.** A simulação reproduz a mudança de altura sem evento, mas não o iOS real. Se o aparelho mudar a altura mais de 2,5 s depois de abrir ou voltar sem nenhum evento, a correção vem na próxima passada de layout: qualquer troca de aba ou atualização da Home.

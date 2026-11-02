@@ -34,7 +34,7 @@
   --dj-r-card:18px; --dj-r-tile:8px; --dj-r-tool:13px;
   /* área segura inferior efetiva. Em alguns iPhones, no app instalado, o iOS informa à página a altura da tela sem a faixa do relógio
      (ex.: 797 em vez de 844 pt) e não desenha nada abaixo dela: o indicador de início fica FORA da área do app, mas env() continua
-     informando 34. --vgap (medido em fixViewportGap) desconta essa parte; nos demais casos --sab = env(safe-area-inset-bottom). */
+     informando 34. --vgap (medido em measureViewport, no início de toda passada de layout) desconta essa parte; nos demais casos --sab = env(safe-area-inset-bottom). */
   --sab:max(0px, calc(env(safe-area-inset-bottom,0px) - var(--vgap,0px)));
   color-scheme:dark;
 }
@@ -2413,6 +2413,28 @@ function renderHome(p){
     pillars, divider(), energyWater, divider(), care));
   fitTitlesNow();
 }
+// Altura útil da tela — fonte única, medida no início de toda passada de layout (nunca guardada de uma medição anterior).
+// Defeito do iOS em apps instalados na tela de início: a altura informada à página exclui a faixa do relógio e nada é desenhado abaixo dela;
+// o indicador de início fica fora da área do app, mas a área segura inferior continua informada (34). A diferença vai para --vgap e é descontada em --sab.
+// Assinatura exigida (para não agir em nenhum outro caso): modo app instalado, retrato, e a diferença entre a tela física e a altura informada
+// igual (±6) à área segura superior. No Safari, no Claude, em computadores ou em iPhones sem o defeito, --vgap fica 0.
+// O iOS pode mudar essa altura logo depois de abrir o app ou ao voltar do segundo plano SEM disparar evento; por isso, além dos eventos,
+// a geometria é acompanhada quadro a quadro por 2,5 s nesses momentos (settleLayout) e tudo é refeito se algo mudar.
+const vgapProbe = h("div", {style: "position:fixed;visibility:hidden;pointer-events:none;padding-top:env(safe-area-inset-top,0px)", "aria-hidden": "true"});
+function measureViewport(){
+  if (!vgapProbe.isConnected) document.body.append(vgapProbe);
+  const standalone = navigator.standalone === true || (window.matchMedia && matchMedia("(display-mode: standalone)").matches);
+  const portrait = innerHeight > innerWidth, phys = Math.max(screen.width, screen.height), topInset = parseFloat(getComputedStyle(vgapProbe).paddingTop) || 0;
+  const g = phys - innerHeight, ok = standalone && portrait && g > 8 && g < 80 && topInset > 0 && Math.abs(g - topInset) <= 6;
+  const v = ok ? Math.round(g) + "px" : "0px";
+  if (document.documentElement.style.getPropertyValue("--vgap") === v) return false;
+  document.documentElement.style.setProperty("--vgap", v); return true;
+}
+// confere a geometria atual contra a da última passada; refaz o layout só se algo mudou
+function syncLayout(){ const changed = measureViewport(), home = document.querySelector(".home"); if (changed || (home && sigOf(home) !== lastSig)) fitTitles(); }
+let settleUntil = 0;
+function settleLayout(ms = 2500){ const run = !settleUntil || performance.now() > settleUntil; settleUntil = Math.max(settleUntil, performance.now() + ms);
+  if (!run) return; const tick = () => { syncLayout(); if (performance.now() < settleUntil) requestAnimationFrame(tick); else settleUntil = 0; }; requestAnimationFrame(tick); }
 // Layout da Home calculado como um conjunto, sempre a partir da geometria real do momento:
 // 1 · títulos inteiros: se algum não cabe ao lado da pastilha, ícone sobre o título (.stack); se ainda há palavra que não cabe, uma coluna (.one).
 //     Só refeito quando muda a largura dos cartões ou o tamanho do texto.
@@ -2422,7 +2444,7 @@ function renderHome(p){
 // Refeito a cada mudança de geometria — tamanho da janela, da Home ou da barra (área segura aplicada depois do primeiro desenho, rotação, fonte).
 const over = t => t.scrollWidth > t.clientWidth + 0.5;
 let fitKey = "";
-function fitTitles(force){ const home = document.querySelector(".home"), c0 = home && home.querySelector(".hc"); if (!c0) return;
+function fitTitles(force){ measureViewport(); const home = document.querySelector(".home"), c0 = home && home.querySelector(".hc"); if (!c0) return;
   const st = home.style; for (const k of ["--ha", "--xb", "--xd", "--xh", "--l1-min", "--hbc"]) st.removeProperty(k);
   const key = c0.getBoundingClientRect().width.toFixed(1) + "|" + getComputedStyle(document.documentElement).fontSize;
   if (force || key !== fitKey) { fitKey = key;
@@ -2459,8 +2481,10 @@ function spread(home){ const st = home.style, tb = document.getElementById("tabb
   // segunda medição: arredondamentos de grade podem absorver parte do acréscimo; corrige a etapa ativa uma vez
   const got = free - room(); if (got > 1 && Math.abs(free - got) > 1) { if (k2 > 0 && k2 < 1) k2 = Math.min(1, k2 + (free - got) / cap2); else if (k1 < 1) k1 = Math.min(1, k1 * free / got); apply(k1, k2); } }
 const homeRO = typeof ResizeObserver === "function" ? new ResizeObserver(() => { const home = document.querySelector(".home"); if (home && sigOf(home) !== lastSig) fitTitles(); }) : null;
-for (const ev of ["resize", "orientationchange", "pageshow"]) window.addEventListener(ev, () => fitTitles());
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => fitTitles(true));
+for (const ev of ["resize", "orientationchange", "pageshow", "focus"]) window.addEventListener(ev, () => { syncLayout(); settleLayout(); });
+if (window.visualViewport) visualViewport.addEventListener("resize", () => { syncLayout(); settleLayout(); });
+document.addEventListener("visibilitychange", () => { if (!document.hidden) settleLayout(); });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { fitKey = ""; syncLayout(); fitTitles(true); });
 // observa (caixa externa) a Home (conteúdo, fonte, texto ampliado), a barra inferior (altura muda quando a área segura chega depois do primeiro desenho)
 // e a página (área segura superior aplicada depois desloca tudo para baixo);
 // cada passada é idempotente: as próprias mudanças de altura geram no máximo uma confirmação, sem ciclo
@@ -4013,21 +4037,6 @@ function backupSheet(){
 }
 
 /* ---------- início ---------- */
-// Defeito do iOS em apps instalados na tela de início: a altura informada à página exclui a faixa do relógio e nada é desenhado abaixo dela;
-// o indicador de início fica fora da área do app, mas a área segura inferior continua informada (34). A diferença vai para --vgap e é descontada em --sab.
-// Assinatura exigida (para não agir em nenhum outro caso): modo app instalado, retrato, e a diferença entre a tela física e a altura informada
-// igual (±6) à área segura superior. No Safari, no Claude, em computadores ou em iPhones sem o defeito, --vgap fica 0.
-const vgapProbe = h("div", {style: "position:fixed;visibility:hidden;pointer-events:none;padding-top:env(safe-area-inset-top,0px)", "aria-hidden": "true"});
-function fixViewportGap(){
-  if (!vgapProbe.isConnected) document.body.append(vgapProbe);
-  const standalone = navigator.standalone === true || (window.matchMedia && matchMedia("(display-mode: standalone)").matches);
-  const portrait = innerHeight > innerWidth, phys = Math.max(screen.width, screen.height), topInset = parseFloat(getComputedStyle(vgapProbe).paddingTop) || 0;
-  const g = phys - innerHeight, ok = standalone && portrait && !document.body.classList.contains("typing") && g > 8 && g < 80 && topInset > 0 && Math.abs(g - topInset) <= 6;
-  const v = ok ? Math.round(g) + "px" : "0px";
-  if (document.documentElement.style.getPropertyValue("--vgap") !== v) { document.documentElement.style.setProperty("--vgap", v); fitTitles(); }   // a barra mudou de altura: redistribui a Home
-}
-fixViewportGap();
-for (const ev of ["resize", "orientationchange", "pageshow"]) window.addEventListener(ev, fixViewportGap);
 (() => {   // tamanho de texto do iPhone (Ajustes → Tela e Brilho → Tamanho do Texto), com limite para o layout não quebrar
   const pr = document.createElement("span"); pr.style.font = "-apple-system-body"; pr.textContent = "a"; document.body.append(pr);
   const px = pr.style.font ? parseFloat(getComputedStyle(pr).fontSize) : 0; pr.remove();
@@ -4035,7 +4044,9 @@ for (const ev of ["resize", "orientationchange", "pageshow"]) window.addEventLis
   document.documentElement.classList.toggle("big-text", px >= 19);   // texto ampliado: layouts de 4 colunas viram 2×2
 })();
 load();
+measureViewport();
 try { const v = JSON.parse(sessionStorage.getItem(KEY + ".view")); if (v && TABS.some(t => t[0] === v.tab)) view = Object.assign(view, v, {edit: null}); if (view.sub === "favoritos") view.sub = "plano"; } catch (e) {}
 render();
+settleLayout();
 })();
 </script>
