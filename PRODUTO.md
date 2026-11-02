@@ -1135,3 +1135,43 @@ O iOS muda a altura informada logo depois de abrir o app instalado sem disparar 
 **Pendências.**
 - Conferir no iPhone real (SF Pro, VoiceOver em voz, vibração).
 - As subabas Exercício, Sono e Emocional de Saúde e as folhas receberam só o Material C (via `.panel`) e o segmented control; não foram redesenhadas.
+
+## 39. v30 — Nutrição e Perfil: evolução de composição (não só acabamento)
+
+**Diagnóstico (Home × Nutrição/Perfil, capturas próprias; as do usuário não chegaram).**
+1. Na Home a informação tem um núcleo visual (o número no material); em Nutrição, o resumo era uma grade de tabela, e no Perfil, só listas.
+2. Hierarquia: Home tem rótulo · número · legenda; Perfil misturava resumo e valor numa frase que quebrava ("Hipertrofia · meta 2.600 kcal").
+3. Seções: Home organiza por divisórias finas; as outras telas usavam títulos grandes que competiam com o conteúdo.
+4. Energias: plano, meta e GET apareciam em lugares diferentes, sem relação explícita.
+5. Controles: o botão de compartilhar não seguia a família do seletor e do "+".
+
+**Mudanças.**
+- **Nutrição:**
+  - painel-instrumento com anel de energia (total no centro) e legenda 2 × 2 com fibras integradas;
+  - quadro "Meta diária · No plano de hoje · Gasto estimado";
+  - refeições com coluna de horário;
+  - cabeçalho de seção em versalete com fio;
+  - compartilhar na família dos controles.
+- **Perfil:**
+  - linhas com valor-chave à direita (78 kg · 178 cm, 2.600 kcal, 2 perfis, 2.730 kcal, 2,7 L/dia, 3 itens, "Sem backup");
+  - resumos curtos;
+  - identificação maior, com nome em destaque;
+  - seções em versalete com fio.
+- O cabeçalho de seção vale também em Saúde, por consistência.
+
+**Auditoria científica (2.472 kcal × 284/148/89 g, fibras 52 g).**
+- O total é a soma da energia declarada de cada alimento (TACO ou rótulo), não 4/4/9.
+- A TACO calcula a energia com fatores específicos por alimento, e seu carboidrato é "total por diferença", com a fibra incluída.
+- Nos 559 alimentos do app, energia TACO ÷ 4/4/9 tem mediana de 0,989 (80% entre 0,888 e 1,044).
+- Para a captura: 4/4/9 com carboidrato total dá 2.529; com fibra a 2 kcal/g, 2.425. O exibido, 2.472, fica entre os dois.
+- A diferença de −57 kcal (−2,3%) é esperada, não é inconsistência. Nenhum valor foi alterado.
+- Os percentuais são da energia dos macronutrientes (4/4/9), agora explícito no painel.
+
+**Verificação.**
+- Home idêntica pixel a pixel e estável na navegação.
+- Quatro abas × três iPhones × com e sem defeito de altura × texto 17/21: 0 falhas.
+- Nutrição e Perfil em 320/375/390/430 pt × texto 17/21/24 px: sem estouro, sem texto cortado, sem palavra partida (antes desta rodada, 5 falhas de nome de refeição cortado em 320 pt; agora 0).
+- Folhas e áreas de toque sem pendências.
+- Contraste ≥ 5,31:1 em 83 textos.
+- 27 testes de cálculo e e2e sem erros.
+- Processamento ao abrir a aba: Nutrição 8,0 → 9,0 ms; Saúde 7,2 → 7,6; Perfil 6,7 → 8,7 (dentro de um quadro).

@@ -162,6 +162,17 @@ A sofisticação cresce com a importância da informação, não com a quantidad
 - **Cobre:** reservado a identidade e ações principais (seleção, "+", horários, objetivo).
 - **Perfil:** fica neutro (Quiet Luxury). A cor aparece só em alertas, como o backup.
 
+### 3.7 Componentes de composição (v30)
+
+| Componente | Onde | Anatomia |
+|---|---|---|
+| **Cabeçalho de seção** (`h2.sec-t`) | Todas as abas | Versalete 13 px, espaçamento .14em, cobre-acinzentado `#B9937A`, com fio de 1 px físico que esmaece para a direita. Organiza sem pesar; em `.sec-row` divide a linha com a ação "+". |
+| **Painel-instrumento** (`macroRing` + `.sx-*`) | Nutrição | Eyebrow "Planejado para hoje" · anel de energia (C/P/G pelos fatores 4/4/9) com o total planejado no centro · legenda 2 × 2 (carboidratos, proteínas, gorduras, fibras: nome, gramas, % da energia) · rodapé "% da energia dos macronutrientes". A legenda fica ao lado do anel em 375–430 pt e desce quando o texto cresce (`flex-basis` em rem). |
+| **Quadro de energias** (`.gl-led`) | Objetivo, em Nutrição | Três linhas, nunca equivalentes: **Meta diária** (cobre, definida por você), **No plano de hoje** (soma dos alimentos e diferença para a meta) e **Gasto estimado** (GET, cálculo). |
+| **Linha de informação** (`row(…, val)`, `.pr-l`/`.pr-v`) | Perfil | Título em uma linha; embaixo, o resumo à esquerda e o valor-chave à direita, tabular. Sem espaço, o valor desce inteiro; nada é truncado nem hifenizado. |
+| **Linha de refeição** | Nutrição | Coluna de horário (largura em em) com fio vertical · nome em destaque · quantidade secundária · calorias à direita. Em tela estreita com texto ampliado, calorias e seta descem para a linha de baixo. |
+| **Controle secundário do topo** (`.top .icon-btn`) | Topo das abas | Mesma família do seletor de membro: grafite com aro cobre fino. |
+
 ## 4. Layout da Home: motor adaptativo
 
 Ordem: cabeçalho (seletor + "+", saudação, data) · **A** pilares 2 × 2 · divisória · **B** Gasto diário + Hidratação · divisória · **C** Suplementos + Medicamentos.
