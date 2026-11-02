@@ -32,6 +32,10 @@
   --dj-hairline:rgba(150,136,124,.40); --dj-hairline-core:rgba(172,142,116,.58); --dj-hairline-seg:rgba(222,156,108,.96);
   /* raios: cartão, pastilha de ícone, botão-ferramenta */
   --dj-r-card:18px; --dj-r-tile:8px; --dj-r-tool:13px;
+  /* área segura inferior efetiva. Em alguns iPhones, no app instalado, o iOS informa à página a altura da tela sem a faixa do relógio
+     (ex.: 797 em vez de 844 pt) e não desenha nada abaixo dela: o indicador de início fica FORA da área do app, mas env() continua
+     informando 34. --vgap (medido em fixViewportGap) desconta essa parte; nos demais casos --sab = env(safe-area-inset-bottom). */
+  --sab:max(0px, calc(env(safe-area-inset-bottom,0px) - var(--vgap,0px)));
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -44,8 +48,8 @@ button,input,textarea{font:inherit;color:inherit}
 button{cursor:pointer;border:0;background:none;padding:0;text-align:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .num{font-variant-numeric:tabular-nums}
-.app{max-width:600px;margin:0 auto;padding-bottom:calc(var(--tabbar) + 28px + env(safe-area-inset-bottom,0px))}
-.app:has(> .home){padding-bottom:var(--home-pb,calc(var(--tabbar) + 16px + env(safe-area-inset-bottom,0px)))}
+.app{max-width:600px;margin:0 auto;padding-bottom:calc(var(--tabbar) + 28px + var(--sab))}
+.app:has(> .home){padding-bottom:var(--home-pb,calc(var(--tabbar) + 16px + var(--sab)))}
 .view{animation:in .2s ease-out}
 @keyframes in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -71,7 +75,7 @@ button{cursor:pointer;border:0;background:none;padding:0;text-align:inherit}
 
 /* Barra de abas */
 .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:25;background:color-mix(in srgb,var(--bg) 90%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);
-  border-top:1px solid var(--line);padding:6px max(12px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));transition:transform .2s}
+  border-top:1px solid var(--line);padding:6px max(12px,env(safe-area-inset-right,0px)) calc(6px + var(--sab)) max(12px,env(safe-area-inset-left,0px));transition:transform .2s}
 .tabbar-in{max-width:600px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
 .tab{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0 4px;border-radius:12px;color:var(--muted);font-size:var(--t-cap);font-weight:600;letter-spacing:.01em}
 .tab svg{width:23px;height:23px}
@@ -126,7 +130,7 @@ h2.sec{font-size:0.765rem;font-weight:650;letter-spacing:.08em;text-transform:up
 .scrim{position:fixed;inset:0;background:var(--scrim);z-index:50;opacity:0;transition:opacity .2s}
 .scrim.on{opacity:1}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:51;background:var(--surface);border:1px solid var(--line);border-bottom:0;border-radius:24px 24px 0 0;max-width:600px;margin:0 auto;
-  padding:10px max(18px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px));
+  padding:10px max(18px,env(safe-area-inset-right,0px)) calc(18px + var(--sab)) max(18px,env(safe-area-inset-left,0px));
   transform:translateY(100%);transition:transform .26s cubic-bezier(.2,.8,.2,1);box-shadow:var(--shadow);max-height:92%;overflow:auto;overscroll-behavior:contain}
 .sheet.on{transform:none}
 .grab{width:38px;height:5px;border-radius:3px;background:var(--line-2);margin:0 auto 14px}
@@ -402,7 +406,7 @@ h2.sec .sec-n{float:right;letter-spacing:.02em;text-transform:none;font-weight:5
 .so-k{font-weight:620;font-variant-numeric:tabular-nums;white-space:nowrap}
 .so-q{font-size:0.765rem;color:var(--ink-2);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .so-d{font-size:var(--t-cap);color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
-.confirmbar{position:sticky;bottom:calc(-18px - env(safe-area-inset-bottom,0px));margin:12px -18px calc(-18px - env(safe-area-inset-bottom,0px));padding:12px 18px calc(14px + env(safe-area-inset-bottom,0px));background:var(--surface);border-top:1px solid var(--line-2)}
+.confirmbar{position:sticky;bottom:calc(-18px - var(--sab));margin:12px -18px calc(-18px - var(--sab));padding:12px 18px calc(14px + var(--sab));background:var(--surface);border-top:1px solid var(--line-2)}
 .confirmbar p{margin:0 0 10px;font-size:var(--t-sm);color:var(--ink-2);font-variant-numeric:tabular-nums}
 
 /* Perfil e energia */
@@ -788,7 +792,7 @@ details.hd .hist{border-top:0}
 .savewarn{position:fixed;left:12px;right:12px;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:70;display:flex;align-items:center;gap:12px;max-width:576px;margin:0 auto;
   padding:12px 12px 12px 14px;border-radius:14px;background:var(--danger-soft);border:1px solid var(--danger);font-size:var(--t-sm);line-height:1.4;box-shadow:var(--shadow)}
 .savewarn span{flex:1}
-.toast{position:fixed;left:50%;bottom:calc(var(--tabbar) + 22px + env(safe-area-inset-bottom,0px));transform:translate(-50%,10px);background:var(--surface-3);border:1px solid var(--line-2);color:var(--ink);padding:10px 16px;border-radius:12px;font-size:var(--t-sm);font-weight:500;opacity:0;transition:.2s;z-index:60;pointer-events:none;box-shadow:var(--shadow);white-space:nowrap}
+.toast{position:fixed;left:50%;bottom:calc(var(--tabbar) + 22px + var(--sab));transform:translate(-50%,10px);background:var(--surface-3);border:1px solid var(--line-2);color:var(--ink);padding:10px 16px;border-radius:12px;font-size:var(--t-sm);font-weight:500;opacity:0;transition:.2s;z-index:60;pointer-events:none;box-shadow:var(--shadow);white-space:nowrap}
 .toast.act{pointer-events:auto;display:flex;align-items:center;gap:14px;padding:6px 6px 6px 16px}
 .toast .undo{color:var(--accent-2);font-weight:650;padding:6px 10px;border-radius:9px}
 .toast.on{opacity:1;transform:translate(-50%,0)}
@@ -1344,12 +1348,7 @@ html.big-text .hc.l1 .hc-v b.txt{font-size:1.294rem}
 /* barra inferior: divisória fina; aba ativa em cobre com filete que esmaece nas pontas, sob o rótulo */
 /* barra inferior: 58 de conteúdo (como a barra nativa, com rótulo de 13 legível) + a área do indicador de início do iOS (env), que fica livre;
    o filete da aba ativa fica dentro da aba, 4 abaixo do rótulo — nenhum espaço do app abaixo dele além da área segura do sistema */
-.tabbar{border-top-color:rgba(255,255,255,.07);padding-top:4px;padding-bottom:env(safe-area-inset-bottom,0px);bottom:calc(-1 * var(--vgap,0px))}
-/* --vgap: no app instalado, alguns iPhones informam à página a altura da tela SEM a faixa do relógio (ex.: 797 em vez de 844 pt) e tudo o que é
-   fixo na base fica essa diferença acima do fim real da tela. O código mede a diferença (tela física − altura informada) e a devolve aqui. */
-.sheet{bottom:calc(-1 * var(--vgap,0px))}
-.scrim{bottom:calc(-1 * var(--vgap,0px))}
-.toast{bottom:calc(var(--tabbar) + 22px + env(safe-area-inset-bottom,0px) - var(--vgap,0px))}
+.tabbar{border-top-color:rgba(255,255,255,.07);padding-top:4px;padding-bottom:var(--sab)}
 .tab{position:relative;gap:4px;padding:4px 0 6px;line-height:1.2;transition:transform .12s ease}
 .tab:active{transform:scale(.94)}
 .tab.on{color:var(--dj-signal)}
@@ -4012,7 +4011,8 @@ function backupSheet(){
 }
 
 /* ---------- início ---------- */
-// Defeito do iOS em apps instalados na tela de início: a altura informada à página exclui a faixa do relógio, embora o app ocupe a tela inteira.
+// Defeito do iOS em apps instalados na tela de início: a altura informada à página exclui a faixa do relógio e nada é desenhado abaixo dela;
+// o indicador de início fica fora da área do app, mas a área segura inferior continua informada (34). A diferença vai para --vgap e é descontada em --sab.
 // Assinatura exigida (para não agir em nenhum outro caso): modo app instalado, retrato, e a diferença entre a tela física e a altura informada
 // igual (±6) à área segura superior. No Safari, no Claude, em computadores ou em iPhones sem o defeito, --vgap fica 0.
 const vgapProbe = h("div", {style: "position:fixed;visibility:hidden;pointer-events:none;padding-top:env(safe-area-inset-top,0px)", "aria-hidden": "true"});
@@ -4022,7 +4022,7 @@ function fixViewportGap(){
   const portrait = innerHeight > innerWidth, phys = Math.max(screen.width, screen.height), topInset = parseFloat(getComputedStyle(vgapProbe).paddingTop) || 0;
   const g = phys - innerHeight, ok = standalone && portrait && !document.body.classList.contains("typing") && g > 8 && g < 80 && topInset > 0 && Math.abs(g - topInset) <= 6;
   const v = ok ? Math.round(g) + "px" : "0px";
-  if (document.documentElement.style.getPropertyValue("--vgap") !== v) { document.documentElement.style.setProperty("--vgap", v); fitTitles(); }   // a barra mudou de lugar: redistribui a Home
+  if (document.documentElement.style.getPropertyValue("--vgap") !== v) { document.documentElement.style.setProperty("--vgap", v); fitTitles(); }   // a barra mudou de altura: redistribui a Home
 }
 fixViewportGap();
 for (const ev of ["resize", "orientationchange", "pageshow"]) window.addEventListener(ev, fixViewportGap);

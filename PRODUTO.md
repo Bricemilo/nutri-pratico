@@ -1004,3 +1004,25 @@ A barra tinha 95,6 px (a nativa tem cerca de 83). Correção: padding da barra 4
 - 27 testes de cálculo, e2e, palavras, bordas e área segura tardia sem falhas.
 
 **Pendência.** Confirmar no iPhone. A simulação não reproduz a pintura fora da altura informada; o fundo da faixa vazia indica que o app é desenhado ali, mas só o aparelho confirma.
+
+## 35. v26 — Barra inferior no iPhone com o defeito de altura (correção definitiva)
+
+**Evidência.**
+- Segunda captura real, após a v25: as abas apareceram cortadas exatamente a 797 pt.
+- Ou seja, o iOS **não desenha** nada abaixo da altura que informa à página. Descer a barra para 844 (v25) a colocou parcialmente fora da área desenhável.
+- A faixa abaixo de 797 pt é do sistema e é nela que fica o indicador de início.
+
+**Correção.**
+- Desfeito o deslocamento para baixo.
+- Nova área segura inferior efetiva: `--sab = max(0, env(safe-area-inset-bottom) − --vgap)`.
+- Com o defeito, `--sab` = 0: o indicador de início já está fora da área do app, e a barra se apoia na borda desenhável sem reservar os 34 pt duplicados.
+- Sem o defeito, `--sab` = `env()`, como antes.
+- Todos os usos de `env(safe-area-inset-bottom)` passaram a `var(--sab)`: barra, folhas, barra de confirmação, aviso, margem do conteúdo e padding da página no `build.sh`.
+
+**Verificação (simulação do defeito: área do app 797, tela 844).**
+- Barra de 739,4 a 797 pt; abas e filete inteiros dentro da área do app; respiro de 24 pt acima da barra.
+- Folhas terminam a 797; texto ampliado rola até 16 pt acima da barra.
+- iPhone sem defeito e Safari: capturas idênticas pixel a pixel em cinco telas.
+- 27 testes de cálculo e e2e sem erros.
+
+**Pendência.** Confirmar no iPhone. O espaço sob as abas nesse aparelho passa a ser 6 pt do app mais 47 pt do sistema. Ele não pode ser menor, porque o app não desenha nessa faixa.

@@ -28,7 +28,7 @@ pwa_head = """<!doctype html>
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <style>
-:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:var(--sab,env(safe-area-inset-bottom,0px))}
 body{margin:0}
 img{max-width:100%}
 [hidden]{display:none!important}

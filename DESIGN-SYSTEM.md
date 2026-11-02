@@ -128,7 +128,7 @@ Cobre acetinado, 44 × 44 e raio `--dj-r-tool`. É uma ferramenta, não protagon
 
 - 58 px de conteúdo mais a área do indicador de início do iOS (`env(safe-area-inset-bottom)`), que fica **livre**. Nenhum espaço do app abaixo dos rótulos.
 - Aba ativa em `--dj-signal`, com filete `--dj-signal-line` 4 px abaixo do rótulo.
-- **Compensação `--vgap`:** em alguns iPhones, com o app instalado na tela de início, o iOS informa à página a altura sem a faixa do relógio (ex.: 797 em vez de 844 pt). Assim, tudo o que é fixo na base fica 47 pt acima do fim real da tela; isso foi confirmado numa captura real. `fixViewportGap()` mede a diferença (tela física − altura informada) e só age com a assinatura exata do defeito: app instalado, retrato e diferença igual à área segura superior. Barra, folhas, fundo das folhas e avisos descem por `--vgap`. Novos elementos fixos na base devem usar `bottom: calc(-1 * var(--vgap, 0px))`.
+- **Área segura inferior efetiva `--sab`:** em alguns iPhones, com o app instalado na tela de início, o iOS informa à página a altura sem a faixa do relógio (ex.: 797 em vez de 844 pt) e não desenha nada abaixo dela; o indicador de início fica fora da área do app, mas `env(safe-area-inset-bottom)` continua 34 (confirmado em capturas reais). `fixViewportGap()` mede a diferença (tela física − altura informada) em `--vgap`, só com a assinatura exata do defeito (app instalado, retrato, diferença igual à área segura superior), e `--sab` = `max(0, env(safe-area-inset-bottom) − --vgap)`. **Todo elemento fixo na base usa `var(--sab)`, nunca `env(safe-area-inset-bottom)` direto**, e nunca é deslocado para baixo da altura informada (seria cortado).
 
 ---
 
@@ -189,7 +189,7 @@ Antes de aceitar uma tela, verificar em iPhone compacto, padrão e grande, com �
 
 ## Pendências da referência
 
-- Conferir no iPhone real: a correção da faixa inferior (`--vgap`), SF Pro, VoiceOver em voz, resposta tátil (iOS 18+) e divisórias em 1 px físico.
+- Conferir no iPhone real: a correção da faixa inferior (`--sab`/`--vgap`), SF Pro, VoiceOver em voz, resposta tátil (iOS 18+) e divisórias em 1 px físico.
 - Tamanhos de texto de acessibilidade acima de 24 px ficam limitados a 24.
 - As folhas não fecham com a tecla Esc (teclado externo); fecham pelo botão e por toque fora.
 - O campo do nome da refeição (fora da Home) tem 40 px de altura.
