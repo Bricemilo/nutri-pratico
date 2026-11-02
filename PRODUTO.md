@@ -977,3 +977,30 @@ A barra tinha 95,6 px (a nativa tem cerca de 83). Correção: padding da barra 4
 - Componentes reutilizáveis `jewelCard(o)` e `jewelDivider()` / `.dj-divider`. Funcionam fora da Home, com padding e raio padrão.
 - Documentação em `DESIGN-SYSTEM.md`.
 - Comparação pixel a pixel antes × depois em cinco telas (Home com dados no 13, vazia no mini, Pro Max, Saúde, Perfil): idênticas.
+
+## 34. v25 — Faixa preta abaixo da barra no iPhone real (corrigida)
+
+**Evidência.** Captura do iPhone 13 (1170 × 2532) com o app instalado, medida pixel a pixel:
+- Topo da barra a 706 pt; abas terminam a 763 pt; 81 pt pretos até o fim da tela (34 pt são do indicador de início).
+- Na simulação correta, a barra fica a 752 pt e sobram só os 34 pt do sistema.
+- A diferença, 46–47 pt, é igual à área segura superior (faixa do relógio).
+
+**Causa.** No app instalado, o iOS informa à página a altura da tela sem a faixa do relógio (797 em vez de 844 pt), embora desenhe o app na tela inteira. A cor da faixa vazia é a do fundo da página, o que é coerente com isso. Elementos fixos na base (`bottom: 0`) ficam presos a essa base falsa.
+
+**Reprodução.** Simulação com tela física de 844 e altura informada de 797, em modo app instalado: barra a 705,4 pt e 81 pt abaixo das abas. São os mesmos números da captura real.
+
+**Correção.**
+- `fixViewportGap()` mede tela física − altura informada e grava `--vgap`.
+- Só age com a assinatura exata do defeito: app instalado, retrato e diferença igual (±6) à área segura superior. Em qualquer outro caso o valor é 0.
+- Barra inferior, folhas, fundo escurecido das folhas e aviso (toast) descem por `--vgap`.
+- A distribuição da Home é refeita quando o valor muda.
+
+**Verificação.**
+- Com o defeito simulado: barra a 752,4 pt, 34 pt abaixo das abas e respiro de 24 pt, iguais a um iPhone sem o defeito.
+- Folha aberta pelo "+" encostada na base, com o fundo escurecido até o fim da tela.
+- Texto ampliado rola até 16 pt acima da barra.
+- Safari (navegador): sem mudança.
+- Sem o defeito: capturas idênticas pixel a pixel em cinco telas.
+- 27 testes de cálculo, e2e, palavras, bordas e área segura tardia sem falhas.
+
+**Pendência.** Confirmar no iPhone. A simulação não reproduz a pintura fora da altura informada; o fundo da faixa vazia indica que o app é desenhado ali, mas só o aparelho confirma.

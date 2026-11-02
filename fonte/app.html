@@ -1344,7 +1344,12 @@ html.big-text .hc.l1 .hc-v b.txt{font-size:1.294rem}
 /* barra inferior: divisória fina; aba ativa em cobre com filete que esmaece nas pontas, sob o rótulo */
 /* barra inferior: 58 de conteúdo (como a barra nativa, com rótulo de 13 legível) + a área do indicador de início do iOS (env), que fica livre;
    o filete da aba ativa fica dentro da aba, 4 abaixo do rótulo — nenhum espaço do app abaixo dele além da área segura do sistema */
-.tabbar{border-top-color:rgba(255,255,255,.07);padding-top:4px;padding-bottom:env(safe-area-inset-bottom,0px)}
+.tabbar{border-top-color:rgba(255,255,255,.07);padding-top:4px;padding-bottom:env(safe-area-inset-bottom,0px);bottom:calc(-1 * var(--vgap,0px))}
+/* --vgap: no app instalado, alguns iPhones informam à página a altura da tela SEM a faixa do relógio (ex.: 797 em vez de 844 pt) e tudo o que é
+   fixo na base fica essa diferença acima do fim real da tela. O código mede a diferença (tela física − altura informada) e a devolve aqui. */
+.sheet{bottom:calc(-1 * var(--vgap,0px))}
+.scrim{bottom:calc(-1 * var(--vgap,0px))}
+.toast{bottom:calc(var(--tabbar) + 22px + env(safe-area-inset-bottom,0px) - var(--vgap,0px))}
 .tab{position:relative;gap:4px;padding:4px 0 6px;line-height:1.2;transition:transform .12s ease}
 .tab:active{transform:scale(.94)}
 .tab.on{color:var(--dj-signal)}
@@ -3523,6 +3528,20 @@ function backupSheet(){
 }
 
 /* ---------- início ---------- */
+// Defeito do iOS em apps instalados na tela de início: a altura informada à página exclui a faixa do relógio, embora o app ocupe a tela inteira.
+// Assinatura exigida (para não agir em nenhum outro caso): modo app instalado, retrato, e a diferença entre a tela física e a altura informada
+// igual (±6) à área segura superior. No Safari, no Claude, em computadores ou em iPhones sem o defeito, --vgap fica 0.
+const vgapProbe = h("div", {style: "position:fixed;visibility:hidden;pointer-events:none;padding-top:env(safe-area-inset-top,0px)", "aria-hidden": "true"});
+function fixViewportGap(){
+  if (!vgapProbe.isConnected) document.body.append(vgapProbe);
+  const standalone = navigator.standalone === true || (window.matchMedia && matchMedia("(display-mode: standalone)").matches);
+  const portrait = innerHeight > innerWidth, phys = Math.max(screen.width, screen.height), topInset = parseFloat(getComputedStyle(vgapProbe).paddingTop) || 0;
+  const g = phys - innerHeight, ok = standalone && portrait && !document.body.classList.contains("typing") && g > 8 && g < 80 && topInset > 0 && Math.abs(g - topInset) <= 6;
+  const v = ok ? Math.round(g) + "px" : "0px";
+  if (document.documentElement.style.getPropertyValue("--vgap") !== v) { document.documentElement.style.setProperty("--vgap", v); fitTitles(); }   // a barra mudou de lugar: redistribui a Home
+}
+fixViewportGap();
+for (const ev of ["resize", "orientationchange", "pageshow"]) window.addEventListener(ev, fixViewportGap);
 (() => {   // tamanho de texto do iPhone (Ajustes → Tela e Brilho → Tamanho do Texto), com limite para o layout não quebrar
   const pr = document.createElement("span"); pr.style.font = "-apple-system-body"; pr.textContent = "a"; document.body.append(pr);
   const px = pr.style.font ? parseFloat(getComputedStyle(pr).fontSize) : 0; pr.remove();
