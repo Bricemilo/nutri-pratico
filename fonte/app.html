@@ -17,6 +17,21 @@
   --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px; --s6:24px; --s8:32px;
   --r-s:12px; --r-m:16px; --r-l:20px; --r-xl:24px;
   --t-cap:.765rem; --t-sm:.824rem; --t-body:.941rem; --t-h:1rem; --t-sec:1.118rem; --t-title:1.3rem; --t-page:1.882rem; --t-num:1.529rem; --t-num-l:2.353rem;
+  /* BRICEÑO · Digital Jewelry — tokens oficiais (referência visual: Home v23; documentação em DESIGN-SYSTEM.md).
+     Oito materiais: cor do material + base profunda. Usar sempre por estes nomes; não criar variações locais. */
+  --dj-copper:#DE8A4A;    --dj-copper-deep:#1E1108;      /* Nutrição · cobre acetinado */
+  --dj-emerald:#3FBFA0;   --dj-emerald-deep:#061B16;     /* Exercício · titânio esmeralda */
+  --dj-amethyst:#9F86EA;  --dj-amethyst-deep:#170F2C;    /* Sono · ametista profunda */
+  --dj-ruby:#E66F8E;      --dj-ruby-deep:#250D17;        /* Emocional · rubi rosado */
+  --dj-champagne:#D7B378; --dj-champagne-deep:#19130B;   /* Gasto diário · bronze champanhe */
+  --dj-sapphire:#35A9E0;  --dj-sapphire-deep:#06172A;    /* Hidratação · safira azul */
+  --dj-peridot:#A6C452;   --dj-peridot-deep:#0F1708;     /* Suplementos · peridoto oliva */
+  --dj-midnight:#6F98E6;  --dj-midnight-deep:#0B1430;    /* Medicamentos · safira da meia-noite */
+  /* sinal cobre (aba ativa, segmento das divisórias) e fio das divisórias */
+  --dj-signal:#EEA36A; --dj-signal-line:#E39A60;
+  --dj-hairline:rgba(150,136,124,.40); --dj-hairline-core:rgba(172,142,116,.58); --dj-hairline-seg:rgba(222,156,108,.96);
+  /* raios: cartão, pastilha de ícone, botão-ferramenta */
+  --dj-r-card:18px; --dj-r-tile:8px; --dj-r-tool:13px;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -1225,19 +1240,20 @@ html.big-text .sc-m > span + span{border-left:0;border-top:1px solid var(--line)
    Camadas de cada cartão (.hc): 1 base cromática profunda · 2 luz ambiente · 3 reflexo curvo vetorial (.hc-fx, SVG de JEWEL)
    · 4 microtextura (estrias finas da lâmina) · 5 aro de 1 px que acende onde a luz incide · 6 conteúdo sobre a zona escura. */
 /* tokens de espaço da Home (grade de 4): todos os intervalos vêm daqui; o código (spread) lê --air e --air-min */
-.home{--hc-gap:12px;--hc-pad:14px;--hc-pv:12px;--hc-r:18px;--sp-head:16px;--sp-div:20px;--air:24px;--air-min:16px}
+.home{--hc-gap:12px;--hc-pad:14px;--hc-pv:12px;--hc-r:var(--dj-r-card);--sp-head:16px;--sp-div:20px;--air:24px;--air-min:16px}
 .hi-h{margin:2px 0 calc(var(--sp-head) + var(--xh,0px))}
 .hi-h h1{margin:0;font-size:1.647rem;font-weight:660;letter-spacing:-.028em;line-height:1.12}
 .hi-h .today{margin:4px 0 0;font-size:var(--t-sm);color:var(--muted);font-weight:500}
 .hgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:1fr;gap:var(--hc-gap)}
 /* Signature divider (duas, idênticas): fio grafite quente que esmaece em transição longa (22%) e ganha calor e presença ao centro + segmento cobre acetinado de 32 (ecoa o filete da aba ativa), em 1 px físico */
-.hdiv{position:relative;height:1px;margin:calc(var(--sp-div) + var(--xd,0px)) 0;background:linear-gradient(90deg,rgba(150,136,124,0),rgba(150,136,124,.40) 22%,rgba(172,142,116,.58) 50%,rgba(150,136,124,.40) 78%,rgba(150,136,124,0))}
-.hdiv::after{content:"";position:absolute;left:50%;top:0;width:32px;height:100%;margin-left:-16px;background:linear-gradient(90deg,rgba(214,150,104,0),rgba(222,156,108,.96) 50%,rgba(214,150,104,0))}
-@media (min-resolution:2dppx){.hdiv{transform:scaleY(.5)}}
-@media (min-resolution:3dppx){.hdiv{transform:scaleY(.3334)}}
+.hdiv,.dj-divider{position:relative;height:1px;background:linear-gradient(90deg,rgba(150,136,124,0),var(--dj-hairline) 22%,var(--dj-hairline-core) 50%,var(--dj-hairline) 78%,rgba(150,136,124,0))}
+.hdiv{margin:calc(var(--sp-div) + var(--xd,0px)) 0}
+.hdiv::after,.dj-divider::after{content:"";position:absolute;left:50%;top:0;width:32px;height:100%;margin-left:-16px;background:linear-gradient(90deg,rgba(214,150,104,0),var(--dj-hairline-seg) 50%,rgba(214,150,104,0))}
+@media (min-resolution:2dppx){.hdiv,.dj-divider{transform:scaleY(.5)}}
+@media (min-resolution:3dppx){.hdiv,.dj-divider{transform:scaleY(.3334)}}
 .hgrid.odd .hc:last-child{grid-column:1 / -1}
 .hc{--g:#D98A4E;--gd:#20130A;--ra:140deg;--rt:34%;--rb:80%;--lb:30%;--lt:16%;
-  position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;align-items:stretch;min-width:0;padding:var(--hc-pv) var(--hc-pad);border-radius:var(--hc-r);text-align:left;
+  position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;align-items:stretch;min-width:0;padding:var(--hc-pv,12px) var(--hc-pad,14px);border-radius:var(--hc-r,var(--dj-r-card));text-align:left;
   border:1px solid transparent;
   background:
     radial-gradient(75% 85% at 100% 100%,color-mix(in srgb,var(--g) var(--lb),transparent),transparent 72%) padding-box,
@@ -1257,17 +1273,17 @@ html.big-text .sc-m > span + span{border-left:0;border-top:1px solid var(--line)
 .hc.l2 .hc-fx{-webkit-mask-image:linear-gradient(to bottom,#000 34%,transparent 54%),linear-gradient(to right,rgba(0,0,0,.2) 52%,rgba(0,0,0,.38) 84%,#000 100%);
   mask-image:linear-gradient(to bottom,#000 34%,transparent 54%),linear-gradient(to right,rgba(0,0,0,.2) 52%,rgba(0,0,0,.38) 84%,#000 100%)}
 /* oito materiais: cor (--g), base (--gd), luz de canto (--lb), luz do alto (--lt), direção e força do aro (--ra/--rt/--rb); o reflexo vem de JEWEL */
-.hc.food  {--g:#DE8A4A;--gd:#1E1108;--lb:34%;--lt:26%;--ra:150deg;--rt:56%;--rb:96%}  /* cobre acetinado */
-.hc.move  {--g:#3FBFA0;--gd:#061B16;--lb:26%;--lt:15%;--ra:120deg;--rt:42%;--rb:90%}  /* titânio esmeralda */
-.hc.sleep {--g:#9F86EA;--gd:#170F2C;--lb:34%;--lt:26%;--ra:145deg;--rt:52%;--rb:88%}  /* ametista profunda */
-.hc.wb    {--g:#E66F8E;--gd:#250D17;--lb:34%;--lt:24%;--ra:140deg;--rt:52%;--rb:94%}  /* rubi rosado */
-.hc.water {--g:#35A9E0;--gd:#06172A;--lb:34%;--lt:20%;--ra:130deg;--rt:46%;--rb:98%}  /* safira azul */
-.hc.energy{--g:#D7B378;--gd:#19130B;--lb:28%;--lt:22%;--ra:155deg;--rt:58%;--rb:88%}  /* bronze champanhe */
-.hc.supp  {--g:#A6C452;--gd:#0F1708;--lb:25%;--lt:22%;--ra:150deg;--rt:56%;--rb:84%}  /* peridoto oliva */
-.hc.meds  {--g:#6F98E6;--gd:#0B1430;--lb:36%;--lt:18%;--ra:135deg;--rt:42%;--rb:90%}  /* safira da meia-noite */
+.hc.food  {--g:var(--dj-copper);--gd:var(--dj-copper-deep);--lb:34%;--lt:26%;--ra:150deg;--rt:56%;--rb:96%}  /* cobre acetinado */
+.hc.move  {--g:var(--dj-emerald);--gd:var(--dj-emerald-deep);--lb:26%;--lt:15%;--ra:120deg;--rt:42%;--rb:90%}  /* titânio esmeralda */
+.hc.sleep {--g:var(--dj-amethyst);--gd:var(--dj-amethyst-deep);--lb:34%;--lt:26%;--ra:145deg;--rt:52%;--rb:88%}  /* ametista profunda */
+.hc.wb    {--g:var(--dj-ruby);--gd:var(--dj-ruby-deep);--lb:34%;--lt:24%;--ra:140deg;--rt:52%;--rb:94%}  /* rubi rosado */
+.hc.water {--g:var(--dj-sapphire);--gd:var(--dj-sapphire-deep);--lb:34%;--lt:20%;--ra:130deg;--rt:46%;--rb:98%}  /* safira azul */
+.hc.energy{--g:var(--dj-champagne);--gd:var(--dj-champagne-deep);--lb:28%;--lt:22%;--ra:155deg;--rt:58%;--rb:88%}  /* bronze champanhe */
+.hc.supp  {--g:var(--dj-peridot);--gd:var(--dj-peridot-deep);--lb:25%;--lt:22%;--ra:150deg;--rt:56%;--rb:84%}  /* peridoto oliva */
+.hc.meds  {--g:var(--dj-midnight);--gd:var(--dj-midnight-deep);--lb:36%;--lt:18%;--ra:135deg;--rt:42%;--rb:90%}  /* safira da meia-noite */
 /* ícone: pequena peça — pastilha tonal elevada, aro fino aceso no alto, sombra de contato mínima, símbolo nítido */
 .hc-h{display:flex;align-items:center;gap:10px;min-width:0}
-.hc-i{display:grid;place-items:center;flex:none;width:28px;height:28px;border-radius:8px;color:color-mix(in srgb,var(--g) 78%,#fff);
+.hc-i{display:grid;place-items:center;flex:none;width:28px;height:28px;border-radius:var(--dj-r-tile);color:color-mix(in srgb,var(--g) 78%,#fff);
   border:1px solid transparent;
   background:linear-gradient(155deg,color-mix(in srgb,var(--g) 30%,var(--gd)),color-mix(in srgb,var(--g) 10%,var(--gd))) padding-box,
     linear-gradient(160deg,color-mix(in srgb,var(--g) 72%,#fff),color-mix(in srgb,var(--g) 22%,transparent) 55%,color-mix(in srgb,var(--g) 40%,transparent)) border-box;
@@ -1315,7 +1331,7 @@ html.big-text .sc-m > span + span{border-left:0;border-top:1px solid var(--line)
 .hc-v b.txt{white-space:normal}
 html.big-text .hc.l1 .hc-v b.txt{font-size:1.294rem}
 /* topo: "+" em cobre acetinado — ferramenta, não protagonista: brilho contido, aro discreto, sombra curta */
-.icon-btn.accent{border-radius:13px;color:#22120A;border:1px solid transparent;
+.icon-btn.accent{border-radius:var(--dj-r-tool);color:#22120A;border:1px solid transparent;
   background:linear-gradient(170deg,#C3804E,#A9663A 55%,#94562A) padding-box,linear-gradient(170deg,rgba(236,188,148,.6),rgba(169,102,58,.35) 50%,rgba(96,52,22,.8)) border-box;
   box-shadow:inset 0 1px 0 rgba(255,228,202,.16),0 2px 6px -3px rgba(0,0,0,.8)}
 /* barra superior: seletor e "+" com 44 de altura, centrados na mesma linha */
@@ -1331,8 +1347,8 @@ html.big-text .hc.l1 .hc-v b.txt{font-size:1.294rem}
 .tabbar{border-top-color:rgba(255,255,255,.07);padding-top:4px;padding-bottom:env(safe-area-inset-bottom,0px)}
 .tab{position:relative;gap:4px;padding:4px 0 6px;line-height:1.2;transition:transform .12s ease}
 .tab:active{transform:scale(.94)}
-.tab.on{color:#EEA36A}
-.tab.on::after{content:"";position:absolute;bottom:0;left:50%;width:34px;height:2px;margin-left:-17px;border-radius:2px;background:linear-gradient(90deg,rgba(222,140,80,0),#E39A60,rgba(222,140,80,0))}
+.tab.on{color:var(--dj-signal)}
+.tab.on::after{content:"";position:absolute;bottom:0;left:50%;width:34px;height:2px;margin-left:-17px;border-radius:2px;background:linear-gradient(90deg,rgba(222,140,80,0),var(--dj-signal-line),rgba(222,140,80,0))}
 @media (max-width:380px){.home{--hc-gap:8px;--hc-pad:12px}.hc-h{gap:8px}.hc.l1 .hc-v b{font-size:1.412rem}.hc.l1 .hc-v b.long{font-size:1.118rem}.hc.l1 .hc-v b.txt:not(.long){font-size:1.294rem}}
 @media (prefers-reduced-motion:reduce){.hc,.tab{transition:none}.hc:active,.tab:active{transform:none}}
 </style>
@@ -1846,6 +1862,21 @@ const JEWEL = (() => {
   };
 })();
 /* luz curva do cabeçalho (conceito original), bem atenuada: três fios de cobre atrás da metade direita, longe do texto */
+/* ---------- Digital Jewelry: componentes reutilizáveis (referência: Home; ver DESIGN-SYSTEM.md) ----------
+   jewelCard(o) — cartão-joia, um botão inteiro:
+     o.cls    material: food · move · sleep · wb · energy · water · supp · meds (classe CSS com os tokens --dj-* e reflexo de JEWEL)
+     o.lv     tamanho: "l1" (pilar, número 26) ou "l2" (indicador compacto, número 22)
+     o.icon   chave de ICON · o.title título curto (uma linha) · o.value valor (null = estado vazio) · o.unit unidade · o.sub legenda
+     o.empty  [mensagem, ação] quando não há dado · o.aria rótulo completo para o VoiceOver (opcional) · o.fn ação ao tocar
+   jewelDivider() — Signature divider (1 px físico, grafite quente com segmento cobre central). */
+function jewelCard(o){ const has = o.value != null;
+  return h("button", {class: `hc ${o.lv} ${o.cls}` + (has ? "" : " empty"), type: "button", onclick: () => { haptic(); o.fn(); },
+      "aria-label": o.aria || `${o.title}: ${has ? `${o.value}${o.unit ? " " + o.unit.replace("/", " por ").trim() : ""}${o.sub ? `. ${o.sub}` : ""}` : `${o.empty[0]}. ${o.empty[1]}`}.`},
+    h("span", {class: "hc-fx", "aria-hidden": "true"}, JEWEL(o.cls)),
+    h("span", {class: "hc-h"}, h("span", {class: "hc-i", html: ICON[o.icon]}), h("span", {class: "hc-t"}, o.title)),
+    h("span", {class: "hc-v"}, has ? [h("b", {class: [String(o.value).length > 9 ? "long" : "", /^\d/.test(o.value) ? "" : "txt"].join(" ").trim() || null}, o.value), o.unit ? [" ", h("small", null, o.unit)] : null] : h("b", {class: "nr"}, o.empty[0])),
+    h("span", {class: "hc-s"}, has ? o.sub || "" : o.empty[1])); }
+function jewelDivider(){ return h("div", {class: "hdiv", "aria-hidden": "true"}); }
 function renderHome(p){
   /* Painel de saúde em três grupos, mesmo componente em dois tamanhos, separados por duas Signature dividers:
      A · pilares (Nutrição, Exercício, Sono, Emocional) · B · energia e hidratação (Gasto diário, Hidratação) · C · acompanhamento (Suplementos, Medicamentos).
@@ -1864,14 +1895,7 @@ function renderHome(p){
   const sup = countOf(["suplemento", "formula"]), med = countOf(["medicamento"]);
   const paused = c => c.total > c.active ? `${c.total - c.active} ${c.total - c.active === 1 ? "pausado" : "pausados"}` : "";
   const cap = x => x ? x[0].toUpperCase() + x.slice(1) : x;
-  // componente único dos oito cartões; o material vem da classe do módulo (CSS), o tamanho do nível (l1/l2/l3)
-  const card = o => { const has = o.value != null;
-    return h("button", {class: `hc ${o.lv} ${o.cls}` + (has ? "" : " empty"), type: "button", onclick: () => { haptic(); o.fn(); },
-        "aria-label": o.aria || `${o.title}: ${has ? `${o.value}${o.unit ? " " + o.unit.replace("/", " por ").trim() : ""}${o.sub ? `. ${o.sub}` : ""}` : `${o.empty[0]}. ${o.empty[1]}`}.`},
-      h("span", {class: "hc-fx", "aria-hidden": "true"}, JEWEL(o.cls)),
-      h("span", {class: "hc-h"}, h("span", {class: "hc-i", html: ICON[o.icon]}), h("span", {class: "hc-t"}, o.title)),
-      h("span", {class: "hc-v"}, has ? [h("b", {class: [String(o.value).length > 9 ? "long" : "", /^\d/.test(o.value) ? "" : "txt"].join(" ").trim() || null}, o.value), o.unit ? [" ", h("small", null, o.unit)] : null] : h("b", {class: "nr"}, o.empty[0])),
-      h("span", {class: "hc-s"}, has ? o.sub || "" : o.empty[1])); };
+  const card = jewelCard, divider = jewelDivider;
   const openMeds = (c, cat) => () => c.total ? go({tab: "saude", hsub: "resumo", hfocus: "meds"}) : medSheet(p, null, cat);
   // suplementos e medicamentos: número e palavra na mesma linha — "2 ativos" (pausados na legenda, se houver) ou, sem cadastro, "0 cadastrados" (o cartão abre o cadastro)
   const careCard = (cls, icon, title, c, cat) => card({lv: "l2", cls, icon, title, value: String(c.total ? c.active : 0), unit: c.total ? (c.active === 1 ? "ativo" : "ativos") : "cadastrados",
@@ -1894,7 +1918,6 @@ function renderHome(p){
     card({lv: "l2", cls: "water", icon: "drop", title: "Hidratação", value: w.ml ? fmtL(w.ml) : null, unit: "L/dia", sub: w.src === "manual" ? "Definida por você" : "Recomendação diária",
       fn: () => waterSheet(p), empty: ["Não definida", "Toque para definir"]}));
   const care = h("div", {class: "hgrid hg-c"}, careCard("supp", "pill", "Suplementos", sup, "suplemento"), careCard("meds", "capsule", "Medicamentos", med, "medicamento"));
-  const divider = () => h("div", {class: "hdiv", "aria-hidden": "true"});
   put(app, h("div", {class: "view home"}, topBar(quickBtn(p, "hoje")),
     h("header", {class: "hi-h"}, h("h1", null, `${greetOf()}, ${firstName(p.name)}`), h("div", {class: "today"}, dayTxt)),
     pillars, divider(), energyWater, divider(), care));

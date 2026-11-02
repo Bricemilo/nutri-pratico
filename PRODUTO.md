@@ -951,3 +951,29 @@ A barra tinha 95,6 px (a nativa tem cerca de 83). Correção: padding da barra 4
 - Medindo só o processamento (render + layout, sem esperar o quadro), v21, v22 e v23 têm o mesmo custo: mediana de 10,8–10,9 ms, p90 de 16,6–17,5 ms. Não há regressão.
 
 **Pendências.** Conferir no iPhone real (SF Pro, VoiceOver, vibração, divisórias em 1 px físico). Campo do nome da refeição com 40 px de altura. Decisão sobre o protocolo "Média".
+
+## 33. Home v24 — Final Release e Design System
+
+**Auditoria final (sem mudança visual).**
+- Espaço inferior: 34 px abaixo das abas, iguais a `env(safe-area-inset-bottom)` (indicador de início do iOS). Nenhum espaço ou elemento do app ali.
+- Funcional, por roteiro automatizado:
+  - o "+" abre "Registrar", e o registro emocional por ele atualiza o cartão;
+  - o valor persiste após recarregar;
+  - o seletor troca para outro membro com os dados dele e volta;
+  - o toque no cartão dispara a resposta tátil;
+  - o estado pressionado está presente;
+  - a árvore de acessibilidade está completa, na ordem visual, com divisórias e reflexos ocultos.
+- Estresse (dados de teste), estados vazios, 40 combinações de tela e texto, áreas seguras tardias, contraste ≥ 5,98:1, 27 testes de cálculo e e2e: sem falhas.
+- Custo de processamento igual ao das versões anteriores: mediana de 11 ms.
+
+**Defeitos encontrados.** Nenhum reproduzível na Home. Observações fora do escopo: as folhas não fecham com Esc; tamanhos de texto acima de 24 px ficam no teto.
+
+**Design system (refatoração sem mudança de pixel).**
+- Tokens oficiais em `:root`:
+  - oito materiais (`--dj-*` e `--dj-*-deep`);
+  - sinal cobre;
+  - fio e segmento das divisórias;
+  - raios de cartão, pastilha e ferramenta.
+- Componentes reutilizáveis `jewelCard(o)` e `jewelDivider()` / `.dj-divider`. Funcionam fora da Home, com padding e raio padrão.
+- Documentação em `DESIGN-SYSTEM.md`.
+- Comparação pixel a pixel antes × depois em cinco telas (Home com dados no 13, vazia no mini, Pro Max, Saúde, Perfil): idênticas.
