@@ -1026,3 +1026,31 @@ A barra tinha 95,6 px (a nativa tem cerca de 83). Correção: padding da barra 4
 - 27 testes de cálculo e e2e sem erros.
 
 **Pendência.** Confirmar no iPhone. O espaço sob as abas nesse aparelho passa a ser 6 pt do app mais 47 pt do sistema. Ele não pode ser menor, porque o app não desenha nessa faixa.
+
+## 36. v27 — Barra inferior global, espaço final das telas e atualização imediata
+
+**Diagnóstico.**
+- As capturas desta rodada não chegaram. A análise usa as duas capturas reais anteriores (v24 e v25) e simulações com a geometria medida do aparelho: tela de 844 pt, área desenhável de 797 pt.
+- O corte dos rótulos é o da v25: a barra foi deslocada para baixo da área desenhável.
+- A v26 já corrigia isso em todas as abas, porque a barra é um único componente (`#tabbar` / `.tabbar`) compartilhado pelas quatro.
+- Causa provável de a correção não ter aparecido: o GitHub Pages deixa o aparelho reutilizar a página por até 10 min, e o app instalado pode abrir a versão anterior logo após a publicação.
+
+**Correções.**
+1. Atualização: a página passa a ser buscada sem o cache HTTP (`fetch(..., {cache: "no-store"})` no `sw.js`). Reabrir o app traz a versão publicada; sem internet, abre a última guardada.
+2. Compensação duplicada removida: `.app` somava a área segura inferior além do padding da página (`:root`). Ao fim da rolagem das abas internas ficavam 62 pt acima da barra em vez de 28. Agora são 28 pt em todos os aparelhos, com ou sem o defeito.
+
+**Safe Areas (modelo final).**
+- `--sab` = `max(0, env(safe-area-inset-bottom) − --vgap)` é a única área segura inferior usada: padding da barra, folhas, barra de confirmação, aviso e padding da página.
+- Com o defeito (`--vgap` = 47), o indicador de início fica fora da área do app, então `--sab` = 0. A barra se apoia na borda desenhável e os rótulos terminam a 790 pt de 797.
+- Sem o defeito, a barra tem 34 pt de área segura sob os rótulos, como antes.
+- A margem final da Home vem da altura real da barra (`--home-pb`). Nas outras telas é a altura da barra + 28.
+
+**Verificação (simulação; 0 falhas em 40 combinações).**
+- Hoje, Nutrição, Saúde e Perfil × iPhone 13, mini e Pro Max × com e sem o defeito × texto 17 e 21 px.
+- Ícones, rótulos e filete inteiros dentro da área desenhável; área de toque das abas ≥ 52 pt.
+- Fim de cada tela acima da barra (24–29 pt).
+- Troca entre abas; folha abre pelo "+" e fecha tocando fora.
+
+**Geometria da Home.**
+- Sem o defeito: idêntica à aprovada, pixel a pixel.
+- No iPhone com defeito, data → cartões 19,7 pt (aprovada 21,8) e divisórias 25,3 pt (aprovada 28), pela mesma distribuição. Há 13 pt a menos de área desenhável; cartões inalterados.

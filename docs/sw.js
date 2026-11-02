@@ -1,5 +1,5 @@
 // Guarda o app no aparelho para abrir rápido e funcionar sem internet.
-const VERSION = "a19e9be083";
+const VERSION = "8c6aabe8d7";
 const CACHE = "nutri-pratico-" + VERSION;
 const OCR = "np-ocr-tesseract-6.0.1";   // leitor de rótulos: guardado à parte, sobrevive às atualizações do app
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icons/apple-touch-icon.png", "./icons/icon-192.png", "./icons/icon-512.png"];
@@ -15,9 +15,10 @@ self.addEventListener("fetch", e => {
   const req = e.request;
   if (req.method !== "GET") return;
   const url = new URL(req.url);
-  // Página: tenta a rede primeiro (pega atualizações) e cai no cache sem internet
+  // Página: tenta a rede primeiro (pega atualizações) e cai no cache sem internet.
+  // "no-store" ignora o cache HTTP do aparelho (o GitHub Pages permite reaproveitar a página por 10 min), para que reabrir o app traga a versão publicada
   if (req.mode === "navigate") {
-    e.respondWith(fetch(req).then(r => { const copy = r.clone(); caches.open(CACHE).then(c => c.put("./index.html", copy)); return r; })
+    e.respondWith(fetch(req.url, {cache: "no-store", credentials: "same-origin"}).then(r => { const copy = r.clone(); caches.open(CACHE).then(c => c.put("./index.html", copy)); return r; })
       .catch(() => caches.match("./index.html")));
     return;
   }
