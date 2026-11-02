@@ -1166,7 +1166,7 @@ html.big-text .seg.seg4 button{height:auto;min-height:44px;white-space:normal}
 .tw{height:44px;width:104px}
 .seg.seg-2 button{height:44px}
 .mh-s{white-space:normal;overflow:visible}
-.meal-name{min-height:40px}
+.meal-name{min-height:44px}
 /* contraste ≥ 4,5:1 sobre o fundo tingido dos pilares: textos de apoio em --ink-2, não em --muted */
 
 /* ===== v12: pilares em duas linhas · fibras complementares · rodapé Hidratação | GET · Saúde compacta · cuidados ===== */
@@ -1375,6 +1375,75 @@ html.big-text .hc.l1 .hc-v b.txt{font-size:1.294rem}
 .tab.on::after{content:"";position:absolute;bottom:0;left:50%;width:34px;height:2px;margin-left:-17px;border-radius:2px;background:linear-gradient(90deg,rgba(222,140,80,0),var(--dj-signal-line),rgba(222,140,80,0))}
 @media (max-width:380px){.home{--hc-gap:8px;--hc-pad:12px}.hc-h{gap:8px}.hc.l1 .hc-v b{font-size:1.412rem}.hc.l1 .hc-v b.long{font-size:1.118rem}.hc.l1 .hc-v b.txt:not(.long){font-size:1.294rem}}
 @media (prefers-reduced-motion:reduce){.hc,.tab{transition:none}.hc:active,.tab:active{transform:none}}
+/* ===== BRICEÑO Design System v29 — três materiais, uma linguagem (ver DESIGN-SYSTEM.md) =====
+   A · Signature Jewelry (.hc, jewelCard): só os oito cartões da Home. Cor profunda, reflexo vetorial, aro aceso.
+   B · Precision Glass (.dj-glass): painéis protagonistas fora da Home — resumo nutricional, indicadores de Saúde, identificação no Perfil.
+       Grafite profundo com leve tom do tema (--tint), aro fino que acende no alto, profundidade discreta. Sem reflexo.
+   C · Quiet Luxury (.dj-quiet): listas, grupos, formulários e informação secundária. Grafite, borda sutil, nenhum ornamento.
+   A sofisticação cresce com a importância da informação, não com a quantidade de efeitos. */
+:root{
+  --dj-glass-base:linear-gradient(168deg,#1C1916 0%,#151311 60%,#131110 100%);
+  --dj-quiet:#171513; --dj-quiet-line:rgba(255,255,255,.06); --dj-quiet-rule:rgba(255,255,255,.065);
+  --dj-tile:linear-gradient(155deg,#221E1B,#191614); --dj-tile-line:rgba(255,255,255,.07);
+  --dj-r-panel:20px;
+  /* tipografia por papel (rem: acompanha o tamanho de texto do iPhone) */
+  --dj-type-page:1.765rem; --dj-type-section:var(--t-sec); --dj-type-title:var(--t-body); --dj-type-num:var(--t-num); --dj-type-unit:var(--t-sm); --dj-type-meta:var(--t-sm); --dj-type-label:var(--t-cap);
+}
+/* B · Precision Glass */
+.dj-glass,.sumcard,.hstack .hrow,.idc{--tint:var(--dj-copper);border:1px solid transparent;border-radius:var(--dj-r-panel);
+  background:radial-gradient(130% 110% at 0% 0%,color-mix(in srgb,var(--tint) 10%,transparent),transparent 58%) padding-box,var(--dj-glass-base) padding-box,
+    linear-gradient(165deg,color-mix(in srgb,var(--tint) 36%,rgba(255,255,255,.08)),rgba(255,255,255,.055) 32%,rgba(255,255,255,.035) 72%,color-mix(in srgb,var(--tint) 14%,rgba(255,255,255,.03))) border-box;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.045),0 18px 32px -26px rgba(0,0,0,.9)}
+/* C · Quiet Luxury */
+.dj-quiet,.goalcard,.prows,.glist,.gempty,.view > details.src.more,.hstack .na,.hstack .na.good{background:var(--dj-quiet);border:1px solid var(--dj-quiet-line);border-radius:var(--dj-r-panel)}
+.panel:not(.sumcard):not(.idc):not(.goalcard){background:var(--dj-quiet);border:1px solid var(--dj-quiet-line)}
+/* pastilha de ícone fora da Home: grafite com aro fino (cor do símbolo = significado, quando houver) */
+.pr-i,.gl-i,.gr-i{background:var(--dj-tile);border:1px solid var(--dj-tile-line);box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
+/* segmented control premium (Plano do dia / Alimentos; abas de Saúde; protocolos): trilho grafite, seleção em cobre acetinado */
+.seg{background:#110F0E;border:1px solid var(--dj-quiet-line);border-radius:14px;padding:3px;gap:3px}
+.seg button{border-radius:11px;color:var(--ink-2);transition:background-color .18s ease,color .18s ease,transform .12s ease}
+.seg button:active{transform:scale(.97)}
+.seg button.on{background:linear-gradient(170deg,#E39A60,#D0844C 55%,#BF7442);color:#1C0E05;font-weight:650;box-shadow:inset 0 1px 0 rgba(255,236,214,.28),0 1px 3px rgba(0,0,0,.55)}
+/* NUTRIÇÃO — resumo (Precision Glass cobre): divisórias finas, números tabulares, fibras integradas ao resumo */
+.sumcard .sc-m{border-top-color:var(--dj-quiet-rule)}
+.sumcard .sc-m > span + span{border-left-color:var(--dj-quiet-rule)}
+.sumcard .sc-f{border-top-color:var(--dj-quiet-rule);align-items:baseline}
+.sumcard .sc-f span{font-size:var(--t-cap);font-weight:600;color:var(--fib)}
+.sumcard .sc-btn:active{background:rgba(255,255,255,.02)}
+/* objetivo: pastilha com o alvo em cobre, edição sempre visível */
+.goalcard .gl-i{color:var(--dj-copper)}
+.goalcard .gl-e{border-color:var(--dj-tile-line);background:var(--dj-tile)}
+/* refeições: lista Quiet Luxury contínua, horários em cobre, calorias alinhadas, separadores finos */
+.meals > .meal{background:var(--dj-quiet);border-left:1px solid var(--dj-quiet-line);border-right:1px solid var(--dj-quiet-line)}
+.meals > .meal:first-child{border-top:1px solid var(--dj-quiet-line)}
+.meals > .meal:last-child{border-bottom:1px solid var(--dj-quiet-line)}
+.meals > .meal + .meal{border-top:1px solid var(--dj-quiet-rule)}
+.meals > .meal:not(.open) .mh:active{background:rgba(255,255,255,.03)}
+.meals > .meal.open .mh{background:#1D1A17}
+.mh-k{min-width:4.6em;text-align:right}
+.add-row .add-meal:not(.fav-b){border:1px solid color-mix(in srgb,var(--dj-copper) 70%,transparent);background:color-mix(in srgb,var(--dj-copper) 6%,transparent)}
+.add-row .add-meal:not(.fav-b):active{background:color-mix(in srgb,var(--dj-copper) 14%,transparent)}
+/* SAÚDE — indicadores (Precision Glass com o material da Home de cada módulo) */
+.hstack .hrow.move{--tint:var(--dj-emerald);--c:var(--dj-emerald)}
+.hstack .hrow.sleep{--tint:var(--dj-amethyst);--c:var(--dj-amethyst)}
+.hstack .hrow.wb{--tint:var(--dj-ruby);--c:var(--dj-ruby)}
+.hstack .hrow.water{--tint:var(--dj-sapphire);--c:var(--dj-sapphire)}
+.hstack .hrow .hp-i{width:40px;height:40px;border-radius:12px;color:color-mix(in srgb,var(--c) 82%,#fff);border:1px solid transparent;
+  background:linear-gradient(155deg,color-mix(in srgb,var(--c) 30%,#14110F),color-mix(in srgb,var(--c) 10%,#14110F)) padding-box,
+    linear-gradient(160deg,color-mix(in srgb,var(--c) 70%,#fff),color-mix(in srgb,var(--c) 22%,transparent) 55%,color-mix(in srgb,var(--c) 36%,transparent)) border-box;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 1px 2px rgba(0,0,0,.55)}
+.hstack .hrow:active{transform:scale(.985)}
+/* suplementos e medicamentos: mesmas cores da Home (peridoto · safira da meia-noite) */
+.gr-i.c-suplemento,.gr-i.c-formula{color:var(--dj-peridot)} .gr-i.c-medicamento{color:var(--dj-midnight)}
+.grow:active{background-color:rgba(255,255,255,.03)}
+.sec-add{background:var(--dj-tile);border:1px solid color-mix(in srgb,var(--dj-copper) 40%,transparent);color:var(--dj-copper)}
+/* PERFIL — identificação (Precision Glass cobre, monograma com aro fino) e grupos Quiet Luxury */
+.idc .av{background:radial-gradient(circle at 30% 25%,#3A2617,#1F150D);border:1px solid color-mix(in srgb,var(--dj-copper) 55%,transparent);color:#F0B585;box-shadow:inset 0 1px 0 rgba(255,236,214,.12)}
+.prows > *{background-image:linear-gradient(var(--dj-quiet-rule),var(--dj-quiet-rule))}
+.prows > :first-child{background-image:none}
+.prow:active,.ec-h:active{background-color:rgba(255,255,255,.03)}
+.prow.due .pr-i{color:var(--dj-copper);border-color:color-mix(in srgb,var(--dj-copper) 35%,transparent)}
+@media (prefers-reduced-motion:reduce){.seg button,.hstack .hrow{transition:none}.seg button:active,.hstack .hrow:active{transform:none}}
 </style>
 
 </head>
@@ -2723,7 +2792,7 @@ function examsSection(p){
           h("span", {class: "gr-m"}, h("b", null, e.name), h("span", null, [e.last ? `Último: ${fromISO(e.last)}` : "Sem data registrada", nx ? h("span", {class: late ? "due" : null}, ` · ${late ? "previsto para" : "próximo:"} ${fromISO(nx)}`) : null])),
           h("span", {class: "li-go", html: ICON.right})); }),
       h("button", {class: "grow", type: "button", id: "goals", onclick: () => goalsSheet(p)}, h("span", {class: "gr-i", html: ICON.heart}),
-        h("span", {class: "gr-m"}, h("b", null, "Prioridades de saúde"), h("span", null, goals ? `${goals} ${goals === 1 ? "prioridade definida" : "prioridades definidas"}` : "O que você quer acompanhar ou melhorar")),
+        h("span", {class: "gr-m"}, h("b", null, "Prioridades de saúde"), h("span", null, goals ? `${goals} ${goals === 1 ? "prioridade definida" : "prioridades definidas"}` : "O que você quer acompanhar")),
         h("span", {class: "li-go", html: ICON.right}))),
     !c.exams.length ? h("p", {class: "care-n"}, "Registre a data do último exame e, se quiser, o intervalo combinado com seu médico para ver a próxima data.") : null);
 }
@@ -3730,7 +3799,7 @@ function renderProfile(p){
       row("heart", "Prioridades de saúde", cr.goals.length ? `${cr.goals.length} ${cr.goals.length === 1 ? "prioridade definida" : "prioridades definidas"}` : "O que você quer acompanhar", () => goalsSheet(p))),
     h("h2", {class: "sec-t"}, "Aplicativo"),
     h("div", {class: "prows"},
-      row("lock", "Backup e segurança", days == null ? "Só neste aparelho · nenhum backup ainda" : `Só neste aparelho · backup ${days === 0 ? "hoje" : days === 1 ? "ontem" : `há ${days} dias`}`, () => backupSheet(), null,
+      row("lock", "Backup e segurança", days == null ? "Só neste aparelho · sem backup" : `Só neste aparelho · backup ${days === 0 ? "hoje" : days === 1 ? "ontem" : `há ${days} dias`}`, () => backupSheet(), null,
         S.patients.some(x => !x.example) && (days == null || days >= 7)),
       row("sliders", "Configurações", tracks(p) ? "Registro do consumo ligado · sugestões" : "Só planejamento · sugestões", () => prefsSheet()),
       row("book", "Fontes e metodologia", "Como o BRICEÑO calcula", () => scienceSheet(p)))));

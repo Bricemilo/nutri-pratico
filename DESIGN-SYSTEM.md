@@ -1,6 +1,6 @@
 # BRICEÑO · Digital Jewelry Design System
 
-Referência visual oficial: **Home v24** (Home Final Release). As próximas telas devem seguir os tokens, componentes e regras deste documento. Tudo está em `fonte/app.html`: os tokens no bloco `:root` e os componentes acima de `renderHome`.
+Referência visual oficial: **Home v24** (Home Final Release); Nutrição, Saúde e Perfil seguem o sistema desde a v29 (seção 3.6). As próximas telas devem seguir os tokens, componentes e regras deste documento. Tudo está em `fonte/app.html`: os tokens no bloco `:root` e os componentes acima de `renderHome`.
 
 > Situação da validação: aprovada em testes automatizados (Chromium/Playwright, iPhones simulados com áreas seguras). **Ainda não conferida em iPhone real**: fonte SF Pro, VoiceOver em voz, vibração e espessura física das divisórias (ver "Pendências").
 
@@ -132,6 +132,36 @@ Cobre acetinado, 44 × 44 e raio `--dj-r-tool`. É uma ferramenta, não protagon
 
 ---
 
+### 3.6 Hierarquia de materiais (A · B · C) — v29
+
+A sofisticação cresce com a importância da informação, não com a quantidade de efeitos.
+
+| Material | Classe | Onde usar | Como é |
+|---|---|---|---|
+| **A · Signature Jewelry** | `.hc` (`jewelCard`) | Só os oito cartões da Home | Cor profunda do material, reflexo vetorial, aro aceso |
+| **B · Precision Glass** | `.dj-glass` (+ `--tint`) | Painéis protagonistas: resumo nutricional, indicadores de Saúde, identificação no Perfil | Grafite profundo com leve tom do tema (`--tint`), aro fino que acende no alto, sombra discreta; **sem reflexo** |
+| **C · Quiet Luxury** | `.dj-quiet` | Listas, grupos, formulários, objetivos, refeições, configurações | Grafite `--dj-quiet` com borda `--dj-quiet-line`, separadores `--dj-quiet-rule`; nenhum ornamento |
+
+**Tokens (v29):**
+
+| Token | Uso |
+|---|---|
+| `--dj-glass-base` | Base do Material B |
+| `--dj-quiet`, `--dj-quiet-line`, `--dj-quiet-rule` | Material C: superfície, borda e separador |
+| `--dj-tile`, `--dj-tile-line` | Pastilha de ícone fora da Home |
+| `--dj-r-panel` | Raio dos painéis (20) |
+| `--dj-type-page` · `--dj-type-section` · `--dj-type-title` · `--dj-type-num` · `--dj-type-unit` · `--dj-type-meta` · `--dj-type-label` | Papéis tipográficos (em rem) |
+
+**Componentes aplicados:**
+- **Segmented control** (`.seg`): trilho grafite e seleção em cobre acetinado (da família do "+"). Texto escuro sobre cobre, com contraste ≥ 5:1. Uma seleção em cobre translúcido foi testada e descartada por baixo contraste.
+- **Pastilhas** (`.pr-i`, `.gl-i`, `.gr-i`): grafite com aro fino. A cor do símbolo só aparece quando significa algo: objetivo em cobre, suplementos em peridoto, medicamentos em safira da meia-noite.
+- **Indicadores de Saúde** (`.hrow`): Material B com o `--tint` do material da Home de cada módulo (esmeralda, ametista, rubi, safira) e pastilha-joia com aro aceso, para dar continuidade com os cartões da Home.
+
+**Regras de cor:**
+- **Cor semântica:** cada cor de material significa sempre o mesmo módulo, em qualquer tela.
+- **Cobre:** reservado a identidade e ações principais (seleção, "+", horários, objetivo).
+- **Perfil:** fica neutro (Quiet Luxury). A cor aparece só em alertas, como o backup.
+
 ## 4. Layout da Home: motor adaptativo
 
 Ordem: cabeçalho (seletor + "+", saudação, data) · **A** pilares 2 × 2 · divisória · **B** Gasto diário + Hidratação · divisória · **C** Suplementos + Medicamentos.
@@ -192,4 +222,3 @@ Antes de aceitar uma tela, verificar em iPhone compacto, padrão e grande, com �
 - Conferir no iPhone real: a correção da faixa inferior (`--sab`/`--vgap`), SF Pro, VoiceOver em voz, resposta tátil (iOS 18+) e divisórias em 1 px físico.
 - Tamanhos de texto de acessibilidade acima de 24 px ficam limitados a 24.
 - As folhas não fecham com a tecla Esc (teclado externo); fecham pelo botão e por toque fora.
-- O campo do nome da refeição (fora da Home) tem 40 px de altura.

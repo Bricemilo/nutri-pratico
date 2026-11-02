@@ -1082,3 +1082,56 @@ O iOS muda a altura informada logo depois de abrir o app instalado sem disparar 
 - Processamento ~11 ms (igual).
 
 **Limitação.** A simulação reproduz a mudança de altura sem evento, mas não o iOS real. Se o aparelho mudar a altura mais de 2,5 s depois de abrir ou voltar sem nenhum evento, a correção vem na próxima passada de layout: qualquer troca de aba ou atualização da Home.
+
+## 38. v29 — Design System aplicado a Nutrição, Saúde e Perfil
+
+**Auditoria.** As três telas usavam superfícies genéricas (`--surface`), sobrepostas em camadas de versões anteriores, sem relação material com a Home. Componentes próprios dessas telas: `.panel`, `.seg`, `.sumcard`, `.goalcard`, `.meals/.meal`, `.hrow`, `.glist/.grow`, `.idc`, `.prows/.prow`. Nenhum é usado na Home.
+
+**Design System (CSS, bloco final de `fonte/app.html`; nenhuma mudança de JS, dados ou cálculos).**
+- Três materiais:
+  - A · Signature Jewelry, só na Home;
+  - B · Precision Glass, `.dj-glass` com `--tint`;
+  - C · Quiet Luxury, `.dj-quiet`.
+- Tokens de superfície, borda, separador, pastilha, raio e papéis tipográficos.
+- Segmented control premium.
+- Pastilhas de ícone padronizadas.
+- Microinterações de toque (escala/brilho), respeitando Reduce Motion.
+
+**Nutrição.**
+- Resumo em Material B cobre, com divisórias finas e Fibras integradas (rótulo na cor da fibra, como os macros).
+- Objetivo em Material C, com alvo em cobre e edição sempre visível.
+- Refeições como lista Quiet Luxury contínua, com calorias alinhadas à direita (largura mínima) e toque com retorno.
+- "Adicionar refeição" com aro cobre fino.
+
+**Saúde.**
+- Indicadores em Material B, com o tom do material da Home de cada módulo e pastilha-joia.
+- Listas em Material C.
+- Suplementos em peridoto e medicamentos em safira da meia-noite, as mesmas cores da Home (antes, dourado e rosa).
+
+**Perfil.**
+- Identificação em Material B, com monograma de aro cobre.
+- Grupos em Material C com separadores finos; ícones neutros e cobre só no alerta de backup.
+
+**Precisão científica (verificada, sem alteração).**
+- Percentuais = energia de cada macro pelos fatores de Atwater (4/4/9) sobre a soma dos macros, arredondados um a um. Podem somar 101%.
+- O total em kcal vem da TACO (fatores próprios de cada alimento): 875 kcal contra ~860 kcal pela soma dos macros. Correto e mantido.
+
+**Corrigido.** Campo do nome da refeição de 40 → 44 pt (área de toque). Última pendência de toque do app.
+
+**Verificação.**
+- Home idêntica pixel a pixel (13, mini vazio, Pro Max) e estável em navegação.
+- Quatro abas × três iPhones × com e sem o defeito de altura × texto 17/21 px: 0 falhas de barra ou conteúdo.
+- Sem cortes nem estouros em Nutrição (fechada e aberta), Alimentos, Saúde, Sono, Perfil e Perfil com energia aberta.
+- 13 folhas sem cortes; áreas de toque sem pendências; 40 combinações de texto sem palavra partida na Home.
+- Contraste medido no pior pixel do fundo real: Nutrição ≥ 4,99, Saúde ≥ 5,54, Perfil ≥ 5,24 (71 textos).
+- 27 testes de cálculo e e2e (dados preservados, GET 2730, navegação, módulos, registro, persistência, seletor, saudação) sem erros.
+
+**Texto (redução de poluição, sem perda de informação).**
+- Saúde → Prioridades: "O que você quer acompanhar ou melhorar" → "O que você quer acompanhar" (mesma frase do Perfil; a folha mantém a explicação completa).
+- Perfil → Backup: "Só neste aparelho · nenhum backup ainda" → "Só neste aparelho · sem backup" (uma linha, mesmo estado real).
+
+**Desempenho (processamento ao abrir a aba, mediana).** Nutrição 7,4 → 9,4 ms; Saúde 6,7 → 7,2 ms; Perfil 7,5 → 7,2 ms. Tudo dentro de um quadro (16,7 ms); a Home não mudou.
+
+**Pendências.**
+- Conferir no iPhone real (SF Pro, VoiceOver em voz, vibração).
+- As subabas Exercício, Sono e Emocional de Saúde e as folhas receberam só o Material C (via `.panel`) e o segmented control; não foram redesenhadas.
