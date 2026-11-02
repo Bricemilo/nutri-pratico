@@ -916,3 +916,38 @@ A barra tinha 95,6 px (a nativa tem cerca de 83). Correção: padding da barra 4
 - Tempo até o quadro: mediana cerca de 2 ms maior que a v21 (16,6–18,9 → 19,1–19,8 ms); p90 igual ou melhor (20,4–21 ms; v21 20–33).
 
 **Pendências.** Conferir no iPhone real: corte, área inferior, SF Pro, VoiceOver, vibração, divisórias em 1 px. Campo do nome da refeição com 40 px de altura. Decisão sobre o protocolo "Média".
+
+## 32. Home v23 — Absolute Excellence (auditoria final)
+
+**Espaço inferior (medido no iPhone 13 e no Pro Max em tela cheia).**
+- Abaixo das abas sobram exatamente 34 px nos dois aparelhos: o padding inferior da barra é `env(safe-area-inset-bottom)` e nada mais. Nenhum elemento do app ocupa essa faixa, e não há espaço extra do app (os 8 px foram removidos na v22).
+- É a área do indicador de início do iOS. Nas capturas simuladas o indicador não é desenhado, por isso a faixa parece vazia. Nas comparações desta versão ele aparece desenhado na posição do sistema (134 × 5 pt, a 8 pt da borda) para mostrar a ocupação real.
+- Comportamento nativo preservado: nenhuma alteração de layout.
+
+**Alterações.**
+1. Divisórias: comparação A (atual) × B (centro mais presente). Adotada a B, com o fio aquecido ao centro (opacidade .44 → .58) e o segmento cobre mais firme (.78 → .96). Mesma geometria e elementos; nas extremidades nada muda. Na tela 3× a A quase desaparecia.
+2. Exercício e Emocional:
+   - O ponto quente (radial) e o traço principal estavam concentrados na borda direita e pareciam reflexo de lente.
+   - Ponto quente de .62 → .34; traço de .26/.28 → .21 (parâmetro `hot` por material, padrão .62 nos demais).
+   - Direção mantida. Pico (p99 L\*) da esmeralda de 57,1 → 53,9, do rubi de 50,0 → 46,1.
+   - Os outros seis materiais não foram alterados.
+
+**Sem alteração (auditados e mantidos).**
+- Geometria (mini, 13, Pro Max): margens 16/16; colunas iguais; alturas idênticas por grupo; quatro distâncias em torno das divisórias iguais (22 / 28 / 36 px); ícones alinhados; baselines exatas.
+- Tipografia: espaço uniforme antes das unidades, números tabulares, sem quebra.
+- Estados vazios: mensagens curtas ("Não registrado", "Sem plano", "Faltam dados"); só Suplementos e Medicamentos mostram 0, que é a contagem real de cadastros, não um dado medido.
+
+**Verificações (Chromium/Playwright, áreas seguras simuladas).**
+- Estresse, só com dados de teste: 10.495 kcal no plano, 12 h/semana, 4.250 kcal/dia, 12 suplementos e 15 medicamentos ativos, "Muito bem". Sem corte, palavra partida, estouro ou unidade descendo de linha no mini, no 13 e no Pro Max.
+- Perfil vazio nos três tamanhos sem problemas.
+- 40 combinações de tela e texto; área segura tardia; troca de fonte e de membro; mudança de altura.
+- SE, Safari e texto ampliado rolam, com o último cartão 16 px acima da barra.
+- Contraste ≥ 5,98:1 em 65 textos.
+- Reduce Motion sem animação.
+- 27 testes de cálculo e e2e de navegação, módulos, saudação, painéis e áreas de toque sem erros.
+
+**Desempenho.**
+- A diferença de ~2 ms na mediana, registrada na v22, foi investigada: trocar os reflexos pelos da v21 não mudou nada, e a métrica (toque → próximo quadro) varia em degraus de quadro.
+- Medindo só o processamento (render + layout, sem esperar o quadro), v21, v22 e v23 têm o mesmo custo: mediana de 10,8–10,9 ms, p90 de 16,6–17,5 ms. Não há regressão.
+
+**Pendências.** Conferir no iPhone real (SF Pro, VoiceOver, vibração, divisórias em 1 px físico). Campo do nome da refeição com 40 px de altura. Decisão sobre o protocolo "Média".
