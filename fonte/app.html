@@ -23,10 +23,11 @@
   --dj-emerald:#3FBFA0;   --dj-emerald-deep:#061B16;     /* Exercício · titânio esmeralda */
   --dj-amethyst:#9F86EA;  --dj-amethyst-deep:#170F2C;    /* Sono · ametista profunda */
   --dj-ruby:#E66F8E;      --dj-ruby-deep:#250D17;        /* Emocional · rubi rosado */
-  --dj-champagne:#D7B378; --dj-champagne-deep:#19130B;   /* Gasto diário · bronze champanhe */
+  --dj-champagne:#D7B378; --dj-champagne-deep:#19130B;   /* GET · bronze champanhe (Perfil; fora da Home desde a v31) */
   --dj-sapphire:#35A9E0;  --dj-sapphire-deep:#06172A;    /* Hidratação · safira azul */
   --dj-peridot:#A6C452;   --dj-peridot-deep:#0F1708;     /* Suplementos · peridoto oliva */
-  --dj-midnight:#6F98E6;  --dj-midnight-deep:#0B1430;    /* Medicamentos · safira da meia-noite */
+  --dj-midnight:#6F98E6;  --dj-midnight-deep:#0B1430;    /* Exames · safira da meia-noite (também o ícone dos medicamentos) */
+  --dj-amber:#E0A25C;     --dj-amber-deep:#1D1307;       /* Consultas · âmbar mel */
   /* sinal cobre (aba ativa, segmento das divisórias) e fio das divisórias */
   --dj-signal:#EEA36A; --dj-signal-line:#E39A60;
   --dj-hairline:rgba(150,136,124,.40); --dj-hairline-core:rgba(172,142,116,.58); --dj-hairline-seg:rgba(222,156,108,.96);
@@ -1499,6 +1500,159 @@ html.big-text .hc.l1 .hc-v b.txt{font-size:1.294rem}
 .prows .pr-l .pr-v.ec-v{color:#E9C89A}
 .prows .prow.due .pr-l .pr-v{color:var(--accent-2)}
 .prows .prow.due .pr-l > span:first-child{color:var(--muted)}
+/* ===== v31 · Home com agenda (Consultas, Exames) e Suplementos e Medicamentos num só cartão; módulos da Saúde ===== */
+.hc.appt{--g:var(--dj-amber);--gd:var(--dj-amber-deep);--lb:30%;--lt:22%;--ra:150deg;--rt:56%;--rb:90%}  /* âmbar mel */
+.hc.exam{--g:var(--dj-midnight);--gd:var(--dj-midnight-deep);--lb:36%;--lt:18%;--ra:135deg;--rt:42%;--rb:90%}  /* safira da meia-noite */
+/* agenda: linha 2 = data e horário (17 px, uma linha), linha 3 = identificação (uma linha, reticências); sem compromisso, mensagem em até duas linhas */
+.hc.ev .hc-v b.dt{font-size:var(--t-h);font-weight:600;letter-spacing:-.012em;line-height:1.1}
+/* o recorte das reticências não pode cortar o halo de leitura: a caixa avança sobre o respiro do cartão (o texto continua na mesma coluna) e o halo fica contido nela */
+.hc.l2 .hc-s.clip,.hc-s.clip{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:0;padding:6px var(--hc-pad,14px);margin:-4px calc(-1 * var(--hc-pad,14px)) -6px;
+  text-shadow:0 0 2px var(--gd),0 0 5px var(--gd),0 0 9px color-mix(in srgb,var(--gd) 85%,transparent)}
+.hc.ev .hc-v b.nr{font-size:var(--t-sm);font-weight:560;line-height:1.25}
+.hc-add{flex:none;display:grid;place-items:center;width:22px;height:22px;border-radius:7px;color:color-mix(in srgb,var(--g) 80%,#fff);border:1px solid color-mix(in srgb,var(--g) 38%,transparent);background:color-mix(in srgb,var(--g) 10%,transparent)}
+.hc-add svg{width:13px;height:13px;display:block}
+/* Suplementos e Medicamentos: dois contadores, número antes do nome, alinhados na coluna do título */
+/* altura natural igual à de Hidratação (não empurra os pilares nem a última linha) */
+.hc.cnt .hc-v.hc-lg{display:flex;flex-direction:column;gap:2px;padding-top:calc(4px + var(--xb,0px))}
+.hc-lr{display:flex;align-items:baseline;gap:6px;white-space:nowrap;min-width:0;line-height:1.05}
+.hc.cnt .hc-lr b{font-size:var(--t-h);font-weight:620;letter-spacing:-.02em;line-height:1.05;min-width:.62em}
+.hc-lr span{font-size:var(--t-sm);font-weight:520;line-height:1.05;color:rgba(244,238,232,.88)}
+.home.stack .hc-lr{white-space:normal}
+
+/* módulos da Saúde: voltar, título com "+", destaque do próximo compromisso */
+.back{display:inline-flex;align-items:center;gap:2px;height:44px;margin:2px 0 -6px -8px;padding:0 10px 0 2px;font-size:var(--t-body);font-weight:550;color:var(--dj-signal)}
+.back svg{width:20px;height:20px;display:block}
+.pg-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.pg-row h1.pg{margin:4px 2px;min-width:0}
+.view.mod .pg-s{margin-top:0}
+.nx{display:flex;flex-direction:column;align-items:stretch;gap:2px;width:100%;margin-top:14px;padding:16px;text-align:left}
+.nx.appt{--tint:var(--dj-amber)} .nx.exam{--tint:var(--dj-midnight)}
+.nx:not(.none):active{transform:scale(.99)}
+.nx-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+.nx-e{font-size:var(--t-cap);font-weight:650;letter-spacing:.12em;text-transform:uppercase;color:color-mix(in srgb,var(--tint) 78%,#fff)}
+.nx-r{font-size:var(--t-cap);font-weight:600;color:var(--ink-2);white-space:nowrap}
+.nx-d{font-size:var(--t-sec);font-weight:640;letter-spacing:-.015em;line-height:1.25}
+.nx-t{margin-top:4px;font-size:var(--t-body);font-weight:580;color:var(--ink);overflow-wrap:break-word}
+.nx-s{font-size:var(--t-sm);color:var(--ink-2);overflow-wrap:break-word}
+.nx.none{gap:4px}
+.nx.none b{font-size:var(--t-body);font-weight:620}
+.nx.none span{font-size:var(--t-sm);color:var(--ink-2);line-height:1.45}
+.nx.none .btn{align-self:flex-start;margin-top:10px;height:44px}
+.view.mod .seg.seg-2{margin-bottom:10px}
+.view.mod .seg.seg-2 button{height:44px}
+/* linhas de compromisso: data em pastilha (dia e mês), título, situação quando importa */
+.dtile{width:42px;height:46px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none;line-height:1;
+  background:var(--dj-tile);border:1px solid var(--dj-tile-line);box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
+.dtile b{font-size:var(--t-h);font-weight:650;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.dtile span{font-size:.706rem;font-weight:650;letter-spacing:.08em;text-transform:uppercase;color:#B9937A;margin-top:4px}
+.dtile.nd b{color:var(--muted)}
+.gr-tt{min-width:0;overflow-wrap:break-word}
+.chip.st{margin-left:0;vertical-align:0;letter-spacing:.06em}
+.chip.st.due{color:var(--accent-2);border-color:var(--accent-line);background:var(--accent-soft)}
+.chip.st.fut{color:color-mix(in srgb,var(--dj-amber) 85%,#fff);border-color:color-mix(in srgb,var(--dj-amber) 35%,transparent);background:transparent}
+.gr-x{font-size:var(--t-cap);color:var(--muted);line-height:1.35}
+.gr-x .due{color:var(--accent-2)}
+.gr-i.c-appt{color:var(--dj-amber)} .gr-i.c-exam{color:var(--dj-midnight)}
+.gnone{margin:0;padding:14px 16px;font-size:var(--t-sm);color:var(--muted);line-height:1.45}
+.gnone.solo{background:var(--dj-quiet);border:1px solid var(--dj-quiet-line);border-radius:var(--dj-r-panel)}
+.srch{position:relative;margin:0 0 10px}
+.srch .input{padding-left:42px;height:46px}
+.srch-i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);display:grid;pointer-events:none}
+.srch-i svg{width:18px;height:18px}
+.more-l{display:block;margin:6px auto 0;min-height:44px;padding:0 12px}
+.chips.sugs button{height:36px}
+.input.dt-in{-webkit-appearance:none;appearance:none;display:flex;align-items:center;text-align:left;min-width:0;line-height:50px}
+.input.dt-in::-webkit-date-and-time-value{text-align:left}
+/* compromissos que já passaram sem registro */
+.panel.conf{margin-top:12px;border-color:color-mix(in srgb,var(--dj-copper) 32%,transparent)}
+.cf-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 0;border-top:1px solid var(--dj-quiet-rule)}
+.panel-h + .cf-row{border-top:0;padding-top:2px}
+.cf-m{flex:1 1 9rem;min-width:0;display:flex;flex-direction:column;gap:1px}
+.cf-m b{font-weight:600;overflow-wrap:break-word}
+.cf-m span{font-size:var(--t-sm);color:var(--ink-2)}
+.cf-b{display:flex;gap:8px;margin-left:auto}
+.cf-b .btn{height:44px}
+/* histórico anual de consultas: 12 meses, barras empilhadas (realizadas · a confirmar · agendadas · canceladas) */
+.mcp{padding:14px 14px 12px}
+.chips.yrs{margin-bottom:12px}
+.chips.yrs button{height:36px}
+.mc-sum{margin:0 2px 12px;font-size:var(--t-sm);color:var(--ink-2)}
+.mc-sum b{font-size:1.412rem;font-weight:650;color:var(--ink);letter-spacing:-.02em;margin-right:2px;font-variant-numeric:tabular-nums}
+.mc{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:2px;height:156px}
+.mc-c{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;border-radius:9px;padding:4px 0 6px}
+.mc-c.on{background:rgba(255,255,255,.06)}
+.mc-n{height:14px;font-size:var(--t-cap);font-weight:650;line-height:14px;color:color-mix(in srgb,var(--dj-amber) 85%,#fff);font-variant-numeric:tabular-nums}
+.mc-b{flex:1;width:100%;max-width:16px;display:flex;flex-direction:column-reverse;gap:2px;border-radius:5px;background:rgba(255,255,255,.035)}
+.mc-b i{display:block;flex:none;border-radius:4px;min-height:4px}
+.mcp i.d{background:linear-gradient(180deg,#F2C285,var(--dj-amber))}
+.mcp i.p{background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--dj-amber) 60%,transparent) 0 2px,transparent 2px 5px);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--dj-amber) 60%,transparent)}
+.mcp i.f{box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--dj-amber) 85%,transparent)}
+.mcp i.k{background:rgba(150,139,129,.5)}
+.mc-l{font-size:var(--t-cap);font-weight:600;line-height:1;color:var(--muted)}
+.mc-c.on .mc-l{color:var(--ink)}
+.mc-k{display:flex;flex-wrap:wrap;gap:6px 14px;margin:12px 2px 0;font-size:var(--t-cap);color:var(--ink-2)}
+.mc-k-i{display:inline-flex;align-items:center;gap:6px;font-variant-numeric:tabular-nums}
+.mc-k-i i{display:block;width:10px;height:10px;border-radius:3px}
+.mc-hint{margin:10px 2px 0;font-size:var(--t-cap);color:var(--muted)}
+.mc-list{margin-top:8px}
+.mc-list .glist{background:transparent;border-color:var(--dj-quiet-rule)}
+/* evolução dos resultados: marcador, período, gráfico de linha com eixo de tempo real */
+.lcp{padding:14px}
+.chips.mk{flex-wrap:nowrap;overflow-x:auto;margin:0 -14px;padding:0 14px 2px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.chips.mk::-webkit-scrollbar{display:none}
+.chips.mk button{flex:none;height:38px}
+.lc-h2{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:2px 10px;margin:14px 2px 10px}
+.lc-h2 b{font-size:var(--t-body);font-weight:620}
+.lc-h2 span{font-size:var(--t-cap);color:var(--muted)}
+.seg.lr{margin-bottom:8px}
+.lc-box{margin:2px -6px 0}
+svg.lc{display:block;width:100%;height:auto;overflow:visible}
+.lc-g{stroke:rgba(255,255,255,.07);stroke-width:1}
+.lc-y{stroke:rgba(255,255,255,.14);stroke-width:1;stroke-dasharray:2 3}
+.lc-t{fill:#9A8F85;font-size:12px;font-family:var(--font);font-variant-numeric:tabular-nums}
+.lc-band{fill:rgba(111,152,230,.11)}
+.lc-bt{fill:rgba(176,198,240,.8);font-size:11px;font-family:var(--font)}
+.lc-l{fill:none;stroke:color-mix(in srgb,var(--dj-midnight) 55%,transparent);stroke-width:1.4;stroke-linejoin:round}
+.lc-p{fill:#9DBBF2;stroke:#0D121C;stroke-width:1.5}
+.lc-p.on{fill:#E8F0FF;stroke:var(--dj-midnight);stroke-width:2.5}
+.lc-h{fill:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.lc-d{margin-top:8px;padding:10px 2px 0;border-top:1px solid var(--dj-quiet-rule);min-height:4.5em}
+.lc-dv{display:flex;align-items:baseline;flex-wrap:wrap;gap:0 4px}
+.lc-dv b{font-size:1.412rem;font-weight:650;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.lc-dv span{color:var(--ink-2);font-size:var(--t-sm)}
+.lc-dv .lc-dd{margin-left:auto;padding-left:10px}
+.lc-d p{margin:4px 0 0;font-size:var(--t-sm);color:var(--ink-2);line-height:1.45}
+.lc-one{margin:0 2px 6px;font-size:var(--t-sm);color:var(--ink-2)}
+.grow.lr{min-height:56px}
+.lr-v{flex:none;font-weight:620;font-variant-numeric:tabular-nums;font-size:var(--t-body);white-space:nowrap}
+.lr-v small{color:var(--muted);font-weight:500;font-size:var(--t-cap)}
+.lcp .glist{background:transparent;border-color:var(--dj-quiet-rule)}
+/* exames realizados por ano: discreto */
+.yrc{padding:8px 16px}
+.yr-r{display:grid;grid-template-columns:3.2em minmax(0,1fr) 2em;align-items:center;gap:12px;min-height:34px;font-size:var(--t-sm);color:var(--ink-2);font-variant-numeric:tabular-nums}
+.yr-r b{text-align:right;color:var(--ink);font-weight:600}
+.yr-b{height:6px;border-radius:3px;background:rgba(255,255,255,.05);overflow:hidden}
+.yr-b i{display:block;height:100%;border-radius:3px;background:color-mix(in srgb,var(--dj-midnight) 75%,transparent)}
+/* ficha do exame */
+.kvs{display:flex;flex-direction:column;margin:2px 0 4px}
+.kv{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 14px;padding:10px 0;border-top:1px solid var(--line);font-size:var(--t-sm)}
+.kv:first-child{border-top:0}
+.kv span{color:var(--muted);flex:none}
+.kv b{flex:1 1 9em;font-weight:550;text-align:right;min-width:0;overflow-wrap:break-word}
+.kvt{margin:8px 0;padding:12px 14px;border-radius:14px;background:var(--surface-2)}
+.kvt span{font-size:var(--t-cap);color:var(--muted)}
+.kvt p{margin:4px 0 0;white-space:pre-wrap;font-size:var(--t-sm);line-height:1.5}
+.ask-n{margin:0 0 12px;padding:12px 14px;border-radius:14px;background:var(--accent-soft);border:1px solid var(--accent-line);font-size:var(--t-sm)}
+.sheet .glist{border-color:var(--line)}
+.grow.dr{padding:0 6px 0 0}
+.dr-o{flex:1;display:flex;align-items:center;gap:14px;min-width:0;min-height:60px;padding:8px 0 8px 14px;text-align:left}
+.doc-img{display:block;width:100%;max-height:60vh;object-fit:contain;border-radius:12px;background:#000}
+.doc-pdf{display:block;width:100%;height:60vh;border:0;border-radius:12px;background:#fff}
+/* iPhone de 320 pt: data e contadores cabem na meia largura (sem passar a Home para uma coluna) */
+@media (max-width:350px){.hc.ev .hc-v b.dt{font-size:.882rem;letter-spacing:-.02em}.hc-lr{gap:4px}.hc-lr span{letter-spacing:-.015em}.hc.cnt .hc-lr b{min-width:.55em}}
+/* texto ampliado: segmentos com rótulos longos passam a duas colunas em vez de cortar a palavra */
+html.big-text .seg.fit{grid-auto-flow:row;grid-template-columns:repeat(2,minmax(0,1fr))}
+html.big-text .seg.fit button{height:auto;min-height:40px;padding:6px 4px;white-space:normal}
 </style>
 
 <div class="app" id="app"></div>
@@ -1571,6 +1725,10 @@ const ICON = {
   flask:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 3v6.2L4.6 19a1.4 1.4 0 0 0 1.3 2h12.2a1.4 1.4 0 0 0 1.3-2l-4.9-9.8V3M8 3h8M7 15.5h10"/></svg>',
   heart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.4a4.3 4.3 0 0 1 7.5 2.4C19.5 15.4 12 20 12 20Z"/></svg>',
   capsule:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="2.5" width="15" height="4.5" rx="1.2"/><path d="M6 7v12.5A2 2 0 0 0 8 21.5h8a2 2 0 0 0 2-2V7M10 11.5h4v6h-4z"/></svg>',
+  steth:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 3.5H4.5v5a4.5 4.5 0 0 0 9 0v-5h-1"/><path d="M9 13v1.5a5 5 0 0 0 10 0V12"/><circle cx="19" cy="10" r="2"/></svg>',
+  cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></svg>',
+  clip:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m19.5 11.5-7.4 7.4a4.9 4.9 0 0 1-6.9-6.9l7.8-7.8a3.3 3.3 0 0 1 4.6 4.6l-7.8 7.8a1.6 1.6 0 0 1-2.3-2.3l7.1-7.1"/></svg>',
+  left:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg>',
   bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3 5 13.5h6L10 21l8-10.5h-6z"/></svg>'
 };
 const ic = k => h("span", {html: ICON[k], style: "display:contents"});
@@ -1653,6 +1811,8 @@ function sheet(label, build){
   const scrim = h("div", {class: "scrim"});
   const el = h("div", {class: "sheet", role: "dialog", "aria-modal": "true", "aria-label": label}, h("div", {class: "grab"}));
   function close(){ el.classList.remove("on"); scrim.classList.remove("on"); setTimeout(() => { el.remove(); scrim.remove(); }, 260); }
+  // conteúdo opcional (null) e listas entram como no h(): sem virar texto "null" ou "[object …]"
+  const add0 = el.append.bind(el); el.append = (...k) => add0(...k.flat(Infinity).filter(x => x != null && x !== false));
   scrim.addEventListener("click", close);
   build(el, close);
   document.body.append(scrim, el);
@@ -1677,7 +1837,8 @@ const planTotal = pl => C.planTotal(db, pl);
 // Formato preservado da versão anterior (chave "nutripratico.v1"; perfis continuam em "patients").
 // Antes de migrar, guarda uma cópia exata do que estava salvo em KEY + ".antes-da-v2".
 // v3: acrescenta p.logs (movimento, sono, bem-estar) e fixa o protocolo de energia de quem já usava a média.
-const KEY = "nutripratico.v1", VERSION = 3, SNAP = KEY + ".antes-da-v" + VERSION, SNAPS = [SNAP, KEY + ".antes-da-v2"];
+// v4: consultas (care.appts), resultados de exames (care.labs) e exames com situação (solicitado · agendado · realizado · cancelado).
+const KEY = "nutripratico.v1", VERSION = 4, SNAP = KEY + ".antes-da-v" + VERSION, SNAPS = [SNAP, KEY + ".antes-da-v3", KEY + ".antes-da-v2"];
 const DEFAULT_OBJ = ["Alimentação equilibrada", "Manutenção do peso", "Emagrecimento", "Hipertrofia muscular", "Performance esportiva",
   "Ganho de peso", "Recomposição corporal", "Controle glicêmico", "Saúde intestinal", "Reeducação alimentar", "Gestação", "Lactação"];
 const DEFAULT_MEALS = ["Café da manhã", "Colação", "Almoço", "Lanche da tarde 1", "Lanche da tarde 2", "Pré-treino", "Pós-treino", "Jantar", "Ceia"];
@@ -1702,7 +1863,11 @@ function load(){
     for (const m of p.plan.meals){ m.time = m.time || ""; m.items = m.items || []; }
     p.logs = p.logs || {};
     for (const k of ["move", "sleep", "mood", "eaten"]) p.logs[k] = p.logs[k] || [];
-    p.care = Object.assign({water: null, meds: [], exams: [], goals: []}, p.care || {});
+    p.care = Object.assign({water: null, meds: [], exams: [], goals: [], appts: [], labs: []}, p.care || {});
+    // até a v3 cada exame era um item com a data da última realização (last), o intervalo combinado (every) e o resultado em texto.
+    // Migração sem perda: com data → "realizado" naquela data; sem data → "solicitado" (pendente). Intervalo, resultado e observações seguem iguais.
+    for (const x of p.care.exams) if (!x.status) { x.status = x.last ? "realizado" : "solicitado"; x.date = x.last || ""; x.time = ""; delete x.last; }
+    for (const x of p.care.exams) { x.docs = x.docs || []; if (x.date == null) x.date = ""; }
     // até a v2 o padrão era a média FAO/OMS + DRI: quem já usava continua vendo os mesmos números
     if (from < 3 && !p.energy.method && C.ageOf(p.birth) >= 18) p.energy.method = "media";
     // quem já marcava refeições antes do registro virar opcional continua com a marcação ligada
@@ -1851,7 +2016,7 @@ function go(v, keepScroll){
 }
 function render(){
   put(tabbar, h("div", {class: "tabbar-in"}, TABS.map(([id, label, icon]) =>
-    h("button", {class: "tab" + (view.tab === id ? " on" : ""), "aria-current": view.tab === id ? "page" : null, onclick: () => { if (view.tab !== id) haptic(); go({tab: id, edit: null}); }}, ic(icon), label))));
+    h("button", {class: "tab" + (view.tab === id ? " on" : ""), "aria-current": view.tab === id ? "page" : null, onclick: () => { if (view.tab !== id) haptic(); go(Object.assign({tab: id, edit: null}, view.tab === id && id === "saude" && HMODS.includes(view.hsub) ? {hsub: "resumo"} : {})); }}, ic(icon), label))));
   const p = active();
   if (!p) { renderWelcome(); return; }
   ({hoje: renderHome, alimentacao: view.sub === "alimentos" ? renderFoods : renderPlan, saude: renderHealth, perfil: renderProfile})[view.tab](p);
@@ -1940,7 +2105,7 @@ const favKcal = f => C.mealTotal(db, {items: f.items.filter(i => db.has(i.foodId
    no máximo uma sugestão (core.nextAction) e atalhos de registro. */
 const today = () => C.dayKey();
 // cuidados de saúde do perfil: água (valor manual em mL, ou null = estimativa), suplementos/medicamentos, exames e prioridades
-const careOf = p => p.care || (p.care = {water: null, meds: [], exams: [], goals: []});
+const careOf = p => p.care || (p.care = {water: null, meds: [], exams: [], goals: [], appts: [], labs: []});
 const waterOf = p => C.waterRec(p.energy.weight, C.ageOf(p.birth), careOf(p).water);
 const fmtL = ml => (ml / 1000).toLocaleString("pt-BR", {minimumFractionDigits: 1, maximumFractionDigits: 1});
 const logsOf = p => { const L = p.logs || (p.logs = {}); for (const k of ["move", "sleep", "mood", "eaten"]) L[k] = L[k] || []; return L; };
@@ -1979,7 +2144,10 @@ const JEWEL = (() => {
     water: {c: "#38B4F0", hi: "#E2F6FF", sx: 64, ey: 22, c1: [110, 88], c2: [150, 54], n: 6, ox: 2.4, oy: 2.0, pk: 0.8, fill: 0.36, glow: 0.38, sec: 0.4},
     energy:{c: "#DDBB7E", hi: "#F4E4C4", sx: 80, ey: 8, c1: [130, 124], c2: [154, 56], n: 15, ox: 1.9, oy: 1.4, pk: .7, fill: 0.35, glow: 0.27},
     supp:  {c: "#AFD054", hi: "#F3FFD6", sx: 56, ey: 30, c1: [118, 140], c2: [142, 38], n: 8, ox: 3.0, oy: 2.4, pk: 0.66, fill: 0.32, glow: 0.27, sec: 0.26},
-    meds:  {c: "#6E9DF4", hi: "#E3EEFF", sx: 62, ey: 66, c1: [130, 128], c2: [166, 108], n: 8, ox: 3.2, oy: 2.4, pk: 0.82, fill: 0.47, glow: 0.46, sec: 0.5}
+    meds:  {c: "#6E9DF4", hi: "#E3EEFF", sx: 62, ey: 66, c1: [130, 128], c2: [166, 108], n: 8, ox: 3.2, oy: 2.4, pk: 0.82, fill: 0.47, glow: 0.46, sec: 0.5},
+    // v31 · Consultas: âmbar mel (lâmina longa e baixa, como o champanhe); Exames: safira da meia-noite (o material dos medicamentos, que deixaram de ter cartão próprio)
+    appt:  {c: "#E5A65E", hi: "#FFEBCD", sx: 78, ey: 14, c1: [128, 124], c2: [154, 60], n: 13, ox: 2.0, oy: 1.5, pk: .72, fill: 0.34, glow: 0.27},
+    exam:  {c: "#6E9DF4", hi: "#E3EEFF", sx: 62, ey: 66, c1: [130, 128], c2: [166, 108], n: 8, ox: 3.2, oy: 2.4, pk: 0.82, fill: 0.44, glow: 0.42, sec: 0.46}
   };
   const f = v => +v.toFixed(1);
   const curve = (o, dx, dy) => [[o.sx + dx, 126 + dy], [o.c1[0] + dx, o.c1[1] + dy], [o.c2[0] + dx, o.c2[1] + dy], [(o.ex || 186) + dx, o.ey + dy]];
@@ -2025,29 +2193,35 @@ function jewelCard(o){ const has = o.value != null;
     h("span", {class: "hc-v"}, has ? [h("b", {class: [String(o.value).length > 9 ? "long" : "", /^\d/.test(o.value) ? "" : "txt"].join(" ").trim() || null}, o.value), o.unit ? [" ", h("small", null, o.unit)] : null] : h("b", {class: "nr"}, o.empty[0])),
     h("span", {class: "hc-s"}, has ? o.sub || "" : o.empty[1])); }
 function jewelDivider(){ return h("div", {class: "hdiv", "aria-hidden": "true"}); }
+/* jewelEvent(o) — cartão de agenda (Consultas, Exames), no máximo três linhas: ícone + título · data e horário · identificação (uma linha, com reticências).
+   Sem compromisso: mensagem curta no lugar das linhas 2 e 3 e um "+" discreto no título; o toque abre o cadastro. */
+function jewelEvent(o){ const e = o.event;
+  return h("button", {class: `hc l2 ev ${o.cls}` + (e ? "" : " empty"), type: "button", onclick: () => { haptic(); (e ? o.open : o.add)(); },
+      "aria-label": e ? `${o.title}: ${o.next} ${whenSpoken(e)}. ${o.line3(e)}.` : `${o.title}: ${o.emptyMsg}. Toque para adicionar.`},
+    h("span", {class: "hc-fx", "aria-hidden": "true"}, JEWEL(o.cls)),
+    h("span", {class: "hc-h"}, h("span", {class: "hc-i", html: ICON[o.icon]}), h("span", {class: "hc-t"}, o.title), e ? null : h("span", {class: "hc-add", "aria-hidden": "true", html: ICON.plus})),
+    e ? [h("span", {class: "hc-v"}, h("b", {class: "dt"}, whenShort(e, true))), h("span", {class: "hc-s clip"}, o.line3(e))] : h("span", {class: "hc-v"}, h("b", {class: "nr"}, o.emptyMsg))); }
+/* jewelCare(o) — Suplementos e Medicamentos num cartão: título "Em uso" e dois contadores reais (itens ativos, não pausados), número antes do nome. */
+function jewelCare(o){ const row = (v, one, many) => h("span", {class: "hc-lr"}, h("b", null, String(v)), h("span", null, v === 1 ? one : many));
+  return h("button", {class: "hc l2 cnt " + o.cls, type: "button", onclick: () => { haptic(); o.fn(); },
+      "aria-label": `Suplementos e medicamentos em uso: ${plural(o.sup, "suplemento", "suplementos")} e ${plural(o.med, "medicamento", "medicamentos")}${o.paused ? `; ${plural(o.paused, "item pausado", "itens pausados")}` : ""}.`},
+    h("span", {class: "hc-fx", "aria-hidden": "true"}, JEWEL(o.cls)),
+    h("span", {class: "hc-h"}, h("span", {class: "hc-i", html: ICON.pill}), h("span", {class: "hc-t"}, "Em uso")),
+    h("span", {class: "hc-v hc-lg"}, row(o.sup, "suplemento", "suplementos"), row(o.med, "medicamento", "medicamentos"))); }
 function renderHome(p){
-  /* Painel de saúde em três grupos, mesmo componente em dois tamanhos, separados por duas Signature dividers:
-     A · pilares (Nutrição, Exercício, Sono, Emocional) · B · energia e hidratação (Gasto diário, Hidratação) · C · acompanhamento (Suplementos, Medicamentos).
+  /* Painel de saúde: oito cartões em quatro linhas de dois, em três grupos separados por duas Signature dividers:
+     A · pilares (Nutrição, Exercício, Sono, Emocional) · B · Hidratação + Suplementos e Medicamentos · C · Consultas + Exames (próximo compromisso).
      Cor só no ícone e numa nuance mínima do fundo; números em destaque, unidades subordinadas, legendas curtas.
      Cada cartão leva ao módulo; sem dado, estado vazio que abre o cadastro. O detalhe nutricional fica na aba Nutrição. */
-  const plan = p.plan, r = C.energyOf(p), t = planTotal(plan), L = logsOf(p), ctx = healthCtx(p), adult = adultOf(p), w = waterOf(p), cr = careOf(p);
+  const plan = p.plan, t = planTotal(plan), L = logsOf(p), ctx = healthCtx(p), adult = adultOf(p), w = waterOf(p);
   const dayTxt = new Date().toLocaleDateString("pt-BR", {weekday: "long", day: "numeric", month: "long"});
-  homeKey = greetOf() + today();
+  homeKey = greetOf() + today() + evKey(p);
   const meals = plan.meals.filter(m => filled(m).length);
   const sl = ctx.sleep.stats.last, lastNight = sl && C.addDays(sl.date, 1) >= today() ? sl : null;
   const lastMood = [...L.mood].sort((a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : (b.at || 0) - (a.at || 0))[0];
   const mw = ctx.move.week;
-  // suplementos (inclui fórmulas manipuladas) e medicamentos: nomes únicos; pausados não contam como ativos
-  const countOf = cats => { const seen = new Map(); for (const m of cr.meds) if (cats.includes(m.cat || "suplemento")) { const k = norm(m.name); if (!seen.has(k) || !m.paused) seen.set(k, m); }
-    const all = [...seen.values()]; return {total: all.length, active: all.filter(m => !m.paused).length}; };
-  const sup = countOf(["suplemento", "formula"]), med = countOf(["medicamento"]);
-  const paused = c => c.total > c.active ? `${c.total - c.active} ${c.total - c.active === 1 ? "pausado" : "pausados"}` : "";
-  const cap = x => x ? x[0].toUpperCase() + x.slice(1) : x;
+  const cc = careCounts(p), nx = nextOf(p);
   const card = jewelCard, divider = jewelDivider;
-  const openMeds = (c, cat) => () => c.total ? go({tab: "saude", hsub: "resumo", hfocus: "meds"}) : medSheet(p, null, cat);
-  // suplementos e medicamentos: número e palavra na mesma linha — "2 ativos" (pausados na legenda, se houver) ou, sem cadastro, "0 cadastrados" (o cartão abre o cadastro)
-  const careCard = (cls, icon, title, c, cat) => card({lv: "l2", cls, icon, title, value: String(c.total ? c.active : 0), unit: c.total ? (c.active === 1 ? "ativo" : "ativos") : "cadastrados",
-    sub: c.total ? cap(paused(c)) : "", fn: openMeds(c, cat), aria: c.total ? null : `${title}: nenhum cadastrado. Toque para adicionar.`});
   const reg = ["Não registrado", "Toque para registrar"];
   const pillars = h("div", {class: "hgrid hg-a" + (adult ? "" : " odd")},
     card({lv: "l1", cls: "food", icon: "utensils", title: "Nutrição", value: meals.length ? k0(t.kcal) : null, unit: "kcal", sub: "Plano alimentar",
@@ -2058,17 +2232,20 @@ function renderHome(p){
       fn: () => lastNight ? go({tab: "saude", hsub: "sono"}) : sleepSheet(p), empty: reg}),
     adult ? card({lv: "l1", cls: "wb", icon: "smile", title: "Emocional", value: lastMood ? MOODS[lastMood.mood - 1] : null, sub: lastMood ? `${relDay(lastMood.date)}${lastMood.time ? ", " + lastMood.time : ""}` : "",
       fn: () => lastMood ? go({tab: "saude", hsub: "bem-estar"}) : moodSheet(p), empty: reg}) : null);
-  const energyWater = h("div", {class: "hgrid hg-b"},
-    // "Gasto diário": nome intuitivo; "Estimativa energética" deixa claro que é cálculo, não medida; ao tocar, o Perfil abre "Gasto energético total (GET)" com protocolo e fórmulas
-    card({lv: "l2", cls: "energy", icon: "bolt", title: "Gasto diário", value: r.ok && r.get ? k0(r.get) : null, unit: "kcal/dia", sub: "Estimativa energética",
-      fn: () => r.ok ? go({tab: "perfil", eopen: true}) : bodySheet(p), empty: [r.ok ? "Só taxa basal" : "Faltam dados", r.ok ? "Abaixo de 3 anos" : "Informe peso e altura"],
-      aria: r.ok && r.get ? `Gasto diário: ${k0(r.get)} kcal por dia. Estimativa do gasto energético total, GET.` : `Gasto diário, gasto energético total: ${r.ok ? "só taxa basal, abaixo de 3 anos" : "faltam dados. Informe peso e altura"}.`}),
+  // B · hidratação (recomendação diária do perfil, sem registro de copos) e o que está em uso. O GET saiu da Home: continua em Perfil → Planejamento.
+  const careRow = h("div", {class: "hgrid hg-b"},
     card({lv: "l2", cls: "water", icon: "drop", title: "Hidratação", value: w.ml ? fmtL(w.ml) : null, unit: "L/dia", sub: w.src === "manual" ? "Definida por você" : "Recomendação diária",
-      fn: () => waterSheet(p), empty: ["Não definida", "Toque para definir"]}));
-  const care = h("div", {class: "hgrid hg-c"}, careCard("supp", "pill", "Suplementos", sup, "suplemento"), careCard("meds", "capsule", "Medicamentos", med, "medicamento"));
+      fn: () => waterSheet(p), empty: ["Não definida", "Toque para definir"]}),
+    jewelCare({cls: "supp", sup: cc.sup, med: cc.med, paused: cc.paused, fn: () => go({tab: "saude", hsub: "cuidados"})}));
+  // C · agenda: próxima consulta e próximo exame agendado do perfil ativo
+  const agenda = h("div", {class: "hgrid hg-c"},
+    jewelEvent({cls: "appt", icon: "steth", title: "Consultas", event: nx.appt, next: "próxima em", line3: apptTitle, emptyMsg: "Nenhuma consulta agendada",
+      open: () => go({tab: "saude", hsub: "consultas"}), add: () => apptSheet(p)}),
+    jewelEvent({cls: "exam", icon: "flask", title: "Exames", event: nx.exam, next: "próximo em", line3: e => e.name, emptyMsg: "Nenhum exame agendado",
+      open: () => go({tab: "saude", hsub: "exames"}), add: () => examSheet(p, null, {status: "agendado"})}));
   put(app, h("div", {class: "view home"}, topBar(quickBtn(p, "hoje")),
     h("header", {class: "hi-h"}, h("h1", null, `${greetOf()}, ${firstName(p.name)}`), h("div", {class: "today"}, dayTxt)),
-    pillars, divider(), energyWater, divider(), care));
+    pillars, divider(), careRow, divider(), agenda));
   fitTitlesNow();
 }
 // Altura útil da tela — fonte única, medida no início de toda passada de layout (nunca guardada de uma medição anterior).
@@ -2107,7 +2284,7 @@ function fitTitles(force){ measureViewport(); const home = document.querySelecto
   const key = c0.getBoundingClientRect().width.toFixed(1) + "|" + getComputedStyle(document.documentElement).fontSize;
   if (force || key !== fitKey) { fitKey = key;
     home.classList.remove("stack", "one"); const fitT = () => { home.classList.remove("stack"); if ([...home.querySelectorAll(".hc-t")].some(over)) home.classList.add("stack"); };
-    fitT(); if ([...home.querySelectorAll(".hc-t,.hc-v,.hc-s")].some(over)) { home.classList.add("one"); fitT(); } }
+    fitT(); if ([...home.querySelectorAll(".hc-t,.hc-v,.hc-s:not(.clip)")].some(over)) { home.classList.add("one"); fitT(); } }
   const a = home.querySelector(".hg-a .hc"), b = home.querySelector(".hg-b .hc"), hb = b ? b.getBoundingClientRect().height : 0;
   if (b) st.setProperty("--hbc", hb.toFixed(2) + "px");
   if (a && b && hb + 8 > a.getBoundingClientRect().height) st.setProperty("--l1-min", (hb + 8).toFixed(2) + "px");
@@ -2148,7 +2325,7 @@ if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { fi
 // cada passada é idempotente: as próprias mudanças de altura geram no máximo uma confirmação, sem ciclo
 function fitTitlesNow(){ fitKey = ""; if (homeRO) { homeRO.disconnect(); for (const e of [document.querySelector(".home"), document.getElementById("tabbar"), document.documentElement]) if (e) homeRO.observe(e, {box: "border-box"}); } fitTitles(true); }
 // volta ao app ou virada de período/dia: a Home é redesenhada (só se nada estiver aberto por cima)
-function refreshHome(){ if (view.tab === "hoje" && active() && homeKey !== greetOf() + today() && !document.querySelector(".scrim")) render(); }
+function refreshHome(){ const p = active(); if (view.tab === "hoje" && p && homeKey !== greetOf() + today() + evKey(p) && !document.querySelector(".scrim")) render(); }
 document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshHome(); });
 setInterval(refreshHome, 60000);
 // Resumo nutricional completo (Hoje e Alimentação): painel com macros, g/kg, fibras, planejado e consumido.
@@ -2180,8 +2357,9 @@ function quickSheet(p, ctx){
       big("sleep", "moon", "Sono", () => sleepSheet(p)), adult ? big("wb", "smile", "Emocional", () => moodSheet(p)) : null);
     const food = [row("food", "Alimento no plano", "Buscar e adicionar a uma refeição", () => { go({tab: "alimentacao", sub: "alimentos"}); setTimeout(() => { const i = $("#busca-alimento"); if (i) i.focus(); }, 80); }),
       row("camera", "Novo alimento", embedded ? "Digitar os dados do rótulo" : "Foto da tabela nutricional ou digitação", () => addFoodChooser("", () => render()))];
+    const care = [row("steth", "Consulta", "Agendar ou registrar uma consulta", () => apptSheet(p)), row("flask", "Exame", "Solicitado, agendado ou realizado", () => examSheet(p))];
     el.append(h("h2", null, "Registrar"), h("p", {class: "sh-sub"}, "Em segundos, de qualquer tela."), health,
-      ...(ctx === "alimentacao" ? [h("div", {class: "qlist"}, food), mealRows] : [mealRows, h("div", {class: "qlist"}, food)]));
+      ...(ctx === "alimentacao" ? [h("div", {class: "qlist"}, food), mealRows, h("div", {class: "qlist"}, care)] : ctx === "saude" ? [h("div", {class: "qlist"}, care), mealRows, h("div", {class: "qlist"}, food)] : [mealRows, h("div", {class: "qlist"}, food, care)]));
   });
 }
 const byTime = (a, b) => (a.time || "99") < (b.time || "99") ? -1 : (a.time || "99") > (b.time || "99") ? 1 : 0;
@@ -2213,7 +2391,22 @@ function moodLine(L, keys){
   pts.forEach(p => { if (p) svg.append(el("circle", {cx: p[0], cy: p[1], r: 3.6, class: "md"})); });
   return h("div", {class: "mchart"}, svg, h("div", {class: "mdays"}, keys.map(k => h("span", null, WD[(new Date(k + "T12:00").getDay() + 6) % 7]))));
 }
+// módulos da Saúde abertos a partir do resumo (ou da Home): página própria com "‹ Saúde"
+const HMODS = ["consultas", "exames", "cuidados"];
+function careHub(p){
+  const c = careOf(p), now = Date.now(), n = nextOf(p), cc = careCounts(p), goals = c.goals.length;
+  const overA = c.appts.filter(a => C.isOverdue(a, now)).length, overE = c.exams.filter(e => C.isOverdue(e, now)).length, pend = c.exams.filter(e => e.status === "solicitado").length;
+  const row = (id, icon, cls, title, sub, fn, due) => h("button", {class: "grow hub", type: "button", id, onclick: fn}, h("span", {class: "gr-i c-" + cls, html: ICON[icon]}),
+    h("span", {class: "gr-m"}, h("b", null, title), h("span", {class: due ? "due" : null}, sub)), h("span", {class: "li-go", html: ICON.right}));
+  return [h("h2", {class: "sec-t"}, "Cuidados"),
+    h("div", {class: "glist"},
+      row("consultas", "steth", "appt", "Consultas", n.appt ? `Próxima: ${whenShort(n.appt)} · ${apptTitle(n.appt)}` : overA ? `${overA} a confirmar` : "Nenhuma consulta agendada", () => go({hsub: "consultas"}), !n.appt && overA),
+      row("exames", "flask", "exam", "Exames", n.exam ? `Próximo: ${whenShort(n.exam)} · ${n.exam.name}` : overE ? `${overE} a confirmar` : pend ? plural(pend, "exame pendente", "exames pendentes") : "Nenhum exame agendado", () => go({hsub: "exames"}), !n.exam && (overE || pend)),
+      row("cuidados", "pill", "suplemento", "Suplementos e medicamentos", `Ativos: ${plural(cc.sup, "suplemento", "suplementos")} · ${plural(cc.med, "medicamento", "medicamentos")}`, () => go({hsub: "cuidados"})),
+      row("goals", "heart", "goal", "Prioridades de saúde", goals ? plural(goals, "prioridade definida", "prioridades definidas") : "O que você quer acompanhar", () => goalsSheet(p)))];
+}
 function renderHealth(p){
+  if (HMODS.includes(view.hsub)) { ({consultas: renderAppts, exames: renderExams, cuidados: renderCare})[view.hsub](p); return; }
   const L = logsOf(p), t = today(), age = C.ageOf(p.birth), adult = adultOf(p);
   const mw = C.moveWeek(L.move, t), mref = C.moveRef(age), ss = C.sleepStats(L.sleep, t), sref = C.sleepRef(age);
   const nowI = C.weekKeys(t).indexOf(t), last7 = Array.from({length: 7}, (_, i) => C.addDays(t, i - 6));
@@ -2281,10 +2474,10 @@ function renderHealth(p){
   const tabs = [["resumo", "Resumo"], ["movimento", "Exercício"], ["sono", "Sono"], adult ? ["bem-estar", "Emocional"] : null].filter(Boolean);
   put(app, h("div", {class: "view"}, topBar(quickBtn(p, "saude")),
     h("h1", {class: "pg"}, "Saúde"),
-    h("div", {class: "seg subnav hseg", role: "tablist", "aria-label": "Saúde"}, tabs.map(([k, l]) => h("button", {type: "button", role: "tab", class: sub === k ? "on" : "", "aria-selected": String(sub === k), onclick: () => go({hsub: k})}, l))),
+    h("div", {class: "seg subnav hseg fit", role: "tablist", "aria-label": "Saúde"}, tabs.map(([k, l]) => h("button", {type: "button", role: "tab", class: sub === k ? "on" : "", "aria-selected": String(sub === k), onclick: () => go({hsub: k})}, l))),
     h("div", {class: "hstack"}, sub === "resumo" ? [(na => na && ["mover", "regular", "mover-ok"].includes(na.id) ? h("div", {class: "na " + na.tone, style: "margin-top:0"}, h("span", {class: "na-ic", html: ICON.spark}),
         h("div", null, h("span", {class: "na-e"}, na.tone === "good" ? "Bom trabalho" : "Sugestão"), h("b", null, na.title), h("span", {class: "na-t"}, na.text))) : null)(C.nextAction(healthCtx(p))), row("movimento"), row("sono"), adult ? row("bem-estar") : h("p", {class: "note"}, "O registro emocional para crianças e adolescentes terá um fluxo próprio, adequado à idade."), waterRow,
-      medsSection(p), examsSection(p)] : detail[sub]()),
+      careHub(p)] : detail[sub]()),
     more("Sobre estes dados", "Só registros feitos por você, guardados neste aparelho; nenhum valor é estimado nem importado. Não são diagnósticos.")));
   if (view.hfocus){ const el = document.getElementById(view.hfocus); view.hfocus = null; if (el) setTimeout(() => el.scrollIntoView({block: "start", behavior: "smooth"}), 60); }
 }
@@ -2296,15 +2489,11 @@ const MED_WHEN = ["Ao acordar", "Manhã", "Almoço", "Tarde", "Jantar", "Noite",
 const MED_FREQ = ["Diário", "Dias alternados", "Semanal", "Quando necessário"];
 const medLine = m => [m.dose ? `${m.dose}${m.unit ? " " + m.unit : ""}` : "", m.when || "", m.freq && m.freq !== "Diário" ? m.freq.toLowerCase() : ""].filter(Boolean).join(" · ");
 const secHead = (title, addLabel, fn, id) => h("div", {class: "sec-row", id}, h("h2", {class: "sec-t"}, title), h("button", {class: "sec-add", type: "button", "aria-label": addLabel, onclick: fn}, ic("plus")));
-function medsSection(p){
-  const list = careOf(p).meds, sorted = [...list].sort((a, b) => (a.paused ? 1 : 0) - (b.paused ? 1 : 0) || MED_WHEN.indexOf(a.when) - MED_WHEN.indexOf(b.when));
-  return h("div", {class: "care"}, secHead("Suplementos e medicamentos", "Adicionar suplemento, fórmula ou medicamento", () => medSheet(p), "meds"),
-    list.length ? h("div", {class: "glist"}, sorted.map(m => h("button", {class: "grow" + (m.paused ? " off" : ""), type: "button", onclick: () => medSheet(p, m)},
-        h("span", {class: "gr-i c-" + (m.cat || "suplemento"), html: m.cat === "medicamento" ? ICON.capsule : ICON.pill}),
-        h("span", {class: "gr-m"}, h("b", null, m.name, m.paused ? h("span", {class: "chip"}, "pausado") : null), h("span", null, medLine(m) || (MED_CAT.find(c => c[0] === m.cat) || MED_CAT[0])[1])),
-        h("span", {class: "li-go", html: ICON.right}))))
-      : h("button", {class: "gempty", type: "button", onclick: () => medSheet(p)}, "Organize o que você usa: nome, dose e momento do dia. Sem lembretes nem marcação diária."),
-    list.length ? h("p", {class: "care-n"}, "O app não recomenda doses. Siga a orientação de quem prescreveu.") : null);
+function medRow(p, m){
+  return h("button", {class: "grow" + (m.paused ? " off" : ""), type: "button", onclick: () => medSheet(p, m)},
+    h("span", {class: "gr-i c-" + (m.cat || "suplemento"), html: m.cat === "medicamento" ? ICON.capsule : ICON.pill}),
+    h("span", {class: "gr-m"}, h("b", null, m.name, m.paused ? h("span", {class: "chip"}, "pausado") : null), h("span", null, medLine(m) || (MED_CAT.find(c => c[0] === m.cat) || MED_CAT[0])[1])),
+    h("span", {class: "li-go", html: ICON.right}));
 }
 function medSheet(p, m, cat0){
   const c = careOf(p), editing = !!m;
@@ -2346,59 +2535,530 @@ function medSheet(p, m, cat0){
   });
 }
 
-/* ---------- Exames e prioridades de saúde ----------
-   Datas, intervalo definido pela pessoa e resultado em texto livre. Sem interpretação automática nem periodicidade sugerida. */
-const EXAM_SUG = ["Hemograma", "Glicemia de jejum", "Hemoglobina glicada", "Perfil lipídico", "Vitamina D", "Vitamina B12", "Ferritina", "TSH", "Creatinina"];
-const EXAM_EVERY = [[3, "3 meses"], [6, "6 meses"], [12, "1 ano"], [24, "2 anos"]];
-function examsSection(p){
-  const c = careOf(p), t = today();
-  const sorted = [...c.exams].sort((a, b) => (C.examNext(a) || "9999") < (C.examNext(b) || "9999") ? -1 : 1);
-  const goals = c.goals.length;
-  return h("div", {class: "care"}, secHead("Exames e acompanhamento", "Adicionar exame", () => examSheet(p), "exams"),
-    h("div", {class: "glist"},
-      sorted.map(e => { const nx = C.examNext(e), late = nx && nx < t;
-        return h("button", {class: "grow", type: "button", onclick: () => examSheet(p, e)}, h("span", {class: "gr-i", html: ICON.flask}),
-          h("span", {class: "gr-m"}, h("b", null, e.name), h("span", null, [e.last ? `Último: ${fromISO(e.last)}` : "Sem data registrada", nx ? h("span", {class: late ? "due" : null}, ` · ${late ? "previsto para" : "próximo:"} ${fromISO(nx)}`) : null])),
-          h("span", {class: "li-go", html: ICON.right})); }),
-      h("button", {class: "grow", type: "button", id: "goals", onclick: () => goalsSheet(p)}, h("span", {class: "gr-i", html: ICON.heart}),
-        h("span", {class: "gr-m"}, h("b", null, "Prioridades de saúde"), h("span", null, goals ? `${goals} ${goals === 1 ? "prioridade definida" : "prioridades definidas"}` : "O que você quer acompanhar")),
-        h("span", {class: "li-go", html: ICON.right}))),
-    !c.exams.length ? h("p", {class: "care-n"}, "Registre a data do último exame e, se quiser, o intervalo combinado com seu médico para ver a próxima data.") : null);
+/* ---------- Agenda: consultas e exames ----------
+   Cada compromisso guarda a data e a hora do local (AAAA-MM-DD, HH:MM) e o fuso IANA do aparelho no momento do cadastro (tz).
+   A hora mostrada é sempre a do compromisso; "já passou" é calculado no fuso dele (core: zonedEpoch, isUpcoming, nextEvent).
+   Próximo compromisso = só marcados (consulta "agendada", exame "agendado") que ainda não passaram; sem horário, valem até o fim do dia.
+   Contagem de suplementos e medicamentos (Home, Saúde): itens ATIVOS (não pausados), um por nome. */
+const DEVICE_TZ = (() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch (e) { return ""; } })();
+const MON = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+const MONL = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+const cap1 = x => x ? x[0].toUpperCase() + x.slice(1) : x;
+const hm = t => t ? t.replace(":", "h") : "";
+const ymd = d => String(d || "").split("-").map(Number);
+const keyMs = d => { const [y, m, dd] = ymd(d); return new Date(y, m - 1, dd, 12).getTime(); };
+const daysTo = d => Math.round((keyMs(d) - keyMs(today())) / 864e5);
+// "12 nov" (ano só quando não é o ano corrente; com near, só quando está a mais de 330 dias — o próximo compromisso de dezembro para janeiro dispensa o ano)
+const dShort = (d, near) => { const [y, m, dd] = ymd(d); const showY = near ? Math.abs(daysTo(d)) > 330 : y !== new Date().getFullYear(); return `${dd} ${MON[m - 1]}${showY ? " " + y : ""}`; };
+const dLong = d => { const [y, m, dd] = ymd(d); const s = new Date(y, m - 1, dd, 12).toLocaleDateString("pt-BR", {weekday: "long", day: "numeric", month: "long"}); return y !== new Date().getFullYear() ? `${s} de ${y}` : s; };
+const tzTag = e => { if (!e.tz || !DEVICE_TZ || e.tz === DEVICE_TZ || !e.time) return "";
+  try { const t = new Intl.DateTimeFormat("pt-BR", {timeZone: e.tz, timeZoneName: "short"}).formatToParts(new Date(C.eventStart(e))).find(x => x.type === "timeZoneName"); return t ? ` (${t.value})` : ""; } catch (x) { return ""; } };
+// near (cartões da Home): sem o fuso, para caber em uma linha; o fuso aparece no módulo e na ficha
+const whenShort = (e, near) => e.date ? dShort(e.date, near) + (e.time ? " · " + hm(e.time) + (near ? "" : tzTag(e)) : "") : "";
+const whenLong = e => e.date ? cap1(dLong(e.date)) + (e.time ? " · " + hm(e.time) + tzTag(e) : "") : "";
+const whenSpoken = e => e.date ? dLong(e.date) + (e.time ? `, às ${e.time}` : "") : "";
+const relWhen = e => { const n = daysTo(e.date); return n === 0 ? "Hoje" : n === 1 ? "Amanhã" : n < 0 ? (n === -1 ? "Ontem" : `Há ${-n} dias`) : n < 45 ? `Em ${n} dias` : `Em ${Math.round(n / 30.44)} meses`; };
+const byStartAsc = (a, b) => (C.eventStart(a) ?? 0) - (C.eventStart(b) ?? 0);
+const byDateDesc = (a, b) => (C.eventStart(b) ?? 0) - (C.eventStart(a) ?? 0) || (b.at || 0) - (a.at || 0);
+const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+function careCounts(p){
+  const seen = new Map(); for (const m of careOf(p).meds) { const cat = m.cat === "medicamento" ? "med" : "sup", k = cat + "|" + norm(m.name); if (!seen.has(k) || !m.paused) seen.set(k, Object.assign({}, m, {kk: cat})); }
+  const all = [...seen.values()], c = k => all.filter(m => m.kk === k);
+  return {sup: c("sup").filter(m => !m.paused).length, med: c("med").filter(m => !m.paused).length, paused: all.filter(m => m.paused).length, total: all.length};
 }
-function examSheet(p, e){
-  const c = careOf(p), editing = !!e;
-  const d = Object.assign({name: "", last: "", every: null, result: "", notes: ""}, e || {});
-  sheet(editing ? "Editar exame" : "Novo exame", (el, close) => {
-    const name = h("input", {class: "input", id: "ex-nome", value: d.name, placeholder: "Ex.: Perfil lipídico", autocomplete: "off", autocapitalize: "sentences"});
-    const last = h("input", {class: "input num", id: "ex-data", value: d.last ? fromISO(d.last) : "", placeholder: "dd/mm/aaaa", inputmode: "numeric", autocomplete: "off"});
-    const res = h("textarea", {class: "input area", id: "ex-res", rows: "2", maxlength: "500", placeholder: "Opcional. Ex.: LDL 128 mg/dL"}); res.value = d.result || "";
-    const notes = h("textarea", {class: "input area", id: "ex-obs", rows: "2", maxlength: "280", placeholder: "Opcional"}); notes.value = d.notes || "";
-    const err = h("div", {class: "err", role: "alert"}), body = h("div"), nextEl = h("p", {class: "w-basis", "aria-live": "polite"});
-    const ok = h("button", {class: "btn primary block", type: "button", onclick: () => commit()}, editing ? "Salvar" : "Adicionar");
-    const iso = () => last.value.length === 10 ? toISO(last.value) : null;
-    const check = () => { const bad = last.value && !iso(); err.textContent = last.value.length === 10 && bad ? "Data inválida. Use dd/mm/aaaa." : "";
-      ok.disabled = !name.value.trim() || (last.value && !iso()); const nx = C.examNext({last: iso(), every: d.every}); nextEl.textContent = nx ? `Próxima data prevista: ${fromISO(nx)}` : ""; };
+// próximo compromisso de cada tipo e a chave que muda quando um deles passa (a Home é redesenhada sozinha)
+const nextOf = p => ({appt: C.nextEvent(careOf(p).appts), exam: C.nextEvent(careOf(p).exams)});
+const evKey = p => { const n = nextOf(p); return (n.appt ? n.appt.id : "-") + "|" + (n.exam ? n.exam.id : "-"); };
+// grava o registro no perfil escolhido (família): sai do perfil de origem, entra no de destino
+function placeIn(listName, rec, ownerId, fallback){
+  const to = S.patients.find(x => x.id === ownerId) || fallback, from = S.patients.find(x => careOf(x)[listName].includes(rec));
+  if (from && from !== to) { const L = careOf(from)[listName]; L.splice(L.indexOf(rec), 1); touch(from); }
+  if (!careOf(to)[listName].includes(rec)) careOf(to)[listName].push(rec);
+  touch(to); return to;
+}
+const ownerChips = (d, repaint) => S.patients.length < 2 ? null : [h("div", {class: "lbl2"}, "Perfil"),
+  chips([...S.patients].sort((a, b) => a.name.localeCompare(b.name, "pt-BR")).map(x => [x.id, firstName(x.name) + (x.example ? " (exemplo)" : "")]), d.owner, v => { if (v) { d.owner = v; repaint(); } })];
+const dateOk = v => /^\d{4}-\d{2}-\d{2}$/.test(v || "") && +v.slice(0, 4) >= 1900 && +v.slice(0, 4) <= 2100;
+const field = (id, label, input, opt, extra) => h("div", {class: "field"}, h("label", {for: id}, label, opt ? [" ", h("span", {class: "opt"}, "opcional")] : null), input, extra || null);
+const txtIn = (id, v, ph, a) => h("input", Object.assign({class: "input", id, value: v || "", placeholder: ph || "", autocomplete: "off", autocapitalize: "sentences"}, a || {}));
+const area = (id, v, ph, max) => { const t = h("textarea", {class: "input area", id, rows: "2", maxlength: String(max || 500), placeholder: ph || "Opcional"}); t.value = v || ""; return t; };
+const stChip = (txt, cls) => txt ? h("span", {class: "chip st " + (cls || "")}, txt) : null;
+const dateTile = e => { const [, m, d] = ymd(e.date); return e.date ? h("span", {class: "dtile", "aria-hidden": "true"}, h("b", null, String(d)), h("span", null, MON[m - 1])) : h("span", {class: "dtile nd", "aria-hidden": "true"}, h("b", null, "—")); };
+// cabeçalho dos módulos da Saúde: volta ao resumo, título e "+"
+function modPage(p, title, addLabel, add, ...kids){
+  put(app, h("div", {class: "view mod"}, topBar(quickBtn(p, "saude")),
+    h("button", {class: "back", type: "button", onclick: () => go({hsub: "resumo"})}, ic("left"), "Saúde"),
+    h("div", {class: "pg-row"}, h("h1", {class: "pg"}, title), add ? h("button", {class: "sec-add", type: "button", "aria-label": addLabel, onclick: add}, ic("plus")) : null),
+    ...kids));
+}
+// confirmação de compromissos que já passaram sem registro: "Aconteceu?"
+function confirmBlock(items, title, label, actions){
+  if (!items.length) return null;
+  return h("section", {class: "panel conf"}, h("div", {class: "panel-h"}, h("span", null, title), h("span", {class: "sec-n"}, plural(items.length, "compromisso", "compromissos"))),
+    items.map(e => h("div", {class: "cf-row"}, h("div", {class: "cf-m"}, h("b", null, label(e)), h("span", null, whenShort(e))),
+      h("div", {class: "cf-b"}, actions(e).map(a => h("button", {class: "btn sm " + (a.cls || "ghost"), type: "button", onclick: a.fn}, a.label))))));
+}
+
+/* ---------- Consultas ---------- */
+const SPECS = ["Clínico geral", "Cardiologia", "Dermatologia", "Endocrinologia", "Ginecologia", "Nutrição", "Oftalmologia", "Ortopedia", "Pediatria", "Psicologia", "Psiquiatria", "Odontologia"];
+const apptTitle = a => a.prof || a.spec || "Consulta";
+const apptPlace = a => a.mode === "online" ? (a.place ? `Online · ${a.place}` : "Online") : a.place || "";
+const apptSub = a => [a.prof ? a.spec : "", apptPlace(a)].filter(Boolean).join(" · ");
+const apptState = (a, now = Date.now()) => a.status === "cancelada" ? "cancelada" : a.status === "realizada" ? "realizada" : C.isUpcoming(a, now) ? "futura" : "confirmar";
+function setAppt(p, a, status){ const prev = a.status; a.status = status; a.updated = Date.now(); touch(p); render();
+  toast(status === "realizada" ? "Consulta registrada como realizada" : status === "cancelada" ? "Consulta cancelada" : "Consulta reativada", () => { a.status = prev; touch(p); render(); }); }
+function apptRow(p, a, now, showState){
+  const st = apptState(a, now), lab = {cancelada: ["cancelada", "off"], confirmar: ["a confirmar", "due"], realizada: showState ? ["realizada", ""] : null, futura: showState ? ["agendada", "fut"] : null}[st];
+  return h("button", {class: "grow ev" + (st === "cancelada" ? " off" : ""), type: "button", onclick: () => apptSheet(p, a)}, dateTile(a),
+    h("span", {class: "gr-m"}, h("b", null, h("span", {class: "gr-tt"}, apptTitle(a)), lab ? stChip(lab[0], lab[1]) : null),
+      h("span", null, [a.time ? hm(a.time) + tzTag(a) : "", apptSub(a)].filter(Boolean).join(" · ") || (a.date ? dShort(a.date) : ""))),
+    h("span", {class: "li-go", html: ICON.right}));
+}
+function apptSheet(p, a, preset){
+  const editing = !!a;
+  const d = Object.assign({spec: "", prof: "", date: "", time: "", place: "", mode: "presencial", addr: "", notes: "", status: null}, a || {}, preset || {}, {owner: p.id});
+  let pickedStatus = editing;
+  sheet(editing ? "Editar consulta" : "Nova consulta", (el, close) => {
+    const spec = txtIn("cs-esp", d.spec, "Ex.: Cardiologia"), prof = txtIn("cs-prof", d.prof, "Ex.: Dra. Ana Lima", {autocapitalize: "words"});
+    const date = h("input", {class: "input dt-in", type: "date", id: "cs-data", value: d.date, min: "1900-01-01", max: "2100-12-31"});
+    const time = h("input", {class: "input dt-in", type: "time", id: "cs-hora", value: d.time});
+    const place = txtIn("cs-local", d.place, "Ex.: Clínica Vida"), addr = txtIn("cs-end", d.addr, ""), notes = area("cs-obs", d.notes);
+    const hint = h("p", {class: "note", "aria-live": "polite"}), body = h("div"), slot = h("div");
+    const ok = h("button", {class: "btn primary block", type: "button", onclick: () => commit()}, editing ? "Salvar" : "Salvar consulta");
+    const future = () => C.isUpcoming({status: "agendada", date: date.value, time: time.value, tz: DEVICE_TZ});
+    function check(){
+      if (!pickedStatus && dateOk(date.value)) d.status = future() ? "agendada" : "realizada";
+      const need = [!(spec.value.trim() || prof.value.trim()) ? "a especialidade ou o profissional" : "", !dateOk(date.value) ? "a data" : ""].filter(Boolean);
+      ok.disabled = need.length > 0; hint.textContent = need.length ? `Para salvar, informe ${need.join(" e ")}. O resto pode ser completado depois.` : "";
+    }
     function paint(){
-      put(body, !editing ? [h("div", {class: "lbl2"}, "Sugestões"), chips(EXAM_SUG.filter(x => !c.exams.some(y => norm(y.name) === norm(x))).map(x => [x, x]), null, v => { name.value = v; check(); })] : null,
-        h("div", {class: "lbl2"}, "Repetir a cada ", h("span", {class: "opt"}, "opcional")), chips(EXAM_EVERY, d.every, v => { d.every = v; paint(); check(); }, "opt"));
+      check(); addr.placeholder = d.mode === "online" ? "Link ou instrução de acesso" : "Rua, número, sala";
+      const used = []; for (const x of careOf(p).appts) if (x.spec && !used.some(u => norm(u) === norm(x.spec))) used.push(x.spec);
+      const sug = [...used, ...SPECS.filter(s => !used.some(u => norm(u) === norm(s)))].slice(0, 8);
+      put(body,
+        !editing && !spec.value.trim() ? h("div", {class: "chips sugs", style: "margin:-6px 0 14px"}, sug.map(s => h("button", {type: "button", onclick: () => { spec.value = s; paint(); }}, s))) : null,
+        h("div", {class: "g2"}, field("cs-data", "Data", date), field("cs-hora", "Horário", time, true)),
+        dateOk(date.value) ? [h("div", {class: "lbl2", style: "margin-top:0"}, "Situação"), chips([["agendada", "Agendada"], ["realizada", "Realizada"], ["cancelada", "Cancelada"]], d.status, v => { if (v) { d.status = v; pickedStatus = true; paint(); } })] : null,
+        h("div", {class: "lbl2"}, "Modalidade"), chips([["presencial", "Presencial"], ["online", "Online"]], d.mode, v => { if (v) { d.mode = v; paint(); } }),
+        h("div", {style: "height:14px"}),
+        field("cs-local", d.mode === "online" ? "Plataforma ou instituição" : "Clínica ou instituição", place, true),
+        field("cs-end", d.mode === "online" ? "Acesso" : "Endereço", addr, true),
+        field("cs-obs", "Observações", notes, false), ownerChips(d, paint));
     }
     function commit(){
-      const x = Object.assign(e || {id: uid(), at: Date.now()}, {name: name.value.trim(), last: iso(), every: d.every || null, result: res.value.trim(), notes: notes.value.trim()});
-      if (!editing) c.exams.push(x);
-      touch(p); close(); render(); toast(editing ? `${x.name} atualizado` : `${x.name} adicionado`, editing ? null : () => { c.exams.splice(c.exams.indexOf(x), 1); touch(p); render(); });
+      if (ok.disabled) return;
+      const moved = !editing || a.date !== date.value || a.time !== time.value;
+      const rec = a || {id: uid(), at: Date.now()};
+      Object.assign(rec, {spec: spec.value.trim(), prof: prof.value.trim(), date: date.value, time: time.value, place: place.value.trim(), mode: d.mode, addr: addr.value.trim(), notes: notes.value.trim(),
+        status: d.status || (future() ? "agendada" : "realizada"), tz: moved ? DEVICE_TZ : (rec.tz || DEVICE_TZ), updated: Date.now()});
+      const from = editing ? S.patients.find(x => careOf(x).appts.includes(rec)) : null, to = placeIn("appts", rec, d.owner, p);
+      close(); render();
+      if (from && from !== to) toast(`Consulta movida para ${firstName(to.name)}`);
+      else toast(editing ? "Consulta atualizada" : rec.status === "agendada" ? "Consulta agendada" : "Consulta registrada", editing ? null : () => { const L = careOf(to).appts; L.splice(L.indexOf(rec), 1); touch(to); render(); });
     }
-    name.addEventListener("input", check);
-    last.addEventListener("input", () => { last.value = maskDate(last.value); check(); });
-    paint(); check();
-    el.append(h("h2", null, editing ? e.name : "Novo exame"), h("p", {class: "sh-sub"}, "O intervalo é o combinado com seu médico ou nutricionista; o app não sugere periodicidade nem interpreta resultados."),
-      h("div", {class: "field"}, h("label", {for: "ex-nome"}, "Exame ou painel"), name),
-      h("div", {class: "field"}, h("label", {for: "ex-data"}, "Data da última realização"), last, err), body, nextEl,
-      h("div", {class: "field", style: "margin-top:14px"}, h("label", {for: "ex-res"}, "Resultado"), res),
-      h("div", {class: "field"}, h("label", {for: "ex-obs"}, "Observações"), notes),
-      editing ? h("button", {class: "btn danger block", type: "button", style: "margin-top:10px", onclick: () => { const i = c.exams.indexOf(e); c.exams.splice(i, 1); touch(p); close(); render(); toast(`${e.name} excluído`, () => { c.exams.splice(i, 0, e); touch(p); render(); }); }}, "Excluir") : null,
+    for (const i of [spec, prof]) i.addEventListener("input", () => { check(); if (i === spec && !editing) paint(); });
+    for (const i of [date, time]) { i.addEventListener("input", paint); i.addEventListener("change", paint); }
+    paint();
+    const actions = editing ? h("div", {class: "bk-row", style: "margin-top:6px"}, slot,
+      h("button", {class: "btn danger block", type: "button", onclick: () => ask(slot, "Excluir esta consulta? Ela sai do histórico e do gráfico.", [{label: "Excluir", fn: () => {
+        const L = careOf(p).appts, i = L.indexOf(a); if (i < 0) return; L.splice(i, 1); touch(p); close(); render(); toast("Consulta excluída", () => { L.splice(i, 0, a); touch(p); render(); }); }}])}, "Excluir consulta")) : null;
+    el.append(h("h2", null, editing ? apptTitle(a) : "Nova consulta"),
+      h("p", {class: "sh-sub"}, editing ? [a.spec && a.prof ? a.spec + " · " : "", whenLong(a)].join("") : `No perfil de ${firstName(p.name)}. Especialidade ou profissional e a data bastam para salvar.`),
+      field("cs-esp", "Especialidade", spec), field("cs-prof", "Profissional", prof), body, hint, actions,
+      h("div", {class: "confirmbar"}, ok));
+  });
+}
+function renderAppts(p){
+  const c = careOf(p), now = Date.now(), L = c.appts;
+  const up = C.upcoming(L, now), nx = up[0], over = L.filter(a => C.isOverdue(a, now)).sort(byStartAsc);
+  const done = L.filter(a => a.status === "realizada").sort(byDateDesc), canc = L.filter(a => a.status === "cancelada").sort(byDateDesc);
+  const f = view.cf === "historico" || (view.cf === "canceladas" && canc.length) ? view.cf : "proximas";
+  const lists = {proximas: up, historico: done, canceladas: canc};
+  const listBox = h("div", {class: "glist"}), q = {v: ""};
+  const fill = () => { const t = norm(q.v.trim()), rows = lists[f].filter(a => !t || norm([a.spec, a.prof, a.place, a.notes].join(" ")).includes(t));
+    put(listBox, rows.length ? rows.map(a => apptRow(p, a, now)) : h("p", {class: "gnone"}, t ? "Nenhuma consulta encontrada." : f === "proximas" ? "Nenhuma consulta agendada." : f === "historico" ? "Nenhuma consulta realizada registrada." : "Nenhuma consulta cancelada.")); };
+  const search = L.length >= 5 ? h("div", {class: "srch"}, h("span", {class: "srch-i", html: ICON.search}),
+    h("input", {class: "input", type: "search", placeholder: "Buscar por especialidade, profissional ou local", "aria-label": "Buscar consultas", autocomplete: "off", oninput: e => { q.v = e.target.value; fill(); }})) : null;
+  fill();
+  // gráfico anual: anos com registros + o atual
+  const yNow = new Date().getFullYear(), years = [...new Set([yNow, ...L.filter(a => a.date).map(a => ymd(a.date)[0])])].sort((a, b) => b - a);
+  const yr = years.includes(view.cy) ? view.cy : yNow;
+  const chartBox = h("div");
+  const paintChart = sel => put(chartBox, apptChart(p, L, yr, now, sel, i => paintChart(i === sel ? null : i)));
+  paintChart(null);
+  const hero = nx ? h("button", {class: "nx dj-glass appt", type: "button", onclick: () => apptSheet(p, nx), "aria-label": `Próxima consulta: ${whenSpoken(nx)}. ${apptTitle(nx)}. ${apptSub(nx)}. Editar.`},
+      h("span", {class: "nx-h"}, h("span", {class: "nx-e"}, "Próxima consulta"), h("span", {class: "nx-r"}, relWhen(nx))),
+      h("b", {class: "nx-d"}, whenLong(nx)), h("span", {class: "nx-t"}, apptTitle(nx)), apptSub(nx) ? h("span", {class: "nx-s"}, apptSub(nx)) : null,
+      nx.mode !== "online" && nx.addr ? h("span", {class: "nx-s"}, nx.addr) : null)
+    : h("div", {class: "nx none dj-quiet"}, h("b", null, "Nenhuma consulta agendada"), h("span", null, "Cadastre a próxima para vê-la aqui e na tela Hoje."),
+      h("button", {class: "btn primary sm", type: "button", onclick: () => apptSheet(p)}, ic("plus"), "Agendar consulta"));
+  modPage(p, "Consultas", "Nova consulta", () => apptSheet(p), hero,
+    confirmBlock(over, "Aconteceu?", apptTitle, a => [{label: "Cancelada", fn: () => setAppt(p, a, "cancelada")}, {label: "Realizada", cls: "primary", fn: () => setAppt(p, a, "realizada")}]),
+    h("h2", {class: "sec-t"}, "Agenda"),
+    h("div", {class: "seg seg-2 fit", role: "tablist", "aria-label": "Consultas"}, [["proximas", `Próximas${up.length ? " · " + up.length : ""}`], ["historico", "Histórico"], canc.length ? ["canceladas", "Canceladas"] : null].filter(Boolean)
+      .map(([k, l]) => h("button", {type: "button", role: "tab", class: f === k ? "on" : "", "aria-selected": String(f === k), onclick: () => go({cf: k}, true)}, l))),
+    search, listBox,
+    h("h2", {class: "sec-t"}, "Histórico anual"),
+    h("section", {class: "panel mcp"}, years.length > 1 ? h("div", {class: "chips yrs", role: "group", "aria-label": "Ano"}, years.map(y => h("button", {type: "button", class: y === yr ? "on" : "", "aria-pressed": String(y === yr), onclick: () => go({cy: y}, true)}, String(y)))) : null, chartBox),
+    h("p", {class: "care-n"}, "Consultas canceladas não contam como realizadas. Os dados ficam neste aparelho, no perfil de " + firstName(p.name) + "."));
+}
+function apptChart(p, L, year, now, sel, pick){
+  const m = C.monthCounts(L, year, now), tot = k => m.reduce((a, x) => a + x[k], 0), max = Math.max(2, ...m.map(x => x.done + x.cancel + x.future + x.pending));
+  const any = m.some(x => x.done + x.cancel + x.future + x.pending);
+  const pc = v => `height:${(v / max * 100).toFixed(1)}%`;
+  const sum = h("p", {class: "mc-sum"}, h("b", null, String(tot("done"))), ` ${tot("done") === 1 ? "consulta realizada" : "consultas realizadas"} em ${year}`);
+  if (!any) return [sum, h("p", {class: "gnone", style: "padding:6px 0 2px"}, `Nenhuma consulta registrada em ${year}.`)];
+  const key = (cls, l, n) => n ? h("span", {class: "mc-k-i"}, h("i", {class: cls}), `${l} ${n}`) : null;
+  const month = sel == null ? null : L.filter(a => { const [y, mm] = ymd(a.date); return y === year && mm === sel + 1; }).sort(byStartAsc);
+  return [sum,
+    h("div", {class: "mc", role: "group", "aria-label": `Consultas por mês em ${year}. Toque em um mês para ver as consultas.`}, m.map((x, i) => {
+      const n = x.done + x.cancel + x.future + x.pending;
+      return h("button", {type: "button", class: "mc-c" + (sel === i ? " on" : "") + (n ? "" : " z"), "aria-pressed": String(sel === i),
+          "aria-label": `${cap1(MONL[i])}: ${n ? [plural(x.done, "realizada", "realizadas"), x.future ? plural(x.future, "agendada", "agendadas") : "", x.pending ? `${x.pending} a confirmar` : "", x.cancel ? plural(x.cancel, "cancelada", "canceladas") : ""].filter(Boolean).join(", ") : "nenhuma consulta"}`, onclick: () => pick(i)},
+        h("span", {class: "mc-n"}, x.done ? String(x.done) : ""),
+        h("span", {class: "mc-b"}, x.done ? h("i", {class: "d", style: pc(x.done)}) : null, x.pending ? h("i", {class: "p", style: pc(x.pending)}) : null,
+          x.future ? h("i", {class: "f", style: pc(x.future)}) : null, x.cancel ? h("i", {class: "k", style: pc(x.cancel)}) : null),
+        h("span", {class: "mc-l"}, MON[i][0].toUpperCase()));
+    })),
+    h("div", {class: "mc-k"}, key("d", "Realizadas", tot("done")), key("f", "Agendadas", tot("future")), key("p", "A confirmar", tot("pending")), key("k", "Canceladas", tot("cancel"))),
+    month ? h("div", {class: "mc-list"}, h("div", {class: "lbl2"}, `${cap1(MONL[sel])} de ${year}`), month.length ? h("div", {class: "glist"}, month.map(a => apptRow(p, a, now, true))) : h("p", {class: "gnone"}, "Nenhuma consulta neste mês."))
+      : h("p", {class: "mc-hint"}, "Toque em um mês para ver as consultas.")];
+}
+
+/* ---------- Exames ----------
+   Três situações que não se confundem: solicitado (pendente, sem data), agendado (com data; o próximo aparece na tela Hoje) e realizado
+   (com resultado em texto, resultados numéricos e documentos). O intervalo de repetição é o combinado com o profissional: o app não sugere periodicidade. */
+const EXAM_SUG = ["Hemograma", "Glicemia de jejum", "Hemoglobina glicada", "Perfil lipídico", "Vitamina D", "Vitamina B12", "Ferritina", "TSH", "Creatinina",
+  "Ultrassonografia", "Ressonância magnética", "Eletrocardiograma", "Densitometria óssea"];
+const EXAM_EVERY = [[3, "3 meses"], [6, "6 meses"], [12, "1 ano"], [24, "2 anos"]];
+const EXAM_CAT = [["lab", "Laboratorial"], ["imagem", "Imagem"], ["cardio", "Cardiológico"], ["outro", "Outro"]];
+const EXAM_ST = {solicitado: "Pendente", agendado: "Agendado", realizado: "Realizado", cancelado: "Cancelado"};
+const examPlace = e => e.place || "";
+const examLabs = (p, e) => careOf(p).labs.filter(r => r.examId === e.id);
+// previsão de repetição: só do realizado mais recente de cada exame (pelo nome) que tenha intervalo combinado
+function examNextOf(p, e){
+  if (e.status !== "realizado" || !(e.every > 0) || !e.date) return null;
+  const latest = careOf(p).exams.filter(x => x.status === "realizado" && x.date && norm(x.name) === norm(e.name)).sort(byDateDesc)[0];
+  return latest === e ? C.examNext({last: e.date, every: e.every}) : null;
+}
+function setExam(p, e, status){ const prev = e.status; e.status = status; e.updated = Date.now(); touch(p); render();
+  toast(status === "realizado" ? `${e.name}: realizado` : status === "cancelado" ? `${e.name}: cancelado` : `${e.name}: atualizado`, () => { e.status = prev; touch(p); render(); }); }
+function examRow(p, e, now){
+  const nx = examNextOf(p, e), late = nx && nx < today(), labs = examLabs(p, e).length, docs = (e.docs || []).length;
+  const over = C.isOverdue(e, now), st = e.status === "cancelado" ? ["cancelado", "off"] : over ? ["a confirmar", "due"] : null;
+  const sub = e.status === "solicitado" ? ["Sem data", e.req ? "pedido por " + e.req : "", examPlace(e)] : [e.time && e.status === "agendado" ? hm(e.time) + tzTag(e) : "", examPlace(e)];
+  return h("button", {class: "grow ev" + (e.status === "cancelado" ? " off" : ""), type: "button", onclick: () => examDetail(p, e)}, dateTile(e),
+    h("span", {class: "gr-m"}, h("b", null, h("span", {class: "gr-tt"}, e.name), st ? stChip(st[0], st[1]) : null),
+      h("span", null, sub.filter(Boolean).join(" · ") || (e.date ? dShort(e.date) : "")),
+      labs || docs || nx ? h("span", {class: "gr-x"}, [labs ? plural(labs, "resultado", "resultados") : "", docs ? plural(docs, "documento", "documentos") : ""].filter(Boolean).join(" · "),
+        nx ? h("span", {class: late ? "due" : null}, `${labs || docs ? " · " : ""}${late ? "repetição prevista para" : "repetir em"} ${fromISO(nx)}`) : null) : null),
+    h("span", {class: "li-go", html: ICON.right}));
+}
+function examSheet(p, e, preset){
+  const editing = !!e;
+  const d = Object.assign({name: "", cat: "", status: "solicitado", date: "", time: "", place: "", req: "", every: null, result: "", notes: ""}, e || {}, preset || {}, {owner: p.id});
+  sheet(editing ? "Editar exame" : "Novo exame", (el, close) => {
+    const name = txtIn("ex-nome", d.name, "Ex.: Perfil lipídico");
+    const date = h("input", {class: "input dt-in", type: "date", id: "ex-data", value: d.date, min: "1900-01-01", max: "2100-12-31"});
+    const time = h("input", {class: "input dt-in", type: "time", id: "ex-hora", value: d.time});
+    const place = txtIn("ex-local", d.place, "Ex.: Laboratório Central"), req = txtIn("ex-req", d.req, "Ex.: Dr. Paulo Reis", {autocapitalize: "words"});
+    const res = area("ex-res", d.result, "Opcional. Ex.: laudo sem alterações descritas"), notes = area("ex-obs", d.notes, "Opcional", 280);
+    const hint = h("p", {class: "note", "aria-live": "polite"}), body = h("div"), nextEl = h("p", {class: "w-basis", "aria-live": "polite"});
+    const ok = h("button", {class: "btn primary block", type: "button", onclick: () => commit()}, editing ? "Salvar" : "Salvar exame");
+    const needsDate = () => d.status === "agendado" || d.status === "realizado";
+    function check(){
+      const need = [!name.value.trim() ? "o nome do exame" : "", needsDate() && !dateOk(date.value) ? (d.status === "agendado" ? "a data agendada" : "a data em que foi feito") : ""].filter(Boolean);
+      ok.disabled = need.length > 0; hint.textContent = need.length ? `Para salvar, informe ${need.join(" e ")}.` : "";
+      const nx = d.status === "realizado" && dateOk(date.value) ? C.examNext({last: date.value, every: d.every}) : null; nextEl.textContent = nx ? `Repetição prevista para ${fromISO(nx)} (intervalo informado por você).` : "";
+    }
+    function paint(){
+      put(body,
+        !editing && !name.value.trim() ? h("div", {class: "chips sugs", style: "margin:-6px 0 14px"}, EXAM_SUG.slice(0, 9).map(s => h("button", {type: "button", onclick: () => { name.value = s; if (!d.cat) d.cat = /ultra|resson|densito|mamo|radio|tomo/i.test(s) ? "imagem" : /eletro/i.test(s) ? "cardio" : "lab"; paint(); }}, s))) : null,
+        h("div", {class: "lbl2", style: "margin-top:0"}, "Situação"),
+        chips([["solicitado", "Solicitado"], ["agendado", "Agendado"], ["realizado", "Realizado"], editing ? ["cancelado", "Cancelado"] : null].filter(Boolean), d.status, v => { if (v) { d.status = v; paint(); } }),
+        h("p", {class: "note", style: "margin:6px 2px 0"}, {solicitado: "Pedido do profissional, ainda sem data marcada.", agendado: "Com data marcada. O próximo agendado aparece na tela Hoje.", realizado: "Já feito. Registre o resultado e anexe o laudo, se quiser.", cancelado: "Não aparece como próximo nem conta como realizado."}[d.status]),
+        h("div", {style: "height:14px"}),
+        needsDate() ? h("div", {class: "g2"}, field("ex-data", d.status === "agendado" ? "Data" : "Data de realização", date), field("ex-hora", "Horário", time, true)) : null,
+        field("ex-local", "Laboratório, clínica ou instituição", place, true), field("ex-req", "Profissional que solicitou", req, true),
+        h("div", {class: "lbl2", style: "margin-top:0"}, "Tipo ", h("span", {class: "opt"}, "opcional")), chips(EXAM_CAT, d.cat, v => { d.cat = v || ""; paint(); }, "opt"),
+        d.status === "realizado" ? [h("div", {class: "lbl2"}, "Repetir a cada ", h("span", {class: "opt"}, "opcional · combinado com o profissional")), chips(EXAM_EVERY, d.every, v => { d.every = v; paint(); }, "opt"), nextEl,
+          h("div", {style: "height:14px"}), field("ex-res", "Resultado ou laudo (texto)", res, false)] : h("div", {style: "height:14px"}),
+        field("ex-obs", "Observações", notes, false), ownerChips(d, paint));
+      check();
+    }
+    function commit(){
+      if (ok.disabled) return;
+      const rec = e || {id: uid(), at: Date.now(), docs: []}, keepDate = needsDate();
+      const changedWhen = !editing || e.date !== date.value || e.time !== time.value;
+      Object.assign(rec, {name: name.value.trim(), cat: d.cat || "", status: d.status, date: keepDate ? date.value : "", time: keepDate ? time.value : "", place: place.value.trim(), req: req.value.trim(),
+        every: d.status === "realizado" ? d.every || null : rec.every || null, result: res.value.trim(), notes: notes.value.trim(), tz: changedWhen ? DEVICE_TZ : (rec.tz || DEVICE_TZ), updated: Date.now()});
+      const from = editing ? S.patients.find(x => careOf(x).exams.includes(rec)) : null, to = placeIn("exams", rec, d.owner, p);
+      // resultados vinculados acompanham o exame quando ele muda de perfil
+      if (from && from !== to) for (const r of careOf(from).labs.filter(r => r.examId === rec.id)) placeIn("labs", r, to.id, to);
+      close(); render();
+      if (from && from !== to) toast(`Exame movido para ${firstName(to.name)}`);
+      else toast(editing ? `${rec.name} atualizado` : `${rec.name}: ${EXAM_ST[rec.status].toLowerCase()}`, editing ? null : () => { const L = careOf(to).exams; L.splice(L.indexOf(rec), 1); touch(to); render(); });
+    }
+    name.addEventListener("input", () => { check(); if (!editing && name.value.trim().length <= 1) paint(); });
+    for (const i of [date, time]) { i.addEventListener("input", check); i.addEventListener("change", check); }
+    paint();
+    el.append(h("h2", null, editing ? e.name : "Novo exame"),
+      h("p", {class: "sh-sub"}, editing ? `${EXAM_ST[e.status]}${e.date ? " · " + whenLong(e) : ""}` : `No perfil de ${firstName(p.name)}. O app organiza datas e resultados; não sugere periodicidade nem interpreta resultados.`),
+      field("ex-nome", "Exame ou painel", name), body, hint, h("div", {class: "confirmbar"}, ok));
+    if (!editing) setTimeout(() => name.focus(), 60);
+  });
+}
+// excluir exame: leva junto os resultados vinculados e, passado o prazo do "Desfazer", os documentos guardados no aparelho
+function deleteExam(p, e){
+  const L = careOf(p).exams, i = L.indexOf(e); if (i < 0) return;
+  const labs = examLabs(p, e), LB = careOf(p).labs; L.splice(i, 1); for (const r of labs) LB.splice(LB.indexOf(r), 1);
+  touch(p); render(); docsGC((e.docs || []).map(x => x.id));
+  toast(`${e.name} excluído`, () => { L.splice(i, 0, e); LB.push(...labs); touch(p); render(); });
+}
+function examDetail(p, e){
+  sheet(e.name, (el, close) => {
+    const box = h("div"), slot = h("div"), file = h("input", {type: "file", accept: "application/pdf,image/*", hidden: true});
+    const info = (k, v) => v ? h("div", {class: "kv"}, h("span", null, k), h("b", null, v)) : null;
+    function paint(){
+      const labs = examLabs(p, e).sort((a, b) => (a.name || "").localeCompare(b.name || "", "pt-BR")), now = Date.now(), nx = examNextOf(p, e);
+      put(box,
+        h("h2", null, e.name),
+        h("p", {class: "sh-sub"}, [EXAM_ST[e.status], e.date ? whenLong(e) : "", (EXAM_CAT.find(c => c[0] === e.cat) || [])[1]].filter(Boolean).join(" · ")),
+        C.isOverdue(e, now) ? h("div", {class: "ask-n"}, "A data já passou. O exame foi realizado?",
+          h("div", {class: "g2", style: "margin-top:10px"}, h("button", {class: "btn ghost sm", type: "button", onclick: () => { close(); setTimeout(() => examSheet(p, e), 280); }}, "Remarcar"),
+            h("button", {class: "btn primary sm", type: "button", onclick: () => { e.status = "realizado"; e.updated = Date.now(); touch(p); render(); paint(); }}, "Realizado"))) : null,
+        h("div", {class: "kvs"}, info("Local", examPlace(e)), info("Solicitado por", e.req), info("Repetição prevista", nx ? `${fromISO(nx)} (intervalo informado)` : ""), info("Observações", e.notes)),
+        e.result ? h("div", {class: "kvt"}, h("span", null, "Resultado ou laudo"), h("p", null, e.result)) : null,
+        e.status === "realizado" || labs.length ? [h("div", {class: "lbl2"}, "Resultados numéricos"),
+          labs.length ? h("div", {class: "glist"}, labs.map(r => h("button", {class: "grow lr", type: "button", onclick: () => labSheet(p, r, e, paint)},
+            h("span", {class: "gr-m"}, h("b", null, r.name), h("span", null, refText(r))),
+            h("span", {class: "lr-v"}, fmtLab(r.value), h("small", null, " " + r.unit)), h("span", {class: "li-go", html: ICON.right}))))
+            : h("p", {class: "gnone"}, "Valores como LDL, glicemia ou vitamina D, para acompanhar a evolução."),
+          h("button", {class: "btn ghost block", type: "button", style: "margin-top:8px", onclick: () => labSheet(p, null, e, paint)}, ic("plus"), "Adicionar resultado")] : null,
+        docsBlock(p, e, file, paint),
+        h("div", {class: "g2", style: "margin-top:16px"},
+          h("button", {class: "btn ghost block", type: "button", onclick: () => { close(); setTimeout(() => examSheet(p, e), 280); }}, ic("edit"), "Editar"),
+          e.status === "solicitado" ? h("button", {class: "btn primary block", type: "button", onclick: () => { close(); setTimeout(() => examSheet(p, e, {status: "agendado"}), 280); }}, "Agendar")
+            : e.status === "agendado" && !C.isOverdue(e, now) ? h("button", {class: "btn primary block", type: "button", onclick: () => { setExam(p, e, "realizado"); paint(); }}, "Realizado")
+            : h("button", {class: "btn plain block", type: "button", onclick: close}, "Fechar")),
+        slot,
+        h("button", {class: "btn danger block", type: "button", style: "margin-top:10px", onclick: () => ask(slot, `Excluir ${[e.name, labs.length ? plural(labs.length, "resultado vinculado", "resultados vinculados") : "", (e.docs || []).length ? plural(e.docs.length, "documento anexado", "documentos anexados") : ""].filter(Boolean).join(", ").replace(/, ([^,]*)$/, " e $1")}?`,
+          [{label: "Excluir", fn: () => { close(); deleteExam(p, e); }}])}, "Excluir exame"),
+        h("p", {class: "note"}, "O app guarda e mostra o que você registrou. Não interpreta resultados nem faz diagnósticos."));
+    }
+    file.addEventListener("change", () => { const f = file.files[0]; file.value = ""; if (f) attachDoc(p, e, f, paint); });
+    paint(); el.append(box, file);
+  });
+}
+const fmtLab = v => Number.isFinite(v) ? new Intl.NumberFormat("pt-BR", {maximumFractionDigits: 3}).format(v) : "—";
+const refText = r => r.lo != null && r.hi != null ? `Referência ${fmtLab(r.lo)}–${fmtLab(r.hi)} ${r.unit}` : r.lo != null ? `Referência ≥ ${fmtLab(r.lo)} ${r.unit}` : r.hi != null ? `Referência ≤ ${fmtLab(r.hi)} ${r.unit}` : "Sem referência informada";
+
+/* ---------- Resultados numéricos (marcadores) ----------
+   Guardados como informados (valor, unidade, data da coleta, referência do laboratório). O nome é agrupado num marcador único
+   (core.markerKey) para que "LDL", "LDL-C" e "Colesterol LDL" formem uma só série. */
+function labSheet(p, r, exam, after){
+  const editing = !!r, c = careOf(p);
+  const d = Object.assign({name: "", value: null, raw: "", unit: "", date: exam && exam.date ? exam.date : today(), lo: null, hi: null, lab: exam ? exam.place || "" : "", notes: ""}, r || {});
+  sheet(editing ? "Editar resultado" : "Novo resultado", (el, close) => {
+    const name = txtIn("lb-nome", d.name, "Ex.: Colesterol LDL"), val = txtIn("lb-val", d.raw || (d.value != null ? fmtLab(d.value) : ""), "Ex.: 128", {inputmode: "decimal"});
+    const unit = txtIn("lb-un", d.unit, "Ex.: mg/dL", {autocapitalize: "off"}), date = h("input", {class: "input dt-in", type: "date", id: "lb-data", value: d.date, min: "1900-01-01", max: "2100-12-31"});
+    const lo = txtIn("lb-min", d.lo != null ? fmtLab(d.lo) : "", "Mín.", {inputmode: "decimal", "aria-label": "Referência mínima"}), hi = txtIn("lb-max", d.hi != null ? fmtLab(d.hi) : "", "Máx.", {inputmode: "decimal", "aria-label": "Referência máxima"});
+    const lab = txtIn("lb-lab", d.lab, "Opcional"), notes = area("lb-obs", d.notes, "Opcional", 280);
+    const group = h("p", {class: "w-basis", "aria-live": "polite"}), uBox = h("div"), mBox = h("div"), hint = h("p", {class: "note", "aria-live": "polite"});
+    const ok = h("button", {class: "btn primary block", type: "button", onclick: () => commit()}, editing ? "Salvar" : "Salvar resultado");
+    const used = () => { const m = new Map(); for (const x of c.labs) if (!m.has(x.key)) m.set(x.key, x.name); return m; };
+    function check(){
+      const k = C.markerKey(name.value), info = k && C.labInfo(k), v = C.parseNum(val.value), l = C.parseNum(lo.value), hh = C.parseNum(hi.value);
+      group.textContent = !k ? "" : info ? (norm(info.n) === norm(name.value.trim()) ? "" : `Agrupado como ${info.n}.`) : used().has(k) ? `Mesmo marcador de registros anteriores (${used().get(k)}).` : "Novo marcador.";
+      put(uBox, info ? h("div", {class: "chips sugs", style: "margin:-6px 0 14px"}, Object.keys(info.u).map(u => h("button", {type: "button", class: C.unitKey(unit.value) === C.unitKey(u) ? "on" : "", onclick: () => { unit.value = u; check(); }}, u))) : null);
+      const need = [!name.value.trim() ? "o marcador" : "", v == null ? "um valor numérico" : "", !unit.value.trim() ? "a unidade" : "", !dateOk(date.value) ? "a data da coleta" : ""].filter(Boolean);
+      const badRef = (lo.value.trim() && l == null) || (hi.value.trim() && hh == null) || (l != null && hh != null && l > hh);
+      ok.disabled = need.length > 0 || badRef; hint.textContent = need.length ? `Para salvar, informe ${need.join(", ")}.` : badRef ? "Confira a referência: use números, com o mínimo menor que o máximo." : "";
+    }
+    function paintMarkers(){
+      const mine = [...used().entries()].map(([k, n]) => [k, (C.labInfo(k) || {}).n || n]), common = ["ldl", "hdl", "col-total", "tg", "glicose", "hba1c", "vitd", "ferritina", "pcr-us", "b12", "tsh", "creatinina"]
+        .filter(k => !mine.some(m => m[0] === k)).map(k => [k, C.labInfo(k).n]);
+      put(mBox, !editing && !name.value.trim() ? h("div", {class: "chips sugs", style: "margin:-6px 0 14px"}, [...mine, ...common].slice(0, 10).map(([k, n]) => h("button", {type: "button", onclick: () => {
+        name.value = n; const prev = c.labs.find(x => x.key === k); if (!unit.value && prev) unit.value = prev.unit; else if (!unit.value && C.labInfo(k)) unit.value = Object.keys(C.labInfo(k).u)[0]; paintMarkers(); check(); setTimeout(() => val.focus(), 30); }}, n))) : null);
+    }
+    function commit(){
+      if (ok.disabled) return;
+      const k = C.markerKey(name.value), info = C.labInfo(k), rec = r || {id: uid(), at: Date.now()};
+      Object.assign(rec, {key: k, name: info ? info.n : name.value.trim(), entered: name.value.trim(), value: C.parseNum(val.value), raw: val.value.trim(), unit: unit.value.trim(), date: date.value,
+        lo: C.parseNum(lo.value), hi: C.parseNum(hi.value), lab: lab.value.trim(), notes: notes.value.trim(), examId: rec.examId || (exam ? exam.id : null), updated: Date.now()});
+      if (!editing) c.labs.push(rec);
+      touch(p); close(); render(); if (after) after();
+      toast(editing ? "Resultado atualizado" : `${rec.name}: ${fmtLab(rec.value)} ${rec.unit}`, editing ? null : () => { c.labs.splice(c.labs.indexOf(rec), 1); touch(p); render(); if (after) after(); });
+    }
+    for (const i of [name, val, unit, lo, hi]) i.addEventListener("input", () => { check(); if (i === name) paintMarkers(); });
+    for (const i of [date]) { i.addEventListener("input", check); i.addEventListener("change", check); }
+    paintMarkers(); check();
+    const slot = h("div");
+    el.append(h("h2", null, editing ? r.name : "Novo resultado"),
+      h("p", {class: "sh-sub"}, exam ? `${exam.name}${exam.date ? " · " + fromISO(exam.date) : ""}` : `No perfil de ${firstName(p.name)}. Valor e unidade como estão no laudo.`),
+      field("lb-nome", "Marcador", name, false, group), mBox,
+      h("div", {class: "g2"}, field("lb-val", "Valor", val), field("lb-un", "Unidade", unit)), uBox,
+      field("lb-data", "Data da coleta", date),
+      h("div", {class: "field"}, h("label", {for: "lb-min"}, "Referência do laboratório ", h("span", {class: "opt"}, "opcional · mesma unidade")), h("div", {class: "g2"}, lo, hi)),
+      field("lb-lab", "Laboratório", lab, true), field("lb-obs", "Observações", notes, false), hint,
+      editing ? [slot, h("button", {class: "btn danger block", type: "button", onclick: () => ask(slot, "Excluir este resultado?", [{label: "Excluir", fn: () => {
+        const i = c.labs.indexOf(r); if (i < 0) return; c.labs.splice(i, 1); touch(p); close(); render(); if (after) after(); toast("Resultado excluído", () => { c.labs.splice(i, 0, r); touch(p); render(); if (after) after(); }); }}])}, "Excluir resultado")] : null,
       h("div", {class: "confirmbar"}, ok));
     if (!editing) setTimeout(() => name.focus(), 60);
   });
+}
+
+/* ---------- Documentos de exames ----------
+   PDF ou imagem guardados neste aparelho (IndexedDB, banco "briceno-docs"), ligados ao exame pelo id. Não entram no backup em arquivo
+   e não passam por leitura automática (sem OCR, sem interpretação). Excluir o exame ou o documento apaga o arquivo depois do prazo do "Desfazer". */
+const DOCS = (() => {
+  let dbp = null;
+  const open = () => dbp || (dbp = new Promise((res, rej) => { try { const r = indexedDB.open("briceno-docs", 1);
+    r.onupgradeneeded = () => r.result.createObjectStore("docs", {keyPath: "id"}); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); } catch (e) { rej(e); } }));
+  const run = (mode, fn) => open().then(db => new Promise((res, rej) => { const t = db.transaction("docs", mode), q = fn(t.objectStore("docs"));
+    t.oncomplete = () => res(q ? q.result : undefined); t.onerror = () => rej(t.error); t.onabort = () => rej(t.error); }));
+  return {ok: typeof indexedDB !== "undefined", put: rec => run("readwrite", st => st.put(rec)), get: id => run("readonly", st => st.get(id)), del: id => run("readwrite", st => st.delete(id))};
+})();
+const docRefd = id => S.patients.some(x => careOf(x).exams.some(e => (e.docs || []).some(d => d.id === id)));
+function docsGC(ids){ if (!ids.length || !DOCS.ok) return; setTimeout(() => { for (const id of ids) if (!docRefd(id)) DOCS.del(id).catch(() => {}); }, 6500); }
+const fmtSize = b => b >= 1048576 ? `${g1(b / 1048576)} MB` : `${Math.max(1, Math.round(b / 1024))} kB`;
+function attachDoc(p, e, f, after){
+  if (!/^(application\/pdf|image\/)/.test(f.type)) { toast("Use um PDF ou uma imagem"); return; }
+  if (f.size > 15 * 1048576) { toast("Arquivo acima de 15 MB"); return; }
+  const meta = {id: uid() + uid(), name: f.name || "Documento", type: f.type, size: f.size, at: Date.now()};
+  DOCS.put({id: meta.id, blob: f}).then(() => {
+    e.docs = e.docs || []; e.docs.push(meta); touch(p); render(); if (after) after(); toast("Documento anexado");
+    try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (x) {}
+  }, () => toast("Não foi possível guardar o arquivo neste aparelho"));
+}
+function openDoc(meta){
+  DOCS.get(meta.id).then(rec => {
+    if (!rec || !rec.blob) { toast("Este documento não está neste aparelho"); return; }
+    const url = URL.createObjectURL(rec.blob), img = /^image\//.test(meta.type);
+    const f = new File([rec.blob], meta.name, {type: meta.type});
+    sheet(meta.name, (el, close) => {
+      el.append(h("h2", null, meta.name), h("p", {class: "sh-sub"}, `${img ? "Imagem" : "PDF"} · ${fmtSize(meta.size)} · guardado neste aparelho`),
+        img ? h("img", {class: "doc-img", src: url, alt: meta.name}) : h("iframe", {class: "doc-pdf", src: url, title: meta.name}),
+        h("div", {class: "bk-row", style: "margin-top:12px"},
+          navigator.canShare && navigator.canShare({files: [f]}) ? h("button", {class: "btn ghost block", type: "button", onclick: () => navigator.share({files: [f], title: meta.name}).catch(() => {})}, ic("share"), "Abrir em outro app ou compartilhar") : null,
+          h("button", {class: "btn plain block", type: "button", onclick: () => { close(); setTimeout(() => URL.revokeObjectURL(url), 400); }}, "Fechar")));
+    });
+  }, () => toast("Não foi possível abrir o documento"));
+}
+function docsBlock(p, e, file, after){
+  if (!DOCS.ok) return null;
+  const docs = e.docs || [], slot = h("div");
+  return [h("div", {class: "lbl2"}, "Documentos"),
+    docs.length ? h("div", {class: "glist"}, docs.map(m => h("div", {class: "grow dr"},
+      h("button", {class: "dr-o", type: "button", onclick: () => openDoc(m)}, h("span", {class: "gr-i", html: ICON.clip}), h("span", {class: "gr-m"}, h("b", null, h("span", {class: "gr-tt"}, m.name)), h("span", null, `${/^image\//.test(m.type) ? "Imagem" : "PDF"} · ${fmtSize(m.size)}`))),
+      h("button", {class: "x", type: "button", "aria-label": `Remover ${m.name}`, html: ICON.x, onclick: () => ask(slot, `Remover ${m.name} deste exame?`, [{label: "Remover", fn: () => {
+        const i = e.docs.indexOf(m); e.docs.splice(i, 1); touch(p); render(); after(); docsGC([m.id]); toast("Documento removido", () => { e.docs.splice(i, 0, m); touch(p); render(); after(); }); }}])})))) : null,
+    slot,
+    h("button", {class: "btn ghost block", type: "button", style: "margin-top:8px", onclick: () => file.click()}, ic("clip"), "Anexar PDF ou imagem"),
+    h("p", {class: "note"}, "Os documentos ficam só neste aparelho e não entram no backup em arquivo. O app não lê nem interpreta o conteúdo.")];
+}
+
+/* ---------- Evolução dos resultados (gráfico de linha) ----------
+   Eixo do tempo proporcional às datas reais (medições irregulares não ficam igualmente espaçadas). Cada ponto é uma medição; a linha fina
+   só liga os pontos, não representa valores entre eles. Uma unidade por gráfico; faixa de referência só quando todos os pontos têm a mesma. */
+const NS = "http://www.w3.org/2000/svg";
+const sv = (tag, a, ...kids) => { const e = document.createElementNS(NS, tag); for (const k in a) if (a[k] != null) { if (k.startsWith("on")) e.addEventListener(k.slice(2), a[k]); else e.setAttribute(k, a[k]); } for (const c of kids) if (c != null) e.append(c); return e; };
+function niceStep(span){ const r = span / 3, p10 = 10 ** Math.floor(Math.log10(r || 1)), f = r / p10; return (f < 1.5 ? 1 : f < 3 ? 2 : f < 7 ? 5 : 10) * p10; }
+function labChart(s, pts, range, sel, onSel){
+  const W = 340, H = 196, L = 44, R = 14, T = 16, B = 30;
+  let x0, x1;
+  if (range === "all") { x0 = pts[0].t; x1 = pts[pts.length - 1].t; const pad = Math.max((x1 - x0) * .06, 20 * 864e5); x0 -= pad; x1 += pad; }
+  else { x0 = new Date(range, 0, 1).getTime(); x1 = new Date(range, 11, 31, 23).getTime(); }
+  const band = pts.every(q => q.lo != null || q.hi != null) && pts.every(q => q.lo === pts[0].lo && q.hi === pts[0].hi) ? {lo: pts[0].lo, hi: pts[0].hi} : null;
+  const vals = pts.map(q => q.v).concat(band ? [band.lo, band.hi].filter(v => v != null) : []);
+  let y0 = Math.min(...vals), y1 = Math.max(...vals); const sp = y1 - y0 || Math.abs(y1) * .2 || 1; y0 -= sp * .18; y1 += sp * .18;
+  if (Math.min(...pts.map(q => q.v)) >= 0 && y0 < 0) y0 = 0;
+  const st = niceStep(y1 - y0); y0 = Math.floor(y0 / st) * st; y1 = Math.ceil(y1 / st) * st;
+  const X = t => L + (t - x0) / (x1 - x0) * (W - L - R), Y = v => T + (1 - (v - y0) / (y1 - y0)) * (H - T - B);
+  const g = sv("svg", {viewBox: `0 0 ${W} ${H}`, class: "lc", role: "img", "aria-label": `Gráfico: ${pts.length} ${pts.length === 1 ? "resultado" : "resultados"} em ${s.unit}, de ${fmtLab(Math.min(...pts.map(q => q.v)))} a ${fmtLab(Math.max(...pts.map(q => q.v)))}.`});
+  for (let v = y0; v <= y1 + st / 2; v += st) { g.append(sv("line", {x1: L, x2: W - R, y1: Y(v), y2: Y(v), class: "lc-g"}), sv("text", {x: L - 7, y: Y(v) + 4, class: "lc-t", "text-anchor": "end"}, fmtLab(+v.toFixed(6)))); }
+  if (band) { const a = Y(band.hi != null ? Math.min(band.hi, y1) : y1), b = Y(band.lo != null ? Math.max(band.lo, y0) : y0);
+    g.append(sv("rect", {x: L, y: a, width: W - L - R, height: Math.max(0, b - a), class: "lc-band"}), sv("text", {x: L + 6, y: a + 12, class: "lc-bt"}, "Referência do laboratório")); }
+  // eixo do tempo: meses (um ano) ou viradas de ano (histórico completo)
+  if (range !== "all") for (let m = 0; m < 12; m++) { const t = new Date(range, m, 15).getTime(); g.append(sv("text", {x: X(t), y: H - 10, class: "lc-t", "text-anchor": "middle"}, MON[m][0].toUpperCase())); }
+  else { const ya = new Date(x0).getFullYear(), yb = new Date(x1).getFullYear(); let marks = 0;
+    for (let y = ya + 1; y <= yb; y++) { const t = new Date(y, 0, 1).getTime(); if (t <= x0 || t >= x1) continue; marks++; g.append(sv("line", {x1: X(t), x2: X(t), y1: T, y2: H - B, class: "lc-y"}), sv("text", {x: X(t) + 4, y: H - 10, class: "lc-t"}, String(y))); }
+    if (!marks) { g.append(sv("text", {x: X(pts[0].t), y: H - 10, class: "lc-t", "text-anchor": "middle"}, `${MON[new Date(pts[0].t).getMonth()]}/${String(new Date(pts[0].t).getFullYear()).slice(2)}`));
+      if (pts.length > 1) g.append(sv("text", {x: X(pts[pts.length - 1].t), y: H - 10, class: "lc-t", "text-anchor": "middle"}, `${MON[new Date(pts[pts.length - 1].t).getMonth()]}/${String(new Date(pts[pts.length - 1].t).getFullYear()).slice(2)}`)); } }
+  if (pts.length > 1) g.append(sv("polyline", {points: pts.map(q => `${X(q.t).toFixed(1)},${Y(q.v).toFixed(1)}`).join(" "), class: "lc-l"}));
+  pts.forEach((q, i) => { g.append(sv("circle", {cx: X(q.t), cy: Y(q.v), r: i === sel ? 6 : 4.2, class: "lc-p" + (i === sel ? " on" : "")}),
+    sv("circle", {cx: X(q.t), cy: Y(q.v), r: 16, class: "lc-h", onclick: () => onSel(i)})); });
+  return g;
+}
+function labsPanel(p){
+  const c = careOf(p), L = c.labs;
+  if (!L.length) return h("button", {class: "gempty", type: "button", onclick: () => labSheet(p)}, "Registre valores como LDL, glicemia ou vitamina D para ver a evolução ao longo do tempo. Cada ponto do gráfico é um resultado real.");
+  const groups = new Map(); for (const r of L) { const g = groups.get(r.key) || {k: r.key, name: (C.labInfo(r.key) || {}).n || r.name, n: 0, last: ""}; g.n++; if (r.date > g.last) g.last = r.date; groups.set(r.key, g); }
+  const keys = [...groups.values()].sort((a, b) => a.last < b.last ? 1 : a.last > b.last ? -1 : b.n - a.n);
+  const k = groups.has(view.lk) ? view.lk : keys[0].k, s = C.labSeries(L, k);
+  const years = [...new Set(s.points.map(q => new Date(q.t).getFullYear()))].sort((a, b) => b - a);
+  const range = view.lr === "all" || years.includes(view.lr) ? view.lr : "all";
+  const pts = range === "all" ? s.points : s.points.filter(q => new Date(q.t).getFullYear() === range);
+  const chartBox = h("div", {class: "lc-box"}), detail = h("div", {class: "lc-d", "aria-live": "polite"});
+  const all = L.filter(r => r.key === k).sort((a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : (b.at || 0) - (a.at || 0));
+  const paint = sel => {
+    put(chartBox, pts.length ? labChart(s, pts, range, sel, i => paint(i)) : h("p", {class: "gnone"}, "Sem resultados nesta unidade no período."));
+    const q = pts[sel], r = q && L.find(x => x.id === q.id), ex = r && r.examId ? c.exams.find(e => e.id === r.examId) : null;
+    put(detail, q ? [h("div", {class: "lc-dv"}, h("b", null, fmtLab(+q.v.toFixed(q.conv ? 1 : 6))), h("span", null, " " + s.unit), h("span", {class: "lc-dd"}, cap1(dLong(q.date)))),
+      h("p", null, [q.conv ? `Informado como ${fmtLab(q.orig.value)} ${q.orig.unit} e convertido para ${s.unit}.` : "", r ? refText(r) + "." : "", r && r.lab ? `Laboratório: ${r.lab}.` : "", ex ? `Exame: ${ex.name}.` : ""].filter(Boolean).join(" "))] : null);
+  };
+  paint(pts.length - 1);
+  return h("section", {class: "panel lcp"},
+    h("div", {class: "chips mk", role: "group", "aria-label": "Marcador"}, keys.map(g => h("button", {type: "button", class: g.k === k ? "on" : "", "aria-pressed": String(g.k === k), onclick: () => go({lk: g.k, lr: "all"}, true)}, g.name))),
+    h("div", {class: "lc-h2"}, h("b", null, groups.get(k).name), h("span", null, s.unit ? `${plural(s.points.length, "resultado", "resultados")} · ${s.unit}` : "")),
+    years.length > 1 ? h("div", {class: "seg seg-2 lr"}, [["all", "Tudo"], ...years.slice(0, 4).map(y => [y, String(y)])].map(([v, l]) => h("button", {type: "button", class: range === v ? "on" : "", "aria-pressed": String(range === v), onclick: () => go({lr: v}, true)}, l))) : null,
+    s.points.length === 1 ? h("p", {class: "lc-one"}, "Um resultado registrado. A linha de evolução aparece a partir do segundo.") : null,
+    chartBox, detail,
+    s.excluded ? h("p", {class: "note"}, `${plural(s.excluded, "resultado está", "resultados estão")} em unidade sem conversão validada para ${s.unit} e não ${s.excluded === 1 ? "aparece" : "aparecem"} no gráfico (continuam na lista).`) : null,
+    h("div", {class: "lbl2"}, "Histórico completo"),
+    h("div", {class: "glist"}, all.map(r => h("button", {class: "grow lr", type: "button", onclick: () => labSheet(p, r, r.examId ? c.exams.find(e => e.id === r.examId) : null)},
+      h("span", {class: "gr-m"}, h("b", null, fromISO(r.date)), h("span", null, [r.lab, refText(r)].filter(Boolean).join(" · "))),
+      h("span", {class: "lr-v"}, fmtLab(r.value), h("small", null, " " + r.unit)), h("span", {class: "li-go", html: ICON.right})))),
+    h("p", {class: "note"}, "Cada ponto é um resultado registrado; a linha só liga os pontos. Referências variam entre laboratórios. O gráfico não indica melhora, piora nem diagnóstico: converse com o profissional que acompanha você."));
+}
+function renderExams(p){
+  const c = careOf(p), now = Date.now(), E = c.exams;
+  const up = C.upcoming(E, now), nx = up[0], over = E.filter(e => C.isOverdue(e, now)).sort(byStartAsc);
+  const pend = E.filter(e => e.status === "solicitado").sort((a, b) => (b.at || 0) - (a.at || 0)), done = E.filter(e => e.status === "realizado").sort(byDateDesc);
+  const canc = E.filter(e => e.status === "cancelado").sort(byDateDesc), all = !!view.xall, yc = C.yearCounts(E, "realizado");
+  const hero = nx ? h("button", {class: "nx dj-glass exam", type: "button", onclick: () => examDetail(p, nx), "aria-label": `Próximo exame: ${whenSpoken(nx)}. ${nx.name}. ${examPlace(nx)}. Ver detalhes.`},
+      h("span", {class: "nx-h"}, h("span", {class: "nx-e"}, "Próximo exame"), h("span", {class: "nx-r"}, relWhen(nx))),
+      h("b", {class: "nx-d"}, whenLong(nx)), h("span", {class: "nx-t"}, nx.name), examPlace(nx) ? h("span", {class: "nx-s"}, examPlace(nx)) : null)
+    : h("div", {class: "nx none dj-quiet"}, h("b", null, "Nenhum exame agendado"), h("span", null, pend.length ? `${plural(pend.length, "exame pendente", "exames pendentes")} sem data. Agende quando marcar.` : "Cadastre um exame solicitado, agendado ou já realizado."),
+      h("button", {class: "btn primary sm", type: "button", onclick: () => examSheet(p, null, {status: "agendado"})}, ic("plus"), "Agendar exame"));
+  const maxY = Math.max(1, ...yc.map(x => x.n));
+  modPage(p, "Exames", "Novo exame", () => examSheet(p), hero,
+    confirmBlock(over, "Aconteceu?", e => e.name, e => [{label: "Remarcar", fn: () => examSheet(p, e)}, {label: "Realizado", cls: "primary", fn: () => setExam(p, e, "realizado")}]),
+    pend.length ? [h("h2", {class: "sec-t"}, "Pendentes"), h("div", {class: "glist"}, pend.map(e => examRow(p, e, now)))] : null,
+    up.length > 1 ? [h("h2", {class: "sec-t"}, "Agendados"), h("div", {class: "glist"}, up.slice(1).map(e => examRow(p, e, now)))] : null,
+    h("h2", {class: "sec-t"}, "Realizados"),
+    done.length ? [h("div", {class: "glist"}, (all ? done : done.slice(0, 6)).map(e => examRow(p, e, now))),
+      done.length > 6 ? h("button", {class: "link more-l", type: "button", onclick: () => go({xall: !all}, true)}, all ? "Mostrar só os recentes" : `Mostrar todos (${done.length})`) : null]
+      : h("p", {class: "gnone solo"}, "Nenhum exame realizado registrado."),
+    h("div", {class: "sec-row"}, h("h2", {class: "sec-t"}, "Evolução dos resultados"), c.labs.length ? h("button", {class: "sec-add", type: "button", "aria-label": "Registrar resultado", onclick: () => labSheet(p)}, ic("plus")) : null),
+    labsPanel(p),
+    yc.length ? [h("h2", {class: "sec-t"}, "Exames realizados por ano"), h("section", {class: "panel yrc"}, yc.map(x => h("div", {class: "yr-r"}, h("span", null, String(x.year)),
+      h("span", {class: "yr-b"}, h("i", {style: `width:${(x.n / maxY * 100).toFixed(1)}%`})), h("b", null, String(x.n)))))] : null,
+    canc.length ? h("details", {class: "src more"}, h("summary", null, `Cancelados (${canc.length})`), h("div", {class: "glist"}, canc.map(e => examRow(p, e, now)))) : null,
+    h("p", {class: "care-n"}, "O app organiza datas, resultados e documentos. Não sugere periodicidade, não interpreta resultados e não faz diagnósticos."));
+}
+
+/* ---------- Suplementos e medicamentos (módulo) ---------- */
+function renderCare(p){
+  const L = careOf(p).meds, cc = careCounts(p), order = (a, b) => (a.paused ? 1 : 0) - (b.paused ? 1 : 0) || MED_WHEN.indexOf(a.when) - MED_WHEN.indexOf(b.when);
+  const sup = L.filter(m => m.cat !== "medicamento").sort(order), med = L.filter(m => m.cat === "medicamento").sort(order);
+  modPage(p, "Suplementos e medicamentos", "Adicionar item", () => medSheet(p),
+    h("p", {class: "pg-s"}, `${plural(cc.sup, "suplemento ativo", "suplementos ativos")} · ${plural(cc.med, "medicamento ativo", "medicamentos ativos")}${cc.paused ? ` · ${plural(cc.paused, "pausado", "pausados")}` : ""}`),
+    secHead("Suplementos", "Adicionar suplemento ou fórmula", () => medSheet(p, null, "suplemento"), "sup"),
+    sup.length ? h("div", {class: "glist"}, sup.map(m => medRow(p, m))) : h("button", {class: "gempty", type: "button", onclick: () => medSheet(p, null, "suplemento")}, "Nenhum suplemento. Inclua vitaminas, minerais, proteínas em pó e fórmulas manipuladas."),
+    secHead("Medicamentos", "Adicionar medicamento", () => medSheet(p, null, "medicamento"), "med"),
+    med.length ? h("div", {class: "glist"}, med.map(m => medRow(p, m))) : h("button", {class: "gempty", type: "button", onclick: () => medSheet(p, null, "medicamento")}, "Nenhum medicamento. Inclua os de uso contínuo e os temporários."),
+    h("p", {class: "care-n"}, "Ativos são os itens não pausados. O app não recomenda doses: siga a orientação de quem prescreveu."));
 }
 function goalsSheet(p){
   const c = careOf(p);
@@ -3365,7 +4025,7 @@ function foodSheet(opt, done){
 /* ---------- Perfil ---------- */
 function renderProfile(p){
   const e = p.energy, adult = adultOf(p), plan = p.plan;
-  const days = S.lastBackup ? Math.floor((Date.now() - S.lastBackup) / DAY) : null, w = waterOf(p), cr = careOf(p);
+  const days = S.lastBackup ? Math.floor((Date.now() - S.lastBackup) / DAY) : null, w = waterOf(p), cr = careOf(p), nx = nextOf(p), nUpA = C.upcoming(cr.appts).length;
   // linha de informação: título em uma linha; embaixo, o resumo à esquerda e o valor-chave à direita (tabular). Se não couberem lado a lado,
   // o valor desce inteiro para a linha seguinte — nada é cortado nem hifenizado
   const row = (icon, title, sub, fn, id, due, val) => h("button", {class: "prow" + (due ? " due" : ""), type: "button", onclick: fn, id}, h("span", {class: "pr-i", html: ICON[icon]}),
@@ -3387,8 +4047,9 @@ function renderProfile(p){
       row("drop", "Hidratação", w.ml ? (w.src === "manual" ? "Definida por você" : "Estimativa · 35 mL/kg") : "Definir recomendação diária", () => waterSheet(p), null, false, w.ml ? `${fmtL(w.ml)} L/dia` : null)),
     h("h2", {class: "sec-t"}, "Saúde e acompanhamento"),
     h("div", {class: "prows"},
-      row("pill", "Suplementos e medicamentos", "Dose e momento de uso", () => go({tab: "saude", hsub: "resumo", hfocus: "meds"}), null, false, cr.meds.length ? `${cr.meds.length} ${cr.meds.length === 1 ? "item" : "itens"}` : null),
-      row("flask", "Exames e avaliações", cr.exams.length ? "Próximas datas" : "Datas e próximas previsões", () => go({tab: "saude", hsub: "resumo", hfocus: "exams"}), null, false, cr.exams.length ? `${cr.exams.length} ${cr.exams.length === 1 ? "exame" : "exames"}` : null),
+      row("steth", "Consultas", nx.appt ? `Próxima: ${whenShort(nx.appt)}` : "Agenda e histórico", () => go({tab: "saude", hsub: "consultas"}), null, false, nUpA ? plural(nUpA, "agendada", "agendadas") : null),
+      row("flask", "Exames", nx.exam ? `Próximo: ${whenShort(nx.exam)}` : "Agenda, resultados e evolução", () => go({tab: "saude", hsub: "exames"}), null, false, cr.exams.length ? plural(cr.exams.length, "exame", "exames") : null),
+      row("pill", "Suplementos e medicamentos", "Dose e momento de uso", () => go({tab: "saude", hsub: "cuidados"}), null, false, cr.meds.length ? `${cr.meds.length} ${cr.meds.length === 1 ? "item" : "itens"}` : null),
       row("heart", "Prioridades de saúde", "O que você quer acompanhar", () => goalsSheet(p), null, false, cr.goals.length ? `${cr.goals.length} ${cr.goals.length === 1 ? "definida" : "definidas"}` : null)),
     h("h2", {class: "sec-t"}, "Aplicativo"),
     h("div", {class: "prows"},
@@ -3567,8 +4228,9 @@ function methodProse(){
     h("p", null, "Usam 4 kcal/g para carboidratos e proteínas e 9 kcal/g para gorduras. A energia total vem da própria TACO; por isso ela pode diferir um pouco da soma dos macronutrientes."),
     h("h3", null, "Hidratação"),
     h("p", null, "Adultos: estimativa prática de 35 mL de água por kg de peso por dia, um ponto de partida que pode ser substituído por um valor definido pela pessoa. Abaixo de 18 anos o app não calcula. Não há acréscimo automático por exercício: a perda de suor varia muito, e o ACSM (2007) recomenda ajustar a reposição individualmente. Referências de água total (alimentos e bebidas): EFSA 2010 e IOM 2004."),
-    h("h3", null, "Suplementos, medicamentos e exames"),
+    h("h3", null, "Suplementos, medicamentos, consultas e exames"),
     h("p", null, "O app apenas organiza o que a pessoa informa: não recomenda doses, não sugere periodicidade de exames e não interpreta resultados."),
+    h("p", null, "Resultados de exames são guardados como informados (valor, unidade, data da coleta e referência do laboratório). Nomes equivalentes formam um só marcador (ex.: LDL, LDL-C e Colesterol LDL). No gráfico, unidades diferentes só se juntam quando há conversão validada para aquele analito: glicose 18,016 (mg/dL por mmol/L); colesterol total, LDL, HDL e não HDL 38,67; triglicerídeos 88,57; creatinina 88,42 (µmol/L por mg/dL); ácido úrico 59,48; vitamina D (25-OH) 2,496 (nmol/L por ng/mL); vitamina B12 0,7378 (pmol/L por pg/mL); hemoglobina 10 (g/L por g/dL); PCR ultrassensível 10 (mg/L por mg/dL); hemoglobina glicada pela equação mestra IFCC–NGSP (% = 0,09148 × mmol/mol + 2,152). Sem conversão validada, o resultado fica fora do gráfico e continua na lista. O eixo do tempo respeita o intervalo real entre as datas; a linha só liga as medições."),
     h("h3", null, "Substituições"),
     h("p", null, "Sugere alimentos com o mesmo papel principal (fonte de carboidrato, proteína ou gordura) e calcula a quantidade com a mesma energia, carboidratos ou proteínas. Alimentos equivalentes nesse critério não são nutricionalmente idênticos."),
     h("p", null, "Este app organiza o planejamento. Ele não substitui orientação de nutricionista ou médico, especialmente para crianças, gestantes e pessoas com doenças."));
@@ -3614,7 +4276,8 @@ function profileSheet(p){
     paintSeg(); check();
     const delWrap = h("div", {style: "margin-top:18px;padding-top:14px;border-top:1px solid var(--line)"});
     const idle = () => delWrap.replaceChildren(h("button", {class: "btn danger block", type: "button", onclick: () => ask(delWrap, `Excluir o perfil de ${p.name} e todo o plano dele? Isso não pode ser desfeito.`, [{label: "Excluir", fn: () => {
-      S.patients = S.patients.filter(x => x.id !== p.id);
+      const docIds = careOf(p).exams.flatMap(x => (x.docs || []).map(d => d.id));
+      S.patients = S.patients.filter(x => x.id !== p.id); docsGC(docIds);
       if (S.activeId === p.id) S.activeId = (S.patients[0] || {}).id || null;
       saveNow(); close(); go({tab: "hoje", open: [], edit: null}); toast("Perfil excluído");
     }}])}, "Excluir perfil"));
@@ -3706,7 +4369,7 @@ function backupSheet(){
     let snap = null; try { for (const k of SNAPS) if (!snap) snap = localStorage.getItem(k); } catch (e) {}   // a cópia mais recente feita antes de uma atualização
     el.append(h("h2", null, "Backup"),
       h("p", {class: "sh-sub"}, S.lastBackup ? `Último backup: ${new Date(S.lastBackup).toLocaleDateString("pt-BR")}` : "Nenhum backup feito ainda."),
-      h("p", {class: "note", style: "margin:-8px 0 14px"}, "O backup contém os dados de saúde da família, sem criptografia. Guarde o arquivo em um lugar só seu."),
+      h("p", {class: "note", style: "margin:-8px 0 14px"}, "O backup contém os dados de saúde da família (inclusive consultas, exames e resultados), sem criptografia. Guarde o arquivo em um lugar só seu. Documentos anexados a exames (PDF e imagens) não entram no backup: ficam só neste aparelho."),
       h("div", {class: "bk-row"},
         embedded ? null : h("button", {class: "btn primary block", type: "button", onclick: exportNow}, "Exportar backup (arquivo)"),
         h("button", {class: embedded ? "btn primary block" : "btn ghost block", type: "button", onclick: copyNow}, "Copiar backup"),

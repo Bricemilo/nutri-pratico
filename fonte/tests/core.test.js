@@ -268,3 +268,76 @@ test("exames: próxima data = última + intervalo, com ajuste de fim de mês", (
   assert.equal(C.examNext({last: "2024-08-15", every: 6}), "2025-02-15");
   assert.equal(C.examNext({last: "2024-08-15", every: null}), null);
 });
+
+test("agenda: instante no fuso do compromisso, inclusive com horário de verão", () => {
+  assert.equal(new Date(C.zonedEpoch("2026-11-12", "14:30", "America/Sao_Paulo")).toISOString(), "2026-11-12T17:30:00.000Z");
+  assert.equal(new Date(C.zonedEpoch("2026-07-01", "09:00", "Europe/Lisbon")).toISOString(), "2026-07-01T08:00:00.000Z");
+  assert.equal(new Date(C.zonedEpoch("2026-01-15", "09:00", "Europe/Lisbon")).toISOString(), "2026-01-15T09:00:00.000Z");
+  assert.equal(C.zonedEpoch("", "10:00", "America/Sao_Paulo"), null);
+});
+
+test("agenda: próximo compromisso ignora cancelados, realizados e passados; sem horário vale até o fim do dia", () => {
+  const tz = "America/Sao_Paulo", now = C.zonedEpoch("2026-11-10", "15:00", tz);
+  const L = [
+    {id: "a", status: "agendada", date: "2026-11-10", time: "14:00", tz},   // já passou hoje
+    {id: "b", status: "cancelada", date: "2026-11-11", time: "09:00", tz},
+    {id: "c", status: "realizada", date: "2026-11-11", time: "10:00", tz},
+    {id: "d", status: "agendada", date: "2026-11-20", time: "08:00", tz},
+    {id: "e", status: "agendada", date: "2026-11-12", time: "14:30", tz},
+    {id: "f", status: "agendada", date: "2026-11-10", time: "", tz}        // hoje, sem horário: ainda vale
+  ];
+  assert.equal(C.nextEvent(L, now).id, "f");
+  assert.deepEqual(C.upcoming(L, now).map(x => x.id), ["f", "e", "d"]);
+  assert.equal(C.isOverdue(L[0], now), true);
+  assert.equal(C.nextEvent(L.filter(x => x.id !== "f"), now).id, "e");
+  assert.equal(C.nextEvent([{id: "x", status: "solicitado", date: "2026-12-01", tz}], now), null);
+  assert.equal(C.nextEvent([], now), null);
+});
+
+test("agenda: consultas por mês separam realizadas, canceladas, futuras e a confirmar", () => {
+  const tz = "America/Sao_Paulo", now = C.zonedEpoch("2026-06-15", "12:00", tz);
+  const L = [
+    {status: "realizada", date: "2026-01-05", tz}, {status: "realizada", date: "2026-01-20", tz}, {status: "cancelada", date: "2026-01-22", tz},
+    {status: "agendada", date: "2026-06-01", time: "10:00", tz}, {status: "agendada", date: "2026-06-20", time: "10:00", tz},
+    {status: "realizada", date: "2025-01-05", tz}
+  ];
+  const m = C.monthCounts(L, 2026, now);
+  assert.deepEqual(m[0], {done: 2, cancel: 1, future: 0, pending: 0});
+  assert.deepEqual(m[5], {done: 0, cancel: 0, future: 1, pending: 1});
+  assert.equal(m.reduce((a, x) => a + x.done, 0), 2);
+  assert.deepEqual(C.yearCounts([{status: "realizado", date: "2025-03-01"}, {status: "realizado", date: "2026-02-01"}, {status: "realizado", date: "2026-05-01"}, {status: "agendado", date: "2026-09-01"}], "realizado"),
+    [{year: 2026, n: 2}, {year: 2025, n: 1}]);
+});
+
+test("exames: nomes equivalentes viram o mesmo marcador; conversões validadas por analito", () => {
+  assert.equal(C.markerKey("LDL-C"), "ldl"); assert.equal(C.markerKey("Colesterol LDL"), "ldl");
+  assert.equal(C.markerKey("Hemoglobina Glicada"), "hba1c"); assert.equal(C.markerKey("25-OH Vitamina D"), "vitd");
+  assert.equal(C.markerKey("PCR"), "x:pcr");   // PCR comum não é a ultrassensível: não se misturam
+  assert.equal(Math.round(C.convert("glicose", 5.5, "mmol/L", "mg/dL") * 10) / 10, 99.1);
+  assert.equal(Math.round(C.convert("hba1c", 48, "mmol/mol", "%") * 10) / 10, 6.5);
+  assert.equal(Math.round(C.convert("vitd", 75, "nmol/L", "ng/mL") * 10) / 10, 30);
+  assert.equal(Math.round(C.convert("ldl", 3.36, "mmol/L", "mg/dL")), 130);
+  assert.equal(C.convert("insulina", 10, "µUI/mL", "pmol/L"), null);   // sem fator validado: não converte
+  assert.equal(C.convert("x:pcr", 3, "mg/L", "mg/dL"), null);
+  assert.equal(C.convert("tsh", 2.1, "uUI/mL", "mUI/L"), 2.1);
+  assert.equal(C.parseNum("5,6"), 5.6); assert.equal(C.parseNum("250.000"), 250000); assert.equal(C.parseNum("1.234,5"), 1234.5); assert.equal(C.parseNum("abc"), null);
+});
+
+test("exames: série do gráfico em uma unidade só, em ordem de data, sem misturar unidades incompatíveis", () => {
+  const R = [
+    {id: 1, key: "glicose", value: 92, unit: "mg/dL", date: "2025-03-10"},
+    {id: 2, key: "glicose", value: 5.5, unit: "mmol/L", date: "2024-01-10"},
+    {id: 3, key: "glicose", value: 101, unit: "mg/dL", date: "2026-01-10", lo: 70, hi: 99},
+    {id: 4, key: "insulina", value: 8, unit: "µUI/mL", date: "2025-01-01"},
+    {id: 5, key: "glicose", value: 90, unit: "g/L", date: "2025-06-01"}
+  ];
+  const s = C.labSeries(R, "glicose");
+  assert.equal(s.unit, "mg/dL");
+  assert.deepEqual(s.points.map(p => p.id), [2, 1, 3]);
+  assert.equal(s.points[0].conv, true); assert.equal(Math.round(s.points[0].v), 99);
+  assert.equal(s.points[0].orig.value, 5.5);
+  assert.equal(s.excluded, 1);
+  assert.equal(s.points[2].hi, 99);
+  // o eixo do tempo usa o intervalo real entre as datas
+  assert.equal(Math.round((s.points[1].t - s.points[0].t) / 864e5), 425); assert.equal(Math.round((s.points[2].t - s.points[1].t) / 864e5), 306);
+});

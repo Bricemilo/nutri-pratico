@@ -28,10 +28,11 @@ Cada material tem a cor do material e uma base profunda.
 | `--dj-emerald` | `#3FBFA0` | `#061B16` | Emerald Titanium | Exercício |
 | `--dj-amethyst` | `#9F86EA` | `#170F2C` | Deep Amethyst | Sono |
 | `--dj-ruby` | `#E66F8E` | `#250D17` | Rose Ruby | Emocional |
-| `--dj-champagne` | `#D7B378` | `#19130B` | Champagne Bronze | Gasto diário |
+| `--dj-champagne` | `#D7B378` | `#19130B` | Champagne Bronze | GET (Perfil; fora da Home desde a v31) |
 | `--dj-sapphire` | `#35A9E0` | `#06172A` | Sapphire Blue | Hidratação |
-| `--dj-peridot` | `#A6C452` | `#0F1708` | Peridot Olive | Suplementos |
-| `--dj-midnight` | `#6F98E6` | `#0B1430` | Midnight Sapphire | Medicamentos |
+| `--dj-peridot` | `#A6C452` | `#0F1708` | Peridot Olive | Suplementos e Medicamentos (cartão "Em uso") |
+| `--dj-midnight` | `#6F98E6` | `#0B1430` | Midnight Sapphire | Exames (Home, gráficos) · ícone de medicamentos |
+| `--dj-amber` | `#E0A25C` | `#1D1307` | Honey Amber | Consultas (v31) |
 
 ### 2.2 Sinal cobre e divisórias
 
@@ -173,9 +174,22 @@ A sofisticação cresce com a importância da informação, não com a quantidad
 | **Linha de refeição** | Nutrição | Coluna de horário (largura em em) com fio vertical · nome em destaque · quantidade secundária · calorias à direita. Em tela estreita com texto ampliado, calorias e seta descem para a linha de baixo. |
 | **Controle secundário do topo** (`.top .icon-btn`) | Topo das abas | Mesma família do seletor de membro: grafite com aro cobre fino. |
 
+### 3.8 Agenda e acompanhamento clínico (v31)
+
+| Componente | Onde | Anatomia |
+|---|---|---|
+| **Cartão de agenda** (`jewelEvent`) | Home, grupo C | No máximo três linhas: ícone + título · data e horário ("12 nov · 14h30", 17 px, uma linha; 15 px em 320 pt) · identificação (profissional ou exame, uma linha com reticências). Sem compromisso: "Nenhuma consulta agendada" em até duas linhas e um "+" discreto no título; o toque abre o cadastro. O ano só aparece se o compromisso estiver a mais de 330 dias; o fuso, só nas telas internas. |
+| **Cartão de contadores** (`jewelCare`) | Home, grupo B | Título "Em uso" e duas linhas com número antes do nome ("2 suplementos", "0 medicamentos"). Conta itens ativos (não pausados), um por nome. Altura natural igual à de Hidratação. |
+| **Página de módulo** (`modPage`) | Saúde → Consultas, Exames, Suplementos e medicamentos | "‹ Saúde" (44 pt) · título com "+" · destaque do próximo compromisso (Material B, `.nx`, tinta do módulo) · "Aconteceu?" para compromissos passados sem registro · listas em Material C. Tocar de novo na aba Saúde volta ao resumo. |
+| **Linha de compromisso** (`.grow.ev` + `.dtile`) | Listas de consultas e exames | Pastilha com dia e mês · título · detalhe · situação só quando importa ("a confirmar", "cancelada"). |
+| **Histórico anual** (`apptChart`, `.mc`) | Consultas | 12 meses, barras empilhadas em âmbar: realizadas (cheia), a confirmar (hachurada), agendadas (contorno), canceladas (grafite). Total de realizadas no topo; toque no mês lista as consultas. |
+| **Gráfico de evolução** (`labChart`, `.lc`) | Exames | Linha fina que só liga medições; pontos são os resultados. Eixo do tempo proporcional às datas reais; uma unidade por gráfico; faixa de referência só quando todos os pontos têm a mesma. Seleção mostra valor, data, referência, laboratório e, se convertido, o valor original. |
+
+**Regras da agenda.** Próximo compromisso = só consultas "agendada" e exames "agendado" que ainda não passaram, no fuso em que foram marcados; sem horário, valem até o fim do dia. Cancelados, realizados e solicitados nunca são "próximos". A Home é redesenhada sozinha quando o compromisso exibido passa.
+
 ## 4. Layout da Home: motor adaptativo
 
-Ordem: cabeçalho (seletor + "+", saudação, data) · **A** pilares 2 × 2 · divisória · **B** Gasto diário + Hidratação · divisória · **C** Suplementos + Medicamentos.
+Ordem (v31): cabeçalho (seletor + "+", saudação, data) · **A** pilares 2 × 2 · divisória · **B** Hidratação + Suplementos e Medicamentos ("Em uso") · divisória · **C** Consultas + Exames. Oito cartões, quatro linhas de dois. O GET saiu da Home e continua em Perfil → Planejamento.
 
 - **`fitTitles`:** se um título não cabe ao lado da pastilha, o ícone vai para cima (`.stack`). Se ainda há palavra que não cabe inteira, os cartões passam a uma coluna (`.one`). Palavras nunca são partidas.
 - **Hierarquia:** pilares nunca mais baixos que os indicadores (+8). O grupo C tem a altura do grupo B.

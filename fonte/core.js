@@ -458,6 +458,119 @@
   // Próxima data prevista de um exame: última realização + intervalo escolhido pela pessoa. Sem intervalo, sem previsão.
   function examNext(e){ return e && e.last && e.every > 0 ? addMonths(e.last, e.every) : null; }
 
+  /* ---------- consultas e exames: agenda ----------
+     Cada compromisso guarda a data e a hora "de parede" do local (AAAA-MM-DD, HH:MM) e o fuso IANA em que foi marcado (tz).
+     A hora mostrada é sempre a do compromisso; o instante absoluto (para saber se já passou) é calculado no fuso dele. */
+  const tzFmt = {};
+  function tzOffset(ms, tz){   // diferença (ms) entre a hora local do fuso e UTC naquele instante
+    const f = tzFmt[tz] || (tzFmt[tz] = new Intl.DateTimeFormat("en-US", {timeZone: tz, hourCycle: "h23", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit"}));
+    const p = {}; for (const x of f.formatToParts(new Date(ms))) p[x.type] = x.value;
+    return Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour % 24, +p.minute, +p.second) - Math.floor(ms / 1000) * 1000;
+  }
+  const zCache = new Map();   // mesma data/hora/fuso → mesmo instante (evita refazer a conversão a cada comparação)
+  function zonedEpoch(date, time, tz){
+    const ck = date + "|" + time + "|" + tz; if (zCache.has(ck)) return zCache.get(ck);
+    if (zCache.size > 4000) zCache.clear();
+    const v = zonedEpoch0(date, time, tz); zCache.set(ck, v); return v;
+  }
+  function zonedEpoch0(date, time, tz){
+    const [y, m, d] = String(date || "").split("-").map(Number); if (!y || !m || !d) return null;
+    const [hh, mm] = /^\d{1,2}:\d{2}$/.test(time || "") ? time.split(":").map(Number) : [0, 0];
+    if (tz) try { const g = Date.UTC(y, m - 1, d, hh, mm), o1 = tzOffset(g, tz); let t = g - o1; const o2 = tzOffset(t, tz); if (o2 !== o1) t = g - o2; return t; } catch (e) {}
+    return new Date(y, m - 1, d, hh, mm).getTime();
+  }
+  // início (para ordenar) e fim (para saber se já passou): sem horário, o compromisso vale até o fim do dia
+  const eventStart = e => zonedEpoch(e.date, e.time, e.tz);
+  const eventEnd = e => e.time ? eventStart(e) : (zonedEpoch(e.date, "", e.tz) == null ? null : zonedEpoch(e.date, "", e.tz) + 864e5 - 1);
+  // status "marcado": consulta → "agendada"; exame → "agendado". Cancelados, realizados e solicitados nunca são "próximos".
+  const SCHEDULED = ["agendada", "agendado"];
+  function isUpcoming(e, now = Date.now()){ if (!e || !SCHEDULED.includes(e.status) || !e.date) return false; const end = eventEnd(e); return end != null && end >= now; }
+  // marcado, com data que já passou e sem confirmação de realizado/cancelado
+  function isOverdue(e, now = Date.now()){ if (!e || !SCHEDULED.includes(e.status) || !e.date) return false; const end = eventEnd(e); return end != null && end < now; }
+  const byStart = (a, b) => (eventStart(a) ?? 0) - (eventStart(b) ?? 0) || String(a.id).localeCompare(String(b.id));
+  function upcoming(list, now = Date.now()){ return (list || []).filter(e => isUpcoming(e, now)).sort(byStart); }
+  function nextEvent(list, now = Date.now()){ return upcoming(list, now)[0] || null; }
+  // Consultas por mês de um ano (jan–dez): realizadas, canceladas, futuras (marcadas que ainda vão acontecer) e a confirmar (marcadas que já passaram).
+  function monthCounts(list, year, now = Date.now()){
+    const out = Array.from({length: 12}, () => ({done: 0, cancel: 0, future: 0, pending: 0}));
+    for (const e of list || []){
+      const [y, m] = String(e.date || "").split("-").map(Number); if (y !== +year || !(m >= 1 && m <= 12)) continue;
+      const b = out[m - 1];
+      if (e.status === "realizada" || e.status === "realizado") b.done++;
+      else if (e.status === "cancelada" || e.status === "cancelado") b.cancel++;
+      else if (isUpcoming(e, now)) b.future++;
+      else if (isOverdue(e, now)) b.pending++;
+    }
+    return out;
+  }
+  // Quantos registros com um status por ano (ex.: exames realizados), do mais recente ao mais antigo
+  function yearCounts(list, status){
+    const m = new Map(); for (const e of list || []) if (e.status === status && /^\d{4}-/.test(e.date || "")) { const y = +e.date.slice(0, 4); m.set(y, (m.get(y) || 0) + 1); }
+    return [...m.entries()].sort((a, b) => b[0] - a[0]).map(([year, n]) => ({year, n}));
+  }
+
+  /* ---------- resultados laboratoriais ----------
+     Nomes equivalentes agrupados num só marcador (sem acento, caixa ou pontuação). Valores e unidades são guardados como informados.
+     Conversões só entre unidades do mesmo analito, com fatores específicos de cada um; unidades sem conversão nunca se misturam.
+     Fatores: glicose 18,016 (massa molar 180,16); colesterol 38,67; triglicerídeos 88,57; creatinina 88,42; ácido úrico 59,48;
+     vitamina D (25-OH) 2,496; vitamina B12 0,7378 (pmol/L por pg/mL); HbA1c: NGSP (%) = 0,09148 × IFCC (mmol/mol) + 2,152 (equação mestra IFCC–NGSP). */
+  const LAB = [
+    {k: "hba1c", n: "Hemoglobina glicada (HbA1c)", a: ["hba1c", "a1c", "hemoglobina glicada", "hemoglobina glicosilada", "glicohemoglobina", "hb glicada"], u: {"%": [1, 0], "mmol/mol": [0.09148, 2.152]}},
+    {k: "glicose", n: "Glicemia de jejum", a: ["glicemia", "glicemia de jejum", "glicose", "glicose de jejum", "glicemia jejum"], u: {"mg/dL": [1, 0], "mmol/L": [18.016, 0]}},
+    {k: "col-total", n: "Colesterol total", a: ["colesterol total", "colesterol", "ct"], u: {"mg/dL": [1, 0], "mmol/L": [38.67, 0]}},
+    {k: "ldl", n: "Colesterol LDL", a: ["ldl", "ldl c", "ldlc", "colesterol ldl", "ldl colesterol"], u: {"mg/dL": [1, 0], "mmol/L": [38.67, 0]}},
+    {k: "hdl", n: "Colesterol HDL", a: ["hdl", "hdl c", "hdlc", "colesterol hdl", "hdl colesterol"], u: {"mg/dL": [1, 0], "mmol/L": [38.67, 0]}},
+    {k: "nao-hdl", n: "Colesterol não HDL", a: ["nao hdl", "colesterol nao hdl", "nao hdl c"], u: {"mg/dL": [1, 0], "mmol/L": [38.67, 0]}},
+    {k: "tg", n: "Triglicerídeos", a: ["triglicerideos", "triglicerides", "trigliceridios", "tg"], u: {"mg/dL": [1, 0], "mmol/L": [88.57, 0]}},
+    {k: "ferritina", n: "Ferritina", a: ["ferritina"], u: {"ng/mL": [1, 0], "µg/L": [1, 0]}},
+    {k: "vitd", n: "Vitamina D (25-OH)", a: ["vitamina d", "vit d", "25 oh vitamina d", "25 hidroxivitamina d", "25ohd", "25 oh d", "vitamina d 25 oh"], u: {"ng/mL": [1, 0], "nmol/L": [1 / 2.496, 0]}},
+    {k: "pcr-us", n: "PCR ultrassensível", a: ["pcr ultrassensivel", "pcr us", "pcrus", "proteina c reativa ultrassensivel", "pcr ultra sensivel", "hs crp"], u: {"mg/L": [1, 0], "mg/dL": [10, 0]}},
+    {k: "b12", n: "Vitamina B12", a: ["vitamina b12", "b12", "vit b12", "cobalamina"], u: {"pg/mL": [1, 0], "pmol/L": [1 / 0.7378, 0]}},
+    {k: "tsh", n: "TSH", a: ["tsh", "hormonio tireoestimulante", "tireotrofina"], u: {"µUI/mL": [1, 0], "mUI/L": [1, 0]}},
+    {k: "creatinina", n: "Creatinina", a: ["creatinina"], u: {"mg/dL": [1, 0], "µmol/L": [1 / 88.42, 0]}},
+    {k: "hb", n: "Hemoglobina", a: ["hemoglobina", "hb", "hgb"], u: {"g/dL": [1, 0], "g/L": [0.1, 0]}},
+    {k: "acido-urico", n: "Ácido úrico", a: ["acido urico"], u: {"mg/dL": [1, 0], "µmol/L": [1 / 59.48, 0]}},
+    {k: "insulina", n: "Insulina de jejum", a: ["insulina", "insulina de jejum"], u: {"µUI/mL": [1, 0]}}
+  ];
+  const keyText = s => norm(s).replace(/[^a-z0-9]+/g, " ").trim();
+  const ALIAS = new Map(); for (const m of LAB) for (const a of [m.n, ...m.a]) ALIAS.set(keyText(a), m);
+  const labInfo = k => LAB.find(m => m.k === k) || null;
+  // chave do marcador: do catálogo, se o nome (ou um sinônimo) for reconhecido; senão "x:" + nome normalizado
+  function markerKey(name){ const t = keyText(name); if (!t) return null; const m = ALIAS.get(t); return m ? m.k : "x:" + t; }
+  // unidade normalizada para comparação: micro (µ, μ, u, mc), caixa e espaços
+  function unitKey(u){ return String(u || "").trim().replace(/\s+/g, "").replace(/μ/g, "µ").toLowerCase().replace(/^mcg/, "µg").replace(/^(u|mc)(?=[gu])/, "µ").replace(/^µu/, "µui").replace(/^µuii/, "µui"); }
+  // fator da unidade informada para a unidade-base do marcador; null = sem conversão validada
+  function unitFactor(k, unit){ const m = labInfo(k); if (!m) return null; const uk = unitKey(unit); for (const u in m.u) if (unitKey(u) === uk) return m.u[u]; return null; }
+  function convert(k, value, from, to){
+    if (!Number.isFinite(value)) return null;
+    if (unitKey(from) === unitKey(to)) return value;
+    const a = unitFactor(k, from), b = unitFactor(k, to); if (!a || !b) return null;
+    const base = value * a[0] + a[1]; return (base - b[1]) / b[0];
+  }
+  // número digitado em português ("5,6", "1.234,5", "250.000") ou com ponto decimal ("5.6")
+  function parseNum(s){
+    let t = String(s ?? "").trim().replace(/\s/g, ""); if (!t) return null;
+    if (t.includes(",")) t = t.replace(/\./g, "").replace(",", ".");
+    else if (/^-?\d{1,3}(\.\d{3})+$/.test(t)) t = t.replace(/\./g, "");
+    if (!/^-?\d+(\.\d+)?$/.test(t)) return null;
+    return +t;
+  }
+  /* Série de um marcador para o gráfico. Unidade do gráfico: a mais frequente (empate → a do resultado mais recente).
+     Resultados em outra unidade entram só se houver conversão validada para esse analito; os demais ficam fora (excluded) e continuam na lista. */
+  function labSeries(results, k){
+    const list = (results || []).filter(r => r.key === k && Number.isFinite(r.value) && r.date).sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : (a.at || 0) - (b.at || 0));
+    if (!list.length) return {unit: null, points: [], excluded: 0};
+    const freq = new Map(); for (const r of list) { const u = unitKey(r.unit); freq.set(u, (freq.get(u) || 0) + 1); }
+    let best = null, bn = -1; for (let i = list.length - 1; i >= 0; i--) { const u = unitKey(list[i].unit), n = freq.get(u); if (n > bn) { bn = n; best = list[i].unit; } }
+    const points = []; let excluded = 0;
+    for (const r of list){
+      const v = convert(k, r.value, r.unit, best); if (v == null) { excluded++; continue; }
+      const cv = x => x == null || !Number.isFinite(x) ? null : convert(k, x, r.unit, best);
+      points.push({id: r.id, date: r.date, t: zonedEpoch(r.date, "12:00"), v, conv: unitKey(r.unit) !== unitKey(best), orig: {value: r.value, unit: r.unit}, lo: cv(r.lo), hi: cv(r.hi)});
+    }
+    return {unit: best, points, excluded};
+  }
+
   /* Próxima ação: no máximo uma sugestão, só com dados suficientes, nunca diagnóstico.
      Pilares de movimento e sono só geram sugestão para quem já começou a registrá-los, e só para adultos. */
   function nextAction(c){
@@ -476,7 +589,8 @@
     return null;
   }
 
-  return {waterRec, addMonths, examNext, eatenDay, dayKey, addDays, weekKeys, moveWeek, moveRef, sleepMinutes, sleepStats, sleepRef, nextAction,
+  return {zonedEpoch, eventStart, eventEnd, isUpcoming, isOverdue, upcoming, nextEvent, monthCounts, yearCounts, LAB, labInfo, markerKey, unitKey, unitFactor, convert, parseNum, labSeries,
+    waterRec, addMonths, examNext, eatenDay, dayKey, addDays, weekKeys, moveWeek, moveRef, sleepMinutes, sleepStats, sleepRef, nextAction,
     norm, normCh, words, parseLabel, friendly, createFoodDB, searchFoods, within1, measureOf, calcItem, sum, mealTotal, planTotal, macroSplit,
     ageOf, FAO_LV, FAO_FA, faoTMB, DRI_LV, driCalc, energyOf, roleOf, roundQty, equivalent, substitutes, CRITERIA, NO_DATA};
 });

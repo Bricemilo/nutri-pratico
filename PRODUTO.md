@@ -1175,3 +1175,52 @@ O iOS muda a altura informada logo depois de abrir o app instalado sem disparar 
 - Contraste ≥ 5,31:1 em 83 textos.
 - 27 testes de cálculo e e2e sem erros.
 - Processamento ao abrir a aba: Nutrição 8,0 → 9,0 ms; Saúde 7,2 → 7,6; Perfil 6,7 → 8,7 (dentro de um quadro).
+
+## 40. v31 — Home com agenda, Saúde como central de cuidados, Consultas e Exames
+
+**Home (oito cartões, quatro linhas de dois, três grupos).**
+- A: Nutrição · Exercício · Sono · Emocional (sem mudança).
+- B: Hidratação (sem mudança) · **Em uso**, um cartão para suplementos e medicamentos ("2 suplementos / 0 medicamentos").
+- C: **Consultas** (âmbar) · **Exames** (safira da meia-noite), cada um com data e horário do próximo compromisso e a identificação em uma linha.
+- O GET saiu só da Home: cálculo, protocolo e meta seguem em Perfil → Planejamento.
+- Perfis de menores de 18 anos continuam sem o cartão Emocional (regra anterior), e por isso têm sete cartões.
+
+**Contagem de suplementos e medicamentos.** São contados os itens ativos (não pausados), um por nome. A mesma regra vale na Home, na Saúde e no módulo.
+
+**Dados (versão 4 do armazenamento, com cópia automática antes da migração).**
+- `care.appts`: consultas com especialidade, profissional, data, hora, fuso, modalidade, local, endereço ou acesso, observações e situação (agendada, realizada ou cancelada).
+- `care.exams`: exames com situação (solicitado, agendado, realizado ou cancelado), data e hora quando houver, local, solicitante, tipo, intervalo combinado, resultado em texto, observações e documentos.
+  - Migração sem perda: exame com data → "realizado" naquela data; sem data → "solicitado". Intervalo, resultado e observações seguem iguais.
+- `care.labs`: resultados numéricos com marcador agrupado, nome como informado, valor, texto original, unidade, data da coleta, referência mínima e máxima, laboratório e exame vinculado.
+- Documentos (PDF ou imagem, até 15 MB) ficam no banco local `briceno-docs`, fora do backup em arquivo, e o app avisa isso.
+
+**Saúde.**
+- O resumo ganhou a seção "Cuidados", com Consultas, Exames, Suplementos e medicamentos e Prioridades.
+- Cada módulo abre em página própria ("‹ Saúde"):
+  - **Consultas:** próxima em destaque; "Aconteceu?" para as que passaram sem registro; Próximas, Histórico e Canceladas; busca a partir de cinco registros; histórico anual por mês com seleção de ano.
+  - **Exames:** próximo em destaque; pendentes, agendados, realizados e cancelados; ficha com resultados e documentos; evolução por marcador (tudo ou por ano); exames realizados por ano.
+  - **Suplementos e medicamentos:** duas seções, com as funções anteriores preservadas.
+- O "+" do topo também cadastra consulta e exame.
+- Cada cadastro pode ser atribuído a outro perfil da família. Ao mover um exame, os resultados vinculados vão junto.
+
+**Não implementado (por limitação real ou decisão).**
+- **Lembretes:** um app web instalado no iPhone não agenda notificações locais confiáveis sem servidor de push.
+- **Exportação para o Calendário:** não foi incluída porque não pôde ser testada em aparelho real.
+- **Leitura automática:** sem OCR de laudos, sem interpretação e sem integração com laboratórios.
+
+**Correção encontrada pelos testes.** Folhas com conteúdo opcional (como "novo suplemento" desde a v30) mostravam o texto "null" no fim. O `sheet()` agora ignora conteúdo vazio.
+
+**Verificação (navegador simulando iPhones; nada em aparelho real).**
+- 32 testes de cálculo, 5 deles novos: fuso e horário de verão, próximo compromisso, contagem mensal, marcadores e conversões, série do gráfico.
+- **Fluxos:**
+  - migração de exames antigos e de backup v3;
+  - cadastro pela Home e pelo "+";
+  - Home atualizada na hora e quando o compromisso passa;
+  - confirmar realizada;
+  - mover para outro perfil;
+  - excluir com resultados vinculados, com "Desfazer";
+  - anexar, abrir e apagar documento;
+  - persistência após recarregar.
+- **Geometria da Home** igual à da v30 (108/100 pt por linha no iPhone 13, folga de 24 pt), estável na navegação, e a barra inferior sem falhas em todas as abas.
+- 144 verificações de telas e folhas em 320/375/390/430 pt × texto 17/21/24: 0 falhas.
+- Contraste ≥ 4,97:1, medido sem o halo de leitura, em 247 textos de 9 telas.
