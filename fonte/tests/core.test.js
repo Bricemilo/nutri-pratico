@@ -341,3 +341,52 @@ test("exames: série do gráfico em uma unidade só, em ordem de data, sem mistu
   // o eixo do tempo usa o intervalo real entre as datas
   assert.equal(Math.round((s.points[1].t - s.points[0].t) / 864e5), 425); assert.equal(Math.round((s.points[2].t - s.points[1].t) / 864e5), 306);
 });
+
+test("lembretes: arquivo de calendário com instante correto, avisos e texto protegido", () => {
+  const e = {uid: "a1@briceno", title: "Infiltração · joelho direito, sala 3; retorno", date: "2026-11-12", time: "14:30", tz: "America/Sao_Paulo", durMin: 45,
+    location: "Clínica Vida", rem: [10080, 1440, 120, 30, {at: "2026-11-12T07:15"}], now: Date.UTC(2026, 10, 3, 12)};
+  const ics = C.icsCalendar([e]);
+  assert.ok(ics.startsWith("BEGIN:VCALENDAR\r\nVERSION:2.0\r\n") && ics.endsWith("END:VCALENDAR\r\n"));
+  assert.ok(ics.includes("DTSTART:20261112T173000Z"));           // 14h30 em São Paulo (UTC−3) = 17h30 UTC
+  assert.ok(ics.includes("DTEND:20261112T181500Z"));
+  for (const t of ["TRIGGER:-P7D", "TRIGGER:-P1D", "TRIGGER:-PT2H", "TRIGGER:-PT30M", "TRIGGER;VALUE=DATE-TIME:20261112T101500Z"]) assert.ok(ics.includes(t), t);
+  assert.equal(ics.split("BEGIN:VALARM").length - 1, 5);
+  assert.ok(ics.includes("SUMMARY:Infiltração · joelho direito\\, sala 3\; retorno"));
+  // nenhuma linha passa de 75 bytes; linhas longas continuam com espaço
+  for (const ln of ics.split("\r\n")) assert.ok(Buffer.byteLength(ln, "utf8") <= 75, ln);
+  const long = C.icsCalendar([Object.assign({}, e, {desc: "Observação ".repeat(20)})]);
+  assert.ok(long.includes("\r\n "));
+  assert.equal(C.icsBefore(1500), "-P1DT1H"); assert.equal(C.icsBefore(0), "PT0S");
+  // fuso diferente: o mesmo horário de parede em Lisboa vira outro instante
+  assert.ok(C.icsCalendar([Object.assign({}, e, {tz: "Europe/Lisbon"})]).includes("DTSTART:20261112T143000Z"));
+  // sem horário: dia inteiro, avisos às 9h00 do fuso do compromisso
+  const d = C.icsCalendar([{uid: "x", title: "Exame", date: "2026-11-18", time: "", tz: "America/Sao_Paulo", rem: [1440]}]);
+  assert.ok(d.includes("DTSTART;VALUE=DATE:20261118") && d.includes("DTEND;VALUE=DATE:20261119") && d.includes("TRIGGER;VALUE=DATE-TIME:20261117T120000Z"));
+  // repetição (medicamento, hidratação): hora local flutuante + regra semanal
+  const r = C.icsCalendar([{uid: "m", title: "Lembrete", date: "2026-11-04", time: "08:00", floating: true, durMin: 5, rrule: "FREQ=WEEKLY;BYDAY=MO,WE,FR", rem: [0], transparent: true}]);
+  assert.ok(r.includes("DTSTART:20261104T080000\r\n") && r.includes("DURATION:PT5M") && r.includes("RRULE:FREQ=WEEKLY;BYDAY=MO,WE,FR") && r.includes("TRIGGER:PT0S") && r.includes("TRANSP:TRANSPARENT"));
+});
+
+test("lembretes: instantes dos avisos e horários do intervalo", () => {
+  const e = {date: "2026-11-12", time: "14:30", tz: "America/Sao_Paulo"};
+  const t = C.remTimes(e, [30, 1440, 30]);
+  assert.equal(t.length, 2); assert.equal(new Date(t[0]).toISOString(), "2026-11-11T17:30:00.000Z"); assert.equal(new Date(t[1]).toISOString(), "2026-11-12T17:00:00.000Z");
+  assert.deepEqual(C.slotTimes("08:00", "12:00", 120), ["08:00", "10:00", "12:00"]);
+  assert.deepEqual(C.slotTimes("09:00", "10:30", 45), ["09:00", "09:45", "10:30"]);
+  assert.deepEqual(C.slotTimes("12:00", "08:00", 60), []); assert.deepEqual(C.slotTimes("08:00", "20:00", 5), []);
+  assert.equal(C.slotTimes("00:00", "23:59", 15).length, 24);   // limite: no máximo 24 avisos por dia
+});
+
+test("indicadores: semanas sem registro não viram zero; dia mais recente prevalece; comparação neutra", () => {
+  const mv = [{date: "2026-11-02", min: 30}, {date: "2026-11-04", min: 45}, {date: "2026-10-20", min: 60}];
+  const w = C.weekSeries(mv, e => e.min);
+  assert.deepEqual(w.map(x => [x.date, x.v, x.days]), [["2026-10-19", 60, 1], ["2026-11-02", 75, 2]]);   // a semana de 26/10 não aparece
+  const d = C.daySeries([{date: "2026-11-01", v: 80, at: 1}, {date: "2026-11-01", v: 79.4, at: 2}, {date: "2026-10-01", v: 81}], e => e.v);
+  assert.deepEqual(d.map(x => x.v), [81, 79.4]);
+  const c = C.compareSeries(d); assert.ok(Math.abs(c.diff + 1.6) < 1e-9); assert.equal(c.days, 31); assert.equal(c.n, 2);
+  assert.equal(C.compareSeries(d.slice(0, 1)), null);
+  // suplementos e medicamentos ativos: não pausados, dentro das datas de início e término
+  assert.equal(C.medActive({}, "2026-11-04"), true); assert.equal(C.medActive({paused: true}, "2026-11-04"), false);
+  assert.equal(C.medActive({end: "2026-11-03"}, "2026-11-04"), false); assert.equal(C.medActive({start: "2026-11-05"}, "2026-11-04"), false);
+  assert.equal(C.medActive({start: "2026-11-04", end: "2026-11-04"}, "2026-11-04"), true);
+});

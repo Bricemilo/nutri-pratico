@@ -28,6 +28,7 @@
   --dj-peridot:#A6C452;   --dj-peridot-deep:#0F1708;     /* Suplementos · peridoto oliva */
   --dj-midnight:#6F98E6;  --dj-midnight-deep:#0B1430;    /* Exames · safira da meia-noite (também o ícone dos medicamentos) */
   --dj-amber:#E0A25C;     --dj-amber-deep:#1D1307;       /* Consultas · âmbar mel */
+  --dj-rosegold:#E39A8A;                                  /* Procedimentos · ouro rosé (ícone e destaque nos módulos; sem cartão próprio na Home) */
   /* sinal cobre (aba ativa, segmento das divisórias) e fio das divisórias */
   --dj-signal:#EEA36A; --dj-signal-line:#E39A60;
   --dj-hairline:rgba(150,136,124,.40); --dj-hairline-core:rgba(172,142,116,.58); --dj-hairline-seg:rgba(222,156,108,.96);
@@ -1653,6 +1654,87 @@ svg.lc{display:block;width:100%;height:auto;overflow:visible}
 /* texto ampliado: segmentos com rótulos longos passam a duas colunas em vez de cortar a palavra */
 html.big-text .seg.fit{grid-auto-flow:row;grid-template-columns:repeat(2,minmax(0,1fr))}
 html.big-text .seg.fit button{height:auto;min-height:40px;padding:6px 4px;white-space:normal}
+/* v32: mensagens longas quebram em duas linhas em vez de sair da tela */
+.toast{white-space:normal;width:max-content;max-width:calc(100vw - 32px);text-align:center;line-height:1.35}
+.toast.act{text-align:left}
+/* ===== v32 · Home: Prioridades + Agenda de Saúde; títulos completos em até duas linhas; módulos novos da Saúde ===== */
+.hc.prio{--g:var(--dj-champagne);--gd:var(--dj-champagne-deep);--lb:28%;--lt:22%;--ra:155deg;--rt:58%;--rb:88%}  /* bronze champanhe */
+.hc.agenda{--g:var(--dj-midnight);--gd:var(--dj-midnight-deep);--lb:36%;--lt:18%;--ra:135deg;--rt:42%;--rb:90%}  /* safira da meia-noite */
+/* títulos que não cabem numa linha ("Suplementos e Medicamentos", "Agenda de Saúde") quebram entre palavras, sem reduzir a letra; a pastilha fica no alto */
+/* botões não se esticam sozinhos na grade quando o conteúdo é estreito (título que quebra): largura da coluna sempre */
+.hgrid > .hc{justify-self:stretch;width:100%}
+.hc.hc-2l .hc-t{white-space:normal}
+.hc.hc-2l .hc-h{align-items:flex-start}
+.hc.hc-2l .hc-h .hc-t{padding-top:calc((28px - 1.25em) / 2)}
+.home.stack .hc.hc-2l .hc-h .hc-t{padding-top:0}
+/* contadores em uma linha: número em destaque, abreviação logo abaixo do título por extenso */
+.hc.cnt .hc-v.hc-lg{display:block;white-space:nowrap;padding-top:calc(6px + var(--xb,0px))}
+.hc.cnt .hc-lg b{font-size:var(--t-h);font-weight:620;letter-spacing:-.02em}
+.hc.cnt .hc-lg small{font-size:var(--t-sm);font-weight:520;color:rgba(244,238,232,.86)}
+.hc.cnt .hc-lg .hc-sep{color:rgba(244,238,232,.5);padding:0 .1em}
+/* última linha: valor e legenda ancorados na base, alinhados com data e identificação do compromisso ao lado */
+.hg-c .hc.l2 .hc-v{margin-top:auto}
+.hg-c .hc.l2:not(.ev) .hc-v b:not(.nr){font-size:1.294rem}
+.hg-b .hc.cnt .hc-v{margin-top:auto}
+/* módulos */
+.nx.proc{--tint:var(--dj-rosegold)} .nx.prio{--tint:var(--dj-champagne)} .nx.water{--tint:var(--dj-sapphire)} .nx.agenda{--tint:var(--dj-midnight)}
+.qa-i.c-appt{color:var(--dj-amber)} .qa-i.c-exam{color:var(--dj-midnight)} .qa-i.c-proc{color:var(--dj-rosegold)}
+.gr-i.c-proc{color:var(--dj-rosegold)} .gr-i.c-goal{color:var(--dj-champagne)} .gr-i.c-ind{color:#A9C3D6} .gr-i.c-agenda{color:var(--dj-midnight)} .gr-i.c-water{color:var(--dj-sapphire)}
+.ag-k{display:block;font-size:.706rem;font-weight:650;letter-spacing:.1em;text-transform:uppercase;line-height:1.3;color:var(--muted)}
+.ag-k.c-appt{color:color-mix(in srgb,var(--dj-amber) 80%,#fff)} .ag-k.c-exam{color:color-mix(in srgb,var(--dj-midnight) 75%,#fff)} .ag-k.c-proc{color:color-mix(in srgb,var(--dj-rosegold) 80%,#fff)}
+.lbl2.ag-m{margin:16px 2px 8px}
+.chips.ag-f{margin:16px 0 10px}
+.chips.ag-f button,.chips.ind button{min-height:44px;height:auto;white-space:normal;text-align:left}
+.cf-b{flex-wrap:wrap;justify-content:flex-end}
+.lcp > .kv span{flex:1 1 auto}
+.chips.ind{gap:8px}
+.ch-n{color:var(--muted);font-weight:450}
+.rem{margin-top:4px}
+.rem-c{display:flex;gap:8px;align-items:center;margin-top:10px}
+.rem-c .input{flex:1;min-width:0;height:44px}
+.rem-c .btn{flex:none;height:44px}
+.calb{margin-top:14px}
+.calb .note{margin-top:6px}
+.chk{display:flex;align-items:flex-start;gap:12px;min-height:44px;padding:10px 2px;font-size:var(--t-body);line-height:1.35;cursor:pointer}
+.chk input{flex:none;width:22px;height:22px;margin:0;accent-color:var(--dj-signal)}
+.tgs{display:flex;flex-direction:column;gap:10px}
+.tg{padding:12px;border-radius:14px;background:var(--surface-2)}
+.tg-h{display:flex;justify-content:space-between;gap:10px;font-size:var(--t-sm);margin-bottom:8px}
+.tg-h span{color:var(--muted)}
+.tg-r{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tg-r .chips{margin:0}
+.tg-r .input{flex:1 1 6em;min-width:0;height:44px}
+.parts{display:flex;flex-direction:column;gap:8px}
+.part{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) 44px;gap:8px;align-items:center}
+.part .input{height:44px}
+.part .x{width:44px;height:44px;display:grid;place-items:center;color:var(--muted)}
+.part .x svg{width:18px;height:18px}
+.parts .btn{align-self:flex-start;height:44px}
+.grow.pr{padding:0;align-items:stretch}
+.pr-o{flex:1;display:flex;align-items:center;gap:14px;min-width:0;min-height:64px;padding:10px 14px;text-align:left}
+.pr-o .li-go{margin-left:auto}
+.mv{display:flex;align-items:center;gap:2px;padding-right:6px}
+.mv .tool{width:44px;height:44px}
+.mv-up svg{transform:rotate(180deg)}
+.mv .tool:disabled{opacity:.3}
+.pr-desc{margin:4px 2px 0;font-size:var(--t-body);color:var(--ink-2);line-height:1.5;white-space:pre-wrap}
+.w-tot{display:flex;flex-direction:column;gap:2px}
+.w-tot b{font-size:var(--t-sec);font-weight:640;font-variant-numeric:tabular-nums}
+.w-tot span{font-size:var(--t-sm);color:var(--ink-2)}
+.w-add{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:12px}
+.w-add .btn{height:44px;padding:0 4px;white-space:nowrap}
+.lc-goal{stroke:color-mix(in srgb,var(--dj-champagne) 75%,transparent);stroke-width:1.2;stroke-dasharray:5 4}
+.lc-gt{fill:color-mix(in srgb,var(--dj-champagne) 85%,#fff);font-size:11px;font-family:var(--font)}
+.lc-l.b{stroke:color-mix(in srgb,var(--dj-champagne) 55%,transparent)}
+.lc-p.b{fill:#E6CC9C}
+.lc-key{display:flex;align-items:center;gap:6px;margin:8px 2px 0;font-size:var(--t-cap);color:var(--ink-2)}
+.lc-key i{width:10px;height:10px;border-radius:50%;background:#9DBBF2}
+.lc-key i.b{background:#E6CC9C;margin-left:10px}
+.lc-goal-t{margin:10px 2px 0;font-size:var(--t-sm);color:color-mix(in srgb,var(--dj-champagne) 85%,#fff)}
+.lcp > .kv{margin-top:8px}
+@media (max-width:350px){.hc.cnt .hc-lg b{font-size:1.06rem}.hc.cnt .hc-lg small{letter-spacing:-.015em}.w-add{grid-template-columns:repeat(2,minmax(0,1fr))}}
+html.big-text .w-add{grid-template-columns:repeat(2,minmax(0,1fr))}
+html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
 </style>
 
 <div class="app" id="app"></div>
@@ -2234,6 +2316,95 @@ html.big-text .seg.fit button{height:auto;min-height:40px;padding:6px 4px;white-
     return {unit: best, points, excluded};
   }
 
+  /* ---------- lembretes pelo app Calendário (arquivo .ics, RFC 5545) ----------
+     O BRICEÑO é um app web: não agenda notificações próprias. Os lembretes viajam dentro de um evento de calendário
+     (VALARM) e quem avisa é o app Calendário do aparelho. Compromissos com horário: instante exato em UTC (calculado no fuso do
+     compromisso). Sem horário: evento de dia inteiro, com avisos às 9h00 do fuso do compromisso. Repetições diárias ou semanais
+     (medicamentos, hidratação): hora "flutuante", que acompanha o fuso do aparelho. */
+  const icsEsc = s => String(s ?? "").replace(/\\/g, "\\\\").replace(/;/g, "\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+  const icsUTC = ms => new Date(ms).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+  const icsDay = d => String(d).replace(/-/g, "");
+  const icsLocal = (d, t) => icsDay(d) + "T" + String(t || "00:00").replace(":", "") + "00";
+  // linhas com mais de 75 bytes (UTF-8) continuam na linha seguinte, iniciada por espaço; nunca parte um caractere ao meio
+  function icsFold(line){
+    const out = []; let cur = "", n = 0;
+    for (const ch of line){ const b = unescape(encodeURIComponent(ch)).length; if (n + b > (out.length ? 74 : 75)) { out.push(cur); cur = ""; n = 0; } cur += ch; n += b; }
+    out.push(cur); return out.join("\r\n ");
+  }
+  // duração antes do início: 10080 → -P7D · 120 → -PT2H · 30 → -PT30M · 1500 → -P1DT1H
+  function icsBefore(min){
+    min = Math.max(0, Math.round(min)); if (!min) return "PT0S";
+    const d = Math.floor(min / 1440), h = Math.floor(min % 1440 / 60), m = min % 60;
+    return "-P" + (d ? d + "D" : "") + (h || m ? "T" + (h ? h + "H" : "") + (m ? m + "M" : "") : "");
+  }
+  // lembretes de um compromisso → instantes absolutos (ms), em ordem. rem: minutos antes do início ou {at: "AAAA-MM-DDTHH:MM"} no fuso do compromisso.
+  // Sem horário, "x minutos antes" conta a partir das 9h00 do dia (aviso de dia inteiro).
+  function remTimes(e, rem){
+    const base = e.time ? eventStart(e) : zonedEpoch(e.date, "09:00", e.tz); if (base == null) return [];
+    const out = [];
+    for (const r of rem || []){
+      if (typeof r === "number" && r >= 0) out.push(base - r * 60000);
+      else if (r && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(r.at || "")) { const v = zonedEpoch(r.at.slice(0, 10), r.at.slice(11), e.tz); if (v != null) out.push(v); }
+    }
+    return [...new Set(out)].sort((a, b) => a - b);
+  }
+  /* Um evento. o: {uid, title, date, time, tz, durMin, location, desc, rem, seq, rrule, floating, transparent, now}
+     rrule (só com floating): "FREQ=DAILY" ou "FREQ=WEEKLY;BYDAY=MO,WE". */
+  function icsEvent(o){
+    const L = ["BEGIN:VEVENT", "UID:" + o.uid, "DTSTAMP:" + icsUTC(o.now || Date.now()), "SEQUENCE:" + (o.seq || 0)];
+    const dur = o.durMin > 0 ? o.durMin : 60;
+    if (o.floating) L.push("DTSTART:" + icsLocal(o.date, o.time), "DURATION:" + icsBefore(dur).replace("-", ""));
+    else if (!o.time){ const [y, m, d] = o.date.split("-").map(Number), nx = new Date(Date.UTC(y, m - 1, d + 1)).toISOString().slice(0, 10); L.push("DTSTART;VALUE=DATE:" + icsDay(o.date), "DTEND;VALUE=DATE:" + icsDay(nx)); }
+    else { const t0 = zonedEpoch(o.date, o.time, o.tz); L.push("DTSTART:" + icsUTC(t0), "DTEND:" + icsUTC(t0 + dur * 60000)); }
+    if (o.rrule && o.floating) L.push("RRULE:" + o.rrule);
+    L.push("SUMMARY:" + icsEsc(o.title));
+    if (o.location) L.push("LOCATION:" + icsEsc(o.location));
+    if (o.desc) L.push("DESCRIPTION:" + icsEsc(o.desc));
+    L.push("TRANSP:" + (o.transparent ? "TRANSPARENT" : "OPAQUE"));
+    const alarm = trig => L.push("BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:" + icsEsc(o.title), trig, "END:VALARM");
+    if (o.floating) for (const r of o.rem || []) { if (typeof r === "number") alarm("TRIGGER:" + icsBefore(r)); }
+    else if (o.time) for (const r of o.rem || []) { if (typeof r === "number") alarm("TRIGGER:" + icsBefore(r)); else for (const t of remTimes(o, [r])) alarm("TRIGGER;VALUE=DATE-TIME:" + icsUTC(t)); }
+    else for (const t of remTimes(o, o.rem)) alarm("TRIGGER;VALUE=DATE-TIME:" + icsUTC(t));
+    L.push("END:VEVENT"); return L;
+  }
+  function icsCalendar(events, name){
+    const L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//BRICENO//Agenda de Saude//PT-BR", "CALSCALE:GREGORIAN", "METHOD:PUBLISH"];
+    if (name) L.push("X-WR-CALNAME:" + icsEsc(name));
+    for (const e of events) L.push(...icsEvent(e));
+    L.push("END:VCALENDAR"); return L.map(icsFold).join("\r\n") + "\r\n";
+  }
+  // horários de um intervalo (hidratação): de start a end (HH:MM), a cada "every" minutos; no máximo 24
+  function slotTimes(start, end, every){
+    const a = toMin(start), b = toMin(end); if (a == null || b == null || !(every >= 15) || b < a) return [];
+    const out = []; for (let m = a; m <= b && out.length < 24; m += every) out.push(pad(Math.floor(m / 60)) + ":" + pad(m % 60));
+    return out;
+  }
+
+  /* ---------- indicadores (Prioridades e Saúde) ----------
+     Séries de pontos {date, t, v} a partir dos registros que já existem; nada é estimado ou interpolado. */
+  // ativo = não pausado, já começou e não terminou (datas opcionais, AAAA-MM-DD)
+  const medActive = (m, today) => !m.paused && (!m.start || m.start <= today) && (!m.end || m.end >= today);
+  // soma por semana (segunda a domingo), só das semanas que têm registro: semana sem registro não vira zero
+  function weekSeries(list, val){
+    const m = new Map();
+    for (const e of list || []){ if (!/^\d{4}-\d{2}-\d{2}$/.test(e.date || "")) continue; const v = val(e); if (!Number.isFinite(v)) continue;
+      const k = weekKeys(e.date)[0], g = m.get(k) || {date: k, v: 0, n: 0, days: new Set()}; g.v += v; g.n++; g.days.add(e.date); m.set(k, g); }
+    return [...m.values()].sort((a, b) => a.date < b.date ? -1 : 1).map(g => ({date: g.date, t: zonedEpoch(g.date, "12:00"), v: g.v, n: g.n, days: g.days.size}));
+  }
+  // série diária: um ponto por registro (no mesmo dia, o mais recente), em ordem de data
+  function daySeries(list, val){
+    const m = new Map();
+    for (const e of list || []){ if (!/^\d{4}-\d{2}-\d{2}$/.test(e.date || "")) continue; const v = val(e); if (!Number.isFinite(v)) continue;
+      const prev = m.get(e.date); if (!prev || (e.at || 0) >= (prev.at || 0)) m.set(e.date, {date: e.date, t: zonedEpoch(e.date, e.time || "12:00"), v, at: e.at || 0, id: e.id, src: e}); }
+    return [...m.values()].sort((a, b) => a.t - b.t);
+  }
+  // comparação neutra entre a primeira e a última medição do período (sem dizer se é melhor ou pior)
+  function compareSeries(points){
+    if (!points || points.length < 2) return null;
+    const a = points[0], b = points[points.length - 1];
+    return {first: a, last: b, diff: b.v - a.v, days: Math.round((b.t - a.t) / 864e5), n: points.length};
+  }
+
   /* Próxima ação: no máximo uma sugestão, só com dados suficientes, nunca diagnóstico.
      Pilares de movimento e sono só geram sugestão para quem já começou a registrá-los, e só para adultos. */
   function nextAction(c){
@@ -2252,7 +2423,8 @@ html.big-text .seg.fit button{height:auto;min-height:40px;padding:6px 4px;white-
     return null;
   }
 
-  return {zonedEpoch, eventStart, eventEnd, isUpcoming, isOverdue, upcoming, nextEvent, monthCounts, yearCounts, LAB, labInfo, markerKey, unitKey, unitFactor, convert, parseNum, labSeries,
+  return {icsEsc, icsFold, icsBefore, remTimes, icsEvent, icsCalendar, slotTimes, medActive, weekSeries, daySeries, compareSeries,
+    SCHEDULED, zonedEpoch, eventStart, eventEnd, isUpcoming, isOverdue, upcoming, nextEvent, monthCounts, yearCounts, LAB, labInfo, markerKey, unitKey, unitFactor, convert, parseNum, labSeries,
     waterRec, addMonths, examNext, eatenDay, dayKey, addDays, weekKeys, moveWeek, moveRef, sleepMinutes, sleepStats, sleepRef, nextAction,
     norm, normCh, words, parseLabel, friendly, createFoodDB, searchFoods, within1, measureOf, calcItem, sum, mealTotal, planTotal, macroSplit,
     ageOf, FAO_LV, FAO_FA, faoTMB, DRI_LV, driCalc, energyOf, roleOf, roundQty, equivalent, substitutes, CRITERIA, NO_DATA};
@@ -2327,6 +2499,8 @@ const ICON = {
   cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></svg>',
   clip:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m19.5 11.5-7.4 7.4a4.9 4.9 0 0 1-6.9-6.9l7.8-7.8a3.3 3.3 0 0 1 4.6 4.6l-7.8 7.8a1.6 1.6 0 0 1-2.3-2.3l7.1-7.1"/></svg>',
   left:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg>',
+  syringe:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="M19 9 8.7 19.3a2.4 2.4 0 0 1-3.4 0l-.6-.6a2.4 2.4 0 0 1 0-3.4L15 5"/><path d="m9 11 4 4"/><path d="m5 19-3 3"/><path d="m14 4 6 6"/></svg>',
+  bell:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>',
   bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3 5 13.5h6L10 21l8-10.5h-6z"/></svg>'
 };
 const ic = k => h("span", {html: ICON[k], style: "display:contents"});
@@ -2436,11 +2610,15 @@ const planTotal = pl => C.planTotal(db, pl);
 // Antes de migrar, guarda uma cópia exata do que estava salvo em KEY + ".antes-da-v2".
 // v3: acrescenta p.logs (movimento, sono, bem-estar) e fixa o protocolo de energia de quem já usava a média.
 // v4: consultas (care.appts), resultados de exames (care.labs) e exames com situação (solicitado · agendado · realizado · cancelado).
-const KEY = "nutripratico.v1", VERSION = 4, SNAP = KEY + ".antes-da-v" + VERSION, SNAPS = [SNAP, KEY + ".antes-da-v3", KEY + ".antes-da-v2"];
+// v5: procedimentos (care.procs), prioridades com indicadores (care.goals), medições (logs.meas), água registrada (logs.water), lembretes.
+const KEY = "nutripratico.v1", VERSION = 5, SNAP = KEY + ".antes-da-v" + VERSION, SNAPS = [SNAP, KEY + ".antes-da-v4", KEY + ".antes-da-v3", KEY + ".antes-da-v2"];
 const DEFAULT_OBJ = ["Alimentação equilibrada", "Manutenção do peso", "Emagrecimento", "Hipertrofia muscular", "Performance esportiva",
   "Ganho de peso", "Recomposição corporal", "Controle glicêmico", "Saúde intestinal", "Reeducação alimentar", "Gestação", "Lactação"];
 const DEFAULT_MEALS = ["Café da manhã", "Colação", "Almoço", "Lanche da tarde 1", "Lanche da tarde 2", "Pré-treino", "Pós-treino", "Jantar", "Ceia"];
 let S;
+// listas por perfil: registros diários (logs) e cuidados (care). water: meta de água definida pela pessoa (mL) · waterRem: lembretes de água
+const LOG_KINDS = ["move", "sleep", "mood", "eaten", "meas", "water"];
+const CARE0 = () => ({water: null, waterRem: null, meds: [], exams: [], goals: [], appts: [], labs: [], procs: []});
 function blankState(){ return {version: VERSION, patients: [], foods: [], activeId: null, prefs: {objectives: DEFAULT_OBJ.slice(), meals: DEFAULT_MEALS.slice(), use: {}, last: {}, fav: [], recent: []}}; }
 function load(){
   let raw = null;
@@ -2460,8 +2638,14 @@ function load(){
     p.plan = p.plan || {objective: "", target: null, meals: []};
     for (const m of p.plan.meals){ m.time = m.time || ""; m.items = m.items || []; }
     p.logs = p.logs || {};
-    for (const k of ["move", "sleep", "mood", "eaten"]) p.logs[k] = p.logs[k] || [];
-    p.care = Object.assign({water: null, meds: [], exams: [], goals: [], appts: [], labs: []}, p.care || {});
+    for (const k of LOG_KINDS) p.logs[k] = p.logs[k] || [];
+    p.care = Object.assign(CARE0(), p.care || {});
+    // até a v4 cada prioridade era só uma frase: vira prioridade ativa, com o mesmo texto, na mesma ordem, sem indicadores escolhidos
+    p.care.goals.forEach((g, i) => { if (g.status) return; g.name = g.name || g.text || "Prioridade"; delete g.text; Object.assign(g, {id: g.id || uid(), at: g.at || Date.now(), tpl: null, desc: "", status: "ativa", order: i, main: false, star: false, inds: [], targets: {}}); });
+    // até a v4 "Fórmula manipulada" era uma categoria contada com os suplementos: vira característica do item, que segue em Suplementos como antes
+    for (const m of p.care.meds) if (m.cat === "formula") { m.cat = "suplemento"; m.comp = true; m.parts = m.parts || []; m.catOld = true; }
+    for (const m of p.care.meds) { if (!m.cat) m.cat = "suplemento"; m.times = m.times || []; }
+    p.notif = Object.assign({detail: false}, p.notif || {});
     // até a v3 cada exame era um item com a data da última realização (last), o intervalo combinado (every) e o resultado em texto.
     // Migração sem perda: com data → "realizado" naquela data; sem data → "solicitado" (pendente). Intervalo, resultado e observações seguem iguais.
     for (const x of p.care.exams) if (!x.status) { x.status = x.last ? "realizado" : "solicitado"; x.date = x.last || ""; x.time = ""; delete x.last; }
@@ -2703,10 +2887,10 @@ const favKcal = f => C.mealTotal(db, {items: f.items.filter(i => db.has(i.foodId
    no máximo uma sugestão (core.nextAction) e atalhos de registro. */
 const today = () => C.dayKey();
 // cuidados de saúde do perfil: água (valor manual em mL, ou null = estimativa), suplementos/medicamentos, exames e prioridades
-const careOf = p => p.care || (p.care = {water: null, meds: [], exams: [], goals: [], appts: [], labs: []});
+const careOf = p => p.care || (p.care = CARE0());
 const waterOf = p => C.waterRec(p.energy.weight, C.ageOf(p.birth), careOf(p).water);
 const fmtL = ml => (ml / 1000).toLocaleString("pt-BR", {minimumFractionDigits: 1, maximumFractionDigits: 1});
-const logsOf = p => { const L = p.logs || (p.logs = {}); for (const k of ["move", "sleep", "mood", "eaten"]) L[k] = L[k] || []; return L; };
+const logsOf = p => { const L = p.logs || (p.logs = {}); for (const k of LOG_KINDS) L[k] = L[k] || []; return L; };
 const fmtDur = m => m == null ? "—" : m < 60 ? `${Math.round(m)} min` : `${Math.floor(m / 60)} h${Math.round(m % 60) ? " " + pad2(Math.round(m % 60)) : ""}`;
 const pad2 = n => String(n).padStart(2, "0");
 const MOODS = ["Muito mal", "Mal", "Mais ou menos", "Bem", "Muito bem"];
@@ -2745,6 +2929,10 @@ const JEWEL = (() => {
     meds:  {c: "#6E9DF4", hi: "#E3EEFF", sx: 62, ey: 66, c1: [130, 128], c2: [166, 108], n: 8, ox: 3.2, oy: 2.4, pk: 0.82, fill: 0.47, glow: 0.46, sec: 0.5},
     // v31 · Consultas: âmbar mel (lâmina longa e baixa, como o champanhe); Exames: safira da meia-noite (o material dos medicamentos, que deixaram de ter cartão próprio)
     appt:  {c: "#E5A65E", hi: "#FFEBCD", sx: 78, ey: 14, c1: [128, 124], c2: [154, 60], n: 13, ox: 2.0, oy: 1.5, pk: .72, fill: 0.34, glow: 0.27},
+    // v32 · Prioridades: champanhe (o material do antigo cartão do GET) · Agenda de Saúde: safira da meia-noite (o material de Exames)
+    prio:  {c: "#DDBB7E", hi: "#F4E4C4", sx: 80, ey: 8, c1: [130, 124], c2: [154, 56], n: 15, ox: 1.9, oy: 1.4, pk: .7, fill: 0.35, glow: 0.27},
+    // na Agenda o texto desce até a base: a lâmina sobe mais cedo pela borda direita e fica longe da linha de identificação
+    agenda:{c: "#6E9DF4", hi: "#E3EEFF", sx: 96, ey: 18, c1: [142, 118], c2: [168, 62], n: 8, ox: 3.0, oy: 1.8, pk: 0.74, fill: 0.36, glow: 0.36, sec: 0.3},
     exam:  {c: "#6E9DF4", hi: "#E3EEFF", sx: 62, ey: 66, c1: [130, 128], c2: [166, 108], n: 8, ox: 3.2, oy: 2.4, pk: 0.82, fill: 0.44, glow: 0.42, sec: 0.46}
   };
   const f = v => +v.toFixed(1);
@@ -2789,27 +2977,29 @@ function jewelCard(o){ const has = o.value != null;
     h("span", {class: "hc-fx", "aria-hidden": "true"}, JEWEL(o.cls)),
     h("span", {class: "hc-h"}, h("span", {class: "hc-i", html: ICON[o.icon]}), h("span", {class: "hc-t"}, o.title)),
     h("span", {class: "hc-v"}, has ? [h("b", {class: [String(o.value).length > 9 ? "long" : "", /^\d/.test(o.value) ? "" : "txt"].join(" ").trim() || null}, o.value), o.unit ? [" ", h("small", null, o.unit)] : null] : h("b", {class: "nr"}, o.empty[0])),
-    h("span", {class: "hc-s"}, has ? o.sub || "" : o.empty[1])); }
+    h("span", {class: "hc-s" + (has && o.clip ? " clip" : "")}, has ? o.sub || "" : o.empty[1])); }
 function jewelDivider(){ return h("div", {class: "hdiv", "aria-hidden": "true"}); }
-/* jewelEvent(o) — cartão de agenda (Consultas, Exames), no máximo três linhas: ícone + título · data e horário · identificação (uma linha, com reticências).
-   Sem compromisso: mensagem curta no lugar das linhas 2 e 3 e um "+" discreto no título; o toque abre o cadastro. */
+/* jewelEvent(o) — Agenda de Saúde: no máximo três informações — ícone + título (que pode ocupar duas linhas) · data e horário · identificação
+   (uma linha, com reticências). Sem compromisso: "Nenhum agendado" e "Adicionar compromisso"; o toque abre a escolha do tipo. */
 function jewelEvent(o){ const e = o.event;
-  return h("button", {class: `hc l2 ev ${o.cls}` + (e ? "" : " empty"), type: "button", onclick: () => { haptic(); (e ? o.open : o.add)(); },
-      "aria-label": e ? `${o.title}: ${o.next} ${whenSpoken(e)}. ${o.line3(e)}.` : `${o.title}: ${o.emptyMsg}. Toque para adicionar.`},
+  return h("button", {class: `hc l2 ev hc-2l ${o.cls}` + (e ? "" : " empty"), type: "button", onclick: () => { haptic(); (e ? o.open : o.add)(); },
+      "aria-label": e ? `${o.title}: próximo compromisso ${whenSpoken(e)}. ${o.line3(e)}${o.more ? `. E mais ${o.more} no mesmo horário` : ""}.` : `${o.title}: ${o.emptyMsg}. ${o.emptySub}.`},
     h("span", {class: "hc-fx", "aria-hidden": "true"}, JEWEL(o.cls)),
-    h("span", {class: "hc-h"}, h("span", {class: "hc-i", html: ICON[o.icon]}), h("span", {class: "hc-t"}, o.title), e ? null : h("span", {class: "hc-add", "aria-hidden": "true", html: ICON.plus})),
-    e ? [h("span", {class: "hc-v"}, h("b", {class: "dt"}, whenShort(e, true))), h("span", {class: "hc-s clip"}, o.line3(e))] : h("span", {class: "hc-v"}, h("b", {class: "nr"}, o.emptyMsg))); }
-/* jewelCare(o) — Suplementos e Medicamentos num cartão: título "Em uso" e dois contadores reais (itens ativos, não pausados), número antes do nome. */
-function jewelCare(o){ const row = (v, one, many) => h("span", {class: "hc-lr"}, h("b", null, String(v)), h("span", null, v === 1 ? one : many));
-  return h("button", {class: "hc l2 cnt " + o.cls, type: "button", onclick: () => { haptic(); o.fn(); },
-      "aria-label": `Suplementos e medicamentos em uso: ${plural(o.sup, "suplemento", "suplementos")} e ${plural(o.med, "medicamento", "medicamentos")}${o.paused ? `; ${plural(o.paused, "item pausado", "itens pausados")}` : ""}.`},
+    h("span", {class: "hc-h"}, h("span", {class: "hc-i", html: ICON[o.icon]}), h("span", {class: "hc-t"}, o.title)),
+    e ? [h("span", {class: "hc-v"}, h("b", {class: "dt"}, whenShort(e, true))), h("span", {class: "hc-s clip"}, o.line3(e))]
+      : [h("span", {class: "hc-v"}, h("b", {class: "nr"}, o.emptyMsg)), h("span", {class: "hc-s"}, o.emptySub)]); }
+/* jewelCare(o) — Suplementos e Medicamentos: título completo (em duas linhas quando não cabe em uma) e os dois contadores reais numa linha
+   ("2 supl. · 1 med.": abreviações só aqui, logo abaixo do título por extenso; o VoiceOver lê tudo por extenso). Ativos: não pausados, dentro das datas. */
+function jewelCare(o){
+  return h("button", {class: "hc l2 cnt hc-2l " + o.cls, type: "button", onclick: () => { haptic(); o.fn(); },
+      "aria-label": `Suplementos e Medicamentos: ${plural(o.sup, "suplemento ativo", "suplementos ativos")} e ${plural(o.med, "medicamento ativo", "medicamentos ativos")}${o.paused ? `; ${plural(o.paused, "item inativo", "itens inativos")}` : ""}.`},
     h("span", {class: "hc-fx", "aria-hidden": "true"}, JEWEL(o.cls)),
-    h("span", {class: "hc-h"}, h("span", {class: "hc-i", html: ICON.pill}), h("span", {class: "hc-t"}, "Em uso")),
-    h("span", {class: "hc-v hc-lg"}, row(o.sup, "suplemento", "suplementos"), row(o.med, "medicamento", "medicamentos"))); }
+    h("span", {class: "hc-h"}, h("span", {class: "hc-i", html: ICON.pill}), h("span", {class: "hc-t"}, "Suplementos e Medicamentos")),
+    h("span", {class: "hc-v hc-lg"}, h("b", null, String(o.sup)), h("small", null, " supl."), h("span", {class: "hc-sep"}, " · "), h("b", null, String(o.med)), h("small", null, " med."))); }
 function renderHome(p){
   /* Painel de saúde: oito cartões em quatro linhas de dois, em três grupos separados por duas Signature dividers:
-     A · pilares (Nutrição, Exercício, Sono, Emocional) · B · Hidratação + Suplementos e Medicamentos · C · Consultas + Exames (próximo compromisso).
-     Cor só no ícone e numa nuance mínima do fundo; números em destaque, unidades subordinadas, legendas curtas.
+     A · pilares (Nutrição, Exercício, Sono, Emocional) · B · Hidratação + Suplementos e Medicamentos · C · Prioridades + Agenda de Saúde.
+     Cor só no ícone e numa nuance mínima do fundo; números em destaque, unidades subordinadas, legendas curtas e sempre com o período.
      Cada cartão leva ao módulo; sem dado, estado vazio que abre o cadastro. O detalhe nutricional fica na aba Nutrição. */
   const plan = p.plan, t = planTotal(plan), L = logsOf(p), ctx = healthCtx(p), adult = adultOf(p), w = waterOf(p);
   const dayTxt = new Date().toLocaleDateString("pt-BR", {weekday: "long", day: "numeric", month: "long"});
@@ -2818,29 +3008,32 @@ function renderHome(p){
   const sl = ctx.sleep.stats.last, lastNight = sl && C.addDays(sl.date, 1) >= today() ? sl : null;
   const lastMood = [...L.mood].sort((a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : (b.at || 0) - (a.at || 0))[0];
   const mw = ctx.move.week;
-  const cc = careCounts(p), nx = nextOf(p);
+  const cc = careCounts(p), nx = nextAgenda(p), pr = goalsOf(p), act = pr.filter(g => g.status === "ativa"), main = act.find(g => g.main);
   const card = jewelCard, divider = jewelDivider;
-  const reg = ["Não registrado", "Toque para registrar"];
+  // sem registro não quer dizer que não aconteceu: o cartão diz que não há registro e de que período
   const pillars = h("div", {class: "hgrid hg-a" + (adult ? "" : " odd")},
     card({lv: "l1", cls: "food", icon: "utensils", title: "Nutrição", value: meals.length ? k0(t.kcal) : null, unit: "kcal", sub: "Plano alimentar",
       fn: () => go({tab: "alimentacao", sub: "plano", open: [], edit: null}), empty: ["Sem plano", "Toque para montar"]}),
-    card({lv: "l1", cls: "move", icon: "dumbbell", title: "Exercício", value: mw.total > 0 ? fmtDur(mw.total) : null, unit: "/semana", sub: `${mw.activeDays} ${mw.activeDays === 1 ? "dia ativo" : "dias ativos"}`,
-      fn: () => mw.total > 0 ? go({tab: "saude", hsub: "movimento"}) : moveSheet(p), empty: reg}),
+    card({lv: "l1", cls: "move", icon: "dumbbell", title: "Exercício", value: mw.total > 0 ? fmtDur(mw.total) : null, sub: "Nesta semana",
+      aria: `Exercício: ${mw.total > 0 ? `${fmtDur(mw.total)} registrados nesta semana, ${plural(mw.activeDays, "dia", "dias")} com registro` : "sem registros nesta semana"}.`,
+      fn: () => L.move.length ? go({tab: "saude", hsub: "movimento"}) : moveSheet(p), empty: ["Sem registros", "Nesta semana"]}),
     card({lv: "l1", cls: "sleep", icon: "moon", title: "Sono", value: lastNight ? fmtDur(lastNight.min) : null, sub: "Última noite",
-      fn: () => lastNight ? go({tab: "saude", hsub: "sono"}) : sleepSheet(p), empty: reg}),
+      fn: () => lastNight ? go({tab: "saude", hsub: "sono"}) : sleepSheet(p), empty: ["Sem registro", "Última noite"]}),
     adult ? card({lv: "l1", cls: "wb", icon: "smile", title: "Emocional", value: lastMood ? MOODS[lastMood.mood - 1] : null, sub: lastMood ? `${relDay(lastMood.date)}${lastMood.time ? ", " + lastMood.time : ""}` : "",
-      fn: () => lastMood ? go({tab: "saude", hsub: "bem-estar"}) : moodSheet(p), empty: reg}) : null);
-  // B · hidratação (recomendação diária do perfil, sem registro de copos) e o que está em uso. O GET saiu da Home: continua em Perfil → Planejamento.
+      fn: () => lastMood ? go({tab: "saude", hsub: "bem-estar"}) : moodSheet(p), empty: ["Sem registros", "Como você está?"]}) : null);
+  // B · hidratação (meta diária do perfil) e suplementos e medicamentos ativos. O GET saiu da Home: continua em Perfil → Planejamento.
   const careRow = h("div", {class: "hgrid hg-b"},
-    card({lv: "l2", cls: "water", icon: "drop", title: "Hidratação", value: w.ml ? fmtL(w.ml) : null, unit: "L/dia", sub: w.src === "manual" ? "Definida por você" : "Recomendação diária",
-      fn: () => waterSheet(p), empty: ["Não definida", "Toque para definir"]}),
+    card({lv: "l2", cls: "water", icon: "drop", title: "Hidratação", value: w.ml ? fmtL(w.ml) : null, unit: "L/dia", sub: w.src === "manual" ? "Meta definida por você" : "Recomendação diária",
+      fn: () => go({tab: "saude", hsub: "agua"}), empty: ["Não definida", "Toque para definir"]}),
     jewelCare({cls: "supp", sup: cc.sup, med: cc.med, paused: cc.paused, fn: () => go({tab: "saude", hsub: "cuidados"})}));
-  // C · agenda: próxima consulta e próximo exame agendado do perfil ativo
+  // C · o que acompanhar (prioridades ativas) e o próximo compromisso de saúde, de qualquer tipo
   const agenda = h("div", {class: "hgrid hg-c"},
-    jewelEvent({cls: "appt", icon: "steth", title: "Consultas", event: nx.appt, next: "próxima em", line3: apptTitle, emptyMsg: "Nenhuma consulta agendada",
-      open: () => go({tab: "saude", hsub: "consultas"}), add: () => apptSheet(p)}),
-    jewelEvent({cls: "exam", icon: "flask", title: "Exames", event: nx.exam, next: "próximo em", line3: e => e.name, emptyMsg: "Nenhum exame agendado",
-      open: () => go({tab: "saude", hsub: "exames"}), add: () => examSheet(p, null, {status: "agendado"})}));
+    card({lv: "l2", cls: "prio", icon: "target", title: "Prioridades", value: act.length ? String(act.length) : null, unit: act.length === 1 ? "ativa" : "ativas",
+      sub: main ? main.name : "Em acompanhamento", clip: true, empty: ["Nenhuma definida", "Escolha o que acompanhar"],
+      aria: act.length ? `Prioridades: ${plural(act.length, "ativa", "ativas")}${main ? `. Principal: ${main.name}` : ""}.` : "Prioridades: nenhuma definida. Escolha o que acompanhar.",
+      fn: () => go({tab: "saude", hsub: "prioridades"})}),
+    jewelEvent({cls: "agenda", icon: "cal", title: "Agenda de Saúde", event: nx, more: nx ? sameTime(p, nx) : 0, line3: e => agendaLabel(p, e), emptyMsg: "Nenhum agendado", emptySub: "Adicionar compromisso",
+      open: () => go({tab: "saude", hsub: "agenda"}), add: () => newEventSheet(p)}));
   put(app, h("div", {class: "view home"}, topBar(quickBtn(p, "hoje")),
     h("header", {class: "hi-h"}, h("h1", null, `${greetOf()}, ${firstName(p.name)}`), h("div", {class: "today"}, dayTxt)),
     pillars, divider(), careRow, divider(), agenda));
@@ -2955,7 +3148,9 @@ function quickSheet(p, ctx){
       big("sleep", "moon", "Sono", () => sleepSheet(p)), adult ? big("wb", "smile", "Emocional", () => moodSheet(p)) : null);
     const food = [row("food", "Alimento no plano", "Buscar e adicionar a uma refeição", () => { go({tab: "alimentacao", sub: "alimentos"}); setTimeout(() => { const i = $("#busca-alimento"); if (i) i.focus(); }, 80); }),
       row("camera", "Novo alimento", embedded ? "Digitar os dados do rótulo" : "Foto da tabela nutricional ou digitação", () => addFoodChooser("", () => render()))];
-    const care = [row("steth", "Consulta", "Agendar ou registrar uma consulta", () => apptSheet(p)), row("flask", "Exame", "Solicitado, agendado ou realizado", () => examSheet(p))];
+    const care = [row("steth", "Consulta", "Agendar ou registrar uma consulta", () => apptSheet(p)), row("flask", "Exame", "Solicitado, agendado ou realizado", () => examSheet(p)),
+      row("syringe", "Procedimento", "Infiltração, aplicação, cirurgia, fisioterapia…", () => procSheet(p)), row("pulse", "Medição", "Peso, cintura, pressão arterial, dor…", () => measSheet(p)),
+      row("drop", "Água", "Registrar o que bebeu (opcional)", () => go({tab: "saude", hsub: "agua"}))];
     el.append(h("h2", null, "Registrar"), h("p", {class: "sh-sub"}, "Em segundos, de qualquer tela."), health,
       ...(ctx === "alimentacao" ? [h("div", {class: "qlist"}, food), mealRows, h("div", {class: "qlist"}, care)] : ctx === "saude" ? [h("div", {class: "qlist"}, care), mealRows, h("div", {class: "qlist"}, food)] : [mealRows, h("div", {class: "qlist"}, food, care)]));
   });
@@ -2990,21 +3185,29 @@ function moodLine(L, keys){
   return h("div", {class: "mchart"}, svg, h("div", {class: "mdays"}, keys.map(k => h("span", null, WD[(new Date(k + "T12:00").getDay() + 6) % 7]))));
 }
 // módulos da Saúde abertos a partir do resumo (ou da Home): página própria com "‹ Saúde"
-const HMODS = ["consultas", "exames", "cuidados"];
+const HMODS = ["agenda", "consultas", "exames", "procedimentos", "cuidados", "prioridades", "prioridade", "indicadores", "indicador", "agua"];
 function careHub(p){
-  const c = careOf(p), now = Date.now(), n = nextOf(p), cc = careCounts(p), goals = c.goals.length;
-  const overA = c.appts.filter(a => C.isOverdue(a, now)).length, overE = c.exams.filter(e => C.isOverdue(e, now)).length, pend = c.exams.filter(e => e.status === "solicitado").length;
+  const c = careOf(p), now = Date.now(), n = nextAgenda(p), cc = careCounts(p), act = goalsSorted(p, "ativa"), star = act.filter(g => g.star);
+  const over = agendaList(p).filter(e => C.isOverdue(e, now)).length, pend = c.exams.filter(e => e.status === "solicitado").length;
   const row = (id, icon, cls, title, sub, fn, due) => h("button", {class: "grow hub", type: "button", id, onclick: fn}, h("span", {class: "gr-i c-" + cls, html: ICON[icon]}),
     h("span", {class: "gr-m"}, h("b", null, title), h("span", {class: due ? "due" : null}, sub)), h("span", {class: "li-go", html: ICON.right}));
-  return [h("h2", {class: "sec-t"}, "Cuidados"),
+  const nInd = indChoices(p).filter(k => indSeries(p, k).points.length).length;
+  return [star.length ? [h("h2", {class: "sec-t"}, "Em destaque"), h("div", {class: "glist"}, star.map(g => prioRow(p, g)))] : null,
+    h("h2", {class: "sec-t"}, "Cuidados"),
     h("div", {class: "glist"},
-      row("consultas", "steth", "appt", "Consultas", n.appt ? `Próxima: ${whenShort(n.appt)} · ${apptTitle(n.appt)}` : overA ? `${overA} a confirmar` : "Nenhuma consulta agendada", () => go({hsub: "consultas"}), !n.appt && overA),
-      row("exames", "flask", "exam", "Exames", n.exam ? `Próximo: ${whenShort(n.exam)} · ${n.exam.name}` : overE ? `${overE} a confirmar` : pend ? plural(pend, "exame pendente", "exames pendentes") : "Nenhum exame agendado", () => go({hsub: "exames"}), !n.exam && (overE || pend)),
-      row("cuidados", "pill", "suplemento", "Suplementos e medicamentos", `Ativos: ${plural(cc.sup, "suplemento", "suplementos")} · ${plural(cc.med, "medicamento", "medicamentos")}`, () => go({hsub: "cuidados"})),
-      row("goals", "heart", "goal", "Prioridades de saúde", goals ? plural(goals, "prioridade definida", "prioridades definidas") : "O que você quer acompanhar", () => goalsSheet(p)))];
+      row("agenda", "cal", "agenda", "Agenda de Saúde", n ? `Próximo: ${whenShort(n)} · ${agendaLabel(p, n)}` : over ? `${over} a confirmar` : pend ? plural(pend, "exame pendente", "exames pendentes") : "Nenhum compromisso agendado", () => go({hsub: "agenda"}), !n && (over || pend)),
+      row("goals", "target", "goal", "Minhas Prioridades", act.length ? plural(act.length, "prioridade ativa", "prioridades ativas") : "Escolha o que acompanhar", () => go({hsub: "prioridades"})),
+      row("indicadores", "pulse", "ind", "Indicadores", nInd ? plural(nInd, "indicador com registros", "indicadores com registros") : "Medições, sono, exercício e exames", () => go({hsub: "indicadores"})),
+      row("cuidados", "pill", "suplemento", "Suplementos e Medicamentos", `Ativos: ${plural(cc.sup, "suplemento", "suplementos")} · ${plural(cc.med, "medicamento", "medicamentos")}`, () => go({hsub: "cuidados"}))),
+    h("h2", {class: "sec-t"}, "Registros por tipo"),
+    h("div", {class: "glist"},
+      row("consultas", "steth", "appt", "Consultas", c.appts.length ? `${plural(C.upcoming(c.appts, now).length, "agendada", "agendadas")} · histórico anual` : "Agenda e histórico anual", () => go({hsub: "consultas"})),
+      row("exames", "flask", "exam", "Exames", pend ? plural(pend, "pendente", "pendentes") + " · resultados e evolução" : "Resultados, documentos e evolução", () => go({hsub: "exames"})),
+      row("procedimentos", "syringe", "proc", "Procedimentos", c.procs.length ? plural(c.procs.length, "registro", "registros") : "Infiltrações, aplicações, cirurgias…", () => go({hsub: "procedimentos"})))];
 }
 function renderHealth(p){
-  if (HMODS.includes(view.hsub)) { ({consultas: renderAppts, exames: renderExams, cuidados: renderCare})[view.hsub](p); return; }
+  if (HMODS.includes(view.hsub)) { ({agenda: renderAgenda, consultas: renderAppts, exames: renderExams, procedimentos: renderProcs, cuidados: renderCare, prioridades: renderPriorities,
+    prioridade: renderPriority, indicadores: renderIndicators, indicador: renderIndicator, agua: renderWater})[view.hsub](p); return; }
   const L = logsOf(p), t = today(), age = C.ageOf(p.birth), adult = adultOf(p);
   const mw = C.moveWeek(L.move, t), mref = C.moveRef(age), ss = C.sleepStats(L.sleep, t), sref = C.sleepRef(age);
   const nowI = C.weekKeys(t).indexOf(t), last7 = Array.from({length: 7}, (_, i) => C.addDays(t, i - 6));
@@ -3043,7 +3246,7 @@ function renderHealth(p){
       h("span", {class: "hr-m"}, h("span", {class: "hr-t"}, c.title), c.has ? h("span", {class: "hr-v"}, h("b", {class: c.value.length > 8 ? "long" : null}, c.value), h("span", null, c.ctx)) : h("span", {class: "hr-e"}, "Sem registros · toque para começar")),
       h("span", {class: "li-go", html: ICON.right})); };
   const w = waterOf(p);
-  const waterRow = h("button", {class: "hrow water", type: "button", onclick: () => waterSheet(p), "aria-label": w.ml ? `Hidratação: ${fmtL(w.ml)} litros por dia, ${w.src === "manual" ? "definida por você" : "recomendação"}.` : "Hidratação: definir recomendação."},
+  const waterRow = h("button", {class: "hrow water", type: "button", onclick: () => go({hsub: "agua"}), "aria-label": w.ml ? `Hidratação: ${fmtL(w.ml)} litros por dia, ${w.src === "manual" ? "definida por você" : "recomendação"}.` : "Hidratação: definir recomendação."},
     h("span", {class: "hp-i", html: ICON.drop}),
     h("span", {class: "hr-m"}, h("span", {class: "hr-t"}, "Hidratação"), w.ml ? h("span", {class: "hr-v"}, h("b", null, `${fmtL(w.ml)} L/dia`), h("span", null, w.src === "manual" ? "definida por você" : "recomendação")) : h("span", {class: "hr-e"}, "Toque para definir")),
     h("span", {class: "li-go", html: ICON.right}));
@@ -3080,57 +3283,90 @@ function renderHealth(p){
   if (view.hfocus){ const el = document.getElementById(view.hfocus); view.hfocus = null; if (el) setTimeout(() => el.scrollIntoView({block: "start", behavior: "smooth"}), 60); }
 }
 /* ---------- Suplementos, fórmulas e medicamentos ----------
-   Organização do uso (nome, dose, momento, frequência). Sem marcação diária obrigatória e sem recomendar doses. */
-const MED_CAT = [["suplemento", "Suplemento"], ["formula", "Fórmula manipulada"], ["medicamento", "Medicamento"]];
+   Organização do uso (nome, categoria, dose, horários, frequência, início e término). Sem marcação diária obrigatória e sem recomendar doses.
+   Categoria: suplemento ou medicamento, escolhida pela pessoa. "Fórmula manipulada" é uma característica do item (com componentes opcionais),
+   não uma categoria: a fórmula conta uma vez, na categoria escolhida. O app nunca altera tratamentos ou doses. */
+const MED_CAT = [["suplemento", "Suplemento"], ["medicamento", "Medicamento"]];
 const MED_UNIT = ["mg", "mcg", "g", "UI", "mL", "gotas", "cápsulas", "comprimidos", "sachês"];
 const MED_WHEN = ["Ao acordar", "Manhã", "Almoço", "Tarde", "Jantar", "Noite", "Antes de dormir"];
 const MED_FREQ = ["Diário", "Dias alternados", "Semanal", "Quando necessário"];
-const medLine = m => [m.dose ? `${m.dose}${m.unit ? " " + m.unit : ""}` : "", m.when || "", m.freq && m.freq !== "Diário" ? m.freq.toLowerCase() : ""].filter(Boolean).join(" · ");
+const medLine = m => [m.dose ? `${m.dose}${m.unit ? " " + m.unit : ""}` : "", (m.times || []).length ? m.times.map(hm).join(", ") : m.when || "", m.freq && m.freq !== "Diário" ? m.freq.toLowerCase() : "",
+  m.comp ? "fórmula manipulada" : ""].filter(Boolean).join(" · ");
+const medState = (m, td = today()) => m.paused ? "pausado" : m.start && m.start > td ? "começa " + dShort(m.start) : m.end && m.end < td ? "encerrado" : "";
 const secHead = (title, addLabel, fn, id) => h("div", {class: "sec-row", id}, h("h2", {class: "sec-t"}, title), h("button", {class: "sec-add", type: "button", "aria-label": addLabel, onclick: fn}, ic("plus")));
 function medRow(p, m){
-  return h("button", {class: "grow" + (m.paused ? " off" : ""), type: "button", onclick: () => medSheet(p, m)},
+  const st = medState(m);
+  return h("button", {class: "grow" + (st ? " off" : ""), type: "button", onclick: () => medSheet(p, m)},
     h("span", {class: "gr-i c-" + (m.cat || "suplemento"), html: m.cat === "medicamento" ? ICON.capsule : ICON.pill}),
-    h("span", {class: "gr-m"}, h("b", null, m.name, m.paused ? h("span", {class: "chip"}, "pausado") : null), h("span", null, medLine(m) || (MED_CAT.find(c => c[0] === m.cat) || MED_CAT[0])[1])),
+    h("span", {class: "gr-m"}, h("b", null, m.name, st ? h("span", {class: "chip"}, st) : null), h("span", null, medLine(m) || (MED_CAT.find(c => c[0] === m.cat) || MED_CAT[0])[1]),
+      m.comp && (m.parts || []).length ? h("span", {class: "gr-x"}, m.parts.map(x => [x.name, x.dose].filter(Boolean).join(" ")).join(" · ")) : null),
     h("span", {class: "li-go", html: ICON.right}));
 }
 function medSheet(p, m, cat0){
   const c = careOf(p), editing = !!m;
-  const d = Object.assign({name: "", cat: cat0 || "suplemento", dose: "", unit: "", when: "", freq: "Diário", notes: ""}, m || {});
+  const d = Object.assign({name: "", cat: cat0 || "suplemento", dose: "", unit: "", when: "", times: [], freq: "Diário", start: "", end: "", notes: "", comp: false, parts: []}, m ? JSON.parse(JSON.stringify(m)) : {});
+  d.times = d.times || []; d.parts = d.parts || []; if (d.comp && !d.parts.length) d.parts.push({name: "", dose: ""});
   sheet(editing ? "Editar item" : "Novo item", (el, close) => {
     const name = h("input", {class: "input", id: "md-nome", value: d.name, placeholder: "Ex.: Vitamina D", autocomplete: "off", autocapitalize: "sentences", enterkeyhint: "next"});
     const dose = h("input", {class: "input num", id: "md-dose", value: d.dose, placeholder: "Ex.: 2.000", inputmode: "decimal", autocomplete: "off"});
     const notes = h("textarea", {class: "input area", id: "md-obs", rows: "2", maxlength: "280", placeholder: "Opcional"}); notes.value = d.notes || "";
-    const body = h("div"), ok = h("button", {class: "btn primary block", type: "button", onclick: () => commit()}, editing ? "Salvar" : "Adicionar");
-    // reutilização: suplementos já cadastrados em outros perfis da família (medicamentos e fórmulas são prescrições individuais: não são sugeridos)
-    const others = []; for (const x of S.patients) if (x.id !== p.id) for (const o of careOf(x).meds) if ((o.cat || "suplemento") === "suplemento" && !c.meds.some(y => norm(y.name) === norm(o.name)) && !others.some(y => norm(y.name) === norm(o.name))) others.push(o);
-    const check = () => { ok.disabled = !name.value.trim(); };
+    const start = h("input", {class: "input dt-in", type: "date", id: "md-ini", value: d.start || "", min: "1900-01-01", max: "2100-12-31"}), end = h("input", {class: "input dt-in", type: "date", id: "md-fim", value: d.end || "", min: "1900-01-01", max: "2100-12-31"});
+    const tIn = h("input", {class: "input dt-in", type: "time", id: "md-hor", "aria-label": "Novo horário"});
+    const body = h("div"), err = h("p", {class: "note", "aria-live": "polite"}), ok = h("button", {class: "btn primary block", type: "button", onclick: () => commit()}, editing ? "Salvar" : "Adicionar");
+    const check = () => { const badD = start.value && end.value && end.value < start.value; ok.disabled = !name.value.trim() || badD; err.textContent = badD ? "O término vem depois do início." : ""; };
+    function partsBox(){
+      return h("div", {class: "parts"}, d.parts.map((x, i) => { const n = txtIn("pt-n" + i, x.name, "Componente", {"aria-label": `Componente ${i + 1}`}), q = txtIn("pt-d" + i, x.dose, "Dose", {"aria-label": `Dose do componente ${i + 1}`});
+          n.addEventListener("input", () => { x.name = n.value; }); q.addEventListener("input", () => { x.dose = q.value; });
+          return h("div", {class: "part"}, n, q, h("button", {class: "x", type: "button", "aria-label": `Remover componente ${i + 1}`, html: ICON.x, onclick: () => { d.parts.splice(i, 1); paint(); }})); }),
+        h("button", {class: "btn ghost sm", type: "button", onclick: () => { d.parts.push({name: "", dose: ""}); paint(); setTimeout(() => { const f = $("#pt-n" + (d.parts.length - 1)); if (f) f.focus(); }, 30); }}, ic("plus"), "Componente"));
+    }
     function paint(){
       put(body,
-        !editing && others.length ? [h("div", {class: "lbl2"}, "Suplementos de outra pessoa da família"), chips(others.slice(0, 8).map(o => [o.id, o.name]), null, id => {
-          const o = others.find(x => x.id === id); Object.assign(d, {name: o.name, cat: o.cat, dose: o.dose, unit: o.unit, when: o.when, freq: o.freq}); name.value = o.name; dose.value = o.dose || ""; paint(); check(); })] : null,
-        h("div", {class: "lbl2"}, "Categoria"), chips(MED_CAT, d.cat, v => { d.cat = v; paint(); }),
+        h("div", {class: "lbl2"}, "Categoria"), chips(MED_CAT, d.cat, v => { if (v) { d.cat = v; paint(); } }),
+        d.catOld ? h("p", {class: "note"}, "Fórmula cadastrada antes desta versão: estava contada com os suplementos e continua assim. Confira a categoria.") : null,
+        h("label", {class: "chk"}, h("input", {type: "checkbox", checked: d.comp, onchange: e => { d.comp = e.target.checked; if (d.comp && !d.parts.length) d.parts.push({name: "", dose: ""}); paint(); }}), h("span", null, "Fórmula manipulada")),
+        d.comp ? [h("div", {class: "lbl2"}, "Componentes ", h("span", {class: "opt"}, "opcional · como na receita")), partsBox()] : null,
         h("div", {class: "lbl2"}, "Unidade ", h("span", {class: "opt"}, "opcional")), chips(MED_UNIT.map(u => [u, u]), d.unit, v => { d.unit = v || ""; paint(); }, "opt"),
-        h("div", {class: "lbl2"}, "Momento ", h("span", {class: "opt"}, "opcional")), chips(MED_WHEN.map(u => [u, u]), d.when, v => { d.when = v || ""; paint(); }, "opt"),
-        h("div", {class: "lbl2"}, "Frequência"), chips(MED_FREQ.map(u => [u, u]), d.freq, v => { d.freq = v; paint(); }));
+        h("div", {class: "lbl2"}, "Horários ", h("span", {class: "opt"}, "opcional")),
+        d.times.length ? h("div", {class: "chips"}, d.times.map(t => h("button", {type: "button", class: "on", "aria-label": `Remover horário ${hm(t)}`, onclick: () => { d.times = d.times.filter(x => x !== t); paint(); }}, hm(t), " ×"))) : null,
+        h("div", {class: "rem-c"}, tIn, h("button", {class: "btn ghost sm", type: "button", onclick: () => { if (!/^\d{2}:\d{2}$/.test(tIn.value)) { tIn.focus(); return; } if (!d.times.includes(tIn.value)) d.times = [...d.times, tIn.value].sort(); tIn.value = ""; paint(); }}, "Adicionar horário")),
+        !d.times.length ? [h("div", {class: "lbl2"}, "Momento ", h("span", {class: "opt"}, "opcional")), chips(MED_WHEN.map(u => [u, u]), d.when, v => { d.when = v || ""; paint(); }, "opt")] : null,
+        h("div", {class: "lbl2"}, "Frequência"), chips(MED_FREQ.map(u => [u, u]), d.freq, v => { d.freq = v; paint(); }),
+        h("div", {class: "g2", style: "margin-top:14px"}, field("md-ini", "Início", start, true), field("md-fim", "Término", end, true)));
+      check();
     }
     function commit(){
-      const e = Object.assign(m || {id: uid(), at: Date.now()}, {name: name.value.trim(), cat: d.cat, dose: dose.value.trim(), unit: d.unit, when: d.when, freq: d.freq, notes: notes.value.trim()});
+      if (ok.disabled) return;
+      const parts = d.comp ? d.parts.map(x => ({name: (x.name || "").trim(), dose: (x.dose || "").trim()})).filter(x => x.name) : [];
+      const e = Object.assign(m || {id: uid(), at: Date.now()}, {name: name.value.trim(), cat: d.cat, dose: dose.value.trim(), unit: d.unit, when: d.times.length ? "" : d.when, times: d.times, freq: d.freq,
+        start: start.value || "", end: end.value || "", notes: notes.value.trim(), comp: !!d.comp, parts, updated: Date.now()});
+      delete e.catOld;
       if (!editing) c.meds.push(e);
       touch(p); close(); render(); toast(editing ? `${e.name} atualizado` : `${e.name} adicionado`, editing ? null : () => { c.meds.splice(c.meds.indexOf(e), 1); touch(p); render(); });
     }
-    name.addEventListener("input", check);
-    paint(); check();
+    name.addEventListener("input", check); for (const i of [start, end]) { i.addEventListener("input", check); i.addEventListener("change", check); }
+    paint();
+    const remB = editing && (m.times || []).length && m.freq !== "Quando necessário" && !m.paused ? h("div", {class: "calb"},
+      h("button", {class: "btn ghost block", type: "button", onclick: () => medCal(p, m)}, ic("bell"), "Lembretes nos horários, pelo Calendário"),
+      h("p", {class: "note"}, `Um aviso por horário, ${m.freq === "Semanal" ? "uma vez por semana" : m.freq === "Dias alternados" ? "em dias alternados" : "todos os dias"}${m.end ? `, até ${fromISO(m.end)}` : ""}, a partir de ${fromISO(m.start && m.start > today() ? m.start : today())}. Para mudar ou parar, apague os eventos no app Calendário.`)) : null;
     const actions = editing ? h("div", {class: "g2", style: "margin-top:10px"},
       h("button", {class: "btn ghost block", type: "button", onclick: () => { m.paused = !m.paused; touch(p); close(); render(); toast(m.paused ? `${m.name} pausado` : `${m.name} retomado`); }}, m.paused ? "Retomar" : "Pausar"),
       h("button", {class: "btn danger block", type: "button", onclick: () => { const i = c.meds.indexOf(m); c.meds.splice(i, 1); touch(p); close(); render(); toast(`${m.name} excluído`, () => { c.meds.splice(i, 0, m); touch(p); render(); }); }}, "Excluir")) : null;
-    el.append(h("h2", null, editing ? m.name : "Suplemento, fórmula ou medicamento"), h("p", {class: "sh-sub"}, "Só o nome é obrigatório. Fica guardado neste aparelho, no perfil de " + firstName(p.name) + "."),
+    el.append(h("h2", null, editing ? m.name : "Suplemento ou medicamento"), h("p", {class: "sh-sub"}, "Só o nome é obrigatório. Fica guardado neste aparelho, no perfil de " + firstName(p.name) + "."),
       h("div", {class: "field"}, h("label", {for: "md-nome"}, "Nome"), name),
       h("div", {class: "field"}, h("label", {for: "md-dose"}, "Dose ", h("span", {class: "opt"}, "opcional")), dose),
-      body, h("div", {class: "field", style: "margin-top:14px"}, h("label", {for: "md-obs"}, "Observações"), notes),
-      h("p", {class: "note"}, "O app não recomenda doses. Use as informações da prescrição ou da embalagem."), actions,
+      body, err, h("div", {class: "field", style: "margin-top:14px"}, h("label", {for: "md-obs"}, "Observações"), notes),
+      h("p", {class: "note"}, "O app não recomenda nem altera doses. Use as informações da prescrição ou da embalagem."), remB, actions,
       h("div", {class: "confirmbar"}, ok));
     if (!editing) setTimeout(() => name.focus(), 60);
   });
+}
+// lembretes de um item: um evento diário por horário (hora local), do início (ou hoje) até o término, com aviso na hora
+function medCal(p, m){
+  const td = today(), from = m.start && m.start > td ? m.start : td, title = p.notif && p.notif.detail ? m.name : "Lembrete BRICEÑO";
+  const until = m.end ? `;UNTIL=${m.end.replace(/-/g, "")}T235900` : "", rule = m.freq === "Semanal" ? "FREQ=WEEKLY" : m.freq === "Dias alternados" ? "FREQ=DAILY;INTERVAL=2" : "FREQ=DAILY";
+  const ics = C.icsCalendar(m.times.map((t, i) => ({uid: `${m.id}-${i}@briceno`, title, date: from, time: t, floating: true, durMin: 5, rrule: rule + until, rem: [0], transparent: true})));
+  deliverICS(ics, "lembretes.ics").then(ok => { if (ok) toast("Arquivo do Calendário criado"); }, () => toast("Não foi possível criar o arquivo"));
 }
 
 /* ---------- Agenda: consultas e exames ----------
@@ -3159,14 +3395,25 @@ const relWhen = e => { const n = daysTo(e.date); return n === 0 ? "Hoje" : n ===
 const byStartAsc = (a, b) => (C.eventStart(a) ?? 0) - (C.eventStart(b) ?? 0);
 const byDateDesc = (a, b) => (C.eventStart(b) ?? 0) - (C.eventStart(a) ?? 0) || (b.at || 0) - (a.at || 0);
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+// Contagem (Home, Saúde): itens ATIVOS — não pausados, já iniciados e não encerrados (datas opcionais) —, um por nome em cada categoria.
+// Uma fórmula manipulada é um item só (seus componentes não contam à parte).
 function careCounts(p){
-  const seen = new Map(); for (const m of careOf(p).meds) { const cat = m.cat === "medicamento" ? "med" : "sup", k = cat + "|" + norm(m.name); if (!seen.has(k) || !m.paused) seen.set(k, Object.assign({}, m, {kk: cat})); }
-  const all = [...seen.values()], c = k => all.filter(m => m.kk === k);
-  return {sup: c("sup").filter(m => !m.paused).length, med: c("med").filter(m => !m.paused).length, paused: all.filter(m => m.paused).length, total: all.length};
+  const td = today(), seen = new Map();
+  for (const m of careOf(p).meds) { const cat = m.cat === "medicamento" ? "med" : "sup", k = cat + "|" + norm(m.name), on = C.medActive(m, td); if (!seen.has(k) || on) seen.set(k, {kk: cat, on}); }
+  const all = [...seen.values()], n = k => all.filter(m => m.kk === k && m.on).length;
+  return {sup: n("sup"), med: n("med"), paused: all.filter(m => !m.on).length, total: all.length};
 }
-// próximo compromisso de cada tipo e a chave que muda quando um deles passa (a Home é redesenhada sozinha)
-const nextOf = p => ({appt: C.nextEvent(careOf(p).appts), exam: C.nextEvent(careOf(p).exams)});
-const evKey = p => { const n = nextOf(p); return (n.appt ? n.appt.id : "-") + "|" + (n.exam ? n.exam.id : "-"); };
+// Agenda de Saúde: consultas, exames e procedimentos do perfil, numa só linha do tempo (sem cópia: cada registro continua na sua lista)
+const agendaList = p => { const c = careOf(p); return [...c.appts, ...c.exams, ...c.procs]; };
+const kindOf = (p, e) => { const c = careOf(p); return c.appts.includes(e) ? "consulta" : c.procs.includes(e) ? "proc" : "exame"; };
+const KIND = {consulta: {l: "Consulta", ls: "Consultas", cls: "appt", icon: "steth"}, exame: {l: "Exame", ls: "Exames", cls: "exam", icon: "flask"}, proc: {l: "Procedimento", ls: "Procedimentos", cls: "proc", icon: "syringe"}};
+const nextAgenda = p => C.nextEvent(agendaList(p));
+const nextOf = p => ({appt: C.nextEvent(careOf(p).appts), exam: C.nextEvent(careOf(p).exams), proc: C.nextEvent(careOf(p).procs), any: nextAgenda(p)});
+// outros compromissos marcados exatamente no mesmo início (o cartão mostra um; o VoiceOver e a Agenda mostram todos)
+const sameTime = (p, e) => { const t = C.eventStart(e); return agendaList(p).filter(x => x !== e && C.isUpcoming(x) && !!x.time === !!e.time && C.eventStart(x) === t).length; };
+const evKey = p => { const n = nextAgenda(p); return n ? n.id : "-"; };
+// identificação curta, pela finalidade: "Consulta · Cardiologia", "Exame de sangue", "Infiltração · joelho direito"
+const agendaLabel = (p, e) => { const k = kindOf(p, e); return k === "consulta" ? ["Consulta", e.spec || e.prof].filter(Boolean).join(" · ") : k === "proc" ? procTitle(e) : e.name; };
 // grava o registro no perfil escolhido (família): sai do perfil de origem, entra no de destino
 function placeIn(listName, rec, ownerId, fallback){
   const to = S.patients.find(x => x.id === ownerId) || fallback, from = S.patients.find(x => careOf(x)[listName].includes(rec));
@@ -3204,7 +3451,7 @@ const apptPlace = a => a.mode === "online" ? (a.place ? `Online · ${a.place}` :
 const apptSub = a => [a.prof ? a.spec : "", apptPlace(a)].filter(Boolean).join(" · ");
 const apptState = (a, now = Date.now()) => a.status === "cancelada" ? "cancelada" : a.status === "realizada" ? "realizada" : C.isUpcoming(a, now) ? "futura" : "confirmar";
 function setAppt(p, a, status){ const prev = a.status; a.status = status; a.updated = Date.now(); touch(p); render();
-  toast(status === "realizada" ? "Consulta registrada como realizada" : status === "cancelada" ? "Consulta cancelada" : "Consulta reativada", () => { a.status = prev; touch(p); render(); }); }
+  toast(status === "realizada" ? "Consulta registrada como realizada" : status === "cancelada" ? "Consulta cancelada." + calGone(a) : "Consulta reativada", () => { a.status = prev; touch(p); render(); }); }
 function apptRow(p, a, now, showState){
   const st = apptState(a, now), lab = {cancelada: ["cancelada", "off"], confirmar: ["a confirmar", "due"], realizada: showState ? ["realizada", ""] : null, futura: showState ? ["agendada", "fut"] : null}[st];
   return h("button", {class: "grow ev" + (st === "cancelada" ? " off" : ""), type: "button", onclick: () => apptSheet(p, a)}, dateTile(a),
@@ -3214,20 +3461,23 @@ function apptRow(p, a, now, showState){
 }
 function apptSheet(p, a, preset){
   const editing = !!a;
-  const d = Object.assign({spec: "", prof: "", date: "", time: "", place: "", mode: "presencial", addr: "", notes: "", status: null}, a || {}, preset || {}, {owner: p.id});
+  const d = Object.assign({spec: "", prof: "", date: "", time: "", place: "", mode: "presencial", addr: "", reason: "", notes: "", status: null, rem: []}, a ? JSON.parse(JSON.stringify(a)) : {}, preset || {}, {owner: p.id});
   let pickedStatus = editing;
   sheet(editing ? "Editar consulta" : "Nova consulta", (el, close) => {
     const spec = txtIn("cs-esp", d.spec, "Ex.: Cardiologia"), prof = txtIn("cs-prof", d.prof, "Ex.: Dra. Ana Lima", {autocapitalize: "words"});
     const date = h("input", {class: "input dt-in", type: "date", id: "cs-data", value: d.date, min: "1900-01-01", max: "2100-12-31"});
     const time = h("input", {class: "input dt-in", type: "time", id: "cs-hora", value: d.time});
-    const place = txtIn("cs-local", d.place, "Ex.: Clínica Vida"), addr = txtIn("cs-end", d.addr, ""), notes = area("cs-obs", d.notes);
-    const hint = h("p", {class: "note", "aria-live": "polite"}), body = h("div"), slot = h("div");
+    const place = txtIn("cs-local", d.place, "Ex.: Clínica Vida"), addr = txtIn("cs-end", d.addr, ""), notes = area("cs-obs", d.notes), reason = txtIn("cs-mot", d.reason, "Ex.: retorno, dor no joelho");
+    const hint = h("p", {class: "note", "aria-live": "polite"}), body = h("div"), slot = h("div"), docsBox = h("div"), file = h("input", {type: "file", accept: "application/pdf,image/*", hidden: true});
     const ok = h("button", {class: "btn primary block", type: "button", onclick: () => commit()}, editing ? "Salvar" : "Salvar consulta");
+    const cal = h("button", {class: "btn ghost block", type: "button", onclick: () => commit(true)}, ic("cal"), "Salvar e adicionar ao Calendário");
     const future = () => C.isUpcoming({status: "agendada", date: date.value, time: time.value, tz: DEVICE_TZ});
+    const rem = remBlock(d, () => ({date: date.value, time: time.value, tz: DEVICE_TZ}), () => check());
     function check(){
       if (!pickedStatus && dateOk(date.value)) d.status = future() ? "agendada" : "realizada";
       const need = [!(spec.value.trim() || prof.value.trim()) ? "a especialidade ou o profissional" : "", !dateOk(date.value) ? "a data" : ""].filter(Boolean);
-      ok.disabled = need.length > 0; hint.textContent = need.length ? `Para salvar, informe ${need.join(" e ")}. O resto pode ser completado depois.` : "";
+      ok.disabled = cal.disabled = need.length > 0; hint.textContent = need.length ? `Para salvar, informe ${need.join(" e ")}. O resto pode ser completado depois.` : "";
+      cal.hidden = d.status !== "agendada" || !future();
     }
     function paint(){
       check(); addr.placeholder = d.mode === "online" ? "Link ou instrução de acesso" : "Rua, número, sala";
@@ -3241,29 +3491,35 @@ function apptSheet(p, a, preset){
         h("div", {style: "height:14px"}),
         field("cs-local", d.mode === "online" ? "Plataforma ou instituição" : "Clínica ou instituição", place, true),
         field("cs-end", d.mode === "online" ? "Acesso" : "Endereço", addr, true),
-        field("cs-obs", "Observações", notes, false), ownerChips(d, paint));
+        field("cs-mot", "Motivo", reason, true), field("cs-obs", "Observações", notes, false),
+        d.status === "agendada" ? rem.el : null, ownerChips(d, paint));
+      rem.paint(); check();
     }
-    function commit(){
+    function paintDocs(){ if (editing) put(docsBox, docsBlock(p, a, file, paintDocs), calBlock(p, a)); }
+    function commit(toCal){
       if (ok.disabled) return;
       const moved = !editing || a.date !== date.value || a.time !== time.value;
-      const rec = a || {id: uid(), at: Date.now()};
-      Object.assign(rec, {spec: spec.value.trim(), prof: prof.value.trim(), date: date.value, time: time.value, place: place.value.trim(), mode: d.mode, addr: addr.value.trim(), notes: notes.value.trim(),
-        status: d.status || (future() ? "agendada" : "realizada"), tz: moved ? DEVICE_TZ : (rec.tz || DEVICE_TZ), updated: Date.now()});
+      const rec = a || {id: uid(), at: Date.now(), docs: []};
+      const st = d.status || (future() ? "agendada" : "realizada");
+      Object.assign(rec, {spec: spec.value.trim(), prof: prof.value.trim(), date: date.value, time: time.value, place: place.value.trim(), mode: d.mode, addr: addr.value.trim(), reason: reason.value.trim(), notes: notes.value.trim(),
+        status: st, rem: st === "agendada" ? d.rem : [], tz: moved ? DEVICE_TZ : (rec.tz || DEVICE_TZ), updated: Date.now()});
       const from = editing ? S.patients.find(x => careOf(x).appts.includes(rec)) : null, to = placeIn("appts", rec, d.owner, p);
       close(); render();
       if (from && from !== to) toast(`Consulta movida para ${firstName(to.name)}`);
-      else toast(editing ? "Consulta atualizada" : rec.status === "agendada" ? "Consulta agendada" : "Consulta registrada", editing ? null : () => { const L = careOf(to).appts; L.splice(L.indexOf(rec), 1); touch(to); render(); });
+      else toast(editing ? "Consulta atualizada" + (rec.status === "cancelada" ? "." + calGone(rec) : "") : rec.status === "agendada" ? "Consulta agendada" : "Consulta registrada", editing ? null : () => { const L = careOf(to).appts; L.splice(L.indexOf(rec), 1); touch(to); render(); });
+      if (toCal) setTimeout(() => calExport(to, rec), 300);
     }
     for (const i of [spec, prof]) i.addEventListener("input", () => { check(); if (i === spec && !editing) paint(); });
     for (const i of [date, time]) { i.addEventListener("input", paint); i.addEventListener("change", paint); }
-    paint();
+    file.addEventListener("change", () => { const f = file.files[0]; file.value = ""; if (f) attachDoc(p, a, f, paintDocs); });
+    paint(); paintDocs();
     const actions = editing ? h("div", {class: "bk-row", style: "margin-top:6px"}, slot,
-      h("button", {class: "btn danger block", type: "button", onclick: () => ask(slot, "Excluir esta consulta? Ela sai do histórico e do gráfico.", [{label: "Excluir", fn: () => {
-        const L = careOf(p).appts, i = L.indexOf(a); if (i < 0) return; L.splice(i, 1); touch(p); close(); render(); toast("Consulta excluída", () => { L.splice(i, 0, a); touch(p); render(); }); }}])}, "Excluir consulta")) : null;
+      h("button", {class: "btn danger block", type: "button", onclick: () => ask(slot, `Excluir esta consulta${(a.docs || []).length ? ` e ${plural(a.docs.length, "documento anexado", "documentos anexados")}` : ""}? Ela sai do histórico e do gráfico.`, [{label: "Excluir", fn: () => {
+        const L = careOf(p).appts, i = L.indexOf(a); if (i < 0) return; L.splice(i, 1); touch(p); close(); render(); docsGC((a.docs || []).map(x => x.id)); toast("Consulta excluída." + calGone(a), () => { L.splice(i, 0, a); touch(p); render(); }); }}])}, "Excluir consulta")) : null;
     el.append(h("h2", null, editing ? apptTitle(a) : "Nova consulta"),
       h("p", {class: "sh-sub"}, editing ? [a.spec && a.prof ? a.spec + " · " : "", whenLong(a)].join("") : `No perfil de ${firstName(p.name)}. Especialidade ou profissional e a data bastam para salvar.`),
-      field("cs-esp", "Especialidade", spec), field("cs-prof", "Profissional", prof), body, hint, actions,
-      h("div", {class: "confirmbar"}, ok));
+      field("cs-esp", "Especialidade", spec), field("cs-prof", "Profissional", prof), body, hint, docsBox, actions, file,
+      h("div", {class: "confirmbar"}, cal, ok));
   });
 }
 function renderAppts(p){
@@ -3340,7 +3596,7 @@ function examNextOf(p, e){
   return latest === e ? C.examNext({last: e.date, every: e.every}) : null;
 }
 function setExam(p, e, status){ const prev = e.status; e.status = status; e.updated = Date.now(); touch(p); render();
-  toast(status === "realizado" ? `${e.name}: realizado` : status === "cancelado" ? `${e.name}: cancelado` : `${e.name}: atualizado`, () => { e.status = prev; touch(p); render(); }); }
+  toast(status === "realizado" ? `${e.name}: realizado` : status === "cancelado" ? `${e.name}: cancelado.${calGone(e)}` : `${e.name}: atualizado`, () => { e.status = prev; touch(p); render(); }); }
 function examRow(p, e, now){
   const nx = examNextOf(p, e), late = nx && nx < today(), labs = examLabs(p, e).length, docs = (e.docs || []).length;
   const over = C.isOverdue(e, now), st = e.status === "cancelado" ? ["cancelado", "off"] : over ? ["a confirmar", "due"] : null;
@@ -3354,19 +3610,23 @@ function examRow(p, e, now){
 }
 function examSheet(p, e, preset){
   const editing = !!e;
-  const d = Object.assign({name: "", cat: "", status: "solicitado", date: "", time: "", place: "", req: "", every: null, result: "", notes: ""}, e || {}, preset || {}, {owner: p.id});
+  const d = Object.assign({name: "", cat: "", status: "solicitado", date: "", time: "", place: "", req: "", every: null, result: "", resDate: "", notes: "", rem: []}, e ? JSON.parse(JSON.stringify(Object.assign({}, e, {docs: null}))) : {}, preset || {}, {owner: p.id});
   sheet(editing ? "Editar exame" : "Novo exame", (el, close) => {
     const name = txtIn("ex-nome", d.name, "Ex.: Perfil lipídico");
     const date = h("input", {class: "input dt-in", type: "date", id: "ex-data", value: d.date, min: "1900-01-01", max: "2100-12-31"});
     const time = h("input", {class: "input dt-in", type: "time", id: "ex-hora", value: d.time});
     const place = txtIn("ex-local", d.place, "Ex.: Laboratório Central"), req = txtIn("ex-req", d.req, "Ex.: Dr. Paulo Reis", {autocapitalize: "words"});
     const res = area("ex-res", d.result, "Opcional. Ex.: laudo sem alterações descritas"), notes = area("ex-obs", d.notes, "Opcional", 280);
+    const resDate = h("input", {class: "input dt-in", type: "date", id: "ex-dres", value: d.resDate || "", min: "1900-01-01", max: "2100-12-31"});
+    const rem = remBlock(d, () => ({date: date.value, time: time.value, tz: DEVICE_TZ}), null);
     const hint = h("p", {class: "note", "aria-live": "polite"}), body = h("div"), nextEl = h("p", {class: "w-basis", "aria-live": "polite"});
     const ok = h("button", {class: "btn primary block", type: "button", onclick: () => commit()}, editing ? "Salvar" : "Salvar exame");
+    const cal = h("button", {class: "btn ghost block", type: "button", onclick: () => commit(true)}, ic("cal"), "Salvar e adicionar ao Calendário");
     const needsDate = () => d.status === "agendado" || d.status === "realizado";
     function check(){
       const need = [!name.value.trim() ? "o nome do exame" : "", needsDate() && !dateOk(date.value) ? (d.status === "agendado" ? "a data agendada" : "a data em que foi feito") : ""].filter(Boolean);
-      ok.disabled = need.length > 0; hint.textContent = need.length ? `Para salvar, informe ${need.join(" e ")}.` : "";
+      ok.disabled = cal.disabled = need.length > 0; hint.textContent = need.length ? `Para salvar, informe ${need.join(" e ")}.` : "";
+      cal.hidden = !(d.status === "agendado" && C.isUpcoming({status: "agendado", date: date.value, time: time.value, tz: DEVICE_TZ})); rem.paint();
       const nx = d.status === "realizado" && dateOk(date.value) ? C.examNext({last: date.value, every: d.every}) : null; nextEl.textContent = nx ? `Repetição prevista para ${fromISO(nx)} (intervalo informado por você).` : "";
     }
     function paint(){
@@ -3380,29 +3640,31 @@ function examSheet(p, e, preset){
         field("ex-local", "Laboratório, clínica ou instituição", place, true), field("ex-req", "Profissional que solicitou", req, true),
         h("div", {class: "lbl2", style: "margin-top:0"}, "Tipo ", h("span", {class: "opt"}, "opcional")), chips(EXAM_CAT, d.cat, v => { d.cat = v || ""; paint(); }, "opt"),
         d.status === "realizado" ? [h("div", {class: "lbl2"}, "Repetir a cada ", h("span", {class: "opt"}, "opcional · combinado com o profissional")), chips(EXAM_EVERY, d.every, v => { d.every = v; paint(); }, "opt"), nextEl,
-          h("div", {style: "height:14px"}), field("ex-res", "Resultado ou laudo (texto)", res, false)] : h("div", {style: "height:14px"}),
-        field("ex-obs", "Observações", notes, false), ownerChips(d, paint));
+          h("div", {style: "height:14px"}), field("ex-dres", "Data do resultado", resDate, true), field("ex-res", "Resultado ou laudo (texto)", res, false)] : h("div", {style: "height:14px"}),
+        field("ex-obs", "Observações", notes, false), d.status === "agendado" ? rem.el : null, ownerChips(d, paint));
       check();
     }
-    function commit(){
+    function commit(toCal){
       if (ok.disabled) return;
       const rec = e || {id: uid(), at: Date.now(), docs: []}, keepDate = needsDate();
       const changedWhen = !editing || e.date !== date.value || e.time !== time.value;
       Object.assign(rec, {name: name.value.trim(), cat: d.cat || "", status: d.status, date: keepDate ? date.value : "", time: keepDate ? time.value : "", place: place.value.trim(), req: req.value.trim(),
-        every: d.status === "realizado" ? d.every || null : rec.every || null, result: res.value.trim(), notes: notes.value.trim(), tz: changedWhen ? DEVICE_TZ : (rec.tz || DEVICE_TZ), updated: Date.now()});
+        every: d.status === "realizado" ? d.every || null : rec.every || null, result: res.value.trim(), resDate: d.status === "realizado" && dateOk(resDate.value) ? resDate.value : "", notes: notes.value.trim(),
+        rem: d.status === "agendado" ? d.rem : [], tz: changedWhen ? DEVICE_TZ : (rec.tz || DEVICE_TZ), updated: Date.now()});
       const from = editing ? S.patients.find(x => careOf(x).exams.includes(rec)) : null, to = placeIn("exams", rec, d.owner, p);
       // resultados vinculados acompanham o exame quando ele muda de perfil
       if (from && from !== to) for (const r of careOf(from).labs.filter(r => r.examId === rec.id)) placeIn("labs", r, to.id, to);
       close(); render();
       if (from && from !== to) toast(`Exame movido para ${firstName(to.name)}`);
-      else toast(editing ? `${rec.name} atualizado` : `${rec.name}: ${EXAM_ST[rec.status].toLowerCase()}`, editing ? null : () => { const L = careOf(to).exams; L.splice(L.indexOf(rec), 1); touch(to); render(); });
+      else toast(editing ? `${rec.name} atualizado` + (rec.status === "cancelado" ? "." + calGone(rec) : "") : `${rec.name}: ${EXAM_ST[rec.status].toLowerCase()}`, editing ? null : () => { const L = careOf(to).exams; L.splice(L.indexOf(rec), 1); touch(to); render(); });
+      if (toCal) setTimeout(() => calExport(to, rec), 300);
     }
     name.addEventListener("input", () => { check(); if (!editing && name.value.trim().length <= 1) paint(); });
     for (const i of [date, time]) { i.addEventListener("input", check); i.addEventListener("change", check); }
     paint();
     el.append(h("h2", null, editing ? e.name : "Novo exame"),
       h("p", {class: "sh-sub"}, editing ? `${EXAM_ST[e.status]}${e.date ? " · " + whenLong(e) : ""}` : `No perfil de ${firstName(p.name)}. O app organiza datas e resultados; não sugere periodicidade nem interpreta resultados.`),
-      field("ex-nome", "Exame ou painel", name), body, hint, h("div", {class: "confirmbar"}, ok));
+      field("ex-nome", "Exame ou painel", name), body, hint, h("div", {class: "confirmbar"}, cal, ok));
     if (!editing) setTimeout(() => name.focus(), 60);
   });
 }
@@ -3411,7 +3673,7 @@ function deleteExam(p, e){
   const L = careOf(p).exams, i = L.indexOf(e); if (i < 0) return;
   const labs = examLabs(p, e), LB = careOf(p).labs; L.splice(i, 1); for (const r of labs) LB.splice(LB.indexOf(r), 1);
   touch(p); render(); docsGC((e.docs || []).map(x => x.id));
-  toast(`${e.name} excluído`, () => { L.splice(i, 0, e); LB.push(...labs); touch(p); render(); });
+  toast(`${e.name} excluído.${calGone(e)}`, () => { L.splice(i, 0, e); LB.push(...labs); touch(p); render(); });
 }
 function examDetail(p, e){
   sheet(e.name, (el, close) => {
@@ -3425,7 +3687,7 @@ function examDetail(p, e){
         C.isOverdue(e, now) ? h("div", {class: "ask-n"}, "A data já passou. O exame foi realizado?",
           h("div", {class: "g2", style: "margin-top:10px"}, h("button", {class: "btn ghost sm", type: "button", onclick: () => { close(); setTimeout(() => examSheet(p, e), 280); }}, "Remarcar"),
             h("button", {class: "btn primary sm", type: "button", onclick: () => { e.status = "realizado"; e.updated = Date.now(); touch(p); render(); paint(); }}, "Realizado"))) : null,
-        h("div", {class: "kvs"}, info("Local", examPlace(e)), info("Solicitado por", e.req), info("Repetição prevista", nx ? `${fromISO(nx)} (intervalo informado)` : ""), info("Observações", e.notes)),
+        h("div", {class: "kvs"}, info("Local", examPlace(e)), info("Solicitado por", e.req), info("Data do resultado", e.resDate ? fromISO(e.resDate) : ""), info("Repetição prevista", nx ? `${fromISO(nx)} (intervalo informado)` : ""), info("Observações", e.notes)),
         e.result ? h("div", {class: "kvt"}, h("span", null, "Resultado ou laudo"), h("p", null, e.result)) : null,
         e.status === "realizado" || labs.length ? [h("div", {class: "lbl2"}, "Resultados numéricos"),
           labs.length ? h("div", {class: "glist"}, labs.map(r => h("button", {class: "grow lr", type: "button", onclick: () => labSheet(p, r, e, paint)},
@@ -3433,7 +3695,7 @@ function examDetail(p, e){
             h("span", {class: "lr-v"}, fmtLab(r.value), h("small", null, " " + r.unit)), h("span", {class: "li-go", html: ICON.right}))))
             : h("p", {class: "gnone"}, "Valores como LDL, glicemia ou vitamina D, para acompanhar a evolução."),
           h("button", {class: "btn ghost block", type: "button", style: "margin-top:8px", onclick: () => labSheet(p, null, e, paint)}, ic("plus"), "Adicionar resultado")] : null,
-        docsBlock(p, e, file, paint),
+        docsBlock(p, e, file, paint), calBlock(p, e),
         h("div", {class: "g2", style: "margin-top:16px"},
           h("button", {class: "btn ghost block", type: "button", onclick: () => { close(); setTimeout(() => examSheet(p, e), 280); }}, ic("edit"), "Editar"),
           e.status === "solicitado" ? h("button", {class: "btn primary block", type: "button", onclick: () => { close(); setTimeout(() => examSheet(p, e, {status: "agendado"}), 280); }}, "Agendar")
@@ -3454,9 +3716,9 @@ const refText = r => r.lo != null && r.hi != null ? `Referência ${fmtLab(r.lo)}
 /* ---------- Resultados numéricos (marcadores) ----------
    Guardados como informados (valor, unidade, data da coleta, referência do laboratório). O nome é agrupado num marcador único
    (core.markerKey) para que "LDL", "LDL-C" e "Colesterol LDL" formem uma só série. */
-function labSheet(p, r, exam, after){
+function labSheet(p, r, exam, after, name0){
   const editing = !!r, c = careOf(p);
-  const d = Object.assign({name: "", value: null, raw: "", unit: "", date: exam && exam.date ? exam.date : today(), lo: null, hi: null, lab: exam ? exam.place || "" : "", notes: ""}, r || {});
+  const d = Object.assign({name: name0 || "", value: null, raw: "", unit: "", date: exam && exam.date ? exam.date : today(), lo: null, hi: null, lab: exam ? exam.place || "" : "", notes: ""}, r || {});
   sheet(editing ? "Editar resultado" : "Novo resultado", (el, close) => {
     const name = txtIn("lb-nome", d.name, "Ex.: Colesterol LDL"), val = txtIn("lb-val", d.raw || (d.value != null ? fmtLab(d.value) : ""), "Ex.: 128", {inputmode: "decimal"});
     const unit = txtIn("lb-un", d.unit, "Ex.: mg/dL", {autocapitalize: "off"}), date = h("input", {class: "input dt-in", type: "date", id: "lb-data", value: d.date, min: "1900-01-01", max: "2100-12-31"});
@@ -3517,7 +3779,7 @@ const DOCS = (() => {
     t.oncomplete = () => res(q ? q.result : undefined); t.onerror = () => rej(t.error); t.onabort = () => rej(t.error); }));
   return {ok: typeof indexedDB !== "undefined", put: rec => run("readwrite", st => st.put(rec)), get: id => run("readonly", st => st.get(id)), del: id => run("readwrite", st => st.delete(id))};
 })();
-const docRefd = id => S.patients.some(x => careOf(x).exams.some(e => (e.docs || []).some(d => d.id === id)));
+const docRefd = id => S.patients.some(x => { const c = careOf(x); return [...c.exams, ...c.appts, ...c.procs].some(e => (e.docs || []).some(d => d.id === id)); });
 function docsGC(ids){ if (!ids.length || !DOCS.ok) return; setTimeout(() => { for (const id of ids) if (!docRefd(id)) DOCS.del(id).catch(() => {}); }, 6500); }
 const fmtSize = b => b >= 1048576 ? `${g1(b / 1048576)} MB` : `${Math.max(1, Math.round(b / 1024))} kB`;
 function attachDoc(p, e, f, after){
@@ -3646,37 +3908,713 @@ function renderExams(p){
     h("p", {class: "care-n"}, "O app organiza datas, resultados e documentos. Não sugere periodicidade, não interpreta resultados e não faz diagnósticos."));
 }
 
+/* ---------- Lembretes pelo app Calendário ----------
+   O BRICEÑO é um app web instalado na tela de início: não consegue agendar notificações próprias de forma confiável (no iPhone isso
+   exigiria um servidor de envio, que o app não tem). Os lembretes escolhidos viajam num arquivo de calendário (.ics) com os avisos
+   embutidos; quem avisa é o app Calendário do aparelho. O app não pede permissão de notificação porque não envia notificações.
+   Título discreto por padrão ("Compromisso de saúde"): o que aparece na tela bloqueada é escolha da pessoa (Perfil → preferências). */
+const REM_T = [[10080, "7 dias antes"], [1440, "1 dia antes"], [120, "2 horas antes"], [30, "30 minutos antes"]];
+const REM_D = [[10080, "7 dias antes"], [1440, "1 dia antes"], [0, "No dia, às 9h00"]];
+const remLabel = r => typeof r === "number" ? (REM_T.concat(REM_D).find(x => x[0] === r) || [0, `${r} min antes`])[1] : `${dShort(r.at.slice(0, 10))} · ${hm(r.at.slice(11))}`;
+const fmtMoment = ms => { const d = new Date(ms); return `${d.getDate()} ${MON[d.getMonth()]}${d.getFullYear() !== new Date().getFullYear() ? " " + d.getFullYear() : ""} · ${pad2(d.getHours())}h${pad2(d.getMinutes())}`; };
+// bloco de lembretes dentro de um cadastro: d.rem (minutos antes ou {at}); get() devolve a data/hora atuais do formulário
+function remBlock(d, get, repaint){
+  d.rem = d.rem || [];
+  const box = h("div", {class: "rem"}), custom = h("input", {class: "input dt-in", type: "datetime-local", id: "rem-outro", "aria-label": "Outro horário de lembrete"});
+  function paint(){
+    const e = get(), opts = e.time ? REM_T : REM_D;
+    d.rem = d.rem.filter(r => typeof r !== "number" || opts.some(o => o[0] === r));   // sem horário, "2 horas antes" não se aplica
+    const has = v => d.rem.includes(v), when = dateOk(e.date) ? C.remTimes(Object.assign({tz: DEVICE_TZ}, e, {tz: e.tz || DEVICE_TZ}), d.rem) : [], now = Date.now();
+    put(box,
+      h("div", {class: "lbl2"}, "Lembretes ", h("span", {class: "opt"}, "opcional · pelo app Calendário")),
+      h("div", {class: "chips", role: "group", "aria-label": "Lembretes"}, opts.map(([v, l]) => h("button", {type: "button", class: has(v) ? "on" : "", "aria-pressed": String(has(v)),
+        onclick: () => { d.rem = has(v) ? d.rem.filter(x => x !== v) : [...d.rem, v]; paint(); if (repaint) repaint(); }}, l)),
+        d.rem.filter(r => typeof r !== "number").map(r => h("button", {type: "button", class: "on", "aria-pressed": "true", "aria-label": `Remover lembrete de ${remLabel(r)}`,
+          onclick: () => { d.rem = d.rem.filter(x => x !== r); paint(); if (repaint) repaint(); }}, remLabel(r), " ×"))),
+      h("div", {class: "rem-c"}, custom, h("button", {class: "btn ghost sm", type: "button", onclick: () => { const v = custom.value; if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(v)) { custom.focus(); return; }
+        const at = v.slice(0, 16); if (!d.rem.some(r => r.at === at)) d.rem = [...d.rem, {at}]; custom.value = ""; paint(); if (repaint) repaint(); }}, "Adicionar")),
+      when.length ? h("p", {class: "note", "aria-live": "polite"}, `Avisos em ${when.map(t => fmtMoment(t) + (t < now ? " (já passou)" : "")).join("; ")}.`) : null);
+  }
+  paint(); return {el: box, paint};
+}
+// título e textos que vão para o Calendário (discretos por padrão)
+const calTitle = (p, e) => p.notif && p.notif.detail ? agendaLabel(p, e) : `Compromisso de saúde${S.patients.length > 1 ? " · " + firstName(p.name) : ""}`;
+const calSig = (p, e) => JSON.stringify([e.date, e.time, e.tz, e.status, e.rem || [], calTitle(p, e), p.notif && p.notif.detail ? e.place || "" : ""]);
+const calStale = (p, e) => !!(e.cal && e.cal.sig !== calSig(p, e));
+// entrega o arquivo: folha de compartilhamento do sistema (iPhone: Calendário, se oferecido, ou Arquivos → tocar no arquivo → Adicionar); sem ela, baixa o arquivo
+function deliverICS(text, name){
+  const file = typeof File === "function" ? new File([text], name, {type: "text/calendar"}) : null;
+  if (file && navigator.canShare && navigator.canShare({files: [file]})) return navigator.share({files: [file], title: name}).then(() => true, err => err && err.name === "AbortError" ? false : download());
+  return Promise.resolve(download());
+  function download(){ const url = URL.createObjectURL(new Blob([text], {type: "text/calendar"})), a = h("a", {href: url, download: name}); document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 60000); return true; }
+}
+function calExport(p, e){
+  if (!dateOk(e.date)) { toast("Informe a data antes"); return; }
+  const k = kindOf(p, e), detail = p.notif && p.notif.detail, seq = ((e.cal && e.cal.seq) || 0) + (e.cal ? 1 : 0);
+  const ics = C.icsCalendar([{uid: e.id + "@briceno", title: calTitle(p, e), date: e.date, time: e.time, tz: e.tz || DEVICE_TZ, durMin: k === "exame" ? 30 : 60,
+    location: detail ? [e.place, e.mode === "online" ? "" : e.addr].filter(Boolean).join(" · ") : "", desc: detail ? "Registrado no BRICEÑO." : "", rem: e.rem || [], seq}]);
+  deliverICS(ics, `${k === "consulta" ? "consulta" : k === "proc" ? "procedimento" : "exame"}-${e.date}.ics`).then(ok => {
+    if (!ok) return; e.cal = {at: Date.now(), seq, sig: calSig(p, e)}; touch(p); render(); toast("Arquivo do Calendário criado");
+  }, () => toast("Não foi possível criar o arquivo"));
+}
+// bloco do Calendário num cadastro já salvo
+function calBlock(p, e){
+  if (!e || !dateOk(e.date) || !C.SCHEDULED.includes(e.status)) return null;
+  const stale = calStale(p, e), n = (e.rem || []).length;
+  return h("div", {class: "calb"},
+    h("button", {class: "btn ghost block", type: "button", onclick: () => calExport(p, e)}, ic("cal"), e.cal ? "Enviar de novo ao Calendário" : n ? "Adicionar ao Calendário com os lembretes" : "Adicionar ao Calendário"),
+    h("p", {class: "note" + (stale ? " warn" : "")}, stale ? "O compromisso mudou depois de ir para o Calendário. Envie de novo e confira lá: o Calendário pode manter também a versão anterior."
+      : e.cal ? `Enviado ao Calendário em ${fmtMoment(e.cal.at)}. Os avisos são do app Calendário; o BRICEÑO não envia notificações.`
+      : "Os avisos ficam no app Calendário do aparelho, que é quem notifica. No iPhone, escolha Calendário na tela de compartilhar; se não aparecer, salve em Arquivos e toque no arquivo para adicionar."));
+}
+// cancelado ou excluído depois de ir para o Calendário: o app não consegue apagar lá
+const calGone = e => e && e.cal ? " Apague também no Calendário." : "";
+
+/* ---------- Procedimentos ----------
+   Categoria própria (não é consulta nem exame): infiltrações, aplicações intra-articulares, bloqueios, radiofrequência, cirurgias, sessões de
+   fisioterapia e outros tratamentos agendados. Local do corpo e lado são opcionais. Situações: agendado · realizado · cancelado. */
+const PROC_SUG = ["Infiltração", "Ácido hialurônico", "Bloqueio", "Radiofrequência", "Cirurgia", "Sessão de fisioterapia", "Aplicação intra-articular"];
+const PROC_SITE = ["Joelho", "Ombro", "Quadril", "Coluna lombar", "Coluna cervical", "Tornozelo", "Cotovelo", "Mão e punho"];
+const PROC_SIDE = [["direito", "Direito"], ["esquerdo", "Esquerdo"], ["bilateral", "Bilateral"]];
+const PROC_ST = {agendado: "Agendado", realizado: "Realizado", cancelado: "Cancelado"};
+// "joelho direito", "coluna lombar esquerda", "mão e punho direitos"
+function siteTxt(e){
+  const s = (e.site || "").trim(); if (!s) return "";
+  const w = norm(s.split(/\s+/)[0]), pl = /\se\s/.test(s), fem = !pl && (/a$/.test(w) || ["mao", "regiao", "articulacao", "face", "cervical", "lombar"].includes(w));
+  const side = e.side === "bilateral" ? (pl ? "bilaterais" : "bilateral") : e.side ? e.side.replace(/o$/, fem ? "a" : "o") + (pl ? "s" : "") : "";
+  return [s[0].toLowerCase() + s.slice(1), side].filter(Boolean).join(" ");
+}
+const procTitle = e => [e.name || "Procedimento", siteTxt(e)].filter(Boolean).join(" · ");
+const procSub = e => [e.prof, e.place].filter(Boolean).join(" · ");
+function setProc(p, e, status){ const prev = e.status; e.status = status; e.updated = Date.now(); touch(p); render();
+  toast((status === "realizado" ? "Procedimento registrado como realizado" : status === "cancelado" ? "Procedimento cancelado." + calGone(e) : "Procedimento reativado"), () => { e.status = prev; touch(p); render(); }); }
+function procSheet(p, e, preset){
+  const editing = !!e;
+  const d = Object.assign({name: "", site: "", side: "", prof: "", date: "", time: "", place: "", addr: "", notes: "", status: null, rem: []}, e ? JSON.parse(JSON.stringify(e)) : {}, preset || {}, {owner: p.id});
+  let picked = editing;
+  sheet(editing ? "Editar procedimento" : "Novo procedimento", (el, close) => {
+    const name = txtIn("pc-nome", d.name, "Ex.: Infiltração"), site = txtIn("pc-local", d.site, "Ex.: Joelho"), prof = txtIn("pc-prof", d.prof, "Ex.: Dr. Rafael Costa", {autocapitalize: "words"});
+    const date = h("input", {class: "input dt-in", type: "date", id: "pc-data", value: d.date, min: "1900-01-01", max: "2100-12-31"});
+    const time = h("input", {class: "input dt-in", type: "time", id: "pc-hora", value: d.time});
+    const place = txtIn("pc-clin", d.place, "Ex.: Hospital São Lucas"), addr = txtIn("pc-end", d.addr, "Rua, número, sala"), notes = area("pc-obs", d.notes, "Opcional. Ex.: levar exames de imagem");
+    const hint = h("p", {class: "note", "aria-live": "polite"}), body = h("div"), sugN = h("div"), sugS = h("div"), docsBox = h("div"), slot = h("div"), file = h("input", {type: "file", accept: "application/pdf,image/*", hidden: true});
+    const ok = h("button", {class: "btn primary block", type: "button", onclick: () => commit()}, editing ? "Salvar" : "Salvar procedimento");
+    const cal = h("button", {class: "btn ghost block", type: "button", onclick: () => commit(true)}, ic("cal"), "Salvar e adicionar ao Calendário");
+    const future = () => C.isUpcoming({status: "agendado", date: date.value, time: time.value, tz: DEVICE_TZ});
+    const rem = remBlock(d, () => ({date: date.value, time: time.value, tz: DEVICE_TZ}), () => check());
+    function check(){
+      if (!picked && dateOk(date.value)) d.status = future() ? "agendado" : "realizado";
+      const need = [!name.value.trim() ? "o procedimento" : "", !dateOk(date.value) ? "a data" : ""].filter(Boolean);
+      ok.disabled = cal.disabled = need.length > 0; hint.textContent = need.length ? `Para salvar, informe ${need.join(" e ")}. O resto pode ser completado depois.` : "";
+      cal.hidden = d.status !== "agendado" || !future();
+    }
+    const sugs = (box, list, inp, after) => put(box, !inp.value.trim() ? h("div", {class: "chips sugs", style: "margin:-6px 0 14px"}, list.map(x => h("button", {type: "button", onclick: () => { inp.value = x; after(); }}, x))) : null);
+    function paint(){
+      const used = []; for (const x of careOf(p).procs) if (x.name && !used.some(u => norm(u) === norm(x.name))) used.push(x.name);
+      sugs(sugN, [...used, ...PROC_SUG.filter(x => !used.some(u => norm(u) === norm(x)))].slice(0, 8), name, () => { paint(); site.focus(); });
+      sugs(sugS, PROC_SITE, site, paint);
+      put(body,
+        h("div", {class: "lbl2", style: "margin-top:0"}, "Lado ", h("span", {class: "opt"}, "opcional")), chips(PROC_SIDE, d.side || null, v => { d.side = v || ""; paint(); }, "opt"),
+        h("div", {style: "height:14px"}),
+        h("div", {class: "g2"}, field("pc-data", "Data", date), field("pc-hora", "Horário", time, true)),
+        dateOk(date.value) ? [h("div", {class: "lbl2", style: "margin-top:0"}, "Situação"), chips(Object.entries(PROC_ST), d.status, v => { if (v) { d.status = v; picked = true; paint(); } })] : null,
+        h("div", {style: "height:14px"}),
+        field("pc-prof", "Profissional", prof, true), field("pc-clin", "Clínica ou hospital", place, true), field("pc-end", "Endereço", addr, true),
+        field("pc-obs", "Observações", notes, false),
+        d.status === "agendado" ? rem.el : null, ownerChips(d, paint));
+      rem.paint(); check();
+    }
+    function paintDocs(){ if (editing) put(docsBox, docsBlock(p, e, file, paintDocs), calBlock(p, e)); }
+    function commit(toCal){
+      if (ok.disabled) return;
+      const rec = e || {id: uid(), at: Date.now(), docs: []};
+      const moved = !editing || e.date !== date.value || e.time !== time.value;
+      Object.assign(rec, {name: name.value.trim(), site: site.value.trim(), side: d.side || "", prof: prof.value.trim(), date: date.value, time: time.value, place: place.value.trim(), addr: addr.value.trim(),
+        notes: notes.value.trim(), status: d.status || (future() ? "agendado" : "realizado"), rem: d.status === "agendado" ? d.rem : [], tz: moved ? DEVICE_TZ : (rec.tz || DEVICE_TZ), updated: Date.now()});
+      const from = editing ? S.patients.find(x => careOf(x).procs.includes(rec)) : null, to = placeIn("procs", rec, d.owner, p);
+      close(); render();
+      if (from && from !== to) toast(`Procedimento movido para ${firstName(to.name)}`);
+      else toast(editing ? "Procedimento atualizado" + (rec.status === "cancelado" ? "." + calGone(rec) : "") : rec.status === "agendado" ? "Procedimento agendado" : "Procedimento registrado",
+        editing ? null : () => { const L = careOf(to).procs; L.splice(L.indexOf(rec), 1); touch(to); render(); });
+      if (toCal) setTimeout(() => calExport(to, rec), 300);
+    }
+    name.addEventListener("input", () => { check(); if (name.value.trim().length <= 1) paint(); });
+    site.addEventListener("input", () => { if (site.value.trim().length <= 1) paint(); });
+    for (const i of [date, time]) { i.addEventListener("input", paint); i.addEventListener("change", paint); }
+    file.addEventListener("change", () => { const f = file.files[0]; file.value = ""; if (f) attachDoc(p, e, f, paintDocs); });
+    paint(); paintDocs();
+    const del = editing ? [slot, h("button", {class: "btn danger block", type: "button", style: "margin-top:10px", onclick: () => ask(slot, `Excluir este procedimento${(e.docs || []).length ? ` e ${plural(e.docs.length, "documento anexado", "documentos anexados")}` : ""}?`, [{label: "Excluir", fn: () => {
+      const L = careOf(p).procs, i = L.indexOf(e); if (i < 0) return; L.splice(i, 1); touch(p); close(); render(); docsGC((e.docs || []).map(x => x.id));
+      toast("Procedimento excluído." + calGone(e), () => { L.splice(i, 0, e); touch(p); render(); }); }}])}, "Excluir procedimento")] : null;
+    el.append(h("h2", null, editing ? procTitle(e) : "Novo procedimento"),
+      h("p", {class: "sh-sub"}, editing ? [PROC_ST[e.status] || "", whenLong(e)].filter(Boolean).join(" · ") : `No perfil de ${firstName(p.name)}. O procedimento e a data bastam para salvar.`),
+      field("pc-nome", "Procedimento", name), sugN, field("pc-local", "Local do corpo", site, true), sugS, body, hint, docsBox, del, file,
+      h("div", {class: "confirmbar"}, cal, ok));
+    if (!editing) setTimeout(() => name.focus(), 60);
+  });
+}
+function procRow(p, e, now){
+  const over = C.isOverdue(e, now), st = e.status === "cancelado" ? ["cancelado", "off"] : over ? ["a confirmar", "due"] : null;
+  return h("button", {class: "grow ev" + (e.status === "cancelado" ? " off" : ""), type: "button", onclick: () => procSheet(p, e)}, dateTile(e),
+    h("span", {class: "gr-m"}, h("b", null, h("span", {class: "gr-tt"}, procTitle(e)), st ? stChip(st[0], st[1]) : null),
+      h("span", null, [e.time ? hm(e.time) + tzTag(e) : "", procSub(e)].filter(Boolean).join(" · ") || (e.date ? dShort(e.date) : "")),
+      (e.docs || []).length ? h("span", {class: "gr-x"}, plural(e.docs.length, "documento", "documentos")) : null),
+    h("span", {class: "li-go", html: ICON.right}));
+}
+function renderProcs(p){
+  const c = careOf(p), now = Date.now(), L = c.procs, up = C.upcoming(L, now), nx = up[0], over = L.filter(e => C.isOverdue(e, now)).sort(byStartAsc);
+  const done = L.filter(e => e.status === "realizado").sort(byDateDesc), canc = L.filter(e => e.status === "cancelado").sort(byDateDesc);
+  const hero = nx ? h("button", {class: "nx dj-glass proc", type: "button", onclick: () => procSheet(p, nx), "aria-label": `Próximo procedimento: ${whenSpoken(nx)}. ${procTitle(nx)}. ${procSub(nx)}. Editar.`},
+      h("span", {class: "nx-h"}, h("span", {class: "nx-e"}, "Próximo procedimento"), h("span", {class: "nx-r"}, relWhen(nx))),
+      h("b", {class: "nx-d"}, whenLong(nx)), h("span", {class: "nx-t"}, procTitle(nx)), procSub(nx) ? h("span", {class: "nx-s"}, procSub(nx)) : null)
+    : h("div", {class: "nx none dj-quiet"}, h("b", null, "Nenhum procedimento agendado"), h("span", null, "Infiltrações, aplicações, bloqueios, cirurgias, sessões de fisioterapia e outros tratamentos."),
+      h("button", {class: "btn primary sm", type: "button", onclick: () => procSheet(p)}, ic("plus"), "Agendar procedimento"));
+  modPage(p, "Procedimentos", "Novo procedimento", () => procSheet(p), hero,
+    confirmBlock(over, "Aconteceu?", procTitle, e => [{label: "Cancelado", fn: () => setProc(p, e, "cancelado")}, {label: "Realizado", cls: "primary", fn: () => setProc(p, e, "realizado")}]),
+    up.length > 1 ? [h("h2", {class: "sec-t"}, "Agendados"), h("div", {class: "glist"}, up.slice(1).map(e => procRow(p, e, now)))] : null,
+    h("h2", {class: "sec-t"}, "Realizados"),
+    done.length ? h("div", {class: "glist"}, done.map(e => procRow(p, e, now))) : h("p", {class: "gnone solo"}, "Nenhum procedimento realizado registrado."),
+    canc.length ? h("details", {class: "src more"}, h("summary", null, `Cancelados (${canc.length})`), h("div", {class: "glist"}, canc.map(e => procRow(p, e, now)))) : null,
+    h("p", {class: "care-n"}, "Registros organizados por você. O app não avalia indicação, resultado ou intervalo entre procedimentos."));
+}
+
+/* ---------- Agenda de Saúde (módulo) ----------
+   Linha do tempo única: consultas, exames e procedimentos do perfil, sem cópia dos registros (cada um continua na sua lista).
+   Próximos em ordem cronológica, agrupados por mês; histórico do mais recente ao mais antigo, com os cancelados identificados. */
+const openEvent = (p, e) => { const k = kindOf(p, e); (k === "consulta" ? apptSheet : k === "proc" ? procSheet : examDetail)(p, e); };
+function newEventSheet(p, after){
+  sheet("Novo compromisso", (el, close) => {
+    const row = (k, sub, fn) => h("button", {class: "qrow", type: "button", onclick: () => { close(); setTimeout(fn, 60); }}, h("span", {class: "qa-i c-" + KIND[k].cls, html: ICON[KIND[k].icon]}), h("div", null, h("b", null, KIND[k].l), h("span", null, sub)));
+    el.append(h("h2", null, "Novo compromisso"), h("p", {class: "sh-sub"}, `Na Agenda de Saúde de ${firstName(p.name)}.`),
+      h("div", {class: "qlist"}, row("consulta", "Médica, nutricional ou com outro profissional", () => apptSheet(p)),
+        row("exame", "Laboratorial, de imagem ou outro", () => examSheet(p, null, {status: "agendado"})),
+        row("proc", "Infiltração, aplicação, bloqueio, cirurgia, fisioterapia…", () => procSheet(p))),
+      h("div", {style: "height:10px"}), h("button", {class: "btn plain block", type: "button", onclick: close}, "Fechar"));
+  });
+}
+function agRow(p, e, now){
+  const k = kindOf(p, e), st = e.status, over = C.isOverdue(e, now);
+  const chip = st === "cancelada" || st === "cancelado" ? ["cancelado", "off"] : over ? ["a confirmar", "due"] : st === "solicitado" ? ["pendente", "due"] : null;
+  const sub = [e.time ? hm(e.time) + tzTag(e) : "", k === "consulta" ? apptSub(e) : k === "proc" ? procSub(e) : examPlace(e)].filter(Boolean).join(" · ");
+  return h("button", {class: "grow ev ag" + (chip && chip[1] === "off" ? " off" : ""), type: "button", onclick: () => openEvent(p, e)}, dateTile(e),
+    h("span", {class: "gr-m"}, h("span", {class: "ag-k c-" + KIND[k].cls}, KIND[k].l), h("b", null, h("span", {class: "gr-tt"}, k === "consulta" ? apptTitle(e) : k === "proc" ? procTitle(e) : e.name), chip ? stChip(chip[0], chip[1]) : null),
+      sub ? h("span", null, sub) : null),
+    h("span", {class: "li-go", html: ICON.right}));
+}
+function renderAgenda(p){
+  const c = careOf(p), now = Date.now(), f = ["consulta", "exame", "proc"].includes(view.af) ? view.af : "todos", tab = view.ah === "hist" ? "hist" : "prox";
+  const pick = list => list.filter(e => f === "todos" || kindOf(p, e) === f);
+  const all = pick(agendaList(p)), up = C.upcoming(all, now), nx = C.upcoming(agendaList(p), now)[0];
+  const over = all.filter(e => C.isOverdue(e, now)).sort(byStartAsc), pend = all.filter(e => e.status === "solicitado");
+  const done = all.filter(e => ["realizada", "realizado", "cancelada", "cancelado"].includes(e.status) && e.date).sort(byDateDesc);
+  const set = (e, st) => { const k = kindOf(p, e); (k === "consulta" ? setAppt : k === "proc" ? setProc : setExam)(p, e, st); };
+  const byMonth = list => { const out = []; let cur = ""; for (const e of list) { const [y, m] = ymd(e.date), key = y + "-" + m; if (key !== cur) { cur = key; out.push(h("div", {class: "lbl2 ag-m"}, `${cap1(MONL[m - 1])}${y !== new Date().getFullYear() ? " de " + y : ""}`)); out.push(h("div", {class: "glist"})); } out[out.length - 1].append(agRow(p, e, now)); } return out; };
+  const nk = nx ? kindOf(p, nx) : null, more = nx ? sameTime(p, nx) : 0;
+  const hero = nx ? h("button", {class: "nx dj-glass " + KIND[nk].cls, type: "button", onclick: () => openEvent(p, nx), "aria-label": `Próximo compromisso: ${KIND[nk].l}, ${whenSpoken(nx)}. ${agendaLabel(p, nx)}.`},
+      h("span", {class: "nx-h"}, h("span", {class: "nx-e"}, `Próximo · ${KIND[nk].l}`), h("span", {class: "nx-r"}, relWhen(nx))),
+      h("b", {class: "nx-d"}, whenLong(nx)), h("span", {class: "nx-t"}, agendaLabel(p, nx)),
+      (nk === "consulta" ? apptSub(nx) : nk === "proc" ? procSub(nx) : examPlace(nx)) ? h("span", {class: "nx-s"}, nk === "consulta" ? apptSub(nx) : nk === "proc" ? procSub(nx) : examPlace(nx)) : null,
+      more ? h("span", {class: "nx-s"}, `E mais ${more} no mesmo horário`) : null)
+    : h("div", {class: "nx none dj-quiet"}, h("b", null, "Nenhum compromisso agendado"), h("span", null, "Consultas, exames e procedimentos aparecem aqui e na tela Hoje."),
+      h("button", {class: "btn primary sm", type: "button", onclick: () => newEventSheet(p)}, ic("plus"), "Adicionar compromisso"));
+  const filt = h("div", {class: "chips ag-f", role: "group", "aria-label": "Tipo de compromisso"}, [["todos", "Todos"], ["consulta", "Consultas"], ["exame", "Exames"], ["proc", "Procedimentos"]]
+    .map(([v, l]) => h("button", {type: "button", class: f === v ? "on" : "", "aria-pressed": String(f === v), onclick: () => go({af: v}, true)}, l)));
+  const empty = t => h("p", {class: "gnone solo"}, t);
+  const what = f === "todos" ? "compromisso" : f === "proc" ? "procedimento" : KIND[f].l.toLowerCase();
+  modPage(p, "Agenda de Saúde", "Novo compromisso", () => newEventSheet(p), hero,
+    confirmBlock(over, "Aconteceu?", e => agendaLabel(p, e), e => [{label: "Reagendar", fn: () => openEvent(p, e)}, {label: "Cancelado", fn: () => set(e, kindOf(p, e) === "consulta" ? "cancelada" : "cancelado")},
+      {label: "Realizado", cls: "primary", fn: () => set(e, kindOf(p, e) === "consulta" ? "realizada" : "realizado")}]),
+    filt,
+    h("div", {class: "seg seg-2 fit", role: "tablist", "aria-label": "Agenda"}, [["prox", `Próximos${up.length ? " · " + up.length : ""}`], ["hist", "Histórico"]]
+      .map(([k, l]) => h("button", {type: "button", role: "tab", class: tab === k ? "on" : "", "aria-selected": String(tab === k), onclick: () => go({ah: k}, true)}, l))),
+    tab === "prox" ? [up.length ? byMonth(up) : empty(`Nenhum ${what} agendado.`),
+        pend.length ? [h("div", {class: "lbl2 ag-m"}, "Exames solicitados, sem data"), h("div", {class: "glist"}, pend.map(e => agRow(p, e, now)))] : null]
+      : done.length ? byMonth(done) : empty(`Nenhum ${what} no histórico.`),
+    h("h2", {class: "sec-t"}, "Por tipo"),
+    h("div", {class: "glist"},
+      [["consultas", "consulta", "Histórico anual e busca"], ["exames", "exame", "Resultados, documentos e evolução"], ["procedimentos", "proc", "Local do corpo, lado e documentos"]].map(([hs, k, sub]) =>
+        h("button", {class: "grow hub", type: "button", onclick: () => go({hsub: hs})}, h("span", {class: "gr-i c-" + KIND[k].cls, html: ICON[KIND[k].icon]}),
+          h("span", {class: "gr-m"}, h("b", null, KIND[k].ls), h("span", null, sub)), h("span", {class: "li-go", html: ICON.right})))),
+    h("p", {class: "care-n"}, "Cada compromisso fica guardado no histórico depois que passa. Lembretes: escolha no cadastro e envie ao app Calendário, que é quem avisa."));
+}
+
+/* ---------- Indicadores ----------
+   Séries montadas a partir dos registros que já existem no perfil (sono, exercício, humor, água, medições e resultados de exames).
+   Nenhum valor é estimado, interpolado ou classificado como melhor ou pior. Cada ponto mostra data, unidade e origem. */
+const MEAS = {
+  peso:    {n: "Peso", u: "kg", min: 2, max: 400, ph: "Ex.: 72,4"},
+  cintura: {n: "Circunferência da cintura", u: "cm", min: 30, max: 250, ph: "Ex.: 84"},
+  gordura: {n: "Gordura corporal", u: "%", min: 2, max: 75, ph: "Ex.: 22,5", methods: ["Bioimpedância", "Dobras cutâneas", "DEXA", "Outro"],
+    note: "O valor depende do método. O gráfico usa um método por vez; medições por outro método ficam fora e continuam no histórico."},
+  pa:      {n: "Pressão arterial", u: "mmHg", min: 40, max: 300, two: true, ph: "Sistólica", ph2: "Diastólica"},
+  fc:      {n: "Frequência cardíaca de repouso", u: "bpm", min: 25, max: 230, ph: "Ex.: 62"},
+  dor:     {n: "Dor", u: "de 0 a 10", min: 0, max: 10, int: true, ph: "0 a 10", note: "Escala numérica autoavaliada: 0 é sem dor e 10, a pior dor imaginável."}
+};
+const IND_FIX = {
+  "sono.dur": {n: "Duração do sono", u: "h", src: "Registro de sono", grp: "Sono"},
+  "sono.q":   {n: "Qualidade do sono", u: "de 1 a 5", src: "Registro de sono (autoavaliação)", grp: "Sono", scale: [1, 5]},
+  "mov.min":  {n: "Exercício por semana", u: "min", src: "Registros de exercício, somados por semana", grp: "Exercício"},
+  "mov.dias": {n: "Dias com exercício por semana", u: "dias", src: "Registros de exercício", grp: "Exercício", scale: [0, 7]},
+  "humor":    {n: "Estado emocional", u: "de 1 a 5", src: "Registro emocional (autoavaliação)", grp: "Emocional", scale: [1, 5], adult: true},
+  "agua":     {n: "Água registrada por dia", u: "L", src: "Registro de água", grp: "Hidratação"},
+  "refeicoes":{n: "Refeições do plano marcadas como feitas", u: "por dia", src: "Plano alimentar", grp: "Nutrição"}
+};
+const fmtN = (v, dec = 1) => new Intl.NumberFormat("pt-BR", {maximumFractionDigits: dec}).format(v);
+function indInfo(p, k){
+  if (IND_FIX[k]) return Object.assign({k}, IND_FIX[k]);
+  if (k.startsWith("meas:")) { const m = MEAS[k.slice(5)]; return m ? Object.assign({k, src: "Medição registrada", grp: "Medições"}, m) : null; }
+  if (k.startsWith("lab:")) { const key = k.slice(4), r = careOf(p).labs.find(x => x.key === key), info = C.labInfo(key);
+    return info || r ? {k, n: info ? info.n : r.name, u: "", src: "Resultados de exames", grp: "Exames"} : {k, n: (C.labInfo(key) || {}).n || key.replace(/^x:/, ""), u: "", src: "Resultados de exames", grp: "Exames"}; }
+  return null;
+}
+// série de um indicador: {unit, points: [{date, t, v, v2, id, src, conv, orig}], excluded, exNote}
+function indSeries(p, k){
+  const L = logsOf(p), c = careOf(p), info = indInfo(p, k); if (!info) return {unit: "", points: [], excluded: 0};
+  if (k === "sono.dur") return {unit: "h", points: C.daySeries(L.sleep, e => { const m = C.sleepMinutes(e.bed, e.wake); return m == null ? NaN : m / 60; }).map(q => Object.assign(q, {from: "sleep"}))};
+  if (k === "sono.q") return {unit: info.u, points: C.daySeries(L.sleep, e => e.quality ? e.quality : NaN)};
+  if (k === "mov.min") return {unit: "min", points: C.weekSeries(L.move, e => e.min > 0 ? e.min : NaN)};
+  if (k === "mov.dias") return {unit: "dias", points: C.weekSeries(L.move, e => e.min > 0 ? e.min : NaN).map(q => Object.assign({}, q, {v: q.days}))};
+  if (k === "humor") return {unit: info.u, points: C.daySeries(L.mood, e => e.mood)};
+  if (k === "agua") { const by = new Map(); for (const e of L.water) by.set(e.date, (by.get(e.date) || 0) + (e.ml || 0));
+    return {unit: "L", points: [...by.entries()].filter(([, v]) => v > 0).sort((a, b) => a[0] < b[0] ? -1 : 1).map(([date, v]) => ({date, t: C.zonedEpoch(date, "12:00"), v: v / 1000}))}; }
+  if (k === "refeicoes") { if (!tracks(p) && !L.eaten.length) return {unit: "por dia", points: []};
+    const by = new Map(); for (const e of L.eaten) by.set(e.date, (by.get(e.date) || 0) + 1);
+    return {unit: "por dia", points: [...by.entries()].sort((a, b) => a[0] < b[0] ? -1 : 1).map(([date, v]) => ({date, t: C.zonedEpoch(date, "12:00"), v}))}; }
+  if (k.startsWith("meas:")) {
+    const mk = k.slice(5), m = MEAS[mk]; let list = L.meas.filter(e => e.k === mk && Number.isFinite(e.v)), excluded = 0, method = null;
+    if (m.methods) { const f = new Map(); for (const e of list) f.set(e.method || "", (f.get(e.method || "") || 0) + 1);
+      let best = null, bn = -1; for (const e of [...list].sort((a, b) => a.date < b.date ? 1 : -1)) { const n = f.get(e.method || ""); if (n > bn) { bn = n; best = e.method || ""; } }
+      method = best; excluded = list.filter(e => (e.method || "") !== best).length; list = list.filter(e => (e.method || "") === best); }
+    const pts = [...list].sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : (a.time || "") < (b.time || "") ? -1 : (a.at || 0) - (b.at || 0))
+      .map(e => ({date: e.date, t: C.zonedEpoch(e.date, e.time || "12:00"), v: e.v, v2: e.v2, id: e.id, src: e.src === "body" ? "Dados corporais" : "Medição registrada", rec: e}));
+    return {unit: m.u, points: pts, excluded, method, exNote: excluded ? `${plural(excluded, "medição", "medições")} por outro método fora do gráfico (método do gráfico: ${method || "não informado"}).` : ""};
+  }
+  if (k.startsWith("lab:")) { const s = C.labSeries(c.labs, k.slice(4));
+    return {unit: s.unit || "", points: s.points.map(q => Object.assign({}, q, {src: (() => { const r = c.labs.find(x => x.id === q.id); return r && r.lab ? `Resultado de exame · ${r.lab}` : "Resultado de exame"; })()})),
+      excluded: s.excluded, exNote: s.excluded ? `${plural(s.excluded, "resultado está", "resultados estão")} em unidade sem conversão validada para ${s.unit} e fica${s.excluded === 1 ? "" : "m"} fora do gráfico.` : ""}; }
+  return {unit: "", points: []};
+}
+// valor formatado com unidade (sono em horas e minutos; pressão como 120/80)
+function indVal(k, q, unit){
+  if (k === "sono.dur") return fmtDur(q.v * 60);
+  if (k === "sono.q") return `${QUAL[Math.round(q.v) - 1] || fmtN(q.v)}`;
+  if (k === "humor") return MOODS[Math.round(q.v) - 1] || fmtN(q.v);
+  if (k === "meas:pa") return `${fmtN(q.v, 0)}/${fmtN(q.v2, 0)} mmHg`;
+  if (k === "meas:dor") return `${fmtN(q.v, 0)} de 10`;
+  if (k === "mov.min") return `${fmtDur(q.v)} na semana`;
+  if (k === "mov.dias") return `${plural(q.v, "dia", "dias")} na semana`;
+  if (k === "agua") return `${fmtL(q.v * 1000)} L`;
+  if (k === "refeicoes") return plural(q.v, "refeição", "refeições");
+  if (k.startsWith("lab:")) return `${fmtLab(+q.v.toFixed(q.conv ? 1 : 6))} ${unit}`;
+  return `${fmtN(q.v)} ${unit}`;
+}
+const diffAbs = (k, a, unit) => k === "sono.dur" ? fmtDur(a * 60) : k === "mov.min" ? fmtDur(a) : k === "mov.dias" ? plural(a, "dia", "dias") : k === "agua" ? `${fmtL(a * 1000)} L` : k === "refeicoes" ? fmtN(a) : k.startsWith("lab:") ? `${fmtLab(+a.toFixed(2))} ${unit}` : `${fmtN(a)} ${unit}`;
+const weekOf = d => `semana de ${dShort(d)}`;
+const indWhen = (k, q) => k.startsWith("mov.") ? weekOf(q.date) : fromISO(q.date);
+// indicadores sugeridos para escolher numa prioridade: os fixos (adulto: humor), as medições e os marcadores de exame do perfil
+function indChoices(p){
+  const adult = adultOf(p), labs = new Map(); for (const r of careOf(p).labs) if (!labs.has(r.key)) labs.set(r.key, (C.labInfo(r.key) || {}).n || r.name);
+  return [...Object.keys(IND_FIX).filter(k => adult || !IND_FIX[k].adult), ...Object.keys(MEAS).map(k => "meas:" + k),
+    ...new Set(["lab:glicose", "lab:hba1c", "lab:ldl", ...[...labs.keys()].map(k => "lab:" + k)])];
+}
+function indAdd(p, k, after){
+  if (k.startsWith("sono.")) return sleepSheet(p);
+  if (k.startsWith("mov.")) return moveSheet(p);
+  if (k === "humor") return moodSheet(p);
+  if (k === "agua") return go({hsub: "agua"});
+  if (k === "refeicoes") return go({tab: "alimentacao", sub: "plano"});
+  if (k.startsWith("meas:")) return measSheet(p, k.slice(5), null, after);
+  if (k.startsWith("lab:")) { const key = k.slice(4), info = C.labInfo(key), prev = careOf(p).labs.find(x => x.key === key); return labSheet(p, null, null, after, info ? info.n : prev ? prev.name : ""); }
+}
+const indLast = (p, k) => { const s = indSeries(p, k); return s.points.length ? Object.assign({s}, s.points[s.points.length - 1]) : null; };
+const indLine = (p, k) => { const q = indLast(p, k); return q ? `${indVal(k, q, q.s.unit)} · ${indWhen(k, q)}` : "Acompanhamento ainda não começou"; };
+
+/* Medições registradas (logs.meas): peso, cintura, gordura corporal, pressão arterial, frequência cardíaca de repouso e dor.
+   Peso: a medição pode atualizar o peso dos Dados corporais (usado no GET e na hidratação) só se a pessoa marcar. */
+function measSheet(p, mk, rec, after){
+  const L = logsOf(p), editing = !!rec;
+  let cur = mk || (rec && rec.k) || "peso";
+  sheet(editing ? "Editar medição" : "Nova medição", (el, close) => {
+    const n = new Date(), d = rec ? JSON.parse(JSON.stringify(rec)) : {date: today(), time: `${pad2(n.getHours())}:${pad2(n.getMinutes())}`, v: null, v2: null, method: "", note: ""};
+    const date = h("input", {class: "input dt-in", type: "date", id: "md-data", value: d.date, min: "1900-01-01", max: today()}), time = h("input", {class: "input dt-in", type: "time", id: "md-hora", value: d.time || ""});
+    const val = txtIn("md-v", d.v != null ? fmtN(d.v, 2) : "", "", {inputmode: "decimal"}), val2 = txtIn("md-v2", d.v2 != null ? fmtN(d.v2, 2) : "", "", {inputmode: "decimal"}), note = area("md-n", d.note, "Opcional", 200);
+    const useW = h("input", {type: "checkbox", id: "md-usew", checked: true}), body = h("div"), hint = h("p", {class: "note", "aria-live": "polite"});
+    const ok = h("button", {class: "btn primary block", type: "button", onclick: () => commit()}, editing ? "Salvar" : "Salvar medição");
+    function check(){
+      const m = MEAS[cur], v = C.parseNum(val.value), v2 = C.parseNum(val2.value);
+      const bad = x => x == null || x < m.min || x > m.max || (m.int && !Number.isInteger(x));
+      const need = [bad(v) ? (m.two ? "a sistólica" : "o valor") : "", m.two && bad(v2) ? "a diastólica" : "", !dateOk(date.value) || date.value > today() ? "a data (até hoje)" : ""].filter(Boolean);
+      ok.disabled = need.length > 0; hint.textContent = need.length && (val.value || val2.value) ? `Confira ${need.join(", ")}. Faixa aceita: ${m.min} a ${m.max} ${m.u}.` : "";
+    }
+    function paint(){
+      const m = MEAS[cur]; val.placeholder = m.ph; val2.placeholder = m.ph2 || "";
+      put(body,
+        !editing ? [h("div", {class: "lbl2", style: "margin-top:0"}, "O que medir"), chips(Object.entries(MEAS).map(([k, x]) => [k, x.n]), cur, v => { if (v) { cur = v; paint(); } })] : null,
+        h("div", {style: "height:14px"}),
+        m.two ? h("div", {class: "g2"}, field("md-v", "Sistólica (mmHg)", val), field("md-v2", "Diastólica (mmHg)", val2)) : field("md-v", `${m.n} (${m.u})`, val),
+        m.methods ? [h("div", {class: "lbl2", style: "margin-top:0"}, "Método ", h("span", {class: "opt"}, "recomendado")), chips(m.methods.map(x => [x, x]), d.method || null, v => { d.method = v || ""; paint(); }, "opt")] : null,
+        m.note ? h("p", {class: "note"}, m.note) : null,
+        h("div", {class: "g2", style: "margin-top:14px"}, field("md-data", "Data", date), field("md-hora", "Horário", time, true)),
+        cur === "peso" && !editing ? h("label", {class: "chk", for: "md-usew"}, useW, h("span", null, "Atualizar também o peso dos Dados corporais (usado no GET e na hidratação)")) : null,
+        field("md-n", "Observações", note, false));
+      check();
+    }
+    function commit(){
+      if (ok.disabled) return;
+      const r = rec || {id: uid(), at: Date.now(), src: "manual"}, m = MEAS[cur];
+      Object.assign(r, {k: cur, v: C.parseNum(val.value), v2: m.two ? C.parseNum(val2.value) : null, method: m.methods ? d.method || "" : "", date: date.value, time: time.value, note: note.value.trim(), updated: Date.now()});
+      if (!editing) L.meas.push(r);
+      const w0 = p.energy.weight; if (cur === "peso" && !editing && useW.checked) p.energy.weight = r.v;
+      touch(p); close(); render(); if (after) after();
+      toast(`${m.n}: ${indVal("meas:" + cur, r, m.u)} registrado`, editing ? null : () => { L.meas.splice(L.meas.indexOf(r), 1); p.energy.weight = w0; touch(p); render(); if (after) after(); });
+    }
+    for (const i of [val, val2, date]) { i.addEventListener("input", check); i.addEventListener("change", check); }
+    paint();
+    const slot = h("div");
+    el.append(h("h2", null, editing ? MEAS[cur].n : "Nova medição"), h("p", {class: "sh-sub"}, `No perfil de ${firstName(p.name)}. Como foi medido, sem estimativas.`), body, hint,
+      editing ? [slot, h("button", {class: "btn danger block", type: "button", onclick: () => ask(slot, "Excluir esta medição?", [{label: "Excluir", fn: () => {
+        const i = L.meas.indexOf(rec); if (i < 0) return; L.meas.splice(i, 1); touch(p); close(); render(); if (after) after(); toast("Medição excluída", () => { L.meas.splice(i, 0, rec); touch(p); render(); if (after) after(); }); }}])}, "Excluir medição")] : null,
+      h("div", {class: "confirmbar"}, ok));
+    if (!editing) setTimeout(() => val.focus(), 80);
+  });
+}
+
+/* Gráfico de linha genérico: eixo do tempo proporcional às datas reais; cada ponto é um registro; a linha só liga os pontos.
+   o: {pts, x0, x1, unit, band, target, sel, onSel, label, fmtY, scale, two} */
+function lineChart(o){
+  const W = 340, H = 196, L = 44, R = 14, T = 16, B = 30, pts = o.pts;
+  const x0 = o.x0, x1 = o.x1 > o.x0 ? o.x1 : o.x0 + 864e5;
+  const vals = pts.flatMap(q => o.two && q.v2 != null ? [q.v, q.v2] : [q.v]).concat(o.band ? [o.band.lo, o.band.hi].filter(v => v != null) : [], o.target ? [o.target.v, o.target.v2].filter(v => v != null) : []);
+  let y0 = Math.min(...vals), y1 = Math.max(...vals);
+  if (o.scale) { y0 = o.scale[0]; y1 = o.scale[1]; }
+  else { const sp = y1 - y0 || Math.abs(y1) * .2 || 1; y0 -= sp * .18; y1 += sp * .18; if (Math.min(...pts.map(q => q.v)) >= 0 && y0 < 0) y0 = 0; }
+  const st = o.scale ? Math.max(1, Math.round((y1 - y0) / 4)) : niceStep(y1 - y0); if (!o.scale) { y0 = Math.floor(y0 / st) * st; y1 = Math.ceil(y1 / st) * st; }
+  const X = t => L + (t - x0) / (x1 - x0) * (W - L - R), Y = v => T + (1 - (v - y0) / (y1 - y0)) * (H - T - B);
+  const g = sv("svg", {viewBox: `0 0 ${W} ${H}`, class: "lc", role: "img", "aria-label": o.label});
+  for (let v = y0; v <= y1 + st / 2; v += st) g.append(sv("line", {x1: L, x2: W - R, y1: Y(v), y2: Y(v), class: "lc-g"}), sv("text", {x: L - 7, y: Y(v) + 4, class: "lc-t", "text-anchor": "end"}, (o.fmtY || fmtLab)(+v.toFixed(6))));
+  if (o.band) { const a = Y(o.band.hi != null ? Math.min(o.band.hi, y1) : y1), b = Y(o.band.lo != null ? Math.max(o.band.lo, y0) : y0);
+    g.append(sv("rect", {x: L, y: a, width: W - L - R, height: Math.max(0, b - a), class: "lc-band"}), sv("text", {x: L + 6, y: a + 12, class: "lc-bt"}, "Referência do laboratório")); }
+  if (o.target) for (const tv of [o.target.v, o.target.v2].filter(v => v != null && v >= y0 && v <= y1)) g.append(sv("line", {x1: L, x2: W - R, y1: Y(tv), y2: Y(tv), class: "lc-goal"}), sv("text", {x: W - R - 4, y: Y(tv) - 5, class: "lc-gt", "text-anchor": "end"}, "Sua meta"));
+  // eixo do tempo: meses (até ~13 meses) ou viradas de ano
+  const span = x1 - x0;
+  if (span <= 400 * 864e5) { const d = new Date(x0); d.setDate(1); d.setHours(12); let i = 0;
+    for (; d.getTime() <= x1 && i < 14; d.setMonth(d.getMonth() + 1), i++) { const t = new Date(d.getFullYear(), d.getMonth(), 15).getTime(); if (t < x0 || t > x1) continue;
+      const lab = span <= 100 * 864e5 ? MON[d.getMonth()] : MON[d.getMonth()][0].toUpperCase(); g.append(sv("text", {x: X(t), y: H - 10, class: "lc-t", "text-anchor": "middle"}, lab)); } }
+  else { const ya = new Date(x0).getFullYear(), yb = new Date(x1).getFullYear();
+    for (let y = ya + 1; y <= yb; y++) { const t = new Date(y, 0, 1).getTime(); if (t <= x0 || t >= x1) continue; g.append(sv("line", {x1: X(t), x2: X(t), y1: T, y2: H - B, class: "lc-y"}), sv("text", {x: X(t) + 4, y: H - 10, class: "lc-t"}, String(y))); } }
+  const line = key => { const ps = pts.filter(q => q[key] != null); if (ps.length > 1) g.append(sv("polyline", {points: ps.map(q => `${X(q.t).toFixed(1)},${Y(q[key]).toFixed(1)}`).join(" "), class: "lc-l" + (key === "v2" ? " b" : "")})); };
+  line("v"); if (o.two) line("v2");
+  pts.forEach((q, i) => { for (const key of o.two ? ["v", "v2"] : ["v"]) if (q[key] != null) g.append(sv("circle", {cx: X(q.t), cy: Y(q[key]), r: i === o.sel ? 6 : 4.2, class: "lc-p" + (key === "v2" ? " b" : "") + (i === o.sel ? " on" : "")}));
+    g.append(sv("circle", {cx: X(q.t), cy: Y(o.two && q.v2 != null ? (q.v + q.v2) / 2 : q.v), r: o.two ? 22 : 16, class: "lc-h", onclick: () => o.onSel(i)})); });
+  return g;
+}
+const RANGES = [["all", "Tudo"], [365, "12 meses"], [90, "3 meses"], [30, "30 dias"]];
+// página de um indicador (Saúde → Indicadores, ou a partir de uma prioridade)
+function renderIndicator(p){
+  const k = view.ik, info = k && indInfo(p, k), g = view.ip ? goalsOf(p).find(x => x.id === view.ip) : null;
+  if (!info) { go({hsub: "indicadores"}); return; }
+  const s = indSeries(p, k), now = Date.now(), all = s.points;
+  const avail = RANGES.filter(([r]) => r === "all" || all.some(q => q.t >= now - r * 864e5));
+  const range = avail.some(([r]) => r === view.ir) ? view.ir : "all";
+  const pts = range === "all" ? all : all.filter(q => q.t >= now - range * 864e5);
+  const target = g && g.targets && g.targets[k] && g.targets[k].v != null ? g.targets[k] : null;
+  const chartBox = h("div", {class: "lc-box"}), detail = h("div", {class: "lc-d", "aria-live": "polite"});
+  const fmtY = k === "sono.dur" ? v => fmtN(v) + "h" : k === "agua" ? v => fmtN(v) : null;
+  const paint = sel => {
+    let x0, x1; if (range === "all") { x0 = pts[0].t; x1 = pts[pts.length - 1].t; const pad = Math.max((x1 - x0) * .06, 3 * 864e5); x0 -= pad; x1 += pad; } else { x0 = now - range * 864e5; x1 = now + 864e5; }
+    put(chartBox, lineChart({pts, x0, x1, unit: s.unit, sel, onSel: i => paint(i), two: k === "meas:pa", scale: info.scale, fmtY, target,
+      label: `Gráfico de ${info.n}: ${plural(pts.length, "registro", "registros")}${s.unit ? " em " + s.unit : ""}.`}));
+    const q = pts[sel];
+    put(detail, q ? [h("div", {class: "lc-dv"}, h("b", null, indVal(k, q, s.unit)), h("span", {class: "lc-dd"}, k.startsWith("mov.") ? cap1(weekOf(q.date)) : cap1(dLong(q.date)) + (q.rec && q.rec.time ? " · " + hm(q.rec.time) : ""))),
+      h("p", null, [`Origem: ${q.src || info.src}.`, q.conv ? `Informado como ${fmtLab(q.orig.value)} ${q.orig.unit} e convertido para ${s.unit}.` : "", q.rec && q.rec.method ? `Método: ${q.rec.method}.` : ""].filter(Boolean).join(" "))] : null);
+  };
+  const cmp = C.compareSeries(pts);
+  const diffTxt = cmp ? (k === "meas:pa" ? `${fmtN(cmp.first.v, 0)}/${fmtN(cmp.first.v2, 0)} → ${fmtN(cmp.last.v, 0)}/${fmtN(cmp.last.v2, 0)} mmHg`
+    : `${indVal(k, cmp.first, s.unit)} → ${indVal(k, cmp.last, s.unit)}${["sono.q", "humor"].includes(k) || !cmp.diff ? "" : ` (${cmp.diff > 0 ? "+" : "−"}${diffAbs(k, Math.abs(cmp.diff), s.unit)})`}`) : "";
+  const hist = [...all].reverse();
+  const openQ = q => q.rec ? measSheet(p, null, q.rec, null) : k.startsWith("lab:") ? (() => { const r = careOf(p).labs.find(x => x.id === q.id); if (r) labSheet(p, r, r.examId ? careOf(p).exams.find(e => e.id === r.examId) : null); })()
+    : k.startsWith("sono") ? go({hsub: "sono"}) : k.startsWith("mov.") ? go({hsub: "movimento"}) : k === "humor" ? go({hsub: "bem-estar"}) : k === "agua" ? go({hsub: "agua"}) : null;
+  put(app, h("div", {class: "view mod"}, topBar(quickBtn(p, "saude")),
+    h("button", {class: "back", type: "button", onclick: () => go(g ? {hsub: "prioridade", gid: g.id} : {hsub: "indicadores"})}, ic("left"), g ? "Prioridade" : "Indicadores"),
+    h("div", {class: "pg-row"}, h("h1", {class: "pg"}, info.n), h("button", {class: "sec-add", type: "button", "aria-label": `Registrar ${info.n}`, onclick: () => indAdd(p, k)}, ic("plus"))),
+    h("p", {class: "pg-s"}, [s.unit && !["sono.q", "humor"].includes(k) ? `Unidade: ${s.unit}` : info.u ? `Escala ${info.u}` : "", `Origem: ${info.src}`].filter(Boolean).join(" · ")),
+    !all.length ? h("div", {class: "nx none dj-quiet"}, h("b", null, "O acompanhamento ainda não começou"), h("span", null, k === "refeicoes" && !tracks(p) ? "Para este indicador, ative o registro das refeições feitas (Perfil → Preferências) e marque as refeições do plano." : "Não há registros deste indicador no perfil. O primeiro registro inicia o histórico."),
+        k === "refeicoes" && !tracks(p) ? null : h("button", {class: "btn primary sm", type: "button", onclick: () => indAdd(p, k)}, ic("plus"), "Registrar"))
+      : h("section", {class: "panel lcp"},
+        avail.length > 1 ? h("div", {class: "seg seg-2 lr fit", role: "group", "aria-label": "Período"}, avail.map(([v, l]) => h("button", {type: "button", class: range === v ? "on" : "", "aria-pressed": String(range === v), onclick: () => go({ir: v}, true)}, l))) : null,
+        pts.length === 1 ? h("p", {class: "lc-one"}, "Um registro no período. A linha aparece a partir do segundo.") : null,
+        pts.length ? [chartBox, detail] : h("p", {class: "gnone"}, "Sem registros neste período."),
+        k === "meas:pa" && pts.length ? h("p", {class: "lc-key"}, h("i", {class: "a"}), "Sistólica", h("i", {class: "b"}), "Diastólica") : null,
+        target ? h("p", {class: "lc-goal-t"}, `Sua meta: ${goalTxt(k, target, s.unit)}. Definida por você, na prioridade “${g.name}”.`) : null,
+        cmp ? h("div", {class: "kv"}, h("span", null, `Primeiro e último registro do período (${plural(cmp.days, "dia", "dias")})`), h("b", null, diffTxt)) : null,
+        s.exNote ? h("p", {class: "note"}, s.exNote) : null,
+        info.note ? h("p", {class: "note"}, info.note) : null),
+    all.length ? [h("h2", {class: "sec-t"}, "Histórico"), h("div", {class: "glist"}, hist.slice(0, view.iall ? 400 : 12).map(q => h("button", {class: "grow lr", type: "button", onclick: () => openQ(q)},
+        h("span", {class: "gr-m"}, h("b", null, k.startsWith("mov.") ? cap1(weekOf(q.date)) : fromISO(q.date) + (q.rec && q.rec.time ? " · " + hm(q.rec.time) : "")), h("span", null, q.src || info.src)),
+        h("span", {class: "lr-v"}, indVal(k, q, s.unit)), h("span", {class: "li-go", html: ICON.right})))),
+      hist.length > 12 ? h("button", {class: "link more-l", type: "button", onclick: () => go({iall: !view.iall}, true)}, view.iall ? "Mostrar só os recentes" : `Mostrar todos (${hist.length})`) : null] : null,
+    h("p", {class: "care-n"}, k.startsWith("mov.") ? "Semanas sem registro não aparecem: falta de registro não quer dizer que não houve exercício. " : "", "Cada ponto é um registro; a linha só liga os pontos. O app não classifica mudanças como melhora ou piora e não faz diagnósticos.")));
+  if (pts.length) paint(pts.length - 1);
+}
+// todos os indicadores do perfil, com ou sem prioridade
+function renderIndicators(p){
+  const ch = indChoices(p), withData = ch.filter(k => indSeries(p, k).points.length), without = ch.filter(k => !withData.includes(k));
+  const row = k => { const info = indInfo(p, k), q = indLast(p, k);
+    return h("button", {class: "grow lr", type: "button", onclick: () => go({hsub: "indicador", ik: k, ip: null, ir: "all", iall: false})},
+      h("span", {class: "gr-m"}, h("b", null, info.n), h("span", null, q ? `${indWhen(k, q)} · ${q.src || info.src}` : info.src)),
+      q ? h("span", {class: "lr-v"}, indVal(k, q, q.s.unit)) : null, h("span", {class: "li-go", html: ICON.right})); };
+  const grp = list => { const by = new Map(); for (const k of list) { const g = indInfo(p, k).grp; if (!by.has(g)) by.set(g, []); by.get(g).push(k); } return [...by.entries()]; };
+  modPage(p, "Indicadores", "Registrar medição", () => measSheet(p),
+    h("p", {class: "pg-s"}, "Valores registrados no app, com data, unidade e origem. Abra um indicador para ver o gráfico e o histórico."),
+    withData.length ? grp(withData).map(([gname, ks]) => [h("div", {class: "lbl2 ag-m"}, gname), h("div", {class: "glist"}, ks.map(row))])
+      : h("div", {class: "nx none dj-quiet"}, h("b", null, "Nenhum indicador com registros"), h("span", null, "Registros de sono, exercício, emoções, água, medições e resultados de exames formam os indicadores."),
+        h("button", {class: "btn primary sm", type: "button", onclick: () => measSheet(p)}, ic("plus"), "Registrar medição")),
+    h("button", {class: "btn ghost block", type: "button", style: "margin-top:14px", onclick: () => measSheet(p)}, ic("plus"), "Registrar medição"),
+    without.length ? h("details", {class: "src more"}, h("summary", null, `Ainda sem registros (${without.length})`), h("div", {class: "glist"}, without.map(row))) : null,
+    h("p", {class: "care-n"}, "Nada aqui é estimado: sem registro, o indicador fica vazio. Os indicadores podem ser escolhidos em Minhas Prioridades."));
+}
+
+/* ---------- Minhas Prioridades ----------
+   O que a pessoa escolheu acompanhar (sozinha ou com o profissional). Cada prioridade usa os indicadores que já existem no app (sem cópia de registros).
+   Situações: ativa · concluída · arquivada. Uma principal (opcional) e as que ficam em destaque no resumo da Saúde. Sem limite de quantidade;
+   acima de 5 ativas, o app sugere enxugar. Sem pontuação, porcentagem ou classificação de risco. */
+const GOAL_TPL = [
+  {k: "sono", n: "Melhorar a qualidade do sono", inds: ["sono.dur", "sono.q"]},
+  {k: "composicao", n: "Melhorar a composição corporal", inds: ["meas:peso", "meas:cintura", "meas:gordura"]},
+  {k: "atividade", n: "Aumentar a atividade física", inds: ["mov.min", "mov.dias"]},
+  {k: "pressao", n: "Acompanhar a pressão arterial", inds: ["meas:pa"]},
+  {k: "glicemia", n: "Monitorar a glicemia ou HbA1c", inds: ["lab:glicose", "lab:hba1c"]},
+  {k: "alimentacao", n: "Melhorar hábitos alimentares", inds: ["refeicoes"]},
+  {k: "exames", n: "Acompanhar exames laboratoriais", inds: []},
+  {k: "hidratacao", n: "Melhorar a hidratação", inds: ["agua"]},
+  {k: "recuperacao", n: "Acompanhar a recuperação física", inds: ["meas:dor", "sono.dur", "mov.min"]},
+  {k: "emocional", n: "Melhorar o bem-estar emocional", inds: ["humor"], adult: true}
+];
+const GOAL_ST = {ativa: "Ativa", concluida: "Concluída", arquivada: "Arquivada"};
+const goalsOf = p => careOf(p).goals;
+const goalsSorted = (p, st) => goalsOf(p).filter(g => g.status === st).sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || (a.at || 0) - (b.at || 0));
+const goalTxt = (k, t, unit) => `${t.op === "min" ? "pelo menos" : "até"} ${k === "meas:pa" && t.v2 != null ? `${fmtN(t.v, 0)}/${fmtN(t.v2, 0)}` : k === "sono.dur" ? fmtDur(t.v * 60) : fmtN(t.v)}${k === "sono.dur" ? "" : " " + (unit || "")}`.trim();
+const goalLog = (g, ev) => { g.log = g.log || []; g.log.push({at: Date.now(), ev}); };
+function setGoal(p, g, status){
+  const prev = {status: g.status, main: g.main, log: (g.log || []).slice()}; g.status = status; if (status !== "ativa") g.main = false;
+  goalLog(g, status === "ativa" ? "reativada" : status === "concluida" ? "concluída" : "arquivada"); touch(p); render();
+  toast(status === "ativa" ? "Prioridade reativada" : status === "concluida" ? "Prioridade concluída" : "Prioridade arquivada", () => { Object.assign(g, prev); touch(p); render(); });
+}
+function moveGoal(p, g, dir){
+  const L = goalsSorted(p, "ativa"), i = L.indexOf(g), j = i + dir; if (i < 0 || j < 0 || j >= L.length) return;
+  [L[i], L[j]] = [L[j], L[i]]; L.forEach((x, n) => { x.order = n; }); touch(p); render();
+  const el = document.querySelector(`[data-g="${g.id}"] .mv-${dir < 0 ? "up" : "dn"}`) || document.querySelector(`[data-g="${g.id}"] .mv-${dir < 0 ? "dn" : "up"}`); if (el) el.focus();
+}
+function prioSheet(p, g, tplK){
+  const editing = !!g, tpl = GOAL_TPL.find(t => t.k === (tplK || (g && g.tpl))) || null;
+  const d = g ? JSON.parse(JSON.stringify(g)) : {name: tpl ? tpl.n : "", desc: "", inds: tpl ? tpl.inds.filter(k => indChoices(p).includes(k)) : [], targets: {}, main: false, star: false, tpl: tpl ? tpl.k : null};
+  if (!editing && tpl && tpl.k === "exames") d.inds = [...new Set(careOf(p).labs.map(r => "lab:" + r.key))].slice(0, 4);
+  sheet(editing ? "Editar prioridade" : "Nova prioridade", (el, close) => {
+    const name = txtIn("pr-nome", d.name, "Ex.: Dormir melhor", {maxlength: "80"}), desc = area("pr-desc", d.desc, "Opcional. Ex.: combinado com a Dra. Ana, revisar em março", 280);
+    const body = h("div"), hint = h("p", {class: "note", "aria-live": "polite"});
+    const ok = h("button", {class: "btn primary block", type: "button", onclick: () => commit()}, editing ? "Salvar" : "Criar prioridade");
+    const check = () => { ok.disabled = !name.value.trim(); hint.textContent = ok.disabled ? "Dê um nome à prioridade." : ""; };
+    function tRow(k){
+      const info = indInfo(p, k), t = d.targets[k] || {op: k === "mov.min" || k === "mov.dias" || k === "agua" || k === "sono.dur" ? "min" : "max", v: null, v2: null}, unit = indSeries(p, k).unit || info.u;
+      if (["sono.q", "humor", "refeicoes"].includes(k)) return null;
+      const v = txtIn("pr-t-" + k.replace(/\W/g, ""), t.v != null ? fmtN(t.v, 2) : "", k === "sono.dur" ? "horas, ex.: 7,5" : "Valor", {inputmode: "decimal", "aria-label": `Meta de ${info.n}`});
+      const v2 = k === "meas:pa" ? txtIn("pr-t2", t.v2 != null ? fmtN(t.v2, 0) : "", "Diastólica", {inputmode: "decimal", "aria-label": "Meta da diastólica"}) : null;
+      const upd = () => { const a = C.parseNum(v.value), b = v2 ? C.parseNum(v2.value) : null; if (a == null) delete d.targets[k]; else d.targets[k] = {op: t.op, v: k === "sono.dur" ? a : a, v2: b}; };
+      v.addEventListener("input", upd); if (v2) v2.addEventListener("input", upd);
+      return h("div", {class: "tg"}, h("div", {class: "tg-h"}, h("b", null, info.n), unit ? h("span", null, k === "sono.dur" ? "horas" : unit) : null),
+        h("div", {class: "tg-r"}, chips([["max", "Até"], ["min", "Pelo menos"]], t.op, x => { if (x) { t.op = x; d.targets[k] = Object.assign(d.targets[k] || {v: null, v2: null}, {op: x}); upd(); paint(); } }), v, v2));
+    }
+    function paint(){
+      const ch = indChoices(p);
+      put(body,
+        h("div", {class: "lbl2"}, "Indicadores para acompanhar ", h("span", {class: "opt"}, "opcional")),
+        h("div", {class: "chips ind", role: "group", "aria-label": "Indicadores"}, ch.map(k => { const on = d.inds.includes(k), has = indSeries(p, k).points.length > 0;
+          return h("button", {type: "button", class: on ? "on" : "", "aria-pressed": String(on), onclick: () => { d.inds = on ? d.inds.filter(x => x !== k) : [...d.inds, k]; if (on) delete d.targets[k]; paint(); }},
+            indInfo(p, k).n, has ? null : h("span", {class: "ch-n"}, " · sem registros")); })),
+        h("p", {class: "note"}, "Os indicadores usam os registros que já existem no app; nada é copiado. Sem registros, a prioridade mostra que o acompanhamento ainda não começou."),
+        d.inds.some(k => !["sono.q", "humor", "refeicoes"].includes(k)) ? [h("div", {class: "lbl2"}, "Metas ", h("span", {class: "opt"}, "opcional · definidas por você ou com o profissional")),
+          h("div", {class: "tgs"}, d.inds.map(tRow))] : null,
+        h("div", {class: "lbl2"}, "Destaque"),
+        h("label", {class: "chk"}, h("input", {type: "checkbox", checked: d.main, onchange: e => { d.main = e.target.checked; }}), h("span", null, "Prioridade principal (aparece no cartão da tela Hoje)")),
+        h("label", {class: "chk"}, h("input", {type: "checkbox", checked: d.star, onchange: e => { d.star = e.target.checked; }}), h("span", null, "Em destaque no resumo da Saúde")));
+    }
+    function commit(){
+      if (ok.disabled) return;
+      const L = goalsOf(p), rec = g || {id: uid(), at: Date.now(), status: "ativa", order: Math.max(-1, ...L.filter(x => x.status === "ativa").map(x => x.order ?? 0)) + 1, log: []};
+      const targets = {}; for (const k of d.inds) if (d.targets[k] && d.targets[k].v != null) targets[k] = d.targets[k];
+      Object.assign(rec, {name: name.value.trim(), desc: desc.value.trim(), inds: d.inds, targets, main: rec.status === "ativa" && d.main, star: d.star, tpl: d.tpl || null, updated: Date.now()});
+      if (rec.main) for (const x of L) if (x !== rec) x.main = false;
+      if (!editing) { goalLog(rec, "criada"); L.push(rec); }
+      touch(p); close(); render();
+      toast(editing ? "Prioridade atualizada" : `Prioridade criada: ${rec.name}`, editing ? null : () => { L.splice(L.indexOf(rec), 1); touch(p); render(); });
+    }
+    name.addEventListener("input", check);
+    paint(); check();
+    el.append(h("h2", null, editing ? g.name : "Nova prioridade"),
+      h("p", {class: "sh-sub"}, `No perfil de ${firstName(p.name)}. Escolhida por você ou com apoio profissional; não é diagnóstico.`),
+      field("pr-nome", "Nome", name), field("pr-desc", "Descrição", desc, true), body, hint, h("div", {class: "confirmbar"}, ok));
+    if (!editing && !tpl) setTimeout(() => name.focus(), 60);
+  });
+}
+function prioRow(p, g, org, i, n){
+  const inds = g.inds || [], first = inds.find(k => indSeries(p, k).points.length), more = inds.length - 1;
+  const sub = !inds.length ? "Sem indicadores escolhidos" : first ? `${indInfo(p, first).n}: ${indLine(p, first)}${more > 0 ? ` · +${more}` : ""}` : "Acompanhamento ainda não começou";
+  return h("div", {class: "grow pr" + (org ? " org" : ""), "data-g": g.id},
+    h("button", {class: "pr-o", type: "button", onclick: () => go({hsub: "prioridade", gid: g.id})},
+      h("span", {class: "gr-i c-goal", html: g.star ? ICON.starOn : ICON.target}),
+      h("span", {class: "gr-m"}, h("b", null, h("span", {class: "gr-tt"}, g.name), g.main ? stChip("principal", "fut") : null), h("span", null, sub)),
+      org ? null : h("span", {class: "li-go", html: ICON.right})),
+    org ? h("span", {class: "mv"}, h("button", {class: "tool mv-up", type: "button", disabled: i === 0, "aria-label": `Subir ${g.name}`, onclick: () => moveGoal(p, g, -1), html: ICON.chev}),
+      h("button", {class: "tool mv-dn", type: "button", disabled: i === n - 1, "aria-label": `Descer ${g.name}`, onclick: () => moveGoal(p, g, 1), html: ICON.chev})) : null);
+}
+function renderPriorities(p){
+  const act = goalsSorted(p, "ativa"), done = goalsSorted(p, "concluida"), arch = goalsSorted(p, "arquivada"), main = act.find(g => g.main), org = !!view.gorg && act.length > 1;
+  const used = new Set(goalsOf(p).map(g => g.tpl).filter(Boolean)), sug = GOAL_TPL.filter(t => !used.has(t.k) && (adultOf(p) || !t.adult));
+  const sugRow = t => h("button", {class: "grow hub", type: "button", onclick: () => prioSheet(p, null, t.k)}, h("span", {class: "gr-i c-goal", html: ICON.target}),
+    h("span", {class: "gr-m"}, h("b", null, t.n), h("span", null, t.inds.length ? t.inds.filter(k => indChoices(p).includes(k)).map(k => indInfo(p, k).n).join(" · ") : "Escolha os marcadores dos seus exames")), h("span", {class: "li-go", html: ICON.plus}));
+  const hero = main ? h("button", {class: "nx dj-glass prio", type: "button", onclick: () => go({hsub: "prioridade", gid: main.id})},
+      h("span", {class: "nx-h"}, h("span", {class: "nx-e"}, "Prioridade principal")), h("b", {class: "nx-d"}, main.name),
+      main.desc ? h("span", {class: "nx-s"}, main.desc) : null,
+      (main.inds || []).slice(0, 2).map(k => h("span", {class: "nx-s"}, `${indInfo(p, k).n}: ${indLine(p, k)}`))) : null;
+  modPage(p, "Minhas Prioridades", "Nova prioridade", () => prioSheet(p),
+    h("p", {class: "pg-s"}, "O que você escolheu acompanhar, com os dados que já estão no app. Sem pontuação nem diagnóstico."),
+    hero,
+    act.length ? [h("div", {class: "sec-row"}, h("h2", {class: "sec-t"}, `Ativas · ${act.length}`), act.length > 1 ? h("button", {class: "link", type: "button", onclick: () => go({gorg: !org}, true)}, org ? "Concluir" : "Organizar") : null),
+        h("div", {class: "glist"}, act.map((g, i) => prioRow(p, g, org, i, act.length))),
+        act.length > 5 ? h("p", {class: "note"}, "Muitas prioridades ativas ao mesmo tempo dispersam a atenção. Um conjunto de 3 a 5 costuma ser mais fácil de acompanhar; as outras podem ser arquivadas e reativadas depois.") : null]
+      : h("div", {class: "nx none dj-quiet"}, h("b", null, "Nenhuma prioridade definida"), h("span", null, "Escolha uma sugestão abaixo ou crie a sua. Comece com poucas: uma a três já ajudam a dar foco."),
+        h("button", {class: "btn primary sm", type: "button", onclick: () => prioSheet(p)}, ic("plus"), "Criar prioridade")),
+    sug.length ? (act.length ? h("details", {class: "src more"}, h("summary", null, `Sugestões (${sug.length})`), h("div", {class: "glist"}, sug.map(sugRow)))
+      : [h("h2", {class: "sec-t"}, "Sugestões"), h("div", {class: "glist"}, sug.map(sugRow))]) : null,
+    done.length ? h("details", {class: "src more"}, h("summary", null, `Concluídas (${done.length})`), h("div", {class: "glist"}, done.map(g => prioRow(p, g)))) : null,
+    arch.length ? h("details", {class: "src more"}, h("summary", null, `Arquivadas (${arch.length})`), h("div", {class: "glist"}, arch.map(g => prioRow(p, g)))) : null,
+    h("button", {class: "btn ghost block", type: "button", style: "margin-top:14px", onclick: () => go({hsub: "indicadores"})}, "Ver todos os indicadores"),
+    h("p", {class: "care-n"}, `As prioridades são de ${firstName(p.name)}: cada perfil da família tem as suas.`));
+}
+function renderPriority(p){
+  const g = goalsOf(p).find(x => x.id === view.gid); if (!g) { go({hsub: "prioridades"}); return; }
+  const slot = h("div");
+  const indRow = k => { const info = indInfo(p, k), q = indLast(p, k), t = g.targets && g.targets[k];
+    return h("button", {class: "grow lr", type: "button", onclick: () => go({hsub: "indicador", ik: k, ip: g.id, ir: "all", iall: false})},
+      h("span", {class: "gr-m"}, h("b", null, info.n), h("span", null, q ? `${indWhen(k, q)} · ${q.src || info.src}` : "Acompanhamento ainda não começou"), t ? h("span", {class: "gr-x"}, `Meta: ${goalTxt(k, t, (q && q.s.unit) || info.u)}`) : null),
+      q ? h("span", {class: "lr-v"}, indVal(k, q, q.s.unit)) : null, h("span", {class: "li-go", html: ICON.right})); };
+  const LOGT = {"criada": "Criada", "concluída": "Concluída", "arquivada": "Arquivada", "reativada": "Reativada"};
+  put(app, h("div", {class: "view mod"}, topBar(quickBtn(p, "saude")),
+    h("button", {class: "back", type: "button", onclick: () => go({hsub: "prioridades"})}, ic("left"), "Prioridades"),
+    h("div", {class: "pg-row"}, h("h1", {class: "pg"}, g.name), h("button", {class: "sec-add", type: "button", "aria-label": "Editar prioridade", onclick: () => prioSheet(p, g)}, ic("edit"))),
+    h("p", {class: "pg-s"}, [GOAL_ST[g.status], g.main ? "principal" : "", g.star ? "em destaque" : ""].filter(Boolean).join(" · ")),
+    g.desc ? h("p", {class: "pr-desc"}, g.desc) : null,
+    h("h2", {class: "sec-t"}, "Indicadores"),
+    (g.inds || []).length ? h("div", {class: "glist"}, g.inds.map(indRow)) : h("button", {class: "gempty", type: "button", onclick: () => prioSheet(p, g)}, "Nenhum indicador escolhido. Toque para escolher o que acompanhar (sono, exercício, medições, exames…)."),
+    g.status === "ativa" ? h("div", {class: "g2", style: "margin-top:16px"},
+        h("button", {class: "btn ghost block", type: "button", onclick: () => { const L = goalsOf(p); const was = L.find(x => x.main); for (const x of L) x.main = false; g.main = was !== g; touch(p); render(); toast(g.main ? "Definida como principal" : "Deixou de ser a principal"); }}, g.main ? "Tirar de principal" : "Tornar principal"),
+        h("button", {class: "btn ghost block", type: "button", onclick: () => { g.star = !g.star; touch(p); render(); toast(g.star ? "Em destaque no resumo da Saúde" : "Fora do destaque"); }}, g.star ? "Tirar do destaque" : "Pôr em destaque"))
+      : null,
+    h("div", {class: "g2", style: "margin-top:10px"},
+      g.status === "ativa" ? h("button", {class: "btn primary block", type: "button", onclick: () => setGoal(p, g, "concluida")}, ic("check"), "Concluir")
+        : h("button", {class: "btn primary block", type: "button", onclick: () => setGoal(p, g, "ativa")}, "Reativar"),
+      g.status === "arquivada" ? h("button", {class: "btn ghost block", type: "button", onclick: () => prioSheet(p, g)}, ic("edit"), "Editar")
+        : h("button", {class: "btn ghost block", type: "button", onclick: () => setGoal(p, g, "arquivada")}, "Arquivar")),
+    (g.log || []).length ? [h("h2", {class: "sec-t"}, "Histórico"), h("div", {class: "kvs"}, [...g.log].reverse().slice(0, 12).map(x => h("div", {class: "kv"}, h("span", null, LOGT[x.ev] || x.ev), h("b", null, fmtMoment(x.at)))))] : null,
+    slot,
+    h("button", {class: "btn danger block", type: "button", style: "margin-top:14px", onclick: () => ask(slot, "Excluir esta prioridade? Os registros e indicadores continuam no app.", [{label: "Excluir", fn: () => {
+      const L = goalsOf(p), i = L.indexOf(g); L.splice(i, 1); touch(p); go({hsub: "prioridades"}); toast("Prioridade excluída", () => { L.splice(i, 0, g); touch(p); render(); }); }}])}, "Excluir prioridade"),
+    h("p", {class: "care-n"}, "Metas e indicadores servem para acompanhar; o app não diz se um valor é bom ou ruim. Converse com o profissional que acompanha você.")));
+}
+
+/* ---------- Hidratação (módulo) ----------
+   Meta diária (35 mL/kg em adultos, ajustável, ou definida pela pessoa), registro opcional do que bebeu (em mL; sem copos, porcentagem ou barra),
+   histórico e lembretes opcionais pelo app Calendário. O exercício não soma volume automático (ver "Como interpretar"). */
+const WATER_ADD = [150, 250, 350, 500];
+const WDAYS = [["MO", "Seg"], ["TU", "Ter"], ["WE", "Qua"], ["TH", "Qui"], ["FR", "Sex"], ["SA", "Sáb"], ["SU", "Dom"]];
+function addWater(p, ml){
+  const L = logsOf(p), n = new Date(), e = {id: uid(), at: Date.now(), date: today(), time: `${pad2(n.getHours())}:${pad2(n.getMinutes())}`, ml};
+  L.water.push(e); touch(p); render(); toast(`${nf0.format(ml)} mL registrados`, () => { L.water.splice(L.water.indexOf(e), 1); touch(p); render(); });
+}
+function waterRemSheet(p){
+  const c = careOf(p), d = Object.assign({on: true, every: 120, start: "09:00", end: "19:00", days: WDAYS.map(x => x[0])}, c.waterRem || {});
+  sheet("Lembretes de água", (el, close) => {
+    const start = h("input", {class: "input dt-in", type: "time", id: "wr-ini", value: d.start}), end = h("input", {class: "input dt-in", type: "time", id: "wr-fim", value: d.end});
+    const cust = txtIn("wr-min", ![60, 120].includes(d.every) ? String(d.every) : "", "minutos", {inputmode: "numeric", "aria-label": "Intervalo em minutos"});
+    const body = h("div"), out = h("p", {class: "note", "aria-live": "polite"});
+    const ok = h("button", {class: "btn primary block", type: "button", onclick: () => commit()}, "Salvar e adicionar ao Calendário");
+    const every = () => d.every === "x" ? C.parseNum(cust.value) : d.every;
+    function check(){
+      const slots = C.slotTimes(start.value, end.value, every()), bad = !slots.length || !d.days.length;
+      ok.disabled = bad;
+      out.textContent = bad ? (!d.days.length ? "Escolha pelo menos um dia." : "Confira os horários: o início vem antes do fim e o intervalo é de pelo menos 15 minutos.")
+        : `${plural(slots.length, "aviso", "avisos")} por dia: ${slots.map(hm).join(", ")}.${slots.length > 10 ? " São muitos avisos; um intervalo maior incomoda menos." : ""}`;
+    }
+    function paint(){
+      put(body,
+        h("div", {class: "lbl2", style: "margin-top:0"}, "Intervalo"), chips([[60, "A cada hora"], [120, "A cada 2 horas"], ["x", "Personalizado"]], [60, 120].includes(d.every) ? d.every : "x", v => { if (v) { d.every = v; paint(); } }),
+        d.every === "x" || ![60, 120].includes(d.every) ? field("wr-min", "Intervalo personalizado (minutos)", cust) : null,
+        h("div", {class: "g2", style: "margin-top:14px"}, field("wr-ini", "Começa às", start), field("wr-fim", "Termina às", end)),
+        h("div", {class: "lbl2", style: "margin-top:0"}, "Dias"),
+        h("div", {class: "chips", role: "group", "aria-label": "Dias"}, WDAYS.map(([k, l]) => { const on = d.days.includes(k); return h("button", {type: "button", class: on ? "on" : "", "aria-pressed": String(on), onclick: () => { d.days = on ? d.days.filter(x => x !== k) : [...d.days, k]; paint(); }}, l); })),
+        out);
+      check();
+    }
+    function commit(){
+      const ev = every(), slots = C.slotTimes(start.value, end.value, ev); if (!slots.length || !d.days.length) return;
+      c.waterRem = {on: true, every: d.every === "x" ? ev : d.every, start: start.value, end: end.value, days: WDAYS.map(x => x[0]).filter(k => d.days.includes(k)), at: Date.now()};
+      const rule = c.waterRem.days.length === 7 ? "FREQ=DAILY" : "FREQ=WEEKLY;BYDAY=" + c.waterRem.days.join(","), title = p.notif && p.notif.detail ? "Hidratação · beber água, se quiser" : "Lembrete BRICEÑO";
+      const ics = C.icsCalendar(slots.map((t, i) => ({uid: `agua-${p.id}-${i}@briceno`, title, date: today(), time: t, floating: true, durMin: 5, rrule: rule, rem: [0], transparent: true})), "Hidratação");
+      touch(p); close(); render();
+      deliverICS(ics, "hidratacao.ics").then(okk => { if (okk) toast("Arquivo do Calendário criado"); }, () => toast("Não foi possível criar o arquivo"));
+    }
+    for (const i of [start, end, cust]) { i.addEventListener("input", check); i.addEventListener("change", check); }
+    paint();
+    el.append(h("h2", null, "Lembretes de água"), h("p", {class: "sh-sub"}, "Um convite discreto para lembrar da água, não uma obrigação de beber naquele horário."), body,
+      h("p", {class: "note"}, "Os avisos ficam no app Calendário (eventos repetidos, que não ocupam a agenda). Para mudar ou parar, apague os eventos “Hidratação” no Calendário e crie de novo aqui."),
+      c.waterRem ? h("button", {class: "btn ghost block", type: "button", onclick: () => { c.waterRem = null; touch(p); close(); render(); toast("Lembretes desligados no app. Apague também os eventos no Calendário."); }}, "Desligar lembretes") : null,
+      h("div", {class: "confirmbar"}, ok));
+  });
+}
+function renderWater(p){
+  const c = careOf(p), L = logsOf(p), w = waterOf(p), t = today(), dayMl = k => L.water.filter(e => e.date === k).reduce((a, e) => a + (e.ml || 0), 0);
+  const todayL = L.water.filter(e => e.date === t).sort((a, b) => (b.at || 0) - (a.at || 0)), tot = dayMl(t);
+  const days = Array.from({length: 14}, (_, i) => C.addDays(t, -i - 1)).filter(k => dayMl(k) > 0), r = c.waterRem;
+  modPage(p, "Hidratação", null, null,
+    h("section", {class: "nx dj-glass water", style: "cursor:default"},
+      h("span", {class: "nx-h"}, h("span", {class: "nx-e"}, "Meta diária"), h("button", {class: "link", type: "button", onclick: () => waterSheet(p)}, "Ajustar")),
+      h("b", {class: "nx-d"}, w.ml ? `${fmtL(w.ml)} L por dia` : "Não definida"),
+      h("span", {class: "nx-s"}, w.src === "manual" ? "Definida por você" : w.ml ? `Estimativa de 35 mL × ${fq.format(p.energy.weight)} kg, ajustável` : "Informe o peso (Perfil → Dados corporais) ou defina um valor")),
+    h("h2", {class: "sec-t"}, "Registro de hoje ", h("span", {class: "opt"}, "opcional")),
+    h("div", {class: "panel"},
+      h("div", {class: "w-tot"}, h("b", null, tot ? `${fmtL(tot)} L` : "Nada registrado"), h("span", null, tot ? "registrados hoje" : "Registrar é opcional: a meta vale com ou sem registro.")),
+      h("div", {class: "w-add", role: "group", "aria-label": "Registrar água"}, WATER_ADD.map(ml => h("button", {class: "btn ghost sm", type: "button", onclick: () => addWater(p, ml)}, `+ ${ml} mL`))),
+      todayL.length ? h("div", {class: "hist"}, todayL.map(e => h("div", {class: "hi"}, h("div", {class: "hi-m"}, h("b", null, `${nf0.format(e.ml)} mL`), h("span", null, " " + (e.time || ""))),
+        h("button", {class: "x", type: "button", "aria-label": `Apagar ${e.ml} mL das ${e.time}`, html: ICON.x, onclick: () => removeLog(p, "water", e, "Registro")})))) : null),
+    days.length ? [h("h2", {class: "sec-t"}, "Últimos dias com registro"), h("div", {class: "kvs"}, days.map(k => h("div", {class: "kv"}, h("span", null, relDay(k)), h("b", null, `${fmtL(dayMl(k))} L`))))] : null,
+    h("h2", {class: "sec-t"}, "Lembretes"),
+    h("button", {class: "grow hub", type: "button", onclick: () => waterRemSheet(p)}, h("span", {class: "gr-i c-water", html: ICON.bell}),
+      h("span", {class: "gr-m"}, h("b", null, r ? `A cada ${r.every % 60 ? r.every + " min" : r.every === 60 ? "hora" : r.every / 60 + " horas"}, das ${hm(r.start)} às ${hm(r.end)}` : "Lembretes desligados"),
+        h("span", null, r ? `${r.days.length === 7 ? "Todos os dias" : WDAYS.filter(x => r.days.includes(x[0])).map(x => x[1]).join(", ")} · pelo app Calendário` : "Opcional: a cada hora, a cada 2 horas ou personalizado")),
+      h("span", {class: "li-go", html: ICON.right})),
+    h("button", {class: "btn ghost block", type: "button", style: "margin-top:14px", onclick: () => go({hsub: "indicador", ik: "agua", ip: null, ir: "all"})}, "Ver o histórico completo"),
+    h("details", {class: "src more"}, h("summary", null, "Como interpretar"),
+      h("p", null, "35 mL por kg é uma estimativa prática para adultos, um ponto de partida ajustável. A necessidade real varia com clima, suor, atividade física, alimentação e condições de saúde."),
+      h("p", null, "Exercício: o app não soma automaticamente um volume por treino, porque a perda de suor varia muito. Se você bebe mais nos dias de treino, ajuste a meta ou registre o que bebeu."),
+      h("p", null, "Pessoas com doença renal, cardíaca ou com restrição de líquidos devem seguir a orientação do seu médico.")));
+}
+
 /* ---------- Suplementos e medicamentos (módulo) ---------- */
 function renderCare(p){
-  const L = careOf(p).meds, cc = careCounts(p), order = (a, b) => (a.paused ? 1 : 0) - (b.paused ? 1 : 0) || MED_WHEN.indexOf(a.when) - MED_WHEN.indexOf(b.when);
+  const L = careOf(p).meds, cc = careCounts(p), order = (a, b) => (medState(a) ? 1 : 0) - (medState(b) ? 1 : 0) || MED_WHEN.indexOf(a.when) - MED_WHEN.indexOf(b.when);
   const sup = L.filter(m => m.cat !== "medicamento").sort(order), med = L.filter(m => m.cat === "medicamento").sort(order);
-  modPage(p, "Suplementos e medicamentos", "Adicionar item", () => medSheet(p),
-    h("p", {class: "pg-s"}, `${plural(cc.sup, "suplemento ativo", "suplementos ativos")} · ${plural(cc.med, "medicamento ativo", "medicamentos ativos")}${cc.paused ? ` · ${plural(cc.paused, "pausado", "pausados")}` : ""}`),
+  const old = L.filter(m => m.catOld).length;
+  modPage(p, "Suplementos e Medicamentos", "Adicionar item", () => medSheet(p),
+    h("p", {class: "pg-s"}, `${plural(cc.sup, "suplemento ativo", "suplementos ativos")} · ${plural(cc.med, "medicamento ativo", "medicamentos ativos")}${cc.paused ? ` · ${plural(cc.paused, "inativo", "inativos")}` : ""}`),
+    old ? h("p", {class: "note warn"}, `${plural(old, "fórmula manipulada cadastrada antes desta versão continua", "fórmulas manipuladas cadastradas antes desta versão continuam")} em Suplementos, como antes. Abra para conferir a categoria.`) : null,
     secHead("Suplementos", "Adicionar suplemento ou fórmula", () => medSheet(p, null, "suplemento"), "sup"),
     sup.length ? h("div", {class: "glist"}, sup.map(m => medRow(p, m))) : h("button", {class: "gempty", type: "button", onclick: () => medSheet(p, null, "suplemento")}, "Nenhum suplemento. Inclua vitaminas, minerais, proteínas em pó e fórmulas manipuladas."),
     secHead("Medicamentos", "Adicionar medicamento", () => medSheet(p, null, "medicamento"), "med"),
     med.length ? h("div", {class: "glist"}, med.map(m => medRow(p, m))) : h("button", {class: "gempty", type: "button", onclick: () => medSheet(p, null, "medicamento")}, "Nenhum medicamento. Inclua os de uso contínuo e os temporários."),
-    h("p", {class: "care-n"}, "Ativos são os itens não pausados. O app não recomenda doses: siga a orientação de quem prescreveu."));
+    h("p", {class: "care-n"}, "Ativos são os itens não pausados, já iniciados e não encerrados (datas de início e término são opcionais). Uma fórmula manipulada conta uma vez. O app não recomenda nem altera doses: siga a orientação de quem prescreveu."));
 }
-function goalsSheet(p){
-  const c = careOf(p);
-  sheet("Prioridades de saúde", (el, close) => {
-    const list = h("div", {class: "glist"}), inp = h("input", {class: "input", id: "pr-novo", placeholder: "Ex.: Manter a vitamina D em dia", maxlength: "120", autocomplete: "off", enterkeyhint: "done"});
-    const add = h("button", {class: "btn primary block", type: "button", onclick: () => addIt()}, "Adicionar prioridade");
-    function paint(){
-      put(list, c.goals.length ? c.goals.map((g, i) => h("div", {class: "grow"}, h("span", {class: "gr-i", html: ICON.heart}), h("span", {class: "gr-m"}, h("b", null, g.text)),
-          h("button", {class: "tool", type: "button", "aria-label": `Remover: ${g.text}`, html: ICON.x, onclick: () => { c.goals.splice(i, 1); touch(p); paint(); render(); toast("Prioridade removida", () => { c.goals.splice(i, 0, g); touch(p); paint(); render(); }); }})))
-        : h("p", {class: "gempty", style: "margin:0"}, "Nenhuma prioridade ainda."));
-      add.disabled = !inp.value.trim();
-    }
-    function addIt(){ const v = inp.value.trim(); if (!v) return; c.goals.push({id: uid(), at: Date.now(), text: v}); inp.value = ""; touch(p); paint(); render(); }
-    inp.addEventListener("input", paint); inp.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); addIt(); } });
-    paint();
-    el.append(h("h2", null, "Prioridades de saúde"), h("p", {class: "sh-sub"}, "O que você quer acompanhar ou melhorar, em palavras suas. O app não interpreta resultados nem faz diagnósticos."),
-      list, h("div", {class: "field", style: "margin-top:14px"}, h("label", {for: "pr-novo"}, "Nova prioridade"), inp), add,
-      h("div", {style: "height:10px"}), h("button", {class: "btn plain block", type: "button", onclick: close}, "Fechar"));
-  });
-}
+// v32: a antiga folha de prioridades (lista de frases) virou a tela Minhas Prioridades
+const goalsSheet = p => go({tab: "saude", hsub: "prioridades"});
 function chips(list, cur, onPick, cls){
   return h("div", {class: "chips" + (cls ? " " + cls : "")}, list.map(([v, l]) => h("button", {type: "button", class: cur === v ? "on" : "", "aria-pressed": String(cur === v), onclick: () => onPick(cur === v && cls === "opt" ? null : v)}, l)));
 }
@@ -4623,7 +5561,7 @@ function foodSheet(opt, done){
 /* ---------- Perfil ---------- */
 function renderProfile(p){
   const e = p.energy, adult = adultOf(p), plan = p.plan;
-  const days = S.lastBackup ? Math.floor((Date.now() - S.lastBackup) / DAY) : null, w = waterOf(p), cr = careOf(p), nx = nextOf(p), nUpA = C.upcoming(cr.appts).length;
+  const days = S.lastBackup ? Math.floor((Date.now() - S.lastBackup) / DAY) : null, w = waterOf(p), cr = careOf(p), nx = nextOf(p), nUpA = C.upcoming(agendaList(p)).length, nAct = goalsOf(p).filter(g => g.status === "ativa").length;
   // linha de informação: título em uma linha; embaixo, o resumo à esquerda e o valor-chave à direita (tabular). Se não couberem lado a lado,
   // o valor desce inteiro para a linha seguinte — nada é cortado nem hifenizado
   const row = (icon, title, sub, fn, id, due, val) => h("button", {class: "prow" + (due ? " due" : ""), type: "button", onclick: fn, id}, h("span", {class: "pr-i", html: ICON[icon]}),
@@ -4642,13 +5580,13 @@ function renderProfile(p){
       row("users", "Família", "Troque no topo da tela", () => familySheet(), "familia", false, nPeople(S.patients.length))),
     h("h2", {class: "sec-t"}, "Planejamento"),
     h("div", {class: "prows"}, energyCard(p),
-      row("drop", "Hidratação", w.ml ? (w.src === "manual" ? "Definida por você" : "Estimativa · 35 mL/kg") : "Definir recomendação diária", () => waterSheet(p), null, false, w.ml ? `${fmtL(w.ml)} L/dia` : null)),
+      row("drop", "Hidratação", w.ml ? (w.src === "manual" ? "Definida por você" : "Estimativa · 35 mL/kg") : "Definir recomendação diária", () => go({tab: "saude", hsub: "agua"}), null, false, w.ml ? `${fmtL(w.ml)} L/dia` : null)),
     h("h2", {class: "sec-t"}, "Saúde e acompanhamento"),
     h("div", {class: "prows"},
-      row("steth", "Consultas", nx.appt ? `Próxima: ${whenShort(nx.appt)}` : "Agenda e histórico", () => go({tab: "saude", hsub: "consultas"}), null, false, nUpA ? plural(nUpA, "agendada", "agendadas") : null),
-      row("flask", "Exames", nx.exam ? `Próximo: ${whenShort(nx.exam)}` : "Agenda, resultados e evolução", () => go({tab: "saude", hsub: "exames"}), null, false, cr.exams.length ? plural(cr.exams.length, "exame", "exames") : null),
-      row("pill", "Suplementos e medicamentos", "Dose e momento de uso", () => go({tab: "saude", hsub: "cuidados"}), null, false, cr.meds.length ? `${cr.meds.length} ${cr.meds.length === 1 ? "item" : "itens"}` : null),
-      row("heart", "Prioridades de saúde", "O que você quer acompanhar", () => goalsSheet(p), null, false, cr.goals.length ? `${cr.goals.length} ${cr.goals.length === 1 ? "definida" : "definidas"}` : null)),
+      row("cal", "Agenda de Saúde", nx.any ? `Próximo: ${whenShort(nx.any)}` : "Consultas, exames e procedimentos", () => go({tab: "saude", hsub: "agenda"}), null, false, nUpA ? plural(nUpA, "agendado", "agendados") : null),
+      row("target", "Minhas Prioridades", "O que você escolheu acompanhar", () => go({tab: "saude", hsub: "prioridades"}), null, false, nAct ? plural(nAct, "ativa", "ativas") : null),
+      row("pulse", "Indicadores", "Medições, sono, exercício e exames", () => go({tab: "saude", hsub: "indicadores"})),
+      row("pill", "Suplementos e Medicamentos", "Dose, horários e uso", () => go({tab: "saude", hsub: "cuidados"}), null, false, cr.meds.length ? `${cr.meds.length} ${cr.meds.length === 1 ? "item" : "itens"}` : null)),
     h("h2", {class: "sec-t"}, "Aplicativo"),
     h("div", {class: "prows"},
       row("lock", "Backup e segurança", "Só neste aparelho", () => backupSheet(), null,
@@ -4781,7 +5719,11 @@ function prefsSheet(){
       h("div", {class: "seg", role: "radiogroup", "aria-label": "Registro do consumo"}, [[false, "Só planejar"], [true, "Registrar também"]].map(([v, l]) =>
         h("button", {type: "button", role: "radio", class: tracks(p) === v ? "on" : "", "aria-checked": String(tracks(p) === v), onclick: () => { p.trackEaten = v; touch(p); paint(); }}, l))),
       h("p", {class: "note"}, "Registrar é opcional. Com “Registrar também”, cada refeição do plano ganha um círculo para marcar o que foi comido."));
-    const paint = () => put(body, track(), list("meals", "Nomes de refeições sugeridos", DEFAULT_MEALS), list("objectives", "Objetivos sugeridos", DEFAULT_OBJ),
+    const cal = () => h("div", null, h("div", {class: "lbl2"}, `Lembretes de ${firstName(p.name)} no Calendário`),
+      h("div", {class: "seg", role: "radiogroup", "aria-label": "Texto dos lembretes"}, [[false, "Título discreto"], [true, "Com detalhes"]].map(([v, l]) =>
+        h("button", {type: "button", role: "radio", class: !!(p.notif && p.notif.detail) === v ? "on" : "", "aria-checked": String(!!(p.notif && p.notif.detail) === v), onclick: () => { p.notif = Object.assign({}, p.notif, {detail: v}); touch(p); paint(); }}, l))),
+      h("p", {class: "note"}, "Discreto: o Calendário e a tela bloqueada mostram “Compromisso de saúde” ou “Lembrete BRICEÑO”. Com detalhes: o tipo do compromisso, o nome do item e o local."));
+    const paint = () => put(body, track(), cal(), list("meals", "Nomes de refeições sugeridos", DEFAULT_MEALS), list("objectives", "Objetivos sugeridos", DEFAULT_OBJ),
       h("div", {class: "lbl2"}, "Alimentos recentes"), h("button", {class: "btn ghost block", type: "button", disabled: !S.prefs.recent.length, onclick: () => { S.prefs.recent = []; save(); paint(); toast("Recentes apagados"); }},
         S.prefs.recent.length ? `Limpar ${S.prefs.recent.length} recentes` : "Nenhum recente"));
     paint();
@@ -4874,7 +5816,7 @@ function profileSheet(p){
     paintSeg(); check();
     const delWrap = h("div", {style: "margin-top:18px;padding-top:14px;border-top:1px solid var(--line)"});
     const idle = () => delWrap.replaceChildren(h("button", {class: "btn danger block", type: "button", onclick: () => ask(delWrap, `Excluir o perfil de ${p.name} e todo o plano dele? Isso não pode ser desfeito.`, [{label: "Excluir", fn: () => {
-      const docIds = careOf(p).exams.flatMap(x => (x.docs || []).map(d => d.id));
+      const docIds = [...careOf(p).exams, ...careOf(p).appts, ...careOf(p).procs].flatMap(x => (x.docs || []).map(d => d.id));
       S.patients = S.patients.filter(x => x.id !== p.id); docsGC(docIds);
       if (S.activeId === p.id) S.activeId = (S.patients[0] || {}).id || null;
       saveNow(); close(); go({tab: "hoje", open: [], edit: null}); toast("Perfil excluído");
@@ -4967,7 +5909,7 @@ function backupSheet(){
     let snap = null; try { for (const k of SNAPS) if (!snap) snap = localStorage.getItem(k); } catch (e) {}   // a cópia mais recente feita antes de uma atualização
     el.append(h("h2", null, "Backup"),
       h("p", {class: "sh-sub"}, S.lastBackup ? `Último backup: ${new Date(S.lastBackup).toLocaleDateString("pt-BR")}` : "Nenhum backup feito ainda."),
-      h("p", {class: "note", style: "margin:-8px 0 14px"}, "O backup contém os dados de saúde da família (inclusive consultas, exames e resultados), sem criptografia. Guarde o arquivo em um lugar só seu. Documentos anexados a exames (PDF e imagens) não entram no backup: ficam só neste aparelho."),
+      h("p", {class: "note", style: "margin:-8px 0 14px"}, "O backup contém os dados de saúde da família (inclusive agenda, exames, resultados, procedimentos, prioridades e medições), sem criptografia. Guarde o arquivo em um lugar só seu. Documentos anexados (PDF e imagens) não entram no backup: ficam só neste aparelho."),
       h("div", {class: "bk-row"},
         embedded ? null : h("button", {class: "btn primary block", type: "button", onclick: exportNow}, "Exportar backup (arquivo)"),
         h("button", {class: embedded ? "btn primary block" : "btn ghost block", type: "button", onclick: copyNow}, "Copiar backup"),

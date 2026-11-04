@@ -571,6 +571,95 @@
     return {unit: best, points, excluded};
   }
 
+  /* ---------- lembretes pelo app Calendário (arquivo .ics, RFC 5545) ----------
+     O BRICEÑO é um app web: não agenda notificações próprias. Os lembretes viajam dentro de um evento de calendário
+     (VALARM) e quem avisa é o app Calendário do aparelho. Compromissos com horário: instante exato em UTC (calculado no fuso do
+     compromisso). Sem horário: evento de dia inteiro, com avisos às 9h00 do fuso do compromisso. Repetições diárias ou semanais
+     (medicamentos, hidratação): hora "flutuante", que acompanha o fuso do aparelho. */
+  const icsEsc = s => String(s ?? "").replace(/\\/g, "\\\\").replace(/;/g, "\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+  const icsUTC = ms => new Date(ms).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+  const icsDay = d => String(d).replace(/-/g, "");
+  const icsLocal = (d, t) => icsDay(d) + "T" + String(t || "00:00").replace(":", "") + "00";
+  // linhas com mais de 75 bytes (UTF-8) continuam na linha seguinte, iniciada por espaço; nunca parte um caractere ao meio
+  function icsFold(line){
+    const out = []; let cur = "", n = 0;
+    for (const ch of line){ const b = unescape(encodeURIComponent(ch)).length; if (n + b > (out.length ? 74 : 75)) { out.push(cur); cur = ""; n = 0; } cur += ch; n += b; }
+    out.push(cur); return out.join("\r\n ");
+  }
+  // duração antes do início: 10080 → -P7D · 120 → -PT2H · 30 → -PT30M · 1500 → -P1DT1H
+  function icsBefore(min){
+    min = Math.max(0, Math.round(min)); if (!min) return "PT0S";
+    const d = Math.floor(min / 1440), h = Math.floor(min % 1440 / 60), m = min % 60;
+    return "-P" + (d ? d + "D" : "") + (h || m ? "T" + (h ? h + "H" : "") + (m ? m + "M" : "") : "");
+  }
+  // lembretes de um compromisso → instantes absolutos (ms), em ordem. rem: minutos antes do início ou {at: "AAAA-MM-DDTHH:MM"} no fuso do compromisso.
+  // Sem horário, "x minutos antes" conta a partir das 9h00 do dia (aviso de dia inteiro).
+  function remTimes(e, rem){
+    const base = e.time ? eventStart(e) : zonedEpoch(e.date, "09:00", e.tz); if (base == null) return [];
+    const out = [];
+    for (const r of rem || []){
+      if (typeof r === "number" && r >= 0) out.push(base - r * 60000);
+      else if (r && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(r.at || "")) { const v = zonedEpoch(r.at.slice(0, 10), r.at.slice(11), e.tz); if (v != null) out.push(v); }
+    }
+    return [...new Set(out)].sort((a, b) => a - b);
+  }
+  /* Um evento. o: {uid, title, date, time, tz, durMin, location, desc, rem, seq, rrule, floating, transparent, now}
+     rrule (só com floating): "FREQ=DAILY" ou "FREQ=WEEKLY;BYDAY=MO,WE". */
+  function icsEvent(o){
+    const L = ["BEGIN:VEVENT", "UID:" + o.uid, "DTSTAMP:" + icsUTC(o.now || Date.now()), "SEQUENCE:" + (o.seq || 0)];
+    const dur = o.durMin > 0 ? o.durMin : 60;
+    if (o.floating) L.push("DTSTART:" + icsLocal(o.date, o.time), "DURATION:" + icsBefore(dur).replace("-", ""));
+    else if (!o.time){ const [y, m, d] = o.date.split("-").map(Number), nx = new Date(Date.UTC(y, m - 1, d + 1)).toISOString().slice(0, 10); L.push("DTSTART;VALUE=DATE:" + icsDay(o.date), "DTEND;VALUE=DATE:" + icsDay(nx)); }
+    else { const t0 = zonedEpoch(o.date, o.time, o.tz); L.push("DTSTART:" + icsUTC(t0), "DTEND:" + icsUTC(t0 + dur * 60000)); }
+    if (o.rrule && o.floating) L.push("RRULE:" + o.rrule);
+    L.push("SUMMARY:" + icsEsc(o.title));
+    if (o.location) L.push("LOCATION:" + icsEsc(o.location));
+    if (o.desc) L.push("DESCRIPTION:" + icsEsc(o.desc));
+    L.push("TRANSP:" + (o.transparent ? "TRANSPARENT" : "OPAQUE"));
+    const alarm = trig => L.push("BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:" + icsEsc(o.title), trig, "END:VALARM");
+    if (o.floating) for (const r of o.rem || []) { if (typeof r === "number") alarm("TRIGGER:" + icsBefore(r)); }
+    else if (o.time) for (const r of o.rem || []) { if (typeof r === "number") alarm("TRIGGER:" + icsBefore(r)); else for (const t of remTimes(o, [r])) alarm("TRIGGER;VALUE=DATE-TIME:" + icsUTC(t)); }
+    else for (const t of remTimes(o, o.rem)) alarm("TRIGGER;VALUE=DATE-TIME:" + icsUTC(t));
+    L.push("END:VEVENT"); return L;
+  }
+  function icsCalendar(events, name){
+    const L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//BRICENO//Agenda de Saude//PT-BR", "CALSCALE:GREGORIAN", "METHOD:PUBLISH"];
+    if (name) L.push("X-WR-CALNAME:" + icsEsc(name));
+    for (const e of events) L.push(...icsEvent(e));
+    L.push("END:VCALENDAR"); return L.map(icsFold).join("\r\n") + "\r\n";
+  }
+  // horários de um intervalo (hidratação): de start a end (HH:MM), a cada "every" minutos; no máximo 24
+  function slotTimes(start, end, every){
+    const a = toMin(start), b = toMin(end); if (a == null || b == null || !(every >= 15) || b < a) return [];
+    const out = []; for (let m = a; m <= b && out.length < 24; m += every) out.push(pad(Math.floor(m / 60)) + ":" + pad(m % 60));
+    return out;
+  }
+
+  /* ---------- indicadores (Prioridades e Saúde) ----------
+     Séries de pontos {date, t, v} a partir dos registros que já existem; nada é estimado ou interpolado. */
+  // ativo = não pausado, já começou e não terminou (datas opcionais, AAAA-MM-DD)
+  const medActive = (m, today) => !m.paused && (!m.start || m.start <= today) && (!m.end || m.end >= today);
+  // soma por semana (segunda a domingo), só das semanas que têm registro: semana sem registro não vira zero
+  function weekSeries(list, val){
+    const m = new Map();
+    for (const e of list || []){ if (!/^\d{4}-\d{2}-\d{2}$/.test(e.date || "")) continue; const v = val(e); if (!Number.isFinite(v)) continue;
+      const k = weekKeys(e.date)[0], g = m.get(k) || {date: k, v: 0, n: 0, days: new Set()}; g.v += v; g.n++; g.days.add(e.date); m.set(k, g); }
+    return [...m.values()].sort((a, b) => a.date < b.date ? -1 : 1).map(g => ({date: g.date, t: zonedEpoch(g.date, "12:00"), v: g.v, n: g.n, days: g.days.size}));
+  }
+  // série diária: um ponto por registro (no mesmo dia, o mais recente), em ordem de data
+  function daySeries(list, val){
+    const m = new Map();
+    for (const e of list || []){ if (!/^\d{4}-\d{2}-\d{2}$/.test(e.date || "")) continue; const v = val(e); if (!Number.isFinite(v)) continue;
+      const prev = m.get(e.date); if (!prev || (e.at || 0) >= (prev.at || 0)) m.set(e.date, {date: e.date, t: zonedEpoch(e.date, e.time || "12:00"), v, at: e.at || 0, id: e.id, src: e}); }
+    return [...m.values()].sort((a, b) => a.t - b.t);
+  }
+  // comparação neutra entre a primeira e a última medição do período (sem dizer se é melhor ou pior)
+  function compareSeries(points){
+    if (!points || points.length < 2) return null;
+    const a = points[0], b = points[points.length - 1];
+    return {first: a, last: b, diff: b.v - a.v, days: Math.round((b.t - a.t) / 864e5), n: points.length};
+  }
+
   /* Próxima ação: no máximo uma sugestão, só com dados suficientes, nunca diagnóstico.
      Pilares de movimento e sono só geram sugestão para quem já começou a registrá-los, e só para adultos. */
   function nextAction(c){
@@ -589,7 +678,8 @@
     return null;
   }
 
-  return {zonedEpoch, eventStart, eventEnd, isUpcoming, isOverdue, upcoming, nextEvent, monthCounts, yearCounts, LAB, labInfo, markerKey, unitKey, unitFactor, convert, parseNum, labSeries,
+  return {icsEsc, icsFold, icsBefore, remTimes, icsEvent, icsCalendar, slotTimes, medActive, weekSeries, daySeries, compareSeries,
+    SCHEDULED, zonedEpoch, eventStart, eventEnd, isUpcoming, isOverdue, upcoming, nextEvent, monthCounts, yearCounts, LAB, labInfo, markerKey, unitKey, unitFactor, convert, parseNum, labSeries,
     waterRec, addMonths, examNext, eatenDay, dayKey, addDays, weekKeys, moveWeek, moveRef, sleepMinutes, sleepStats, sleepRef, nextAction,
     norm, normCh, words, parseLabel, friendly, createFoodDB, searchFoods, within1, measureOf, calcItem, sum, mealTotal, planTotal, macroSplit,
     ageOf, FAO_LV, FAO_FA, faoTMB, DRI_LV, driCalc, energyOf, roleOf, roundQty, equivalent, substitutes, CRITERIA, NO_DATA};

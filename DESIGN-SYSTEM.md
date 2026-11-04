@@ -28,11 +28,12 @@ Cada material tem a cor do material e uma base profunda.
 | `--dj-emerald` | `#3FBFA0` | `#061B16` | Emerald Titanium | Exercício |
 | `--dj-amethyst` | `#9F86EA` | `#170F2C` | Deep Amethyst | Sono |
 | `--dj-ruby` | `#E66F8E` | `#250D17` | Rose Ruby | Emocional |
-| `--dj-champagne` | `#D7B378` | `#19130B` | Champagne Bronze | GET (Perfil; fora da Home desde a v31) |
+| `--dj-champagne` | `#D7B378` | `#19130B` | Champagne Bronze | Prioridades (Home, v32) · GET (Perfil) · linha de meta nos gráficos |
 | `--dj-sapphire` | `#35A9E0` | `#06172A` | Sapphire Blue | Hidratação |
-| `--dj-peridot` | `#A6C452` | `#0F1708` | Peridot Olive | Suplementos e Medicamentos (cartão "Em uso") |
-| `--dj-midnight` | `#6F98E6` | `#0B1430` | Midnight Sapphire | Exames (Home, gráficos) · ícone de medicamentos |
-| `--dj-amber` | `#E0A25C` | `#1D1307` | Honey Amber | Consultas (v31) |
+| `--dj-peridot` | `#A6C452` | `#0F1708` | Peridot Olive | Suplementos e Medicamentos |
+| `--dj-midnight` | `#6F98E6` | `#0B1430` | Midnight Sapphire | Agenda de Saúde (Home, v32) · Exames · gráficos · ícone de medicamentos |
+| `--dj-amber` | `#E0A25C` | `#1D1307` | Honey Amber | Consultas (módulo e listas) |
+| `--dj-rosegold` | `#E39A8A` | — | Rose Gold | Procedimentos (ícone e destaque nos módulos; sem cartão na Home) |
 
 ### 2.2 Sinal cobre e divisórias
 
@@ -185,11 +186,23 @@ A sofisticação cresce com a importância da informação, não com a quantidad
 | **Histórico anual** (`apptChart`, `.mc`) | Consultas | 12 meses, barras empilhadas em âmbar: realizadas (cheia), a confirmar (hachurada), agendadas (contorno), canceladas (grafite). Total de realizadas no topo; toque no mês lista as consultas. |
 | **Gráfico de evolução** (`labChart`, `.lc`) | Exames | Linha fina que só liga medições; pontos são os resultados. Eixo do tempo proporcional às datas reais; uma unidade por gráfico; faixa de referência só quando todos os pontos têm a mesma. Seleção mostra valor, data, referência, laboratório e, se convertido, o valor original. |
 
-**Regras da agenda.** Próximo compromisso = só consultas "agendada" e exames "agendado" que ainda não passaram, no fuso em que foram marcados; sem horário, valem até o fim do dia. Cancelados, realizados e solicitados nunca são "próximos". A Home é redesenhada sozinha quando o compromisso exibido passa.
+### 3.9 Prioridades, Agenda de Saúde e indicadores (v32)
+
+| Componente | Onde | Anatomia |
+|---|---|---|
+| **Cartão Prioridades** (`jewelCard`, material `prio`) | Home, grupo C | Título · "3 ativas" · prioridade principal (uma linha, reticências) ou "Em acompanhamento". Vazio: "Nenhuma definida" · "Escolha o que acompanhar". Sem pontuação nem porcentagem. |
+| **Cartão Agenda de Saúde** (`jewelEvent`, material `agenda`) | Home, grupo C | Título em até duas linhas · data e horário · identificação pela finalidade ("Consulta · Cardiologia", "Exame de sangue", "Infiltração · joelho direito"). Próximo compromisso de qualquer tipo. Vazio: "Nenhum agendado" · "Adicionar compromisso" (sem "+" isolado). |
+| **Cartão Suplementos e Medicamentos** (`jewelCare`) | Home, grupo B | Título completo em até duas linhas · "2 supl. · 1 med." numa linha (as abreviações ficam logo abaixo do título por extenso; o VoiceOver lê por extenso). |
+| **Títulos em duas linhas** (`.hc-2l`) | Home | Quebram entre palavras, sem reduzir a letra; a pastilha fica alinhada à primeira linha. Valor e legenda do grupo C ancorados na base, alinhados com o vizinho. |
+| **Linha da agenda** (`.grow.ag`) | Agenda de Saúde | Tipo em versalete na cor do módulo (consulta âmbar, exame safira, procedimento ouro rosé) · título · horário e local. Próximos agrupados por mês; histórico do mais recente ao mais antigo. |
+| **Lembretes** (`remBlock`, `calBlock`) | Cadastros de consulta, exame e procedimento | Fichas múltiplas (7 dias, 1 dia, 2 horas, 30 minutos; sem horário: 7 dias, 1 dia, no dia às 9h00) e horário personalizado. Prévia dos instantes. Entrega por arquivo de calendário; aviso quando o compromisso mudou depois de enviado. |
+| **Gráfico genérico** (`lineChart`) | Indicadores | Mesmo desenho do gráfico de exames; segunda série (diastólica) em champanhe; linha de meta tracejada em champanhe com o rótulo "Sua meta". |
+
+ Próximo compromisso = só consultas "agendada" e exames "agendado" que ainda não passaram, no fuso em que foram marcados; sem horário, valem até o fim do dia. Cancelados, realizados e solicitados nunca são "próximos". A Home é redesenhada sozinha quando o compromisso exibido passa.
 
 ## 4. Layout da Home: motor adaptativo
 
-Ordem (v31): cabeçalho (seletor + "+", saudação, data) · **A** pilares 2 × 2 · divisória · **B** Hidratação + Suplementos e Medicamentos ("Em uso") · divisória · **C** Consultas + Exames. Oito cartões, quatro linhas de dois. O GET saiu da Home e continua em Perfil → Planejamento.
+Ordem (v32): cabeçalho (seletor + "+", saudação, data) · **A** pilares 2 × 2 · divisória · **B** Hidratação + Suplementos e Medicamentos · divisória · **C** Prioridades + Agenda de Saúde. Oito cartões, quatro linhas de dois. O GET saiu da Home e continua em Perfil → Planejamento.
 
 - **`fitTitles`:** se um título não cabe ao lado da pastilha, o ícone vai para cima (`.stack`). Se ainda há palavra que não cabe inteira, os cartões passam a uma coluna (`.one`). Palavras nunca são partidas.
 - **Hierarquia:** pilares nunca mais baixos que os indicadores (+8). O grupo C tem a altura do grupo B.

@@ -1224,3 +1224,32 @@ O iOS muda a altura informada logo depois de abrir o app instalado sem disparar 
 - **Geometria da Home** igual à da v30 (108/100 pt por linha no iPhone 13, folga de 24 pt), estável na navegação, e a barra inferior sem falhas em todas as abas.
 - 144 verificações de telas e folhas em 320/375/390/430 pt × texto 17/21/24: 0 falhas.
 - Contraste ≥ 4,97:1, medido sem o halo de leitura, em 247 textos de 9 telas.
+
+## 41. v32 — Prioridades, Agenda de Saúde, Procedimentos, Indicadores e lembretes pelo Calendário
+
+**Home (oito cartões, ordem fixa).** Nutrição · Exercício / Sono · Emocional / Hidratação · Suplementos e Medicamentos / **Prioridades** · **Agenda de Saúde**.
+- **Exercício:** sem registro mostra "Sem registros · Nesta semana" (nunca conclui que a pessoa não se exercitou); com registro, "2 h 30 · Nesta semana". Sono e Emocional também dizem o período.
+- **Suplementos e Medicamentos:** título completo (em duas linhas quando não cabe em uma) e "2 supl. · 1 med."; o VoiceOver lê por extenso. Saiu o título "Em uso".
+- **Prioridades:** "3 ativas" e a prioridade principal (ou "Em acompanhamento"); vazio: "Nenhuma definida · Escolha o que acompanhar".
+- **Agenda de Saúde:** próximo compromisso válido de qualquer tipo (consulta, exame ou procedimento), identificado pela finalidade. Vazio: "Nenhum agendado · Adicionar compromisso". Compromissos no mesmo horário: o cartão mostra um (ordem estável) e o VoiceOver e a Agenda mostram todos.
+- **Geometria:** igual à da v31 no iPhone 13, 16 Pro e mini (folga de 23–24 pt, sem rolagem). O SE de 1ª geração continua rolando, como antes.
+
+**Dados (versão 5, com cópia automática `antes-da-v5`).**
+- `care.procs`: procedimentos (nome, local do corpo, lado, profissional, data, hora, fuso, clínica, endereço, observações, situação agendado/realizado/cancelado, documentos, lembretes).
+- `care.goals`: prioridades com nome, descrição, situação (ativa, concluída, arquivada), ordem, principal, destaque, indicadores, metas e histórico. As frases antigas viraram prioridades ativas, na mesma ordem.
+- `logs.meas`: medições (peso, cintura, gordura corporal com método, pressão arterial, frequência cardíaca de repouso, dor 0–10). `logs.water`: água registrada (opcional, em mL).
+- Consultas ganharam motivo, documentos e lembretes; exames ganharam data do resultado e lembretes; itens de uso ganharam horários, início, término e componentes.
+- "Fórmula manipulada" deixou de ser categoria: virou característica do item. As fórmulas antigas continuam em Suplementos (como eram contadas) e o app pede para conferir a categoria.
+- Preferência por perfil: título dos lembretes discreto (padrão) ou com detalhes.
+
+**Regras.**
+- **Ativo** (suplementos e medicamentos) = não pausado, já iniciado e não encerrado. Uma fórmula conta uma vez.
+- **Indicadores** usam os registros existentes, sem cópia: sono (duração, qualidade), exercício (minutos e dias por semana, só semanas com registro), estado emocional, água, refeições marcadas, medições e resultados de exames. Nada é estimado ou interpolado; o gráfico usa datas reais; a comparação mostra primeiro e último valor do período, sem dizer se melhorou ou piorou. Gordura corporal: um método por gráfico.
+- **Peso:** uma nova medição pode atualizar o peso dos Dados corporais (GET e hidratação) só com a caixa marcada, visível antes de salvar.
+- **Prioridades:** sem limite; acima de cinco ativas o app sugere enxugar. Metas são da pessoa ("até", "pelo menos") e aparecem como linha tracejada no gráfico. Sem pontuação, porcentagem ou classificação de risco.
+
+**Lembretes.** O app não envia notificações (um app web instalado no iPhone não agenda notificações confiáveis sem servidor). Os lembretes escolhidos (7 dias, 1 dia, 2 horas, 30 minutos, horário personalizado; vários por compromisso) vão num arquivo de calendário `.ics` com os avisos embutidos, entregue pela tela de compartilhar do sistema (ou baixado). Quem avisa é o app Calendário. Água e itens de uso: eventos repetidos nos horários escolhidos. Se o compromisso mudar depois de enviado, o app avisa para enviar de novo; se for cancelado ou excluído, lembra de apagar no Calendário. **A entrega no iPhone real não foi testada.**
+
+**Privacidade na família.** Cada perfil tem as próprias prioridades, agenda, medições e preferências. Saíram as sugestões de suplementos vindas de outro perfil. O app não tem bloqueio por perfil: quem usa o aparelho vê todos os perfis.
+
+**Não implementado.** Notificações próprias do app; sincronização com o Calendário (o envio é manual, por arquivo); glicemia capilar (a de laboratório e a HbA1c já entram); integração com Apple Saúde; bloqueio por perfil.
