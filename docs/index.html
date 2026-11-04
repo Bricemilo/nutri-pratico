@@ -743,6 +743,14 @@ h1.pg{font-size:1.765rem;margin:6px 2px 2px}
 .hi-m span{color:var(--muted);margin-left:4px;font-size:var(--t-cap)}
 .hi .x,.hc .x{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;color:var(--muted);flex:none}
 .hi .x svg{width:14px;height:14px}
+/* v33 · registro tocável (abre a edição): linha inteira com 44 pt, seta discreta */
+.hi.hi-b{width:100%;min-height:44px;text-align:left;font:inherit;font-size:var(--t-sm);color:var(--ink-2);background:none;border-left:0;border-right:0;border-top:0;cursor:pointer}
+.hi.hi-b .hi-m{white-space:normal;overflow:visible;line-height:1.35;padding:2px 0} /* o registro inteiro à vista (a data não some nas reticências) */
+.hi.hi-b .li-go{flex:none;color:var(--muted)} .hi.hi-b .li-go svg{width:16px;height:16px;display:block}
+.hi.hi-b:active{background:color-mix(in srgb,var(--ink) 4%,transparent)}
+.g3{display:flex;flex-wrap:wrap;gap:8px} .g3 > .btn{flex:1 1 30%;min-width:0;white-space:normal;min-height:44px}
+.btn.ag-all{margin-top:12px} .btn.ag-all svg{width:18px;height:18px}
+.sheet .ag-k{margin:2px 0 4px} .sheet h2.ev-t{margin-top:0}
 .moods{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-top:12px}
 .mood{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 2px 8px;border-radius:13px;background:var(--surface-2);border:1px solid transparent;font-size:var(--t-cap);line-height:1.2;color:var(--ink-2);text-align:center;min-width:0}
 .mood i{width:14px;height:14px;border-radius:50%;background:currentColor;opacity:.9}
@@ -2818,7 +2826,7 @@ function go(v, keepScroll){
 }
 function render(){
   put(tabbar, h("div", {class: "tabbar-in"}, TABS.map(([id, label, icon]) =>
-    h("button", {class: "tab" + (view.tab === id ? " on" : ""), "aria-current": view.tab === id ? "page" : null, onclick: () => { if (view.tab !== id) haptic(); go(Object.assign({tab: id, edit: null}, view.tab === id && id === "saude" && HMODS.includes(view.hsub) ? {hsub: "resumo"} : {})); }}, ic(icon), label))));
+    h("button", {class: "tab" + (view.tab === id ? " on" : ""), "aria-current": view.tab === id ? "page" : null, onclick: () => { if (view.tab !== id) haptic(); go(Object.assign({tab: id, edit: null, ret: null}, view.tab === id && id === "saude" && HMODS.includes(view.hsub) ? {hsub: "resumo"} : {})); }}, ic(icon), label))));
   const p = active();
   if (!p) { renderWelcome(); return; }
   ({hoje: renderHome, alimentacao: view.sub === "alimentos" ? renderFoods : renderPlan, saude: renderHealth, perfil: renderProfile})[view.tab](p);
@@ -3000,9 +3008,10 @@ function jewelCard(o){ const has = o.value != null;
     h("span", {class: "hc-s" + (has && o.clip ? " clip" : "")}, has ? o.sub || "" : o.empty[1])); }
 function jewelDivider(){ return h("div", {class: "hdiv", "aria-hidden": "true"}); }
 /* jewelEvent(o) — Agenda de Saúde: no máximo três informações — ícone + título (que pode ocupar duas linhas) · data e horário · identificação
-   (uma linha, com reticências). Sem compromisso: "Nenhum agendado" e "Adicionar compromisso"; o toque abre a escolha do tipo. */
+   (uma linha, com reticências). Sem compromisso: "Nenhum agendado" e "Adicionar compromisso". O toque abre sempre a tela da Agenda de Saúde
+   (v33): o cadastro começa pelo "+" de lá, nunca direto do cartão. */
 function jewelEvent(o){ const e = o.event;
-  return h("button", {class: `hc l2 ev hc-2l ${o.cls}` + (e ? "" : " empty"), type: "button", onclick: () => { haptic(); (e ? o.open : o.add)(); },
+  return h("button", {class: `hc l2 ev hc-2l ${o.cls}` + (e ? "" : " empty"), type: "button", onclick: () => { haptic(); o.open(); },
       "aria-label": e ? `${o.title}: próximo compromisso ${whenSpoken(e)}. ${o.line3(e)}${o.more ? `. E mais ${o.more} no mesmo horário` : ""}.` : `${o.title}: ${o.emptyMsg}. ${o.emptySub}.`},
     h("span", {class: "hc-fx", "aria-hidden": "true"}, JEWEL(o.cls)),
     h("span", {class: "hc-h"}, h("span", {class: "hc-i", html: ICON[o.icon]}), h("span", {class: "hc-t"}, o.title)),
@@ -3020,7 +3029,8 @@ function renderHome(p){
   /* Painel de saúde: oito cartões em quatro linhas de dois, em três grupos separados por duas Signature dividers:
      A · pilares (Nutrição, Exercício, Sono, Emocional) · B · Hidratação + Suplementos e Medicamentos · C · Prioridades + Agenda de Saúde.
      Cor só no ícone e numa nuance mínima do fundo; números em destaque, unidades subordinadas, legendas curtas e sempre com o período.
-     Cada cartão leva ao módulo; sem dado, estado vazio que abre o cadastro. O detalhe nutricional fica na aba Nutrição. */
+     Cada cartão leva à visão principal do módulo, com ou sem dado (v33: nenhum cartão abre formulário); o "‹" de lá volta para Hoje.
+     O cadastro começa pelo "+" do módulo ou pelo "+" do topo. O detalhe nutricional fica na aba Nutrição. */
   const plan = p.plan, t = planTotal(plan), L = logsOf(p), ctx = healthCtx(p), adult = adultOf(p), w = waterOf(p);
   const dayTxt = new Date().toLocaleDateString("pt-BR", {weekday: "long", day: "numeric", month: "long"});
   homeKey = greetOf() + today() + evKey(p);
@@ -3036,24 +3046,24 @@ function renderHome(p){
       fn: () => go({tab: "alimentacao", sub: "plano", open: [], edit: null}), empty: ["Sem plano", "Toque para montar"]}),
     card({lv: "l1", cls: "move", icon: "dumbbell", title: "Exercício", value: mw.total > 0 ? fmtDur(mw.total) : null, sub: "Nesta semana",
       aria: `Exercício: ${mw.total > 0 ? `${fmtDur(mw.total)} registrados nesta semana, ${plural(mw.activeDays, "dia", "dias")} com registro` : "sem registros nesta semana"}.`,
-      fn: () => L.move.length ? go({tab: "saude", hsub: "movimento"}) : moveSheet(p), empty: ["Sem registros", "Nesta semana"]}),
+      fn: () => openMod({hsub: "movimento"}), empty: ["Sem registros", "Nesta semana"]}),
     card({lv: "l1", cls: "sleep", icon: "moon", title: "Sono", value: lastNight ? fmtDur(lastNight.min) : null, sub: "Última noite",
-      fn: () => lastNight ? go({tab: "saude", hsub: "sono"}) : sleepSheet(p), empty: ["Sem registro", "Última noite"]}),
+      fn: () => openMod({hsub: "sono"}), empty: ["Sem registro", "Última noite"]}),
     adult ? card({lv: "l1", cls: "wb", icon: "smile", title: "Emocional", value: lastMood ? MOODS[lastMood.mood - 1] : null, sub: lastMood ? `${relDay(lastMood.date)}${lastMood.time ? ", " + lastMood.time : ""}` : "",
-      fn: () => lastMood ? go({tab: "saude", hsub: "bem-estar"}) : moodSheet(p), empty: ["Sem registros", "Como você está?"]}) : null);
+      fn: () => openMod({hsub: "bem-estar"}), empty: ["Sem registros", "Como você está?"]}) : null);
   // B · hidratação (meta diária do perfil) e suplementos e medicamentos ativos. O GET saiu da Home: continua em Perfil → Planejamento.
   const careRow = h("div", {class: "hgrid hg-b"},
     card({lv: "l2", cls: "water", icon: "drop", title: "Hidratação", value: w.ml ? fmtL(w.ml) : null, unit: "L/dia", sub: w.src === "manual" ? "Meta definida por você" : "Recomendação diária",
-      fn: () => go({tab: "saude", hsub: "agua"}), empty: ["Não definida", "Toque para definir"]}),
-    jewelCare({cls: "supp", sup: cc.sup, med: cc.med, paused: cc.paused, fn: () => go({tab: "saude", hsub: "cuidados"})}));
+      fn: () => openMod({hsub: "agua"}), empty: ["Não definida", "Toque para definir"]}),
+    jewelCare({cls: "supp", sup: cc.sup, med: cc.med, paused: cc.paused, fn: () => openMod({hsub: "cuidados"})}));
   // C · o que acompanhar (prioridades ativas) e o próximo compromisso de saúde, de qualquer tipo
   const agenda = h("div", {class: "hgrid hg-c"},
     card({lv: "l2", cls: "prio", icon: "target", title: "Prioridades", value: act.length ? String(act.length) : null, unit: act.length === 1 ? "ativa" : "ativas",
       sub: main ? main.name : "Em acompanhamento", clip: true, empty: ["Nenhuma definida", "Escolha o que acompanhar"],
       aria: act.length ? `Prioridades: ${plural(act.length, "ativa", "ativas")}${main ? `. Principal: ${main.name}` : ""}.` : "Prioridades: nenhuma definida. Escolha o que acompanhar.",
-      fn: () => go({tab: "saude", hsub: "prioridades"})}),
+      fn: () => openMod({hsub: "prioridades"})}),
     jewelEvent({cls: "agenda", icon: "cal", title: "Agenda de Saúde", event: nx, more: nx ? sameTime(p, nx) : 0, line3: e => agendaLabel(p, e), emptyMsg: "Nenhum agendado", emptySub: "Adicionar compromisso",
-      open: () => go({tab: "saude", hsub: "agenda"}), add: () => newEventSheet(p)}));
+      open: () => openMod({hsub: "agenda", ah: "prox"})}));
   put(app, h("div", {class: "view home"}, topBar(quickBtn(p, "hoje")),
     h("header", {class: "hi-h"}, h("h1", null, `${greetOf()}, ${firstName(p.name)}`), h("div", {class: "today"}, dayTxt)),
     pillars, divider(), careRow, divider(), agenda));
@@ -3170,7 +3180,7 @@ function quickSheet(p, ctx){
       row("camera", "Novo alimento", embedded ? "Digitar os dados do rótulo" : "Foto da tabela nutricional ou digitação", () => addFoodChooser("", () => render()))];
     const care = [row("steth", "Consulta", "Agendar ou registrar uma consulta", () => apptSheet(p)), row("flask", "Exame", "Solicitado, agendado ou realizado", () => examSheet(p)),
       row("syringe", "Procedimento", "Infiltração, aplicação, cirurgia, fisioterapia…", () => procSheet(p)), row("pulse", "Medição", "Peso, cintura, pressão arterial, dor…", () => measSheet(p)),
-      row("drop", "Água", "Registrar o que bebeu (opcional)", () => go({tab: "saude", hsub: "agua"}))];
+      row("drop", "Água", "Registrar o que bebeu (opcional)", () => waterLogSheet(p))];
     el.append(h("h2", null, "Registrar"), h("p", {class: "sh-sub"}, "Em segundos, de qualquer tela."), health,
       ...(ctx === "alimentacao" ? [h("div", {class: "qlist"}, food), mealRows, h("div", {class: "qlist"}, care)] : ctx === "saude" ? [h("div", {class: "qlist"}, care), mealRows, h("div", {class: "qlist"}, food)] : [mealRows, h("div", {class: "qlist"}, food, care)]));
   });
@@ -3204,8 +3214,26 @@ function moodLine(L, keys){
   pts.forEach(p => { if (p) svg.append(el("circle", {cx: p[0], cy: p[1], r: 3.6, class: "md"})); });
   return h("div", {class: "mchart"}, svg, h("div", {class: "mdays"}, keys.map(k => h("span", null, WD[(new Date(k + "T12:00").getDay() + 6) % 7]))));
 }
-// módulos da Saúde abertos a partir do resumo (ou da Home): página própria com "‹ Saúde"
+// módulos da Saúde abertos a partir do resumo, da Home ou do Perfil: página própria com "‹" para a tela de origem
 const HMODS = ["agenda", "consultas", "exames", "procedimentos", "cuidados", "prioridades", "prioridade", "indicadores", "indicador", "agua"];
+/* v33 · navegação previsível. Quem abre um módulo guarda de onde veio (view.ret: rótulo + estado da tela de origem, encadeado), e o "‹" do módulo
+   volta exatamente para lá: Hoje → Agenda volta para Hoje; Saúde → Agenda → Consultas volta para Agenda e depois para Saúde.
+   Tocar numa aba zera o caminho. Ir para a tela anterior por um link (ex.: indicador → prioridade de origem) volta em vez de empilhar. */
+const MODT = {agenda: "Agenda de Saúde", consultas: "Consultas", exames: "Exames", procedimentos: "Procedimentos", cuidados: "Suplementos e Medicamentos", prioridades: "Prioridades",
+  prioridade: "Prioridade", indicadores: "Indicadores", indicador: "Indicador", agua: "Hidratação"};
+const PILLT = {movimento: "Exercício", sono: "Sono", "bem-estar": "Emocional"};
+function hereRef(){ const v = view;
+  const l = v.tab === "hoje" ? "Hoje" : v.tab === "perfil" ? "Perfil" : v.tab === "alimentacao" ? "Nutrição" : HMODS.includes(v.hsub) ? (v.hsub === "agenda" && v.ah === "hist" ? "Histórico" : MODT[v.hsub]) : PILLT[v.hsub] || "Saúde";
+  return {l, v: {tab: v.tab, hsub: v.hsub || "resumo", gid: v.gid || null, ik: v.ik || null, ip: v.ip || null, ah: v.ah || null, ret: v.ret || null}}; }
+const sameMod = (a, b) => a.tab === b.tab && a.hsub === b.hsub && (a.gid || null) === (b.gid || null) && (a.ik || null) === (b.ik || null);
+function openMod(v){
+  const dest = Object.assign({tab: "saude"}, v), r = view.ret;
+  if (r && sameMod(r.v, dest)) { go(Object.assign({}, r.v, v)); return; }
+  const ref = hereRef(); let d = 0; for (let x = ref; x; x = x.v.ret) if (++d >= 6) { x.v.ret = null; break; }
+  go(Object.assign(dest, {ret: ref}));
+}
+function goBack(fallback){ const r = view.ret; go(r ? Object.assign({}, r.v) : Object.assign({ret: null}, fallback)); }
+const backBtn = (label, fallback) => h("button", {class: "back", type: "button", onclick: () => goBack(fallback)}, ic("left"), view.ret ? view.ret.l : label);
 function careHub(p){
   const c = careOf(p), now = Date.now(), n = nextAgenda(p), cc = careCounts(p), act = goalsSorted(p, "ativa"), star = act.filter(g => g.star);
   const over = agendaList(p).filter(e => C.isOverdue(e, now)).length, pend = c.exams.filter(e => e.status === "solicitado").length;
@@ -3215,15 +3243,15 @@ function careHub(p){
   return [star.length ? [h("h2", {class: "sec-t"}, "Em destaque"), h("div", {class: "glist"}, star.map(g => prioRow(p, g)))] : null,
     h("h2", {class: "sec-t"}, "Cuidados"),
     h("div", {class: "glist"},
-      row("agenda", "cal", "agenda", "Agenda de Saúde", n ? `Próximo: ${whenShort(n)} · ${agendaLabel(p, n)}` : over ? `${over} a confirmar` : pend ? plural(pend, "exame pendente", "exames pendentes") : "Nenhum compromisso agendado", () => go({hsub: "agenda"}), !n && (over || pend)),
-      row("goals", "target", "goal", "Minhas Prioridades", act.length ? plural(act.length, "prioridade ativa", "prioridades ativas") : "Escolha o que acompanhar", () => go({hsub: "prioridades"})),
-      row("indicadores", "pulse", "ind", "Indicadores", nInd ? plural(nInd, "indicador com registros", "indicadores com registros") : "Medições, sono, exercício e exames", () => go({hsub: "indicadores"})),
-      row("cuidados", "pill", "suplemento", "Suplementos e Medicamentos", `Ativos: ${plural(cc.sup, "suplemento", "suplementos")} · ${plural(cc.med, "medicamento", "medicamentos")}`, () => go({hsub: "cuidados"}))),
+      row("agenda", "cal", "agenda", "Agenda de Saúde", n ? `Próximo: ${whenShort(n)} · ${agendaLabel(p, n)}` : over ? `${over} a confirmar` : pend ? plural(pend, "exame pendente", "exames pendentes") : "Nenhum compromisso agendado", () => openMod({hsub: "agenda", ah: "prox"}), !n && (over || pend)),
+      row("goals", "target", "goal", "Minhas Prioridades", act.length ? plural(act.length, "prioridade ativa", "prioridades ativas") : "Escolha o que acompanhar", () => openMod({hsub: "prioridades"})),
+      row("indicadores", "pulse", "ind", "Indicadores", nInd ? plural(nInd, "indicador com registros", "indicadores com registros") : "Medições, sono, exercício e exames", () => openMod({hsub: "indicadores"})),
+      row("cuidados", "pill", "suplemento", "Suplementos e Medicamentos", `Ativos: ${plural(cc.sup, "suplemento", "suplementos")} · ${plural(cc.med, "medicamento", "medicamentos")}`, () => openMod({hsub: "cuidados"}))),
     h("h2", {class: "sec-t"}, "Registros por tipo"),
     h("div", {class: "glist"},
-      row("consultas", "steth", "appt", "Consultas", c.appts.length ? `${plural(C.upcoming(c.appts, now).length, "agendada", "agendadas")} · histórico anual` : "Agenda e histórico anual", () => go({hsub: "consultas"})),
-      row("exames", "flask", "exam", "Exames", pend ? plural(pend, "pendente", "pendentes") + " · resultados e evolução" : "Resultados, documentos e evolução", () => go({hsub: "exames"})),
-      row("procedimentos", "syringe", "proc", "Procedimentos", c.procs.length ? plural(c.procs.length, "registro", "registros") : "Infiltrações, aplicações, cirurgias…", () => go({hsub: "procedimentos"})))];
+      row("consultas", "steth", "appt", "Consultas", c.appts.length ? `${plural(C.upcoming(c.appts, now).length, "agendada", "agendadas")} · histórico anual` : "Agenda e histórico anual", () => openMod({hsub: "consultas"})),
+      row("exames", "flask", "exam", "Exames", pend ? plural(pend, "pendente", "pendentes") + " · resultados e evolução" : "Resultados, documentos e evolução", () => openMod({hsub: "exames"})),
+      row("procedimentos", "syringe", "proc", "Procedimentos", c.procs.length ? plural(c.procs.length, "registro", "registros") : "Infiltrações, aplicações, cirurgias…", () => openMod({hsub: "procedimentos"})))];
 }
 function renderHealth(p){
   if (HMODS.includes(view.hsub)) { ({agenda: renderAgenda, consultas: renderAppts, exames: renderExams, procedimentos: renderProcs, cuidados: renderCare, prioridades: renderPriorities,
@@ -3235,7 +3263,8 @@ function renderHealth(p){
   const byDate = (a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : (b.at || 0) - (a.at || 0);
   // histórico: os 5 mais recentes à vista; os outros (até 12) por expansão
   const hist = (kind, list, line) => { if (!list.length) return null;
-    const row = e => h("div", {class: "hi"}, h("div", {class: "hi-m"}, line(e)), h("button", {class: "x", type: "button", "aria-label": `Apagar registro de ${relDay(e.date)}`, html: ICON.x, onclick: () => removeLog(p, kind, e, "Registro")}));
+    // tocar no registro abre a edição (com Excluir); sem "x" solto na lista
+    const row = e => h("button", {class: "hi hi-b", type: "button", onclick: () => EDIT_LOG[kind](p, e), "aria-label": `${relDay(e.date)}. Ver ou editar o registro.`}, h("span", {class: "hi-m"}, line(e)), h("span", {class: "li-go", html: ICON.right}));
     const rest = list.slice(5, 12);
     return h("div", {class: "hist"}, list.slice(0, 5).map(row), rest.length ? h("details", {class: "src hmore"}, h("summary", null, `Mostrar mais ${rest.length}`), rest.map(row)) : null); };
   const dayMood = k => [...L.mood].reverse().find(x => x.date === k), todayM = dayMood(t);
@@ -3263,10 +3292,10 @@ function renderHealth(p){
   const row = k => { const c = P[k];
     return h("button", {class: "hrow " + c.cls, type: "button", id: k, onclick: () => go({hsub: k}), "aria-label": `${c.title}: ${c.has ? `${c.value}, ${c.ctx}` : "sem registros"}. Ver detalhes.`},
       h("span", {class: "hp-i", html: ICON[c.icon]}),
-      h("span", {class: "hr-m"}, h("span", {class: "hr-t"}, c.title), c.has ? h("span", {class: "hr-v"}, h("b", {class: c.value.length > 8 ? "long" : null}, c.value), h("span", null, c.ctx)) : h("span", {class: "hr-e"}, "Sem registros · toque para começar")),
+      h("span", {class: "hr-m"}, h("span", {class: "hr-t"}, c.title), c.has ? h("span", {class: "hr-v"}, h("b", {class: c.value.length > 8 ? "long" : null}, c.value), h("span", null, c.ctx)) : h("span", {class: "hr-e"}, "Sem registros ainda")),
       h("span", {class: "li-go", html: ICON.right})); };
   const w = waterOf(p);
-  const waterRow = h("button", {class: "hrow water", type: "button", onclick: () => go({hsub: "agua"}), "aria-label": w.ml ? `Hidratação: ${fmtL(w.ml)} litros por dia, ${w.src === "manual" ? "definida por você" : "recomendação"}.` : "Hidratação: definir recomendação."},
+  const waterRow = h("button", {class: "hrow water", type: "button", onclick: () => openMod({hsub: "agua"}), "aria-label": w.ml ? `Hidratação: ${fmtL(w.ml)} litros por dia, ${w.src === "manual" ? "definida por você" : "recomendação"}.` : "Hidratação: definir recomendação."},
     h("span", {class: "hp-i", html: ICON.drop}),
     h("span", {class: "hr-m"}, h("span", {class: "hr-t"}, "Hidratação"), w.ml ? h("span", {class: "hr-v"}, h("b", null, `${fmtL(w.ml)} L/dia`), h("span", null, w.src === "manual" ? "definida por você" : "recomendação")) : h("span", {class: "hr-e"}, "Toque para definir")),
     h("span", {class: "li-go", html: ICON.right}));
@@ -3274,8 +3303,8 @@ function renderHealth(p){
     return h("section", {class: "hp " + c.cls + (full ? " full" : ""), id: k},
       h("div", {class: "hp-h"}, h("span", {class: "hp-i", html: ICON[c.icon]}),
         full ? h("span", {class: "hp-t"}, c.title) : h("button", {class: "hp-t link0", type: "button", onclick: () => go({hsub: k})}, c.title, h("span", {class: "li-go", html: ICON.right})),
-        h("button", {class: "hp-add", type: "button", "aria-label": c.addL, onclick: c.add}, ic("plus"))),
-      c.has ? [h("div", {class: "hp-v"}, h("b", {class: c.value.length > 8 ? "long" : null}, c.value), h("span", null, c.ctx)), c.chart()] : h("p", {class: "hc-e"}, c.empty),
+        full ? null : h("button", {class: "hp-add", type: "button", "aria-label": c.addL, onclick: c.add}, ic("plus"))),
+      c.has ? [h("div", {class: "hp-v"}, h("b", {class: c.value.length > 8 ? "long" : null}, c.value), h("span", null, c.ctx)), c.chart()] : h("p", {class: "hc-e"}, c.empty, full ? [h("br"), "Para registrar, toque em + no alto da tela."] : null),
       k === "bem-estar" && full ? h("div", {class: "moods", role: "group", "aria-label": "Registrar como você está"}, MOODS.map((m, i) => h("button", {type: "button", class: "mood m" + (i + 1) + (todayM && todayM.mood === i + 1 ? " on" : ""),
         onclick: () => saveMood(p, {mood: i + 1})}, h("i"), m))) : null, ...extra);
   };
@@ -3293,9 +3322,11 @@ function renderHealth(p){
         more("Como ler", "Dias sem registro não significam nada. O app não faz diagnósticos."),
         hist("mood", [...L.mood].sort(byDate), e => [h("b", null, MOODS[e.mood - 1]), e.energy ? ` · energia ${e.energy}` : "", e.stress ? ` · estresse ${e.stress}` : "", e.note ? ` · “${e.note}”` : "", h("span", null, ` ${relDay(e.date)}${e.time ? " " + e.time : ""}`)])) : null]};
   const tabs = [["resumo", "Resumo"], ["movimento", "Exercício"], ["sono", "Sono"], adult ? ["bem-estar", "Emocional"] : null].filter(Boolean);
-  put(app, h("div", {class: "view"}, topBar(quickBtn(p, "saude")),
+  // um "+" por tela: no Exercício, no Sono e no Emocional ele registra aquele pilar; no resumo, é o "Registrar" geral
+  put(app, h("div", {class: "view"}, topBar(sub === "resumo" ? quickBtn(p, "saude") : modAdd(P[sub].addL, P[sub].add)),
+    view.ret && sub !== "resumo" ? backBtn("Saúde", {hsub: "resumo"}) : null,
     h("h1", {class: "pg"}, "Saúde"),
-    h("div", {class: "seg subnav hseg fit", role: "tablist", "aria-label": "Saúde"}, tabs.map(([k, l]) => h("button", {type: "button", role: "tab", class: sub === k ? "on" : "", "aria-selected": String(sub === k), onclick: () => go({hsub: k})}, l))),
+    h("div", {class: "seg subnav hseg fit", role: "tablist", "aria-label": "Saúde"}, tabs.map(([k, l]) => h("button", {type: "button", role: "tab", class: sub === k ? "on" : "", "aria-selected": String(sub === k), onclick: () => go(Object.assign({hsub: k}, k === "resumo" ? {ret: null} : {}))}, l))),
     h("div", {class: "hstack"}, sub === "resumo" ? [(na => na && ["mover", "regular", "mover-ok"].includes(na.id) ? h("div", {class: "na " + na.tone, style: "margin-top:0"}, h("span", {class: "na-ic", html: ICON.spark}),
         h("div", null, h("span", {class: "na-e"}, na.tone === "good" ? "Bom trabalho" : "Sugestão"), h("b", null, na.title), h("span", {class: "na-t"}, na.text))) : null)(C.nextAction(healthCtx(p))), row("movimento"), row("sono"), adult ? row("bem-estar") : h("p", {class: "note"}, "O registro emocional para crianças e adolescentes terá um fluxo próprio, adequado à idade."), waterRow,
       careHub(p)] : detail[sub]()),
@@ -3449,11 +3480,14 @@ const txtIn = (id, v, ph, a) => h("input", Object.assign({class: "input", id, va
 const area = (id, v, ph, max) => { const t = h("textarea", {class: "input area", id, rows: "2", maxlength: String(max || 500), placeholder: ph || "Opcional"}); t.value = v || ""; return t; };
 const stChip = (txt, cls) => txt ? h("span", {class: "chip st " + (cls || "")}, txt) : null;
 const dateTile = e => { const [, m, d] = ymd(e.date); return e.date ? h("span", {class: "dtile", "aria-hidden": "true"}, h("b", null, String(d)), h("span", null, MON[m - 1])) : h("span", {class: "dtile nd", "aria-hidden": "true"}, h("b", null, "—")); };
-// cabeçalho dos módulos da Saúde: volta ao resumo, título e "+"
-function modPage(p, title, addLabel, add, ...kids){
-  put(app, h("div", {class: "view mod"}, topBar(quickBtn(p, "saude")),
-    h("button", {class: "back", type: "button", onclick: () => go({hsub: "resumo"})}, ic("left"), "Saúde"),
-    h("div", {class: "pg-row"}, h("h1", {class: "pg"}, title), add ? h("button", {class: "sec-add", type: "button", "aria-label": addLabel, onclick: add}, ic("plus")) : null),
+// cabeçalho dos módulos da Saúde: "‹" para a tela de origem (ou o resumo da Saúde) e título. Um único "+" por tela, no canto superior direito:
+// num módulo com cadastro próprio ele inicia o novo registro daquele módulo (v33); sem cadastro próprio, é o "Registrar" geral.
+// title: texto, ou {t, back} quando a volta é interna ao módulo (ex.: Histórico → Agenda de Saúde)
+const modAdd = (label, fn) => h("button", {class: "icon-btn accent mod-add", type: "button", "aria-label": label, onclick: fn}, ic("plus"));
+function modPage(p, title, addLabel, add, ...kids){ const o = typeof title === "string" ? {t: title} : title;
+  put(app, h("div", {class: "view mod"}, topBar(add ? modAdd(addLabel, add) : quickBtn(p, "saude")),
+    o.back || backBtn("Saúde", {hsub: "resumo"}),
+    h("div", {class: "pg-row"}, h("h1", {class: "pg"}, o.t)),
     ...kids));
 }
 // confirmação de compromissos que já passaram sem registro: "Aconteceu?"
@@ -3474,7 +3508,7 @@ function setAppt(p, a, status){ const prev = a.status; a.status = status; a.upda
   toast(status === "realizada" ? "Consulta registrada como realizada" : status === "cancelada" ? "Consulta cancelada." + calGone(a) : "Consulta reativada", () => { a.status = prev; touch(p); render(); }); }
 function apptRow(p, a, now, showState){
   const st = apptState(a, now), lab = {cancelada: ["cancelada", "off"], confirmar: ["a confirmar", "due"], realizada: showState ? ["realizada", ""] : null, futura: showState ? ["agendada", "fut"] : null}[st];
-  return h("button", {class: "grow ev" + (st === "cancelada" ? " off" : ""), type: "button", onclick: () => apptSheet(p, a)}, dateTile(a),
+  return h("button", {class: "grow ev" + (st === "cancelada" ? " off" : ""), type: "button", onclick: () => eventDetail(p, a, "consulta")}, dateTile(a),
     h("span", {class: "gr-m"}, h("b", null, h("span", {class: "gr-tt"}, apptTitle(a)), lab ? stChip(lab[0], lab[1]) : null),
       h("span", null, [a.time ? hm(a.time) + tzTag(a) : "", apptSub(a)].filter(Boolean).join(" · ") || (a.date ? dShort(a.date) : ""))),
     h("span", {class: "li-go", html: ICON.right}));
@@ -3560,14 +3594,14 @@ function renderAppts(p){
   const chartBox = h("div");
   const paintChart = sel => put(chartBox, apptChart(p, L, yr, now, sel, i => paintChart(i === sel ? null : i)));
   paintChart(null);
-  const hero = nx ? h("button", {class: "nx dj-glass appt", type: "button", onclick: () => apptSheet(p, nx), "aria-label": `Próxima consulta: ${whenSpoken(nx)}. ${apptTitle(nx)}. ${apptSub(nx)}. Editar.`},
+  const hero = nx ? h("button", {class: "nx dj-glass appt", type: "button", onclick: () => eventDetail(p, nx, "consulta"), "aria-label": `Próxima consulta: ${whenSpoken(nx)}. ${apptTitle(nx)}. ${apptSub(nx)}. Ver detalhes.`},
       h("span", {class: "nx-h"}, h("span", {class: "nx-e"}, "Próxima consulta"), h("span", {class: "nx-r"}, relWhen(nx))),
       h("b", {class: "nx-d"}, whenLong(nx)), h("span", {class: "nx-t"}, apptTitle(nx)), apptSub(nx) ? h("span", {class: "nx-s"}, apptSub(nx)) : null,
       nx.mode !== "online" && nx.addr ? h("span", {class: "nx-s"}, nx.addr) : null)
     : h("div", {class: "nx none dj-quiet"}, h("b", null, "Nenhuma consulta agendada"), h("span", null, "Cadastre a próxima para vê-la aqui e na tela Hoje."),
       h("button", {class: "btn primary sm", type: "button", onclick: () => apptSheet(p)}, ic("plus"), "Agendar consulta"));
   modPage(p, "Consultas", "Nova consulta", () => apptSheet(p), hero,
-    confirmBlock(over, "Aconteceu?", apptTitle, a => [{label: "Cancelada", fn: () => setAppt(p, a, "cancelada")}, {label: "Realizada", cls: "primary", fn: () => setAppt(p, a, "realizada")}]),
+    confirmBlock(over, "Aconteceu?", apptTitle, a => [{label: "Reagendar", fn: () => editEvent(p, a, true)}, {label: "Cancelada", fn: () => setAppt(p, a, "cancelada")}, {label: "Realizada", cls: "primary", fn: () => setAppt(p, a, "realizada")}]),
     h("h2", {class: "sec-t"}, "Agenda"),
     h("div", {class: "seg seg-2 fit", role: "tablist", "aria-label": "Consultas"}, [["proximas", `Próximas${up.length ? " · " + up.length : ""}`], ["historico", "Histórico"], canc.length ? ["canceladas", "Canceladas"] : null].filter(Boolean)
       .map(([k, l]) => h("button", {type: "button", role: "tab", class: f === k ? "on" : "", "aria-selected": String(f === k), onclick: () => go({cf: k}, true)}, l))),
@@ -4075,7 +4109,7 @@ function procSheet(p, e, preset){
 }
 function procRow(p, e, now){
   const over = C.isOverdue(e, now), st = e.status === "cancelado" ? ["cancelado", "off"] : over ? ["a confirmar", "due"] : null;
-  return h("button", {class: "grow ev" + (e.status === "cancelado" ? " off" : ""), type: "button", onclick: () => procSheet(p, e)}, dateTile(e),
+  return h("button", {class: "grow ev" + (e.status === "cancelado" ? " off" : ""), type: "button", onclick: () => eventDetail(p, e, "proc")}, dateTile(e),
     h("span", {class: "gr-m"}, h("b", null, h("span", {class: "gr-tt"}, procTitle(e)), st ? stChip(st[0], st[1]) : null),
       h("span", null, [e.time ? hm(e.time) + tzTag(e) : "", procSub(e)].filter(Boolean).join(" · ") || (e.date ? dShort(e.date) : "")),
       (e.docs || []).length ? h("span", {class: "gr-x"}, plural(e.docs.length, "documento", "documentos")) : null),
@@ -4084,13 +4118,13 @@ function procRow(p, e, now){
 function renderProcs(p){
   const c = careOf(p), now = Date.now(), L = c.procs, up = C.upcoming(L, now), nx = up[0], over = L.filter(e => C.isOverdue(e, now)).sort(byStartAsc);
   const done = L.filter(e => e.status === "realizado").sort(byDateDesc), canc = L.filter(e => e.status === "cancelado").sort(byDateDesc);
-  const hero = nx ? h("button", {class: "nx dj-glass proc", type: "button", onclick: () => procSheet(p, nx), "aria-label": `Próximo procedimento: ${whenSpoken(nx)}. ${procTitle(nx)}. ${procSub(nx)}. Editar.`},
+  const hero = nx ? h("button", {class: "nx dj-glass proc", type: "button", onclick: () => eventDetail(p, nx, "proc"), "aria-label": `Próximo procedimento: ${whenSpoken(nx)}. ${procTitle(nx)}. ${procSub(nx)}. Ver detalhes.`},
       h("span", {class: "nx-h"}, h("span", {class: "nx-e"}, "Próximo procedimento"), h("span", {class: "nx-r"}, relWhen(nx))),
       h("b", {class: "nx-d"}, whenLong(nx)), h("span", {class: "nx-t"}, procTitle(nx)), procSub(nx) ? h("span", {class: "nx-s"}, procSub(nx)) : null)
     : h("div", {class: "nx none dj-quiet"}, h("b", null, "Nenhum procedimento agendado"), h("span", null, "Infiltrações, aplicações, bloqueios, cirurgias, sessões de fisioterapia e outros tratamentos."),
       h("button", {class: "btn primary sm", type: "button", onclick: () => procSheet(p)}, ic("plus"), "Agendar procedimento"));
   modPage(p, "Procedimentos", "Novo procedimento", () => procSheet(p), hero,
-    confirmBlock(over, "Aconteceu?", procTitle, e => [{label: "Cancelado", fn: () => setProc(p, e, "cancelado")}, {label: "Realizado", cls: "primary", fn: () => setProc(p, e, "realizado")}]),
+    confirmBlock(over, "Aconteceu?", procTitle, e => [{label: "Reagendar", fn: () => editEvent(p, e, true)}, {label: "Cancelado", fn: () => setProc(p, e, "cancelado")}, {label: "Realizado", cls: "primary", fn: () => setProc(p, e, "realizado")}]),
     up.length > 1 ? [h("h2", {class: "sec-t"}, "Agendados"), h("div", {class: "glist"}, up.slice(1).map(e => procRow(p, e, now)))] : null,
     h("h2", {class: "sec-t"}, "Realizados"),
     done.length ? h("div", {class: "glist"}, done.map(e => procRow(p, e, now))) : h("p", {class: "gnone solo"}, "Nenhum procedimento realizado registrado."),
@@ -4101,7 +4135,60 @@ function renderProcs(p){
 /* ---------- Agenda de Saúde (módulo) ----------
    Linha do tempo única: consultas, exames e procedimentos do perfil, sem cópia dos registros (cada um continua na sua lista).
    Próximos em ordem cronológica, agrupados por mês; histórico do mais recente ao mais antigo, com os cancelados identificados. */
-const openEvent = (p, e) => { const k = kindOf(p, e); (k === "consulta" ? apptSheet : k === "proc" ? procSheet : examDetail)(p, e); };
+// tocar num compromisso abre os detalhes (ver, editar, reagendar, cancelar, excluir); a edição é um passo a mais, só quando pedida
+const openEvent = (p, e) => eventDetail(p, e);
+// edição; "reagendar" leva o formulário até a data (o mesmo formulário: nada é refeito)
+function editEvent(p, e, resched){ const k = kindOf(p, e);
+  (k === "consulta" ? apptSheet : k === "proc" ? procSheet : examSheet)(p, e);
+  if (resched) setTimeout(() => { const i = document.getElementById(k === "consulta" ? "cs-data" : k === "proc" ? "pc-data" : "ex-data"); if (i) i.scrollIntoView({block: "center", behavior: "smooth"}); }, 320); }
+const stFor = (k, base) => k === "consulta" ? base.replace(/o$/, "a") : base;   // consultas: "realizada", "cancelada"; os demais: "realizado", "cancelado"
+const setEvent = (p, e, base) => { const k = kindOf(p, e); (k === "consulta" ? setAppt : k === "proc" ? setProc : setExam)(p, e, stFor(k, base)); };
+function deleteEvent(p, e, k){
+  const key = k === "consulta" ? "appts" : "procs", L = careOf(p)[key], i = L.indexOf(e); if (i < 0) return;
+  L.splice(i, 1); touch(p); render(); docsGC((e.docs || []).map(x => x.id));
+  toast(`${KIND[k].l} excluíd${k === "consulta" ? "a" : "o"}.${calGone(e)}`, () => { L.splice(i, 0, e); touch(p); render(); });
+}
+/* Detalhes de uma consulta ou de um procedimento (os exames têm os seus, com resultados: examDetail). Mesma estrutura da folha do exame:
+   tipo · título · situação e data · "Aconteceu?" quando a data passou · informações · documentos · Calendário · ações · Excluir. */
+function eventDetail(p, e, k0){
+  const k = k0 || kindOf(p, e); if (k === "exame") return examDetail(p, e);
+  const isA = k === "consulta", title = () => isA ? apptTitle(e) : procTitle(e);
+  sheet(title(), (el, close) => {
+    const box = h("div"), slot = h("div"), file = h("input", {type: "file", accept: "application/pdf,image/*", hidden: true});
+    const info = (l, v) => v ? h("div", {class: "kv"}, h("span", null, l), h("b", null, v)) : null;
+    const then = fn => { close(); setTimeout(fn, 280); };
+    const set = base => { setEvent(p, e, base); paint(); };
+    function paint(){
+      const now = Date.now(), canc = /^cancelad/.test(e.status), done = /^realizad/.test(e.status), over = C.isOverdue(e, now), fut = !canc && !done && C.isUpcoming(e, now);
+      const g = isA ? "a" : "o", st = canc ? "Cancelad" + g : done ? "Realizad" + g : over ? "A confirmar" : fut ? "Agendad" + g : "";
+      const rem = fut && (e.rem || []).length ? e.rem.map(remLabel).join(" · ") : "";
+      put(box,
+        h("span", {class: "ag-k c-" + KIND[k].cls}, KIND[k].l),
+        h("h2", {class: "ev-t"}, title()),
+        h("p", {class: "sh-sub"}, [st, e.date ? whenLong(e) : ""].filter(Boolean).join(" · ")),
+        over ? h("div", {class: "ask-n"}, "A data já passou. Aconteceu?",
+          h("div", {class: "g3", style: "margin-top:10px"}, h("button", {class: "btn ghost sm", type: "button", onclick: () => then(() => editEvent(p, e, true))}, "Reagendar"),
+            h("button", {class: "btn ghost sm", type: "button", onclick: () => set("cancelado")}, isA ? "Cancelada" : "Cancelado"),
+            h("button", {class: "btn primary sm", type: "button", onclick: () => set("realizado")}, isA ? "Realizada" : "Realizado"))) : null,
+        h("div", {class: "kvs"}, isA ? [info("Especialidade", e.prof ? e.spec : ""), info("Modalidade", e.mode === "online" ? "Online" : ""),
+            info(e.mode === "online" ? "Plataforma ou instituição" : "Local", e.place), info(e.mode === "online" ? "Acesso" : "Endereço", e.addr), info("Motivo", e.reason)]
+          : [info("Profissional", e.prof), info("Clínica ou hospital", e.place), info("Endereço", e.addr)],
+          info("Lembretes", rem), info("Observações", e.notes)),
+        h("div", {class: fut || canc ? "g2" : null, style: "margin-top:16px"},
+          h("button", {class: "btn ghost block", type: "button", onclick: () => then(() => editEvent(p, e))}, ic("edit"), "Editar"),
+          fut ? h("button", {class: "btn primary block", type: "button", onclick: () => then(() => editEvent(p, e, true))}, "Reagendar")
+            : canc ? h("button", {class: "btn primary block", type: "button", onclick: () => set("agendado")}, "Reativar") : null),
+        fut ? h("button", {class: "btn ghost block", type: "button", style: "margin-top:10px", onclick: () => set("cancelado")}, isA ? "Cancelar consulta" : "Cancelar procedimento") : null,
+        docsBlock(p, e, file, paint), calBlock(p, e),
+        slot,
+        h("button", {class: "btn danger block", type: "button", style: "margin-top:10px", onclick: () => ask(slot, `Excluir ${isA ? "esta consulta" : "este procedimento"}${(e.docs || []).length ? ` e ${plural(e.docs.length, "documento anexado", "documentos anexados")}` : ""}? ${isA ? "Ela sai" : "Ele sai"} da agenda e do histórico.`,
+          [{label: "Excluir", fn: () => { close(); deleteEvent(p, e, k); }}])}, isA ? "Excluir consulta" : "Excluir procedimento"),
+        h("p", {class: "note"}, canc ? "Cancelar não apaga: o registro continua no histórico, identificado como cancelado." : "Os dados ficam neste aparelho, no perfil de " + firstName(p.name) + "."));
+    }
+    file.addEventListener("change", () => { const f = file.files[0]; file.value = ""; if (f) attachDoc(p, e, f, paint); });
+    paint(); el.append(box, file);
+  });
+}
 function newEventSheet(p, after){
   sheet("Novo compromisso", (el, close) => {
     const row = (k, sub, fn) => h("button", {class: "qrow", type: "button", onclick: () => { close(); setTimeout(fn, 60); }}, h("span", {class: "qa-i c-" + KIND[k].cls, html: ICON[KIND[k].icon]}), h("div", null, h("b", null, KIND[k].l), h("span", null, sub)));
@@ -4121,39 +4208,49 @@ function agRow(p, e, now){
       sub ? h("span", null, sub) : null),
     h("span", {class: "li-go", html: ICON.right}));
 }
+/* Visão principal: o próximo compromisso, os que já passaram sem confirmação ("Aconteceu?"), filtros por tipo, os próximos (por mês) e os três
+   mais recentes do histórico, com acesso ao histórico completo (view.ah = "hist", com "‹ Agenda de Saúde"). O "+" do cabeçalho abre a escolha
+   Consulta · Exame · Procedimento. Tocar num compromisso abre os detalhes. */
 function renderAgenda(p){
-  const c = careOf(p), now = Date.now(), f = ["consulta", "exame", "proc"].includes(view.af) ? view.af : "todos", tab = view.ah === "hist" ? "hist" : "prox";
+  const now = Date.now(), f = ["consulta", "exame", "proc"].includes(view.af) ? view.af : "todos", hist = view.ah === "hist";
   const pick = list => list.filter(e => f === "todos" || kindOf(p, e) === f);
   const all = pick(agendaList(p)), up = C.upcoming(all, now), nx = C.upcoming(agendaList(p), now)[0];
   const over = all.filter(e => C.isOverdue(e, now)).sort(byStartAsc), pend = all.filter(e => e.status === "solicitado");
   const done = all.filter(e => ["realizada", "realizado", "cancelada", "cancelado"].includes(e.status) && e.date).sort(byDateDesc);
-  const set = (e, st) => { const k = kindOf(p, e); (k === "consulta" ? setAppt : k === "proc" ? setProc : setExam)(p, e, st); };
   const byMonth = list => { const out = []; let cur = ""; for (const e of list) { const [y, m] = ymd(e.date), key = y + "-" + m; if (key !== cur) { cur = key; out.push(h("div", {class: "lbl2 ag-m"}, `${cap1(MONL[m - 1])}${y !== new Date().getFullYear() ? " de " + y : ""}`)); out.push(h("div", {class: "glist"})); } out[out.length - 1].append(agRow(p, e, now)); } return out; };
+  const filt = h("div", {class: "chips ag-f", role: "group", "aria-label": "Tipo de compromisso"}, [["todos", "Todos"], ["consulta", "Consultas"], ["exame", "Exames"], ["proc", "Procedimentos"]]
+    .map(([v, l]) => h("button", {type: "button", class: f === v ? "on" : "", "aria-pressed": String(f === v), onclick: () => go({af: v}, true)}, l)));
+  const empty = t => h("p", {class: "gnone solo"}, t);
+  const what = f === "todos" ? "compromisso" : f === "proc" ? "procedimento" : KIND[f].l.toLowerCase(), whatP = f === "todos" ? "compromissos" : f === "proc" ? "procedimentos" : KIND[f].ls.toLowerCase();
+  if (hist) {
+    modPage(p, {t: "Histórico", back: h("button", {class: "back", type: "button", onclick: () => go({ah: "prox"})}, ic("left"), "Agenda de Saúde")}, null, null,
+      h("p", {class: "pg-s"}, `${cap1(whatP)} realizados e cancelados, do mais recente ao mais antigo. Toque em um para ver os detalhes.`),
+      filt, done.length ? byMonth(done) : empty(`Nenhum ${what} no histórico.`),
+      h("p", {class: "care-n"}, "Cancelados continuam no histórico, identificados. Para apagar um registro, abra-o e use Excluir."));
+    return;
+  }
   const nk = nx ? kindOf(p, nx) : null, more = nx ? sameTime(p, nx) : 0;
-  const hero = nx ? h("button", {class: "nx dj-glass " + KIND[nk].cls, type: "button", onclick: () => openEvent(p, nx), "aria-label": `Próximo compromisso: ${KIND[nk].l}, ${whenSpoken(nx)}. ${agendaLabel(p, nx)}.`},
+  const hero = nx ? h("button", {class: "nx dj-glass " + KIND[nk].cls, type: "button", onclick: () => openEvent(p, nx), "aria-label": `Próximo compromisso: ${KIND[nk].l}, ${whenSpoken(nx)}. ${agendaLabel(p, nx)}. Ver detalhes.`},
       h("span", {class: "nx-h"}, h("span", {class: "nx-e"}, `Próximo · ${KIND[nk].l}`), h("span", {class: "nx-r"}, relWhen(nx))),
       h("b", {class: "nx-d"}, whenLong(nx)), h("span", {class: "nx-t"}, agendaLabel(p, nx)),
       (nk === "consulta" ? apptSub(nx) : nk === "proc" ? procSub(nx) : examPlace(nx)) ? h("span", {class: "nx-s"}, nk === "consulta" ? apptSub(nx) : nk === "proc" ? procSub(nx) : examPlace(nx)) : null,
       more ? h("span", {class: "nx-s"}, `E mais ${more} no mesmo horário`) : null)
-    : h("div", {class: "nx none dj-quiet"}, h("b", null, "Nenhum compromisso agendado"), h("span", null, "Consultas, exames e procedimentos aparecem aqui e na tela Hoje."),
-      h("button", {class: "btn primary sm", type: "button", onclick: () => newEventSheet(p)}, ic("plus"), "Adicionar compromisso"));
-  const filt = h("div", {class: "chips ag-f", role: "group", "aria-label": "Tipo de compromisso"}, [["todos", "Todos"], ["consulta", "Consultas"], ["exame", "Exames"], ["proc", "Procedimentos"]]
-    .map(([v, l]) => h("button", {type: "button", class: f === v ? "on" : "", "aria-pressed": String(f === v), onclick: () => go({af: v}, true)}, l)));
-  const empty = t => h("p", {class: "gnone solo"}, t);
-  const what = f === "todos" ? "compromisso" : f === "proc" ? "procedimento" : KIND[f].l.toLowerCase();
+    : h("div", {class: "nx none dj-quiet"}, h("b", null, "Nenhum compromisso agendado"), h("span", null, "Consultas, exames e procedimentos aparecem aqui e na tela Hoje. Use o + para adicionar."));
   modPage(p, "Agenda de Saúde", "Novo compromisso", () => newEventSheet(p), hero,
-    confirmBlock(over, "Aconteceu?", e => agendaLabel(p, e), e => [{label: "Reagendar", fn: () => openEvent(p, e)}, {label: "Cancelado", fn: () => set(e, kindOf(p, e) === "consulta" ? "cancelada" : "cancelado")},
-      {label: "Realizado", cls: "primary", fn: () => set(e, kindOf(p, e) === "consulta" ? "realizada" : "realizado")}]),
+    confirmBlock(over, "Aconteceu?", e => agendaLabel(p, e), e => [{label: "Reagendar", fn: () => editEvent(p, e, true)}, {label: "Cancelado", fn: () => setEvent(p, e, "cancelado")},
+      {label: "Realizado", cls: "primary", fn: () => setEvent(p, e, "realizado")}]),
     filt,
-    h("div", {class: "seg seg-2 fit", role: "tablist", "aria-label": "Agenda"}, [["prox", `Próximos${up.length ? " · " + up.length : ""}`], ["hist", "Histórico"]]
-      .map(([k, l]) => h("button", {type: "button", role: "tab", class: tab === k ? "on" : "", "aria-selected": String(tab === k), onclick: () => go({ah: k}, true)}, l))),
-    tab === "prox" ? [up.length ? byMonth(up) : empty(`Nenhum ${what} agendado.`),
-        pend.length ? [h("div", {class: "lbl2 ag-m"}, "Exames solicitados, sem data"), h("div", {class: "glist"}, pend.map(e => agRow(p, e, now)))] : null]
-      : done.length ? byMonth(done) : empty(`Nenhum ${what} no histórico.`),
+    h("h2", {class: "sec-t"}, `Próximos${up.length ? " · " + up.length : ""}`),
+    up.length ? byMonth(up) : empty(`Nenhum ${what} agendado.`),
+    pend.length ? [h("div", {class: "lbl2 ag-m"}, "Exames solicitados, sem data"), h("div", {class: "glist"}, pend.map(e => agRow(p, e, now)))] : null,
+    h("h2", {class: "sec-t"}, "Histórico"),
+    done.length ? [h("div", {class: "glist"}, done.slice(0, 3).map(e => agRow(p, e, now))),
+        h("button", {class: "btn ghost block ag-all", type: "button", onclick: () => go({ah: "hist"})}, ic("clock"), done.length > 3 ? `Ver histórico completo · ${done.length}` : "Ver histórico completo")]
+      : empty(`Nenhum ${what} realizado registrado. Depois da data, ${f === "todos" ? "os compromissos passam" : "eles passam"} para cá.`),
     h("h2", {class: "sec-t"}, "Por tipo"),
     h("div", {class: "glist"},
       [["consultas", "consulta", "Histórico anual e busca"], ["exames", "exame", "Resultados, documentos e evolução"], ["procedimentos", "proc", "Local do corpo, lado e documentos"]].map(([hs, k, sub]) =>
-        h("button", {class: "grow hub", type: "button", onclick: () => go({hsub: hs})}, h("span", {class: "gr-i c-" + KIND[k].cls, html: ICON[KIND[k].icon]}),
+        h("button", {class: "grow hub", type: "button", onclick: () => openMod({hsub: hs})}, h("span", {class: "gr-i c-" + KIND[k].cls, html: ICON[KIND[k].icon]}),
           h("span", {class: "gr-m"}, h("b", null, KIND[k].ls), h("span", null, sub)), h("span", {class: "li-go", html: ICON.right})))),
     h("p", {class: "care-n"}, "Cada compromisso fica guardado no histórico depois que passa. Lembretes: escolha no cadastro e envie ao app Calendário, que é quem avisa."));
 }
@@ -4241,7 +4338,7 @@ function indAdd(p, k, after){
   if (k.startsWith("sono.")) return sleepSheet(p);
   if (k.startsWith("mov.")) return moveSheet(p);
   if (k === "humor") return moodSheet(p);
-  if (k === "agua") return go({hsub: "agua"});
+  if (k === "agua") return waterLogSheet(p);
   if (k === "refeicoes") return go({tab: "alimentacao", sub: "plano"});
   if (k.startsWith("meas:")) return measSheet(p, k.slice(5), null, after);
   if (k.startsWith("lab:")) { const key = k.slice(4), info = C.labInfo(key), prev = careOf(p).labs.find(x => x.key === key); return labSheet(p, null, null, after, info ? info.n : prev ? prev.name : ""); }
@@ -4353,10 +4450,10 @@ function renderIndicator(p){
     : `${indVal(k, cmp.first, s.unit)} → ${indVal(k, cmp.last, s.unit)}${["sono.q", "humor"].includes(k) || !cmp.diff ? "" : ` (${cmp.diff > 0 ? "+" : "−"}${diffAbs(k, Math.abs(cmp.diff), s.unit)})`}`) : "";
   const hist = [...all].reverse();
   const openQ = q => q.rec ? measSheet(p, null, q.rec, null) : k.startsWith("lab:") ? (() => { const r = careOf(p).labs.find(x => x.id === q.id); if (r) labSheet(p, r, r.examId ? careOf(p).exams.find(e => e.id === r.examId) : null); })()
-    : k.startsWith("sono") ? go({hsub: "sono"}) : k.startsWith("mov.") ? go({hsub: "movimento"}) : k === "humor" ? go({hsub: "bem-estar"}) : k === "agua" ? go({hsub: "agua"}) : null;
-  put(app, h("div", {class: "view mod"}, topBar(quickBtn(p, "saude")),
-    h("button", {class: "back", type: "button", onclick: () => go(g ? {hsub: "prioridade", gid: g.id} : {hsub: "indicadores"})}, ic("left"), g ? "Prioridade" : "Indicadores"),
-    h("div", {class: "pg-row"}, h("h1", {class: "pg"}, info.n), h("button", {class: "sec-add", type: "button", "aria-label": `Registrar ${info.n}`, onclick: () => indAdd(p, k)}, ic("plus"))),
+    : k.startsWith("sono") ? openMod({hsub: "sono"}) : k.startsWith("mov.") ? openMod({hsub: "movimento"}) : k === "humor" ? openMod({hsub: "bem-estar"}) : k === "agua" ? openMod({hsub: "agua"}) : null;
+  put(app, h("div", {class: "view mod"}, topBar(k === "refeicoes" ? quickBtn(p, "saude") : modAdd(`Registrar ${info.n}`, () => indAdd(p, k))),
+    backBtn(g ? "Prioridade" : "Indicadores", g ? {hsub: "prioridade", gid: g.id} : {hsub: "indicadores"}),
+    h("div", {class: "pg-row"}, h("h1", {class: "pg"}, info.n)),
     h("p", {class: "pg-s"}, [s.unit && !["sono.q", "humor"].includes(k) ? `Unidade: ${s.unit}` : info.u ? `Escala ${info.u}` : "", `Origem: ${info.src}`].filter(Boolean).join(" · ")),
     !all.length ? h("div", {class: "nx none dj-quiet"}, h("b", null, "O acompanhamento ainda não começou"), h("span", null, k === "refeicoes" && !tracks(p) ? "Para este indicador, ative o registro das refeições feitas (Perfil → Preferências) e marque as refeições do plano." : "Não há registros deste indicador no perfil. O primeiro registro inicia o histórico."),
         k === "refeicoes" && !tracks(p) ? null : h("button", {class: "btn primary sm", type: "button", onclick: () => indAdd(p, k)}, ic("plus"), "Registrar"))
@@ -4380,7 +4477,7 @@ function renderIndicator(p){
 function renderIndicators(p){
   const ch = indChoices(p), withData = ch.filter(k => indSeries(p, k).points.length), without = ch.filter(k => !withData.includes(k));
   const row = k => { const info = indInfo(p, k), q = indLast(p, k);
-    return h("button", {class: "grow lr", type: "button", onclick: () => go({hsub: "indicador", ik: k, ip: null, ir: "all", iall: false})},
+    return h("button", {class: "grow lr", type: "button", onclick: () => openMod({hsub: "indicador", ik: k, ip: null, ir: "all", iall: false})},
       h("span", {class: "gr-m"}, h("b", null, info.n), h("span", null, q ? `${indWhen(k, q)} · ${q.src || info.src}` : info.src)),
       q ? h("span", {class: "lr-v"}, indVal(k, q, q.s.unit)) : null, h("span", {class: "li-go", html: ICON.right})); };
   const grp = list => { const by = new Map(); for (const k of list) { const g = indInfo(p, k).grp; if (!by.has(g)) by.set(g, []); by.get(g).push(k); } return [...by.entries()]; };
@@ -4480,7 +4577,7 @@ function prioRow(p, g, org, i, n){
   const inds = g.inds || [], first = inds.find(k => indSeries(p, k).points.length), more = inds.length - 1;
   const sub = !inds.length ? "Sem indicadores escolhidos" : first ? `${indInfo(p, first).n}: ${indLine(p, first)}${more > 0 ? ` · +${more}` : ""}` : "Acompanhamento ainda não começou";
   return h("div", {class: "grow pr" + (org ? " org" : ""), "data-g": g.id},
-    h("button", {class: "pr-o", type: "button", onclick: () => go({hsub: "prioridade", gid: g.id})},
+    h("button", {class: "pr-o", type: "button", onclick: () => openMod({hsub: "prioridade", gid: g.id})},
       h("span", {class: "gr-i c-goal", html: g.star ? ICON.starOn : ICON.target}),
       h("span", {class: "gr-m"}, h("b", null, h("span", {class: "gr-tt"}, g.name), g.main ? stChip("principal", "fut") : null), h("span", null, sub)),
       org ? null : h("span", {class: "li-go", html: ICON.right})),
@@ -4492,7 +4589,7 @@ function renderPriorities(p){
   const used = new Set(goalsOf(p).map(g => g.tpl).filter(Boolean)), sug = GOAL_TPL.filter(t => !used.has(t.k) && (adultOf(p) || !t.adult));
   const sugRow = t => h("button", {class: "grow hub", type: "button", onclick: () => prioSheet(p, null, t.k)}, h("span", {class: "gr-i c-goal", html: ICON.target}),
     h("span", {class: "gr-m"}, h("b", null, t.n), h("span", null, t.inds.length ? t.inds.filter(k => indChoices(p).includes(k)).map(k => indInfo(p, k).n).join(" · ") : "Escolha os marcadores dos seus exames")), h("span", {class: "li-go", html: ICON.plus}));
-  const hero = main ? h("button", {class: "nx dj-glass prio", type: "button", onclick: () => go({hsub: "prioridade", gid: main.id})},
+  const hero = main ? h("button", {class: "nx dj-glass prio", type: "button", onclick: () => openMod({hsub: "prioridade", gid: main.id})},
       h("span", {class: "nx-h"}, h("span", {class: "nx-e"}, "Prioridade principal")), h("b", {class: "nx-d"}, main.name),
       main.desc ? h("span", {class: "nx-s"}, main.desc) : null,
       (main.inds || []).slice(0, 2).map(k => h("span", {class: "nx-s"}, `${indInfo(p, k).n}: ${indLine(p, k)}`))) : null;
@@ -4508,19 +4605,19 @@ function renderPriorities(p){
       : [h("h2", {class: "sec-t"}, "Sugestões"), h("div", {class: "glist"}, sug.map(sugRow))]) : null,
     done.length ? h("details", {class: "src more"}, h("summary", null, `Concluídas (${done.length})`), h("div", {class: "glist"}, done.map(g => prioRow(p, g)))) : null,
     arch.length ? h("details", {class: "src more"}, h("summary", null, `Arquivadas (${arch.length})`), h("div", {class: "glist"}, arch.map(g => prioRow(p, g)))) : null,
-    h("button", {class: "btn ghost block", type: "button", style: "margin-top:14px", onclick: () => go({hsub: "indicadores"})}, "Ver todos os indicadores"),
+    h("button", {class: "btn ghost block", type: "button", style: "margin-top:14px", onclick: () => openMod({hsub: "indicadores"})}, "Ver todos os indicadores"),
     h("p", {class: "care-n"}, `As prioridades são de ${firstName(p.name)}: cada perfil da família tem as suas.`));
 }
 function renderPriority(p){
   const g = goalsOf(p).find(x => x.id === view.gid); if (!g) { go({hsub: "prioridades"}); return; }
   const slot = h("div");
   const indRow = k => { const info = indInfo(p, k), q = indLast(p, k), t = g.targets && g.targets[k];
-    return h("button", {class: "grow lr", type: "button", onclick: () => go({hsub: "indicador", ik: k, ip: g.id, ir: "all", iall: false})},
+    return h("button", {class: "grow lr", type: "button", onclick: () => openMod({hsub: "indicador", ik: k, ip: g.id, ir: "all", iall: false})},
       h("span", {class: "gr-m"}, h("b", null, info.n), h("span", null, q ? `${indWhen(k, q)} · ${q.src || info.src}` : "Acompanhamento ainda não começou"), t ? h("span", {class: "gr-x"}, `Meta: ${goalTxt(k, t, (q && q.s.unit) || info.u)}`) : null),
       q ? h("span", {class: "lr-v"}, indVal(k, q, q.s.unit)) : null, h("span", {class: "li-go", html: ICON.right})); };
   const LOGT = {"criada": "Criada", "concluída": "Concluída", "arquivada": "Arquivada", "reativada": "Reativada"};
   put(app, h("div", {class: "view mod"}, topBar(quickBtn(p, "saude")),
-    h("button", {class: "back", type: "button", onclick: () => go({hsub: "prioridades"})}, ic("left"), "Prioridades"),
+    backBtn("Prioridades", {hsub: "prioridades"}),
     h("div", {class: "pg-row"}, h("h1", {class: "pg"}, g.name), h("button", {class: "sec-add", type: "button", "aria-label": "Editar prioridade", onclick: () => prioSheet(p, g)}, ic("edit"))),
     h("p", {class: "pg-s"}, [GOAL_ST[g.status], g.main ? "principal" : "", g.star ? "em destaque" : ""].filter(Boolean).join(" · ")),
     g.desc ? h("p", {class: "pr-desc"}, g.desc) : null,
@@ -4538,7 +4635,7 @@ function renderPriority(p){
     (g.log || []).length ? [h("h2", {class: "sec-t"}, "Histórico"), h("div", {class: "kvs"}, [...g.log].reverse().slice(0, 12).map(x => h("div", {class: "kv"}, h("span", null, LOGT[x.ev] || x.ev), h("b", null, fmtMoment(x.at)))))] : null,
     slot,
     h("button", {class: "btn danger block", type: "button", style: "margin-top:14px", onclick: () => ask(slot, "Excluir esta prioridade? Os registros e indicadores continuam no app.", [{label: "Excluir", fn: () => {
-      const L = goalsOf(p), i = L.indexOf(g); L.splice(i, 1); touch(p); go({hsub: "prioridades"}); toast("Prioridade excluída", () => { L.splice(i, 0, g); touch(p); render(); }); }}])}, "Excluir prioridade"),
+      const L = goalsOf(p), i = L.indexOf(g); L.splice(i, 1); touch(p); goBack({hsub: "prioridades"}); toast("Prioridade excluída", () => { L.splice(i, 0, g); touch(p); render(); }); }}])}, "Excluir prioridade"),
     h("p", {class: "care-n"}, "Metas e indicadores servem para acompanhar; o app não diz se um valor é bom ou ruim. Converse com o profissional que acompanha você.")));
 }
 
@@ -4595,7 +4692,7 @@ function renderWater(p){
   const c = careOf(p), L = logsOf(p), w = waterOf(p), t = today(), dayMl = k => L.water.filter(e => e.date === k).reduce((a, e) => a + (e.ml || 0), 0);
   const todayL = L.water.filter(e => e.date === t).sort((a, b) => (b.at || 0) - (a.at || 0)), tot = dayMl(t);
   const days = Array.from({length: 14}, (_, i) => C.addDays(t, -i - 1)).filter(k => dayMl(k) > 0), r = c.waterRem;
-  modPage(p, "Hidratação", null, null,
+  modPage(p, "Hidratação", "Registrar água", () => waterLogSheet(p),
     h("section", {class: "nx dj-glass water", style: "cursor:default"},
       h("span", {class: "nx-h"}, h("span", {class: "nx-e"}, "Meta diária"), h("button", {class: "link", type: "button", onclick: () => waterSheet(p)}, "Ajustar")),
       h("b", {class: "nx-d"}, w.ml ? `${fmtL(w.ml)} L por dia` : "Não definida"),
@@ -4604,15 +4701,15 @@ function renderWater(p){
     h("div", {class: "panel"},
       h("div", {class: "w-tot"}, h("b", null, tot ? `${fmtL(tot)} L` : "Nada registrado"), h("span", null, tot ? "registrados hoje" : "Registrar é opcional: a meta vale com ou sem registro.")),
       h("div", {class: "w-add", role: "group", "aria-label": "Registrar água"}, WATER_ADD.map(ml => h("button", {class: "btn ghost sm", type: "button", onclick: () => addWater(p, ml)}, `+ ${ml} mL`))),
-      todayL.length ? h("div", {class: "hist"}, todayL.map(e => h("div", {class: "hi"}, h("div", {class: "hi-m"}, h("b", null, `${nf0.format(e.ml)} mL`), h("span", null, " " + (e.time || ""))),
-        h("button", {class: "x", type: "button", "aria-label": `Apagar ${e.ml} mL das ${e.time}`, html: ICON.x, onclick: () => removeLog(p, "water", e, "Registro")})))) : null),
+      todayL.length ? h("div", {class: "hist"}, todayL.map(e => h("button", {class: "hi hi-b", type: "button", "aria-label": `${nf0.format(e.ml)} mL às ${e.time || ""}. Editar ou excluir.`, onclick: () => waterLogSheet(p, e)},
+        h("span", {class: "hi-m"}, h("b", null, `${nf0.format(e.ml)} mL`), h("span", null, " " + (e.time || ""))), h("span", {class: "li-go", html: ICON.right})))) : null),
     days.length ? [h("h2", {class: "sec-t"}, "Últimos dias com registro"), h("div", {class: "kvs"}, days.map(k => h("div", {class: "kv"}, h("span", null, relDay(k)), h("b", null, `${fmtL(dayMl(k))} L`))))] : null,
     h("h2", {class: "sec-t"}, "Lembretes"),
     h("button", {class: "grow hub", type: "button", onclick: () => waterRemSheet(p)}, h("span", {class: "gr-i c-water", html: ICON.bell}),
       h("span", {class: "gr-m"}, h("b", null, r ? `A cada ${r.every % 60 ? r.every + " min" : r.every === 60 ? "hora" : r.every / 60 + " horas"}, das ${hm(r.start)} às ${hm(r.end)}` : "Lembretes desligados"),
         h("span", null, r ? `${r.days.length === 7 ? "Todos os dias" : WDAYS.filter(x => r.days.includes(x[0])).map(x => x[1]).join(", ")} · pelo app Calendário` : "Opcional: a cada hora, a cada 2 horas ou personalizado")),
       h("span", {class: "li-go", html: ICON.right})),
-    h("button", {class: "btn ghost block", type: "button", style: "margin-top:14px", onclick: () => go({hsub: "indicador", ik: "agua", ip: null, ir: "all"})}, "Ver o histórico completo"),
+    h("button", {class: "btn ghost block", type: "button", style: "margin-top:14px", onclick: () => openMod({hsub: "indicador", ik: "agua", ip: null, ir: "all", iall: false})}, "Ver o histórico completo"),
     h("details", {class: "src more"}, h("summary", null, "Como interpretar"),
       h("p", null, "35 mL por kg é uma estimativa prática para adultos, um ponto de partida ajustável. A necessidade real varia com clima, suor, atividade física, alimentação e condições de saúde."),
       h("p", null, "Exercício: o app não soma automaticamente um volume por treino, porque a perda de suor varia muito. Se você bebe mais nos dias de treino, ajuste a meta ou registre o que bebeu."),
@@ -4634,23 +4731,59 @@ function renderCare(p){
     h("p", {class: "care-n"}, "Ativos são os itens não pausados, já iniciados e não encerrados (datas de início e término são opcionais). Uma fórmula manipulada conta uma vez. O app não recomenda nem altera doses: siga a orientação de quem prescreveu."));
 }
 // v32: a antiga folha de prioridades (lista de frases) virou a tela Minhas Prioridades
-const goalsSheet = p => go({tab: "saude", hsub: "prioridades"});
+const goalsSheet = p => openMod({hsub: "prioridades"});
 function chips(list, cur, onPick, cls){
   return h("div", {class: "chips" + (cls ? " " + cls : "")}, list.map(([v, l]) => h("button", {type: "button", class: cur === v ? "on" : "", "aria-pressed": String(cur === v), onclick: () => onPick(cur === v && cls === "opt" ? null : v)}, l)));
 }
-function moveSheet(p, done){
-  const L = logsOf(p);
+// v33 · registros diários: tocar abre a edição; "Excluir registro" fica dentro dela, com Desfazer
+const delLog = (p, kind, rec, close) => h("button", {class: "btn danger block", type: "button", style: "margin-top:14px", onclick: () => { close(); removeLog(p, kind, rec, "Registro"); }}, "Excluir registro");
+const EDIT_LOG = {move: (p, e) => moveSheet(p, null, e), sleep: (p, e) => sleepSheet(p, e), mood: (p, e) => moodSheet(p, e), water: (p, e) => waterLogSheet(p, e)};
+// Água: registrar (o "+" da Hidratação ou o "+" do topo) e editar um registro. Volume em mL; sem copos.
+function waterLogSheet(p, rec){
+  const L = logsOf(p), editing = !!rec, n = new Date();
+  let ml = rec ? rec.ml : null;
+  sheet(editing ? "Editar registro de água" : "Registrar água", (el, close) => {
+    const custom = h("input", {class: "input num", id: "ag-ml", inputmode: "numeric", placeholder: "Outro", "aria-label": "Outro volume, em mL", autocomplete: "off"});
+    const time = h("input", {class: "input dt-in", type: "time", id: "ag-hora", value: rec ? rec.time || "" : `${pad2(n.getHours())}:${pad2(n.getMinutes())}`});
+    if (ml && !WATER_ADD.includes(ml)) custom.value = String(ml);
+    const body = h("div"), ok = h("button", {class: "btn primary block", type: "button", onclick: () => commit()}, editing ? "Salvar alterações" : "Salvar");
+    function paint(){
+      put(body, h("div", {class: "lbl2", style: "margin-top:0"}, "Volume"),
+        h("div", {class: "chips dur"}, WATER_ADD.map(v => h("button", {type: "button", class: ml === v && !custom.value ? "on" : "", "aria-pressed": String(ml === v && !custom.value), onclick: () => { custom.value = ""; ml = v; paint(); }}, `${nf0.format(v)} mL`)), custom));
+      ok.disabled = !(ml > 0 && ml <= 5000);
+    }
+    function commit(){
+      if (ok.disabled) return;
+      if (editing) { const was = Object.assign({}, rec); Object.assign(rec, {ml, time: time.value || rec.time, updated: Date.now()}); touch(p); close(); render();
+        toast("Registro atualizado", () => { Object.assign(rec, was); touch(p); render(); }); return; }
+      const e = {id: uid(), at: Date.now(), date: today(), time: time.value || `${pad2(n.getHours())}:${pad2(n.getMinutes())}`, ml};
+      L.water.push(e); touch(p); close(); render(); toast(`${nf0.format(ml)} mL registrados`, () => { L.water.splice(L.water.indexOf(e), 1); touch(p); render(); });
+    }
+    custom.addEventListener("input", () => { const v = parseInt(custom.value, 10); ml = v > 0 ? v : null; paint(); });
+    paint();
+    el.append(h("h2", null, editing ? "Editar registro de água" : "Registrar água"),
+      h("p", {class: "sh-sub"}, editing ? `${relDay(rec.date)}. Em mL.` : "Em mL. Registrar é opcional: a meta vale com ou sem registro."),
+      body, h("div", {style: "height:14px"}), field("ag-hora", "Horário", time),
+      editing ? delLog(p, "water", rec, close) : null, h("div", {class: "confirmbar"}, ok));
+  });
+}
+function moveSheet(p, done, rec){
+  const L = logsOf(p), editing = !!rec;
   const freq = {}; for (const e of L.move) freq[e.type] = (freq[e.type] || 0) + 1;
   const types = [...new Set([...Object.keys(freq).sort((a, b) => freq[b] - freq[a]), ...MOVE_TYPES])].filter(x => x !== "Outra").concat("Outra");
   const last = [...L.move].sort((a, b) => (b.at || 0) - (a.at || 0))[0];
-  let type = null, min = null, intensity = null, day = 0;
-  sheet("Registrar exercício", (el, close) => {
+  let type = rec ? rec.type : null, min = rec ? rec.min : null, intensity = rec ? rec.intensity || null : null, day = 0;
+  sheet(editing ? "Editar exercício" : "Registrar exercício", (el, close) => {
     const body = h("div"), other = h("input", {class: "input", id: "mv-outra", placeholder: "Qual atividade?", autocomplete: "off"});
     const custom = h("input", {class: "input num", id: "mv-min", inputmode: "numeric", placeholder: "Outro", "aria-label": "Minutos", autocomplete: "off"});
-    const ok = h("button", {class: "btn primary block", type: "button", onclick: () => commit()}, "Salvar");
+    const ok = h("button", {class: "btn primary block", type: "button", onclick: () => commit()}, editing ? "Salvar alterações" : "Salvar");
+    const when = h("input", {class: "input dt-in", type: "date", id: "mv-data", value: rec ? rec.date : today(), max: today(), min: "1900-01-01"});
+    if (rec && ![15, 20, 30, 45, 60, 90].includes(rec.min)) custom.value = String(rec.min);
     const finalType = () => type === "Outra" ? other.value.trim() : type;
-    const check = () => { ok.disabled = !(finalType() && min > 0 && min <= 1440); };
+    const check = () => { ok.disabled = !(finalType() && min > 0 && min <= 1440 && (!editing || dateOk(when.value))); };
     function commit(e){
+      if (editing) { const was = Object.assign({}, rec); Object.assign(rec, {type: finalType(), min, intensity, date: when.value, updated: Date.now()}); touch(p); close(); render();
+        toast("Registro atualizado", () => { for (const k of Object.keys(rec)) delete rec[k]; Object.assign(rec, was); touch(p); render(); }); return; }
       const entry = e || {type: finalType(), min, intensity, date: C.addDays(today(), -day)};
       entry.id = uid(); entry.at = Date.now();
       L.move.push(entry); touch(p); close(); render();
@@ -4665,45 +4798,51 @@ function moveSheet(p, done){
         type === "Outra" ? h("div", {style: "margin-top:8px"}, other) : null,
         h("div", {class: "lbl2"}, "Duração"), h("div", {class: "chips dur"}, [15, 20, 30, 45, 60, 90].map(v => h("button", {type: "button", class: min === v && !custom.value ? "on" : "", onclick: () => { custom.value = ""; min = v; paint(); }}, `${v} min`)), custom),
         h("div", {class: "lbl2"}, "Intensidade ", h("span", {class: "opt"}, "opcional")), chips(INTENS, intensity, v => { intensity = v; paint(); }, "opt"),
-        h("div", {class: "lbl2"}, "Quando"), chips([[0, "Hoje"], [1, "Ontem"]], day, v => { day = v; paint(); }));
+        editing ? h("div", {style: "margin-top:14px"}, field("mv-data", "Data", when)) : [h("div", {class: "lbl2"}, "Quando"), chips([[0, "Hoje"], [1, "Ontem"]], day, v => { day = v; paint(); })]);
       check();
     }
+    when.addEventListener("input", check); when.addEventListener("change", check);
+    if (rec && !types.includes(rec.type)) { type = "Outra"; other.value = rec.type; }
     paint();
-    el.append(h("h2", null, "Registrar exercício"),
-      last ? h("button", {class: "repeat", type: "button", onclick: () => commit({type: last.type, min: last.min, intensity: last.intensity || null, date: today()})},
+    el.append(h("h2", null, editing ? "Editar exercício" : "Registrar exercício"),
+      editing ? h("p", {class: "sh-sub"}, `Registrado ${relDay(rec.date).toLowerCase()}.`) : last ? h("button", {class: "repeat", type: "button", onclick: () => commit({type: last.type, min: last.min, intensity: last.intensity || null, date: today()})},
         h("span", {class: "qa-i", html: ICON.repeat}), h("div", null, h("b", null, "Repetir hoje"), `${last.type} · ${fmtDur(last.min)}${last.intensity ? " · " + last.intensity : ""}`)) : h("p", {class: "sh-sub"}, "Tipo e duração. A intensidade é opcional."),
       body, h("p", {class: "note"}, "O app não converte atividade em calorias: as estimativas de gasto variam muito de pessoa para pessoa."),
+      editing ? delLog(p, "move", rec, close) : null,
       h("div", {class: "confirmbar"}, ok));
   });
 }
-function sleepSheet(p){
-  const L = logsOf(p);
-  const last = [...L.sleep].sort((a, b) => a.date < b.date ? 1 : -1)[0];
-  let day = 0, quality = null;
-  sheet("Registrar sono", (el, close) => {
+function sleepSheet(p, rec){
+  const L = logsOf(p), editing = !!rec;
+  const last = rec || [...L.sleep].sort((a, b) => a.date < b.date ? 1 : -1)[0];
+  let day = 0, quality = rec ? rec.quality || null : null;
+  sheet(editing ? "Editar sono" : "Registrar sono", (el, close) => {
     const bed = h("input", {class: "input tm", type: "time", id: "sn-deitar", value: last ? last.bed : "23:00", "aria-label": "Hora de dormir"});
     const wake = h("input", {class: "input tm", type: "time", id: "sn-acordar", value: last ? last.wake : "07:00", "aria-label": "Hora de acordar"});
     const dur = h("div", {class: "dur-out", "aria-live": "polite"}), body = h("div");
     const ok = h("button", {class: "btn primary block", type: "button"}, "Salvar");
-    const key = () => C.addDays(today(), -day);
+    const key = () => editing ? rec.date : C.addDays(today(), -day);
     function paint(){
       const m = C.sleepMinutes(bed.value, wake.value), ex = L.sleep.find(x => x.date === key());
       dur.textContent = m == null ? "Informe os dois horários" : `${fmtDur(m)} de sono${m > 16 * 60 ? " · confira os horários" : ""}`;
-      ok.disabled = m == null; ok.textContent = ex ? "Atualizar o registro dessa noite" : "Salvar";
-      put(body, h("div", {class: "lbl2"}, "Noite que terminou"), chips([[0, "Hoje"], [1, "Ontem"]], day, v => { day = v; paint(); }),
+      ok.disabled = m == null; ok.textContent = editing ? "Salvar alterações" : ex ? "Atualizar o registro dessa noite" : "Salvar";
+      put(body, editing ? null : [h("div", {class: "lbl2"}, "Noite que terminou"), chips([[0, "Hoje"], [1, "Ontem"]], day, v => { day = v; paint(); })],
         h("div", {class: "lbl2"}, "Como foi? ", h("span", {class: "opt"}, "opcional")), chips(QUAL.map((q, i) => [i + 1, q]), quality, v => { quality = v; paint(); }, "opt"));
     }
     [bed, wake].forEach(x => x.addEventListener("input", paint));
     ok.addEventListener("click", () => {
+      if (editing) { const was = Object.assign({}, rec); Object.assign(rec, {bed: bed.value, wake: wake.value, quality, updated: Date.now()}); touch(p); close(); render();
+        toast("Registro atualizado", () => { for (const k of Object.keys(rec)) delete rec[k]; Object.assign(rec, was); touch(p); render(); }); return; }
       const prev = L.sleep.find(x => x.date === key()), e = {id: uid(), at: Date.now(), date: key(), bed: bed.value, wake: wake.value, quality};
       if (prev) L.sleep.splice(L.sleep.indexOf(prev), 1, e); else L.sleep.push(e);
       touch(p); close(); render();
       toast(`Sono de ${fmtDur(C.sleepMinutes(e.bed, e.wake))} registrado`, () => { const i = L.sleep.indexOf(e); if (prev) L.sleep.splice(i, 1, prev); else L.sleep.splice(i, 1); touch(p); render(); });
     });
     paint();
-    el.append(h("h2", null, "Registrar sono"), h("p", {class: "sh-sub"}, last ? "Horários do último registro já preenchidos." : "Se não lembrar o minuto exato, uma estimativa basta."),
+    el.append(h("h2", null, editing ? "Editar sono" : "Registrar sono"),
+      h("p", {class: "sh-sub"}, editing ? `Noite que terminou ${relDay(rec.date).toLowerCase()}.` : last ? "Horários do último registro já preenchidos." : "Se não lembrar o minuto exato, uma estimativa basta."),
       h("div", {class: "g2"}, h("div", {class: "field"}, h("label", {for: "sn-deitar"}, "Dormi às"), bed), h("div", {class: "field"}, h("label", {for: "sn-acordar"}, "Acordei às"), wake)),
-      dur, body, h("div", {class: "confirmbar"}, ok));
+      dur, body, editing ? delLog(p, "sleep", rec, close) : null, h("div", {class: "confirmbar"}, ok));
   });
 }
 function saveMood(p, data, close){
@@ -4712,11 +4851,16 @@ function saveMood(p, data, close){
   L.mood.push(e); touch(p); if (close) close(); render();
   toast(`Registrado: ${MOODS[e.mood - 1].toLowerCase()}`, () => { L.mood.splice(L.mood.indexOf(e), 1); touch(p); render(); });
 }
-function moodSheet(p){
-  let mood = null, energy = null, stress = null;
+function moodSheet(p, rec){
+  const editing = !!rec;
+  let mood = rec ? rec.mood : null, energy = rec ? rec.energy || null : null, stress = rec ? rec.stress || null : null;
   sheet("Emocional", (el, close) => {
-    const note = h("textarea", {class: "input area", id: "bm-nota", maxlength: "280", rows: "2", placeholder: "Algo que queira lembrar (opcional)"});
-    const body = h("div"), ok = h("button", {class: "btn primary block", type: "button", onclick: () => saveMood(p, {mood, energy, stress, note: note.value.trim() || null}, close)}, "Salvar");
+    const note = h("textarea", {class: "input area", id: "bm-nota", maxlength: "280", rows: "2", placeholder: "Algo que queira lembrar (opcional)"}); if (rec && rec.note) note.value = rec.note;
+    const save = () => { const data = {mood, energy, stress, note: note.value.trim() || null};
+      if (!editing) return saveMood(p, data, close);
+      const was = Object.assign({}, rec); Object.assign(rec, data, {updated: Date.now()}); touch(p); close(); render();
+      toast("Registro atualizado", () => { for (const k of Object.keys(rec)) delete rec[k]; Object.assign(rec, was); touch(p); render(); }); };
+    const body = h("div"), ok = h("button", {class: "btn primary block", type: "button", onclick: save}, editing ? "Salvar alterações" : "Salvar");
     function paint(){
       put(body, h("div", {class: "moods big", role: "radiogroup", "aria-label": "Como você está"}, MOODS.map((m, i) => h("button", {type: "button", role: "radio", "aria-checked": String(mood === i + 1),
           class: "mood m" + (i + 1) + (mood === i + 1 ? " on" : ""), onclick: () => { mood = i + 1; paint(); }}, h("i"), m))),
@@ -4725,8 +4869,9 @@ function moodSheet(p){
       ok.disabled = !mood;
     }
     paint();
-    el.append(h("h2", null, "Como você está se sentindo agora?"), h("p", {class: "sh-sub"}, "Fica só neste aparelho. O app não faz diagnósticos."),
-      body, h("div", {class: "lbl2"}, "Nota"), note, h("div", {class: "confirmbar"}, ok));
+    el.append(h("h2", null, editing ? "Editar registro emocional" : "Como você está se sentindo agora?"),
+      h("p", {class: "sh-sub"}, editing ? `${relDay(rec.date)}${rec.time ? ", " + rec.time : ""}. Fica só neste aparelho.` : "Fica só neste aparelho. O app não faz diagnósticos."),
+      body, h("div", {class: "lbl2"}, "Nota"), note, editing ? delLog(p, "mood", rec, close) : null, h("div", {class: "confirmbar"}, ok));
   });
 }
 
@@ -5600,13 +5745,13 @@ function renderProfile(p){
       row("users", "Família", "Troque no topo da tela", () => familySheet(), "familia", false, nPeople(S.patients.length))),
     h("h2", {class: "sec-t"}, "Planejamento"),
     h("div", {class: "prows"}, energyCard(p),
-      row("drop", "Hidratação", w.ml ? (w.src === "manual" ? "Definida por você" : "Estimativa · 35 mL/kg") : "Definir recomendação diária", () => go({tab: "saude", hsub: "agua"}), null, false, w.ml ? `${fmtL(w.ml)} L/dia` : null)),
+      row("drop", "Hidratação", w.ml ? (w.src === "manual" ? "Definida por você" : "Estimativa · 35 mL/kg") : "Definir recomendação diária", () => openMod({hsub: "agua"}), null, false, w.ml ? `${fmtL(w.ml)} L/dia` : null)),
     h("h2", {class: "sec-t"}, "Saúde e acompanhamento"),
     h("div", {class: "prows"},
-      row("cal", "Agenda de Saúde", nx.any ? `Próximo: ${whenShort(nx.any)}` : "Consultas, exames e procedimentos", () => go({tab: "saude", hsub: "agenda"}), null, false, nUpA ? plural(nUpA, "agendado", "agendados") : null),
-      row("target", "Minhas Prioridades", "O que você escolheu acompanhar", () => go({tab: "saude", hsub: "prioridades"}), null, false, nAct ? plural(nAct, "ativa", "ativas") : null),
-      row("pulse", "Indicadores", "Medições, sono, exercício e exames", () => go({tab: "saude", hsub: "indicadores"})),
-      row("pill", "Suplementos e Medicamentos", "Dose, horários e uso", () => go({tab: "saude", hsub: "cuidados"}), null, false, cr.meds.length ? `${cr.meds.length} ${cr.meds.length === 1 ? "item" : "itens"}` : null)),
+      row("cal", "Agenda de Saúde", nx.any ? `Próximo: ${whenShort(nx.any)}` : "Consultas, exames e procedimentos", () => openMod({hsub: "agenda", ah: "prox"}), null, false, nUpA ? plural(nUpA, "agendado", "agendados") : null),
+      row("target", "Minhas Prioridades", "O que você escolheu acompanhar", () => openMod({hsub: "prioridades"}), null, false, nAct ? plural(nAct, "ativa", "ativas") : null),
+      row("pulse", "Indicadores", "Medições, sono, exercício e exames", () => openMod({hsub: "indicadores"})),
+      row("pill", "Suplementos e Medicamentos", "Dose, horários e uso", () => openMod({hsub: "cuidados"}), null, false, cr.meds.length ? `${cr.meds.length} ${cr.meds.length === 1 ? "item" : "itens"}` : null)),
     h("h2", {class: "sec-t"}, "Aplicativo"),
     h("div", {class: "prows"},
       row("lock", "Backup e segurança", "Só neste aparelho", () => backupSheet(), null,

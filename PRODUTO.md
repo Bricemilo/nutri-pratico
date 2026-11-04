@@ -1253,3 +1253,20 @@ O iOS muda a altura informada logo depois de abrir o app instalado sem disparar 
 **Privacidade na família.** Cada perfil tem as próprias prioridades, agenda, medições e preferências. Saíram as sugestões de suplementos vindas de outro perfil. O app não tem bloqueio por perfil: quem usa o aparelho vê todos os perfis.
 
 **Não implementado.** Notificações próprias do app; sincronização com o Calendário (o envio é manual, por arquivo); glicemia capilar (a de laboratório e a HbA1c já entram); integração com Apple Saúde; bloqueio por perfil.
+
+## 42. v33 — Navegação padronizada e Agenda de Saúde como tela principal
+
+**Correção principal.** O cartão Agenda de Saúde da Home abria a janela "Novo compromisso" quando não havia compromisso futuro. Agora abre sempre a tela Agenda de Saúde; a escolha Consulta · Exame · Procedimento aparece só pelo "+" do cabeçalho. O cartão continua mostrando o próximo compromisso futuro de qualquer tipo.
+
+**Agenda de Saúde.** Próximo compromisso em destaque; "Aconteceu?" para os que passaram sem confirmação (Reagendar · Cancelado · Realizado); filtros Todos · Consultas · Exames · Procedimentos; próximos em ordem cronológica, por mês; exames solicitados sem data; os três mais recentes do histórico e "Ver histórico completo", que abre a tela Histórico (realizados e cancelados, por mês, com os mesmos filtros e "‹ Agenda de Saúde"). Tocar num compromisso abre os detalhes, com Editar, Reagendar, Cancelar/Reativar, documentos, Calendário e Excluir. Exames mantêm a folha própria, com resultados.
+
+**Padrão em todas as áreas** (DESIGN-SYSTEM §3.10):
+- Home: nenhum cartão abre formulário. Exercício, Sono e Emocional sem registro levam à tela do pilar, que explica e aponta o "+".
+- Um "+" por tela, no canto superior direito; nos módulos com cadastro próprio ele registra naquele módulo (antes havia dois "+" lado a lado).
+- Exercício, Sono, Emocional e Água: tocar num registro abre a edição (antes só havia um "x" para apagar); Excluir fica dentro dela, com Desfazer. Registros editados não são duplicados.
+- Hidratação ganhou o "+" (volume em mL e horário) e os registros de hoje são editáveis. "Água" no "+" geral abre o registro direto.
+- Consultas e Procedimentos: linhas e destaque abrem os detalhes (antes abriam direto a edição); "Aconteceu?" ganhou Reagendar.
+- Voltar leva à tela de origem, com o nome dela (Hoje, Saúde, Perfil, Agenda de Saúde, Prioridades…).
+
+**Sem mudança.** Dados (continua v5, sem migração), cálculos, metas, GET e visual dos cartões da Home. Nutrição e Perfil não foram alterados: o plano alimentar tem edição em linha própria (tocar na refeição abre, o alimento é editado no lugar) e as linhas do Perfil abrem a configuração correspondente; o caminho de volta a partir do Perfil passou a ser respeitado.
+

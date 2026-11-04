@@ -191,7 +191,7 @@ A sofisticação cresce com a importância da informação, não com a quantidad
 | Componente | Onde | Anatomia |
 |---|---|---|
 | **Cartão Prioridades** (`jewelCard`, material `prio`) | Home, grupo C | Título · "3 ativas" · prioridade principal (uma linha, reticências) ou "Em acompanhamento". Vazio: "Nenhuma definida" · "Escolha o que acompanhar". Sem pontuação nem porcentagem. |
-| **Cartão Agenda de Saúde** (`jewelEvent`, material `agenda`) | Home, grupo C | Título em até duas linhas · data e horário · identificação pela finalidade ("Consulta · Cardiologia", "Exame de sangue", "Infiltração · joelho direito"). Próximo compromisso de qualquer tipo. Vazio: "Nenhum agendado" · "Adicionar compromisso" (sem "+" isolado). |
+| **Cartão Agenda de Saúde** (`jewelEvent`, material `agenda`) | Home, grupo C | Título em até duas linhas · data e horário · identificação pela finalidade ("Consulta · Cardiologia", "Exame de sangue", "Infiltração · joelho direito"). Próximo compromisso de qualquer tipo. Vazio: "Nenhum agendado" · "Adicionar compromisso" (sem "+" isolado). O toque abre sempre a tela Agenda de Saúde (v33). |
 | **Cartão Suplementos e Medicamentos** (`jewelCare`) | Home, grupo B | Título completo em até duas linhas · "2 supl. · 1 med." numa linha (as abreviações ficam logo abaixo do título por extenso; o VoiceOver lê por extenso). |
 | **Títulos em duas linhas** (`.hc-2l`) | Home | Quebram entre palavras, sem reduzir a letra; a pastilha fica alinhada à primeira linha. Valor e legenda do grupo C ancorados na base, alinhados com o vizinho. |
 | **Linha da agenda** (`.grow.ag`) | Agenda de Saúde | Tipo em versalete na cor do módulo (consulta âmbar, exame safira, procedimento ouro rosé) · título · horário e local. Próximos agrupados por mês; histórico do mais recente ao mais antigo. |
@@ -199,6 +199,22 @@ A sofisticação cresce com a importância da informação, não com a quantidad
 | **Gráfico genérico** (`lineChart`) | Indicadores | Mesmo desenho do gráfico de exames; segunda série (diastólica) em champanhe; linha de meta tracejada em champanhe com o rótulo "Sua meta". |
 
  Próximo compromisso = só consultas "agendada" e exames "agendado" que ainda não passaram, no fuso em que foram marcados; sem horário, valem até o fim do dia. Cancelados, realizados e solicitados nunca são "próximos". A Home é redesenhada sozinha quando o compromisso exibido passa.
+
+### 3.10 Padrão de navegação (v33)
+
+Uma regra para todas as áreas, com as particularidades de cada módulo respeitadas:
+
+| Situação | Comportamento |
+|---|---|
+| Tocar num cartão da Home ou numa linha de módulo | Abre a **visão principal** do módulo, com ou sem dados. Nenhum cartão abre formulário. |
+| Visão principal | O mais relevante primeiro (próximo compromisso, valor da semana, meta do dia); depois a lista; o histórico recente à vista e o completo a um toque. |
+| "+" | **Um por tela**, no canto superior direito (`.icon-btn.accent`). Num módulo com cadastro próprio, inicia o registro daquele módulo (Agenda: escolha Consulta · Exame · Procedimento; Hidratação: água; Exercício, Sono, Emocional: o registro do pilar; Indicador: a medição). Sem cadastro próprio, é o "Registrar" geral. Seções com tipos diferentes (Suplementos · Medicamentos) mantêm o "+" da seção. |
+| Tocar num registro | Abre os **detalhes**. Compromissos: folha de detalhes (tipo · título · situação e data · "Aconteceu?" se passou · informações · Editar / Reagendar / Cancelar · documentos · Calendário · Excluir). Registros diários (exercício, sono, emocional, água) e itens de uso: a própria folha de edição é o detalhe (um passo a menos). |
+| Editar e excluir | Editar abre o formulário já preenchido. Excluir fica dentro dos detalhes ou da edição (botão vermelho), com confirmação quando há documentos ou dados vinculados e Desfazer no aviso. Cancelar não apaga: o compromisso fica no histórico. Sem "x" solto nas listas. |
+| Estado vazio | Explica o que entra ali e aponta o "+" (ou traz um botão explícito); nunca abre formulário sozinho. |
+| Voltar ("‹") | Leva à tela de onde a pessoa veio, com o nome dela: Hoje → Agenda de Saúde mostra "‹ Hoje"; Saúde → Agenda → Consultas mostra "‹ Agenda de Saúde" e depois "‹ Saúde"; Perfil → módulo mostra "‹ Perfil". Telas internas (Histórico da agenda) voltam ao módulo. Tocar numa aba recomeça o caminho. |
+
+Implementação: `openMod(v)` guarda a origem em `view.ret` (rótulo + estado, encadeado, até 6 níveis); `backBtn` e `goBack` usam esse caminho, com o resumo da Saúde como alternativa. `modPage` desenha "‹", título e o "+" do módulo.
 
 ## 4. Layout da Home: motor adaptativo
 
