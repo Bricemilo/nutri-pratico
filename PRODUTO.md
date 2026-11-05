@@ -1270,3 +1270,24 @@ O iOS muda a altura informada logo depois de abrir o app instalado sem disparar 
 
 **Sem mudança.** Dados (continua v5, sem migração), cálculos, metas, GET e visual dos cartões da Home. Nutrição e Perfil não foram alterados: o plano alimentar tem edição em linha própria (tocar na refeição abre, o alimento é editado no lugar) e as linhas do Perfil abrem a configuração correspondente; o caminho de volta a partir do Perfil passou a ser respeitado.
 
+## 43. v34 — Agenda de Saúde no padrão do Sono
+
+**Objetivo.** Ver, com o mínimo de toques e de rolagem, quantos compromissos foram realizados em cada mês e quais foram.
+
+**Estrutura da tela** (uma tela só, nesta ordem):
+1. Cabeçalho "Agenda de Saúde" com o "+" (abre Consulta · Exame · Procedimento, sem mudança).
+2. Categorias: Resumo · Consultas · Exames · Procedimentos. Trocar de categoria atualiza tudo e mantém o mês e o ano.
+3. Painel do ano (mesmo cartão e mesmas barras do Sono, com 12 meses): total do ano, "‹ ano ›", barras tocáveis, "Outubro · 3 consultas".
+4. Próximos: o compromisso futuro mais próximo da categoria (e o "a confirmar" mais recente, quando existir); "Ver todos" abre a lista completa (a confirmar, agendados por mês, exames solicitados sem data).
+5. Histórico · mês escolhido: até 3, do mais recente; "Ver todos" abre o histórico completo já filtrado por mês, ano e categoria, com opção de ampliar para o ano, todos os anos e incluir cancelados.
+
+**Regra de contagem.** Conta só o que foi confirmado como realizado. Um compromisso que passou da data sem confirmação fica "A confirmar" e não conta (o app não presume que aconteceu). Cancelados não contam. Um exame conta uma vez, com seus resultados dentro. A mesma função alimenta barra, quantidade e lista.
+
+**Estado.** A entrada pela Home, pela Saúde ou pelo Perfil abre em Resumo, no ano e mês atuais. Detalhes e listas "Ver todos" voltam ao mesmo contexto (categoria, mês, ano e posição). Mês vazio: não muda sozinho; oferece "Último mês com registros".
+
+**Saiu da tela principal** (continua no app): o bloco "Aconteceu?" (os passados sem confirmação aparecem em Próximos como "A confirmar", e os detalhes têm Reagendar · Cancelado · Realizado) e "Por tipo" (Consultas, Exames e Procedimentos continuam em Saúde → Registros por tipo).
+
+**Sem mudança.** Dados (v5, sem migração), formulários, detalhes, cartão da Home, tela Sono e demais módulos.
+
+**Acessibilidade.** Cada barra é um botão com rótulo completo ("Outubro de 2026: 5 compromissos realizados") e estado selecionado; a quantidade do mês é anunciada. As barras têm 25 pt de largura (12 meses lado a lado não cabem com 44 pt) e 84 pt de altura.
+

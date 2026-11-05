@@ -732,6 +732,58 @@ h1.pg{font-size:1.765rem;margin:6px 2px 2px}
 .hi.hi-b:active{background:color-mix(in srgb,var(--ink) 4%,transparent)}
 .g3{display:flex;flex-wrap:wrap;gap:8px} .g3 > .btn{flex:1 1 30%;min-width:0;white-space:normal;min-height:44px}
 .btn.ag-all{margin-top:12px} .btn.ag-all svg{width:18px;height:18px}
+/* v34 · Agenda de Saúde no padrão do Sono: categorias que rolam de lado (nada cortado), cartão do ano com 12 barras tocáveis, painéis compactos */
+.ag-seg{display:flex;overflow:hidden}
+.ag-seg button{flex:1 0 auto;height:40px;padding:0 7px;overflow:visible;text-overflow:clip;white-space:nowrap;font-size:var(--t-cap)}
+.ag-seg.two{display:grid;grid-auto-flow:row;grid-template-columns:repeat(2,minmax(0,1fr))}
+.ag-seg.two button{min-height:40px;height:auto;padding:6px 2px;white-space:normal;letter-spacing:-.01em}
+.agst{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.agst .panel{margin-top:0}
+.ag-top{display:flex;align-items:center;gap:8px}
+.ag-top .hp-v{flex:1;min-width:0;margin:0 2px;flex-wrap:nowrap;align-items:center;gap:10px}
+.ag-top .hp-v span{min-width:0;line-height:1.25}
+.hp.ag .hp-t{flex:none;min-height:0;color:var(--ink);font-size:var(--t-body);font-weight:650;font-variant-numeric:tabular-nums}
+.ag-yr{display:flex;align-items:center;gap:0;margin-right:-10px;flex:none}
+.ag-yr > b:only-child{margin-right:10px;color:var(--ink-2)}
+.ag-yb{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:var(--ink-2)}
+.ag-yb svg{width:18px;height:18px}
+.ag-yb:disabled{opacity:.3}
+.ag-yb:not(:disabled):active{background:color-mix(in srgb,var(--ink) 6%,transparent)}
+.hp .bars.ag-bars{grid-template-columns:repeat(12,minmax(0,1fr));gap:3px;height:84px;margin:var(--s3) -4px 0}
+.ag-bars .bar{padding:0;background:none;border:0;font:inherit;color:inherit;cursor:pointer;border-radius:10px;-webkit-tap-highlight-color:transparent}
+.ag-bars .bar i{max-width:18px;opacity:.5;transition:opacity .15s}
+.ag-bars .bar.now i{opacity:1;box-shadow:0 0 0 1px color-mix(in srgb,var(--c) 60%,transparent),0 4px 14px -4px color-mix(in srgb,var(--c) 70%,transparent)}
+.ag-bars .bar.nd i{opacity:1}
+.ag-bars .bar span{white-space:nowrap}
+.ag-bars .bar.now .agm{color:var(--ink);font-weight:700}
+.ag-bars .bar:focus-visible{outline:2px solid var(--c);outline-offset:1px}
+.agm .l1{display:none}
+@media (max-width:359px){.agm .l3{display:none}.agm .l1{display:inline}}
+@media (max-width:430px){html.big-text .agm .l3{display:none}html.big-text .agm .l1{display:inline}}
+.ag-sel{margin:10px 2px 0;font-size:var(--t-sm);color:var(--ink-2);line-height:1.4}
+.ag-sel b{color:var(--ink);font-weight:650}
+.agp .panel-h{margin-bottom:4px;flex-wrap:wrap;row-gap:2px}
+.agp-e{font-size:var(--t-sm);font-weight:450;color:var(--ink-2);letter-spacing:0}
+.agp-e.solo{margin:2px 0 4px;line-height:1.4}
+.agl{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:8px 0;text-align:left;border-top:1px solid var(--line);font:inherit;color:inherit;background:none}
+.panel-h + .agl,.agp > .agl:first-child{border-top:0}
+.agl:active{background:color-mix(in srgb,var(--ink) 4%,transparent)}
+.agl-d{width:40px;flex:none;display:flex;flex-direction:column;align-items:center;line-height:1.05}
+.agl-d b{font-size:var(--t-sec);font-weight:680;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.agl-d span{font-size:var(--t-cap);font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2);margin-top:2px}
+.agl-d.nd b{color:var(--muted)}
+.agl-m{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.agl-m b{font-size:var(--t-body);font-weight:600;line-height:1.3}
+.agl-m > span{font-size:var(--t-sm);color:var(--ink-2);line-height:1.3}
+.agl-m em{font-style:normal}
+.agl-m em.due{color:var(--accent-2)}
+.agl.off .agl-m b,.agl.off .agl-d{opacity:.6}
+.agl .li-go svg{width:16px;height:16px;color:var(--muted);display:block}
+.link.ag-more{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:44px;padding:0 2px;border-top:1px solid var(--line);font-size:var(--t-sm);font-weight:600;color:var(--accent-2);text-align:left}
+.link.ag-more .li-go svg{width:16px;height:16px;display:block}
+.link.ag-more.in-h{width:auto;min-height:44px;margin:-10px -6px -10px 0;padding:0 4px 0 8px;border-top:0;gap:4px;flex:none}
+.ag-pf{margin-top:12px}
+.ag-pf + .ag-sel{margin-top:12px}
 .sheet .ag-k{margin:2px 0 4px} .sheet h2.ev-t{margin-top:0}
 .moods{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-top:12px}
 .mood{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 2px 8px;border-radius:13px;background:var(--surface-2);border:1px solid transparent;font-size:var(--t-cap);line-height:1.2;color:var(--ink-2);text-align:center;min-width:0}
@@ -2355,7 +2407,7 @@ function renderHome(p){
       aria: act.length ? `Prioridades: ${plural(act.length, "ativa", "ativas")}${main ? `. Principal: ${main.name}` : ""}.` : "Prioridades: nenhuma definida. Escolha o que acompanhar.",
       fn: () => openMod({hsub: "prioridades"})}),
     jewelEvent({cls: "agenda", icon: "cal", title: "Agenda de Saúde", event: nx, more: nx ? sameTime(p, nx) : 0, line3: e => agendaLabel(p, e), emptyMsg: "Nenhum agendado", emptySub: "Adicionar compromisso",
-      open: () => openMod({hsub: "agenda", ah: "prox"})}));
+      open: () => openMod(AG_ENTRY)}));
   put(app, h("div", {class: "view home"}, topBar(quickBtn(p, "hoje")),
     h("header", {class: "hi-h"}, h("h1", null, `${greetOf()}, ${firstName(p.name)}`), h("div", {class: "today"}, dayTxt)),
     pillars, divider(), careRow, divider(), agenda));
@@ -2515,8 +2567,8 @@ const MODT = {agenda: "Agenda de Saúde", consultas: "Consultas", exames: "Exame
   prioridade: "Prioridade", indicadores: "Indicadores", indicador: "Indicador", agua: "Hidratação"};
 const PILLT = {movimento: "Exercício", sono: "Sono", "bem-estar": "Emocional"};
 function hereRef(){ const v = view;
-  const l = v.tab === "hoje" ? "Hoje" : v.tab === "perfil" ? "Perfil" : v.tab === "alimentacao" ? "Nutrição" : HMODS.includes(v.hsub) ? (v.hsub === "agenda" && v.ah === "hist" ? "Histórico" : MODT[v.hsub]) : PILLT[v.hsub] || "Saúde";
-  return {l, v: {tab: v.tab, hsub: v.hsub || "resumo", gid: v.gid || null, ik: v.ik || null, ip: v.ip || null, ah: v.ah || null, ret: v.ret || null}}; }
+  const l = v.tab === "hoje" ? "Hoje" : v.tab === "perfil" ? "Perfil" : v.tab === "alimentacao" ? "Nutrição" : HMODS.includes(v.hsub) ? (v.hsub === "agenda" && v.ah === "hist" ? "Histórico" : v.hsub === "agenda" && v.ah === "next" ? "Próximos" : MODT[v.hsub]) : PILLT[v.hsub] || "Saúde";
+  return {l, v: {tab: v.tab, hsub: v.hsub || "resumo", gid: v.gid || null, ik: v.ik || null, ip: v.ip || null, ah: v.ah || null, af: v.af || null, ay: v.ay ?? null, am: v.am ?? null, ahp: v.ahp || null, ahc: v.ahc || null, ret: v.ret || null}}; }
 const sameMod = (a, b) => a.tab === b.tab && a.hsub === b.hsub && (a.gid || null) === (b.gid || null) && (a.ik || null) === (b.ik || null);
 function openMod(v){
   const dest = Object.assign({tab: "saude"}, v), r = view.ret;
@@ -2535,7 +2587,7 @@ function careHub(p){
   return [star.length ? [h("h2", {class: "sec-t"}, "Em destaque"), h("div", {class: "glist"}, star.map(g => prioRow(p, g)))] : null,
     h("h2", {class: "sec-t"}, "Cuidados"),
     h("div", {class: "glist"},
-      row("agenda", "cal", "agenda", "Agenda de Saúde", n ? `Próximo: ${whenShort(n)} · ${agendaLabel(p, n)}` : over ? `${over} a confirmar` : pend ? plural(pend, "exame pendente", "exames pendentes") : "Nenhum compromisso agendado", () => openMod({hsub: "agenda", ah: "prox"}), !n && (over || pend)),
+      row("agenda", "cal", "agenda", "Agenda de Saúde", n ? `Próximo: ${whenShort(n)} · ${agendaLabel(p, n)}` : over ? `${over} a confirmar` : pend ? plural(pend, "exame pendente", "exames pendentes") : "Nenhum compromisso agendado", () => openMod(AG_ENTRY), !n && (over || pend)),
       row("goals", "target", "goal", "Minhas Prioridades", act.length ? plural(act.length, "prioridade ativa", "prioridades ativas") : "Escolha o que acompanhar", () => openMod({hsub: "prioridades"})),
       row("indicadores", "pulse", "ind", "Indicadores", nInd ? plural(nInd, "indicador com registros", "indicadores com registros") : "Medições, sono, exercício e exames", () => openMod({hsub: "indicadores"})),
       row("cuidados", "pill", "suplemento", "Suplementos e Medicamentos", `Ativos: ${plural(cc.sup, "suplemento", "suplementos")} · ${plural(cc.med, "medicamento", "medicamentos")}`, () => openMod({hsub: "cuidados"}))),
@@ -3491,60 +3543,134 @@ function newEventSheet(p, after){
       h("div", {style: "height:10px"}), h("button", {class: "btn plain block", type: "button", onclick: close}, "Fechar"));
   });
 }
-function agRow(p, e, now){
-  const k = kindOf(p, e), st = e.status, over = C.isOverdue(e, now);
-  const chip = st === "cancelada" || st === "cancelado" ? ["cancelado", "off"] : over ? ["a confirmar", "due"] : st === "solicitado" ? ["pendente", "due"] : null;
-  const sub = [e.time ? hm(e.time) + tzTag(e) : "", k === "consulta" ? apptSub(e) : k === "proc" ? procSub(e) : examPlace(e)].filter(Boolean).join(" · ");
-  return h("button", {class: "grow ev ag" + (chip && chip[1] === "off" ? " off" : ""), type: "button", onclick: () => openEvent(p, e)}, dateTile(e),
-    h("span", {class: "gr-m"}, h("span", {class: "ag-k c-" + KIND[k].cls}, KIND[k].l), h("b", null, h("span", {class: "gr-tt"}, k === "consulta" ? apptTitle(e) : k === "proc" ? procTitle(e) : e.name), chip ? stChip(chip[0], chip[1]) : null),
-      sub ? h("span", null, sub) : null),
+/* v34 · Agenda de Saúde no padrão do Sono. Uma tela, nesta ordem: categorias (Resumo · Consultas · Exames · Procedimentos) → painel do ano
+   (total e 12 barras, uma por mês, tocáveis) → Próximos (o futuro mais próximo) → Histórico do mês escolhido (até 3; "Ver todos" quando há mais).
+   Uma única regra conta tudo (agDone): só compromissos com status REALIZADO e data válida. Futuros, a confirmar, solicitados e cancelados
+   nunca entram na contagem; resultados de exame e documentos também não (o exame é um registro só, com seus resultados dentro).
+   O gráfico, a quantidade do mês e a lista do mês usam a mesma função: o que a barra diz é exatamente o que a lista mostra.
+   Estado: view.af (categoria), view.ay/view.am (ano e mês). A entrada pela Home/Saúde/Perfil zera para Resumo e o mês atual;
+   detalhes (folhas) e as listas "Ver todos" voltam ao mesmo contexto. */
+const AG_CAT = [["todos", "Resumo"], ["consulta", "Consultas"], ["exame", "Exames"], ["proc", "Procedimentos"]];
+const AG_N = {todos: ["compromisso", "compromissos", "o"], consulta: ["consulta", "consultas", "a"], exame: ["exame", "exames", "o"], proc: ["procedimento", "procedimentos", "o"]};
+const AG_C = {todos: "var(--dj-midnight)", consulta: "var(--dj-amber)", exame: "var(--dj-midnight)", proc: "var(--dj-rosegold)"};
+const AG_ENTRY = {hsub: "agenda", ah: "prox", af: null, ay: null, am: null, ahp: null, ahc: null, asy: null};
+const isDone = e => (e.status === "realizada" || e.status === "realizado") && dateOk(e.date);
+const isCanc = e => e.status === "cancelada" || e.status === "cancelado";
+const agCat = (p, f) => { const c = careOf(p); return f === "consulta" ? c.appts : f === "exame" ? c.exams : f === "proc" ? c.procs : agendaList(p); };
+// realizados da categoria, num ano e num mês (0–11) opcionais, do mais recente ao mais antigo
+const agDone = (p, f, y, m) => agCat(p, f).filter(e => isDone(e) && (y == null || ymd(e.date)[0] === y) && (m == null || ymd(e.date)[1] === m + 1)).sort(byDateDesc);
+const agCount = (f, n) => plural(n, AG_N[f][0], AG_N[f][1]);
+const agDoneTxt = (f, n) => `${agCount(f, n)} realizad${AG_N[f][2]}${n === 1 ? "" : "s"}`;
+const agMonth = (s, m = s.m, y = s.y) => cap1(MONL[m]) + (y !== s.ty ? " de " + y : "");
+function agState(p){
+  const [ty, tm] = ymd(today()), f = AG_CAT.some(x => x[0] === view.af) ? view.af : "todos";
+  const yrs = agendaList(p).filter(isDone).map(e => ymd(e.date)[0]), y0 = Math.min(ty, ...yrs), y1 = Math.max(ty, ...yrs);
+  const y = Number.isInteger(view.ay) && view.ay >= y0 && view.ay <= y1 ? view.ay : ty;
+  const m = Number.isInteger(view.am) && view.am >= 0 && view.am <= 11 ? view.am : tm - 1;
+  return {f, y, m, y0, y1, ty, tm: tm - 1};
+}
+const agTitle = (p, e, k = kindOf(p, e)) => k === "consulta" ? [e.spec, e.prof].filter(Boolean).join(" · ") || "Consulta" : k === "proc" ? procTitle(e) : e.name || "Exame";
+function agStatus(e, k, now){ const a = k === "consulta" ? "a" : "o";
+  return isDone(e) ? "Realizad" + a : isCanc(e) ? "Cancelad" + a : e.status === "solicitado" ? "Pendente" : C.isOverdue(e, now) ? "A confirmar" : C.isUpcoming(e, now) ? "Agendad" + a : ""; }
+// linha compacta: dia e mês · título · (tipo no Resumo) · horário · situação · ›
+function agLine(p, e, showKind, now){
+  const k = kindOf(p, e), [, m, d] = ymd(e.date), st = agStatus(e, k, now), t = agTitle(p, e, k), due = st === "A confirmar" || st === "Pendente";
+  const meta = [showKind ? KIND[k].l : "", e.time ? hm(e.time) + tzTag(e) : ""].filter(Boolean).join(" · ");
+  return h("button", {class: "agl" + (isCanc(e) ? " off" : ""), type: "button", onclick: () => openEvent(p, e),
+      "aria-label": `${e.date ? whenSpoken(e) : "Sem data"}. ${KIND[k].l}: ${t}. ${st}. Ver detalhes.`},
+    h("span", {class: "agl-d" + (dateOk(e.date) ? "" : " nd"), "aria-hidden": "true"}, dateOk(e.date) ? [h("b", null, String(d)), h("span", null, MON[m - 1])] : h("b", null, "—")),
+    h("span", {class: "agl-m"}, h("b", null, t), h("span", null, meta, meta && st ? " · " : "", st ? h("em", {class: due ? "due" : isCanc(e) ? "off" : null}, st) : null)),
     h("span", {class: "li-go", html: ICON.right}));
 }
-/* Visão principal: o próximo compromisso, os que já passaram sem confirmação ("Aconteceu?"), filtros por tipo, os próximos (por mês) e os três
-   mais recentes do histórico, com acesso ao histórico completo (view.ah = "hist", com "‹ Agenda de Saúde"). O "+" do cabeçalho abre a escolha
-   Consulta · Exame · Procedimento. Tocar num compromisso abre os detalhes. */
+// categorias: uma linha, no mesmo tamanho de letra do seletor da Saúde; se as quatro não couberem (iPhone estreito ou texto ampliado),
+// viram 2 × 2 — nenhuma palavra é cortada, reticenciada ou reduzida
+function agSeg(s){
+  const box = h("div", {class: "seg subnav ag-seg", role: "tablist", "aria-label": "Categoria"}, AG_CAT.map(([k, l]) =>
+    h("button", {type: "button", role: "tab", class: s.f === k ? "on" : "", "aria-selected": String(s.f === k), onclick: () => go({af: k}, true)}, l)));
+  const fit = () => { box.classList.remove("two"); if (box.scrollWidth > box.clientWidth + 1) box.classList.add("two"); };
+  requestAnimationFrame(fit); (document.fonts && document.fonts.ready || Promise.resolve()).then(() => box.isConnected && fit());
+  // tamanho do texto ou largura mudaram com a tela aberta: refaz a conta
+  if (window.ResizeObserver) { let w = 0; const ro = new ResizeObserver(() => { if (!box.isConnected) return; const k = box.clientWidth + "|" + getComputedStyle(document.documentElement).fontSize; if (k !== w) { w = k; fit(); } }); [box, ...box.children].forEach(x => ro.observe(x)); }
+  return box;
+}
+// painel do ano: mesmo cartão e mesmas barras do Sono, com 12 meses; o mês escolhido fica aceso e diz a quantidade exata
+function agPanel(p, s){
+  const counts = MON.map((_, i) => agDone(p, s.f, s.y, i).length), tot = counts.reduce((a, b) => a + b, 0), max = Math.max(3, ...counts), n = counts[s.m];
+  const yBtn = (dir, lbl) => h("button", {class: "ag-yb", type: "button", "aria-label": lbl, disabled: dir < 0 ? s.y <= s.y0 : s.y >= s.y1, onclick: () => go({ay: s.y + dir}, true)}, ic(dir < 0 ? "left" : "right"));
+  return h("section", {class: "hp full ag", style: `--c:${AG_C[s.f]}`, "aria-label": `${cap1(AG_N[s.f][1])} realizad${AG_N[s.f][2]}s em ${s.y}`},
+    // uma linha só: total do ano (o número grande, como no Sono) e o ano, com ‹ › quando há outros anos com registros
+    h("div", {class: "ag-top"}, h("div", {class: "hp-v"}, h("b", null, String(tot)), h("span", null, `${tot === 1 ? AG_N[s.f][0] : AG_N[s.f][1]} realizad${AG_N[s.f][2]}${tot === 1 ? "" : "s"}`)),
+      h("div", {class: "ag-yr", role: "group", "aria-label": "Ano"}, s.y0 < s.y1 ? yBtn(-1, `Ano anterior, ${s.y - 1}`) : null, h("b", {class: "hp-t"}, String(s.y)), s.y0 < s.y1 ? yBtn(1, `Próximo ano, ${s.y + 1}`) : null)),
+    h("div", {class: "bars ag-bars", role: "group", "aria-label": `Por mês em ${s.y}. Toque em um mês para ver o histórico.`}, counts.map((v, i) => {
+      const fut = !v && (s.y > s.ty || (s.y === s.ty && i > s.tm));
+      return h("button", {type: "button", class: "bar" + (i === s.m ? " now" : "") + (v ? "" : fut ? " fut" : " nd"), "aria-pressed": String(i === s.m),
+          "aria-label": `${cap1(MONL[i])} de ${s.y}: ${v ? agDoneTxt(s.f, v) : `nenhum${AG_N[s.f][2] === "a" ? "a" : ""} ${AG_N[s.f][0]} realizad${AG_N[s.f][2]}`}`, onclick: () => go({am: i, ay: s.y}, true)},
+        h("i", {style: `height:${v ? Math.max(8, v / max * 100) : 0}%`}), h("span", {class: "agm"}, h("span", {class: "l3"}, cap1(MON[i])), h("span", {class: "l1"}, MON[i][0].toUpperCase())));
+    })),
+    h("p", {class: "ag-sel", "aria-live": "polite"}, h("b", null, agMonth(s)), ` · ${agCount(s.f, n)}`));
+}
+// "Ver todos": no cabeçalho do painel (à direita); "Histórico completo" e o atalho de mês: linha discreta no pé do painel
+const agAll = (label, fn, foot) => h("button", {class: "link ag-more" + (foot === undefined && label.startsWith("Ver todos") ? " in-h" : ""), type: "button", onclick: fn}, label, h("span", {class: "li-go", html: ICON.right}));
+function agLeave(ah){ go({ah, ahp: null, ahc: null, asy: Math.round(scrollY)}); }
+function agBack(){ const y = view.asy || 0; go({ah: "prox", asy: null}, true); window.scrollTo(0, y); }
 function renderAgenda(p){
-  const now = Date.now(), f = ["consulta", "exame", "proc"].includes(view.af) ? view.af : "todos", hist = view.ah === "hist";
-  const pick = list => list.filter(e => f === "todos" || kindOf(p, e) === f);
-  const all = pick(agendaList(p)), up = C.upcoming(all, now), nx = C.upcoming(agendaList(p), now)[0];
-  const over = all.filter(e => C.isOverdue(e, now)).sort(byStartAsc), pend = all.filter(e => e.status === "solicitado");
-  const done = all.filter(e => ["realizada", "realizado", "cancelada", "cancelado"].includes(e.status) && e.date).sort(byDateDesc);
-  const byMonth = list => { const out = []; let cur = ""; for (const e of list) { const [y, m] = ymd(e.date), key = y + "-" + m; if (key !== cur) { cur = key; out.push(h("div", {class: "lbl2 ag-m"}, `${cap1(MONL[m - 1])}${y !== new Date().getFullYear() ? " de " + y : ""}`)); out.push(h("div", {class: "glist"})); } out[out.length - 1].append(agRow(p, e, now)); } return out; };
-  const filt = h("div", {class: "chips ag-f", role: "group", "aria-label": "Tipo de compromisso"}, [["todos", "Todos"], ["consulta", "Consultas"], ["exame", "Exames"], ["proc", "Procedimentos"]]
-    .map(([v, l]) => h("button", {type: "button", class: f === v ? "on" : "", "aria-pressed": String(f === v), onclick: () => go({af: v}, true)}, l)));
-  const empty = t => h("p", {class: "gnone solo"}, t);
-  const what = f === "todos" ? "compromisso" : f === "proc" ? "procedimento" : KIND[f].l.toLowerCase(), whatP = f === "todos" ? "compromissos" : f === "proc" ? "procedimentos" : KIND[f].ls.toLowerCase();
-  if (hist) {
-    modPage(p, {t: "Histórico", back: h("button", {class: "back", type: "button", onclick: () => go({ah: "prox"})}, ic("left"), "Agenda de Saúde")}, null, null,
-      h("p", {class: "pg-s"}, `${cap1(whatP)} realizados e cancelados, do mais recente ao mais antigo. Toque em um para ver os detalhes.`),
-      filt, done.length ? byMonth(done) : empty(`Nenhum ${what} no histórico.`),
-      h("p", {class: "care-n"}, "Cancelados continuam no histórico, identificados. Para apagar um registro, abra-o e use Excluir."));
-    return;
-  }
-  const nk = nx ? kindOf(p, nx) : null, more = nx ? sameTime(p, nx) : 0;
-  const hero = nx ? h("button", {class: "nx dj-glass " + KIND[nk].cls, type: "button", onclick: () => openEvent(p, nx), "aria-label": `Próximo compromisso: ${KIND[nk].l}, ${whenSpoken(nx)}. ${agendaLabel(p, nx)}. Ver detalhes.`},
-      h("span", {class: "nx-h"}, h("span", {class: "nx-e"}, `Próximo · ${KIND[nk].l}`), h("span", {class: "nx-r"}, relWhen(nx))),
-      h("b", {class: "nx-d"}, whenLong(nx)), h("span", {class: "nx-t"}, agendaLabel(p, nx)),
-      (nk === "consulta" ? apptSub(nx) : nk === "proc" ? procSub(nx) : examPlace(nx)) ? h("span", {class: "nx-s"}, nk === "consulta" ? apptSub(nx) : nk === "proc" ? procSub(nx) : examPlace(nx)) : null,
-      more ? h("span", {class: "nx-s"}, `E mais ${more} no mesmo horário`) : null)
-    : h("div", {class: "nx none dj-quiet"}, h("b", null, "Nenhum compromisso agendado"), h("span", null, "Consultas, exames e procedimentos aparecem aqui e na tela Hoje. Use o + para adicionar."));
-  modPage(p, "Agenda de Saúde", "Novo compromisso", () => newEventSheet(p), hero,
-    confirmBlock(over, "Aconteceu?", e => agendaLabel(p, e), e => [{label: "Reagendar", fn: () => editEvent(p, e, true)}, {label: "Cancelado", fn: () => setEvent(p, e, "cancelado")},
-      {label: "Realizado", cls: "primary", fn: () => setEvent(p, e, "realizado")}]),
-    filt,
-    h("h2", {class: "sec-t"}, `Próximos${up.length ? " · " + up.length : ""}`),
-    up.length ? byMonth(up) : empty(`Nenhum ${what} agendado.`),
-    pend.length ? [h("div", {class: "lbl2 ag-m"}, "Exames solicitados, sem data"), h("div", {class: "glist"}, pend.map(e => agRow(p, e, now)))] : null,
-    h("h2", {class: "sec-t"}, "Histórico"),
-    done.length ? [h("div", {class: "glist"}, done.slice(0, 3).map(e => agRow(p, e, now))),
-        h("button", {class: "btn ghost block ag-all", type: "button", onclick: () => go({ah: "hist"})}, ic("clock"), done.length > 3 ? `Ver histórico completo · ${done.length}` : "Ver histórico completo")]
-      : empty(`Nenhum ${what} realizado registrado. Depois da data, ${f === "todos" ? "os compromissos passam" : "eles passam"} para cá.`),
-    h("h2", {class: "sec-t"}, "Por tipo"),
-    h("div", {class: "glist"},
-      [["consultas", "consulta", "Histórico anual e busca"], ["exames", "exame", "Resultados, documentos e evolução"], ["procedimentos", "proc", "Local do corpo, lado e documentos"]].map(([hs, k, sub]) =>
-        h("button", {class: "grow hub", type: "button", onclick: () => openMod({hsub: hs})}, h("span", {class: "gr-i c-" + KIND[k].cls, html: ICON[KIND[k].icon]}),
-          h("span", {class: "gr-m"}, h("b", null, KIND[k].ls), h("span", null, sub)), h("span", {class: "li-go", html: ICON.right})))),
-    h("p", {class: "care-n"}, "Cada compromisso fica guardado no histórico depois que passa. Lembretes: escolha no cadastro e envie ao app Calendário, que é quem avisa."));
+  const now = Date.now(), s = agState(p), f = s.f, L = agCat(p, f), N = AG_N[f], kind = f === "todos";
+  const backAg = h("button", {class: "back", type: "button", onclick: agBack}, ic("left"), "Agenda de Saúde");
+  if (view.ah === "hist") return renderAgHist(p, s, backAg, now);
+  if (view.ah === "next") return renderAgNext(p, s, backAg, now);
+  // Próximos: os que passaram sem confirmação ("A confirmar") e o futuro mais próximo da categoria
+  const up = C.upcoming(L, now), over = L.filter(e => C.isOverdue(e, now)).sort(byDateDesc), pend = L.filter(e => e.status === "solicitado");
+  // o "a confirmar" mais recente (os demais, em Ver todos)
+  const shown = [...over.slice(0, 1), ...up.slice(0, 1)], rest = over.length + up.length + pend.length - shown.length;
+  const none = `Nenhum${N[2] === "a" ? "a" : ""} ${N[0]} agendad${N[2]}`;
+  const next = h("section", {class: "panel agp"},
+    h("div", {class: "panel-h"}, h("span", null, "Próximos"), !shown.length && !rest ? h("span", {class: "agp-e"}, none)
+      : rest > 0 ? agAll(`Ver todos · ${over.length + up.length + pend.length}`, () => agLeave("next")) : null),
+    !shown.length && rest ? h("p", {class: "agp-e solo"}, none) : null,
+    shown.map(e => agLine(p, e, kind, now)));
+  // Histórico do mês escolhido: a mesma lista que a barra conta
+  const month = agDone(p, f, s.y, s.m), last = agDone(p, f)[0], hasHist = L.some(e => dateOk(e.date) && (isDone(e) || isCanc(e)));
+  const lastM = last && (ymd(last.date)[0] !== s.y || ymd(last.date)[1] - 1 !== s.m) ? ymd(last.date) : null;
+  const hist = h("section", {class: "panel agp"},
+    h("div", {class: "panel-h"}, h("span", null, `Histórico · ${agMonth(s)}`), month.length > 3 ? agAll(`Ver todos · ${month.length}`, () => agLeave("hist")) : null),
+    month.length ? month.slice(0, 3).map(e => agLine(p, e, kind, now))
+      : h("p", {class: "agp-e solo"}, `Nenhum${N[2] === "a" ? "a" : ""} ${N[0]} realizad${N[2]} em ${MONL[s.m]}.`),
+    !month.length && lastM ? agAll(`Último mês com registros: ${MONL[lastM[1] - 1]}${lastM[0] !== s.ty ? " de " + lastM[0] : ""}`, () => go({ay: lastM[0], am: lastM[1] - 1}, true)) : null,
+    month.length <= 3 && hasHist && !(!month.length && lastM) ? agAll("Histórico completo", () => agLeave("hist"), true) : null);
+  modPage(p, "Agenda de Saúde", "Novo compromisso", () => newEventSheet(p), agSeg(s), h("div", {class: "agst"}, agPanel(p, s), next, hist),
+    h("p", {class: "care-n"}, "O gráfico e o histórico contam só o que foi confirmado como realizado. Lembretes: escolha no cadastro e envie ao app Calendário, que é quem avisa."));
+}
+// agrupa por mês (do mais recente ao mais antigo, ou na ordem recebida)
+function agGroups(p, list, kind, now){
+  const out = []; let cur = "", box = null;
+  for (const e of list) { const [y, m] = dateOk(e.date) ? ymd(e.date) : [0, 0], key = y + "-" + m;
+    if (key !== cur || !box) { cur = key; out.push(h("div", {class: "lbl2 ag-m"}, y ? `${cap1(MONL[m - 1])}${y !== new Date().getFullYear() ? " de " + y : ""}` : "Sem data")); box = h("section", {class: "panel agp"}); out.push(box); }
+    box.append(agLine(p, e, kind, now)); }
+  return out;
+}
+// histórico completo: começa no mês, ano e categoria escolhidos na Agenda; dá para ampliar para o ano, todos os anos e incluir cancelados
+function renderAgHist(p, s, backAg, now){
+  const f = s.f, per = ["mes", "ano", "tudo"].includes(view.ahp) ? view.ahp : "mes", wc = !!view.ahc;
+  const inP = e => { const [y, m] = ymd(e.date); return per === "tudo" || (y === s.y && (per === "ano" || m - 1 === s.m)); };
+  const all = agCat(p, f).filter(e => dateOk(e.date) && inP(e)), done = all.filter(isDone), canc = all.filter(isCanc);
+  const list = [...done, ...(wc ? canc : [])].sort(byDateDesc);
+  const chip = (on, label, fn) => h("button", {type: "button", class: on ? "on" : "", "aria-pressed": String(on), onclick: fn}, label);
+  modPage(p, {t: "Histórico", back: backAg}, null, null, agSeg(s),
+    h("div", {class: "chips ag-pf", role: "group", "aria-label": "Período e cancelados"}, chip(per === "mes", agMonth(s), () => go({ahp: "mes"}, true)), chip(per === "ano", String(s.y), () => go({ahp: "ano"}, true)),
+      chip(per === "tudo", "Todos os anos", () => go({ahp: "tudo"}, true)), chip(wc, "Incluir cancelados", () => go({ahc: !wc}, true))),
+    h("p", {class: "ag-sel", "aria-live": "polite"}, h("b", null, agDoneTxt(f, done.length)), canc.length ? ` · ${plural(canc.length, "cancelado", "cancelados")}${wc ? "" : " (fora da lista)"}` : ""),
+    list.length ? agGroups(p, list, f === "todos", now) : h("p", {class: "gnone solo"}, `Nada neste período.${!wc && canc.length ? " Toque em Incluir cancelados para vê-los." : per !== "tudo" ? " Amplie o período acima." : ""}`),
+    h("p", {class: "care-n"}, "Cancelados continuam guardados, identificados, e não contam como realizados. Para apagar um registro, abra o registro e use Excluir."));
+}
+// próximos completos: a confirmar, agendados (por mês) e exames solicitados sem data
+function renderAgNext(p, s, backAg, now){
+  const f = s.f, L = agCat(p, f), kind = f === "todos", N = AG_N[f];
+  const over = L.filter(e => C.isOverdue(e, now)).sort(byStartAsc), up = C.upcoming(L, now), pend = L.filter(e => e.status === "solicitado");
+  modPage(p, {t: "Próximos", back: backAg}, "Novo compromisso", () => newEventSheet(p), agSeg(s),
+    over.length ? [h("div", {class: "lbl2 ag-m"}, "A confirmar · a data já passou"), h("section", {class: "panel agp"}, over.map(e => agLine(p, e, kind, now)))] : null,
+    up.length ? agGroups(p, up, kind, now) : h("p", {class: "gnone solo"}, `Nenhum${N[2] === "a" ? "a" : ""} ${N[0]} agendad${N[2]}.`),
+    pend.length ? [h("div", {class: "lbl2 ag-m"}, "Exames solicitados, sem data"), h("section", {class: "panel agp"}, pend.map(e => agLine(p, e, kind, now)))] : null,
+    h("p", {class: "care-n"}, "Um compromisso só passa para o histórico quando você confirma que foi realizado."));
 }
 
 /* ---------- Indicadores ----------
@@ -5040,7 +5166,7 @@ function renderProfile(p){
       row("drop", "Hidratação", w.ml ? (w.src === "manual" ? "Definida por você" : "Estimativa · 35 mL/kg") : "Definir recomendação diária", () => openMod({hsub: "agua"}), null, false, w.ml ? `${fmtL(w.ml)} L/dia` : null)),
     h("h2", {class: "sec-t"}, "Saúde e acompanhamento"),
     h("div", {class: "prows"},
-      row("cal", "Agenda de Saúde", nx.any ? `Próximo: ${whenShort(nx.any)}` : "Consultas, exames e procedimentos", () => openMod({hsub: "agenda", ah: "prox"}), null, false, nUpA ? plural(nUpA, "agendado", "agendados") : null),
+      row("cal", "Agenda de Saúde", nx.any ? `Próximo: ${whenShort(nx.any)}` : "Consultas, exames e procedimentos", () => openMod(AG_ENTRY), null, false, nUpA ? plural(nUpA, "agendado", "agendados") : null),
       row("target", "Minhas Prioridades", "O que você escolheu acompanhar", () => openMod({hsub: "prioridades"}), null, false, nAct ? plural(nAct, "ativa", "ativas") : null),
       row("pulse", "Indicadores", "Medições, sono, exercício e exames", () => openMod({hsub: "indicadores"})),
       row("pill", "Suplementos e Medicamentos", "Dose, horários e uso", () => openMod({hsub: "cuidados"}), null, false, cr.meds.length ? `${cr.meds.length} ${cr.meds.length === 1 ? "item" : "itens"}` : null)),
