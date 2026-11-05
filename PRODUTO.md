@@ -1312,3 +1312,16 @@ O iOS muda a altura informada logo depois de abrir o app instalado sem disparar 
 - No teste a fonte é Inter (sem SF Pro), um pouco mais larga.
 - Os números de exemplo da imagem (2.472 kcal, 2,9 L/dia) não foram reproduzidos; o app mostra os dados reais do perfil.
 
+## 45. v35.1 — Home Signature Edition (proporção e espaço negativo)
+
+**Objetivo.** Cartões um pouco mais baixos e um espaço preto intencional acima da barra inferior. Só proporção e espaçamento: cores, degradês, reflexos, ícones, textos e funções sem mudança.
+
+**O que mudou:**
+- **Altura dos cartões:** 112 → 103 pt (−8%) com valores de uma linha. A redução veio do espaço entre o ícone/título e a métrica (9 → 5) e de 1 pt em cima e embaixo. Os tamanhos de letra são os mesmos.
+- **Valor em duas linhas** ("Mais ou menos" no Emocional): 127 → 121 pt. Nesse caso o conteúdo define o mínimo, porque "Mais ou menos" não cabe numa linha sem reduzir a letra.
+- **Cartões não crescem mais para ocupar a tela.** A sobra vira espaço preto acima da barra (30–34 pt num iPhone 13/15 com "Mais ou menos"; mais com valores curtos). Quando a Home rola, o último cartão termina 24 pt acima da barra (antes 16).
+- **Intervalos:** os mesmos (14 entre linhas, 17 entre grupos com a divisória).
+- **Correção de um defeito antigo:** em telas pequenas ou com letra ampliada (ícone sobre o título), a Home usava a classe `.stack`, que também é um utilitário genérico com 14 pt entre blocos. Isso deixava 45 pt entre os grupos. Agora são 17 em todos os tamanhos, e a rolagem no iPhone SE de 1ª geração caiu de 425 para 341 pt.
+
+**Sem mudança.** Dados, cartões, toques, navegação, barra inferior, demais telas.
+

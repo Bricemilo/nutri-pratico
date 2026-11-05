@@ -65,8 +65,8 @@ Cada material tem a cor do material e uma base profunda.
 | `--hc-pv` | 12 | Padding vertical do cartão |
 | `--sp-head` | 16 | Cabeçalho → primeira linha |
 | `--sp-div` | 20 | Acima e abaixo de cada divisória |
-| `--air` | 24 | Respiro-alvo acima da barra inferior |
-| `--air-min` | 16 | Respiro mínimo; abaixo disso a Home rola |
+| `--air` | 24 (28 na Home desde a v35.1) | Respiro-alvo acima da barra inferior |
+| `--air-min` | 16 (24 na Home desde a v35.1) | Respiro mínimo; abaixo disso a Home rola |
 
 ---
 
@@ -228,7 +228,8 @@ A Home reproduz a imagem aprovada. Cada cartão é CSS mais o reflexo vetorial d
 |---|---|---|
 | `--hm-r` | 20 (18 em telas ≤ 380 pt) | Raio do cartão |
 | `--hm-pad` | 14 (12 em telas estreitas) | Padding horizontal |
-| `--hm-pt` / `--hm-pb` | 13 / 11 | Padding vertical |
+| `--hm-pt` / `--hm-pb` | 12 / 10 (v35.1) | Padding vertical |
+| `--hm-vt` | 5 (v35.1) | Do ícone/título até a métrica (antes 9): onde a altura foi reduzida |
 | `--hm-col` / `--hm-row` | 12 / 14 (8 / 10 em telas estreitas) | Intervalo entre colunas / entre linhas |
 | `--hm-div` | 8 | Acima e abaixo de cada divisória (grupo ≈ 17, perto do intervalo entre linhas) |
 | `--hm-tile` | 28 | Pastilha do ícone (raio 9, símbolo 19) |
@@ -265,7 +266,8 @@ Ordem (v32): cabeçalho (seletor + "+", saudação, data) · **A** pilares 2 × 
 
 - **`fitTitles`:** se um título não cabe ao lado da pastilha, o ícone vai para cima (`.stack`). Se ainda há palavra que não cabe inteira, os cartões passam a uma coluna (`.one`). Palavras nunca são partidas.
 - **Altura (v35):** as quatro linhas têm a mesma altura (`--hm-h`), a do cartão mais alto no tamanho natural. A última linha entra na conta se a diferença for de até 6. Se o texto dela precisar de outra linha, só ela fica mais alta, e nenhum texto é cortado.
-- **`spread` (v35):** mede a área entre o topo do conteúdo e a barra fixa e reparte pouco da sobra (divisórias até +1, cabeçalho até +4, cartões até +3). O restante fica abaixo da última linha, como na imagem aprovada.
+- **`spread` (v35.1 · Signature Edition):** os cartões ficam na altura do conteúdo e nunca crescem para ocupar a tela. Da sobra, só o respiro do cabeçalho cresce (até +4). O restante é o espaço negativo preto acima da barra inferior. Sem sobra, a Home rola, e no fim da rolagem o último cartão fica a `--air-min` (24) da barra.
+- **Altura de referência (v35.1):** 103 com valores de uma linha (−8% em relação aos 112 da v35). Se um valor ocupa duas linhas ("Mais ou menos" em 22 px precisa de 156 pt e o cartão tem 145), todas as linhas acompanham (121) e o conteúdo define o mínimo; a fonte não é reduzida.
 - **Margem inferior:** calculada da altura real da barra. Ao rolar até o fim, o último cartão fica a `--air-min` dela.
 - **Recalcula** a cada mudança de geometria: Home, barra e página (inclusive a área segura aplicada depois do primeiro desenho), redimensionar, girar e fontes. Uma assinatura de geometria evita passadas repetidas.
 

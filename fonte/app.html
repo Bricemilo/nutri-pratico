@@ -1802,7 +1802,7 @@ html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
      4 lâmina de luz curva que nasce na base e sobe até a borda direita (JEWEL) · 5 aro de 1 px aceso em toda a volta (--gr),
      mais claro nos dois cantos onde a luz incide (--gh) · 6 texto branco sobre a zona escura, com halo de leitura na cor da base. */
 :root{
-  --hm-r:20px; --hm-pad:14px; --hm-pt:13px; --hm-pb:11px; --hm-col:12px; --hm-row:14px; --hm-div:8px; --hm-tile:28px;
+  --hm-r:20px; --hm-pad:14px; --hm-pt:12px; --hm-pb:10px; --hm-vt:5px; --hm-col:12px; --hm-row:14px; --hm-div:8px; --hm-tile:28px;
   --hm-ink:#FFFFFF; --hm-ink-2:rgba(255,255,255,.86); --hm-ink-3:rgba(255,255,255,.74);
   --hm-copper-hi:#F7A665; --hm-copper:#D97B3C; --hm-copper-lo:#A4501F; --hm-date:#C3AD99;
 }
@@ -1815,6 +1815,8 @@ html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
 .home .hc.supp  {--g:#DDD068;--gd:#151505;--gt:#7A712B;--gb:#766F2B;--gr:#A99B4C;--gh:#F3EA92}
 .home .hc.prio  {--g:#E8A25B;--gd:#251608;--gt:#B87D42;--gb:#A86F3A;--gr:#C38A51;--gh:#FFE7B4}
 .home .hc.agenda{--g:#7EA5E0;--gd:#060D1A;--gt:#46689D;--gb:#2E4570;--gr:#5677A8;--gh:#BFE2FF}
+/* v35.1: espaço negativo acima da barra inferior — no fim da rolagem, o último cartão fica a 24 dela (antes 16); a sobra de tela também fica ali */
+.home{--air:28px;--air-min:24px}
 .home .hgrid{gap:var(--hm-row) var(--hm-col)}
 .home .hc,.home .hc.l1,.home .hg-c .hc{min-height:var(--hm-h,0px);padding:var(--hm-pt) var(--hm-pad) var(--hm-pb);border-radius:var(--hm-r);border:1px solid transparent;
   background:
@@ -1839,8 +1841,11 @@ html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
 .home .hc.hc-2l .hc-h .hc-t{padding-top:0}
 .home .hc.hc-2l .hc-h{align-items:center}
 .home.stack .hc-h,.home.stack .hc.hc-2l .hc-h{align-items:flex-start}
+/* v35.1: o modo da Home "ícone sobre o título" usa a classe .stack, que também é um utilitário genérico (coluna com 14 de intervalo);
+   na Home ele não vale: sem isso, cada bloco ganhava 14 a mais e o espaço entre os grupos chegava a 45 */
+.view.home.stack{display:block;gap:0}
 /* valor: 26 em negrito em todos os cartões (pilares e indicadores); unidade e legenda claras */
-.home .hc .hc-v{padding-top:9px}
+.home .hc .hc-v{padding-top:var(--hm-vt)}
 .home .hc.l1 .hc-v b:not(.nr),.home .hc.l2:not(.ev):not(.cnt) .hc-v b:not(.nr),.home .hg-c .hc.l2:not(.ev) .hc-v b:not(.nr){font-size:var(--t-num);font-weight:700;letter-spacing:-.02em;color:var(--hm-ink)}
 .home .hc.l1 .hc-v b.long:not(.nr){font-size:1.294rem}
 .home .hc-v small{font-size:var(--t-sm);font-weight:500;color:var(--hm-ink-3)}
@@ -1856,7 +1861,7 @@ html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
 .home .hc.cnt .hc-lg b{font-weight:720;color:var(--hm-ink)}
 .home .hc.cnt .hc-lg small{font-weight:500;color:var(--hm-ink-2)}
 .home .hc.cnt .hc-v{margin-block:auto 0}
-.home .hc.cnt .hc-v.hc-lg{padding-top:10px}
+.home .hc.cnt .hc-v.hc-lg{padding-top:var(--hm-vt)}
 /* todas as linhas ancoram valor e legenda na base */
 .home .hc .hc-v,.home .hg-c .hc.l2 .hc-v,.home .hc.l2 .hc-v{margin-top:auto}
 .home .hg-c:not(:has(.hc-s:not(:empty))) .hc-v{margin-block:auto 0}
@@ -2554,9 +2559,9 @@ const sigOf = home => { const tb = document.getElementById("tabbar"), c0 = home.
 // 1 · respiro entre os grupos, proporcional: divisórias até +16 acima e abaixo · cabeçalho até +12;
 // 2 · só se ainda sobrar (telas altas): cartões, pouco — pilares até +8, indicadores até +4.
 // Passou dos dois limites, o restante fica no respiro inferior. Sem sobra (tela menor, texto ampliado): tamanhos naturais e rolagem.
-// v35 (referência aprovada): as linhas ficam próximas, com o mesmo intervalo; a sobra cresce pouco os cartões (até +3) e o respiro
-// das divisórias (até +1) e do cabeçalho (até +4); o restante fica abaixo da última linha, como na imagem aprovada.
-const GROW = {d: 1, h: 4, a: 3, b: 0};
+// v35.1 (Signature Edition): os cartões ficam na altura do conteúdo (nunca crescem para ocupar a tela) e as linhas mantêm o mesmo intervalo;
+// da sobra, só o respiro do cabeçalho cresce um pouco (até +4). O restante é o espaço negativo preto acima da barra inferior.
+const GROW = {d: 0, h: 4, a: 0, b: 0};
 function spread(home, h0){ const st = home.style, tb = document.getElementById("tabbar"), cards = [...home.querySelectorAll(".hc")];
   if (!tb || !cards.length || document.body.classList.contains("typing")) return;
   const tbTop = tb.getBoundingClientRect().top, rootPB = parseFloat(getComputedStyle(document.documentElement).paddingBottom) || 0, hs = getComputedStyle(home);
