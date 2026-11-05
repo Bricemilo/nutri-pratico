@@ -1291,3 +1291,24 @@ O iOS muda a altura informada logo depois de abrir o app instalado sem disparar 
 
 **Acessibilidade.** Cada barra é um botão com rótulo completo ("Outubro de 2026: 5 compromissos realizados") e estado selecionado; a quantidade do mês é anunciada. As barras têm 25 pt de largura (12 meses lado a lado não cabem com 44 pt) e 84 pt de altura.
 
+## 44. v35 — Home Premium definitiva (quarta versão aprovada)
+
+**Objetivo.** Reproduzir na Home a imagem aprovada (quarta versão), mantendo todos os dados, cartões, toques e fluxos.
+
+**O que mudou (só aparência e espaçamento da Home, mais o seletor de perfil e o "+" do topo):**
+- **Material dos oito cartões.** Base escura da cor do módulo, luz de canto no alto à esquerda, brilho largo embaixo à direita, lâmina de luz curva que sobe da base até a borda direita e aro de 1 px aceso em toda a volta. As cores foram medidas na imagem aprovada, ponto a ponto, e aproximadas.
+- **Linhas.** As quatro linhas têm a mesma altura e o mesmo intervalo (14). As duas divisórias continuam, mais discretas. A sobra de tela fica abaixo da última linha, como na imagem.
+- **Tipografia.** Mesmos tamanhos, com pesos maiores: valor em negrito, título 640, "Nenhum agendado" em negrito.
+- **Cabeçalho.** O seletor de perfil e o "+" ganharam o acabamento cobre da imagem e ficaram 2 pt maiores (46). A data passou a um bege quente.
+- **Prioridades.** "Em acompanhamento" quebra a linha quando não cabe, em vez de terminar em "…". Só o nome da prioridade principal, que é digitado pelo usuário, pode receber reticências.
+- **Correção.** Uma regra genérica de estado vazio (`.empty b`) acrescentava 6 pt sob "Nenhum agendado"; ela não vale mais nos cartões.
+
+**Sem mudança.** Dados (v5, sem migração), ordem e conteúdo dos cartões, o que cada cartão abre, barra inferior, saudação, demais telas e cálculos.
+
+**Contraste.** No teste mais severo (fundo medido sem o texto e sem o halo de leitura), nenhum texto da Home ficou abaixo de 4,5:1. Para isso, a luz foi recolhida da faixa do texto e a lâmina de Hidratação e Prioridades começa mais à direita que na imagem.
+
+**Diferenças conhecidas em relação à imagem:**
+- O seletor e os cartões ficam cerca de 10 a 15 pt mais baixos: o app respeita a área segura do relógio, e a imagem não.
+- No teste a fonte é Inter (sem SF Pro), um pouco mais larga.
+- Os números de exemplo da imagem (2.472 kcal, 2,9 L/dia) não foram reproduzidos; o app mostra os dados reais do perfil.
+

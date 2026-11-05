@@ -1,6 +1,6 @@
 # BRICEÑO · Digital Jewelry Design System
 
-Referência visual oficial: **Home v24** (Home Final Release); Nutrição, Saúde e Perfil seguem o sistema desde a v29 (seção 3.6). As próximas telas devem seguir os tokens, componentes e regras deste documento. Tudo está em `fonte/app.html`: os tokens no bloco `:root` e os componentes acima de `renderHome`.
+Referência visual oficial: **Home v35** (quarta versão aprovada, seção 3.11), que substitui a Home v24 como referência. Nutrição, Saúde e Perfil seguem o sistema desde a v29 (seção 3.6). As próximas telas devem seguir os tokens, componentes e regras deste documento. Tudo está em `fonte/app.html`: os tokens no bloco `:root` (e no bloco "v35 · Home Premium definitiva", no fim do CSS) e os componentes acima de `renderHome`.
 
 > Situação da validação: aprovada em testes automatizados (Chromium/Playwright, iPhones simulados com áreas seguras). **Ainda não conferida em iPhone real**: fonte SF Pro, VoiceOver em voz, vibração e espessura física das divisórias (ver "Pendências").
 
@@ -218,17 +218,54 @@ Uma regra para todas as áreas, com as particularidades de cada módulo respeita
 
 Implementação: `openMod(v)` guarda a origem em `view.ret` (rótulo + estado, encadeado, até 6 níveis); `backBtn` e `goBack` usam esse caminho, com o resumo da Saúde como alternativa. `modPage` desenha "‹", título e o "+" do módulo.
 
+### 3.11 Home Premium definitiva (v35 · quarta versão aprovada)
+
+A Home reproduz a imagem aprovada. Cada cartão é CSS mais o reflexo vetorial de `JEWEL`; não há imagem estática. O bloco CSS fica no fim do `<style>` e vale só dentro de `.home`, exceto o seletor de perfil e o "+", que são o mesmo componente do topo em todas as telas.
+
+**Tokens da Home (`:root`)**
+
+| Token | Valor | O que controla |
+|---|---|---|
+| `--hm-r` | 20 (18 em telas ≤ 380 pt) | Raio do cartão |
+| `--hm-pad` | 14 (12 em telas estreitas) | Padding horizontal |
+| `--hm-pt` / `--hm-pb` | 13 / 11 | Padding vertical |
+| `--hm-col` / `--hm-row` | 12 / 14 (8 / 10 em telas estreitas) | Intervalo entre colunas / entre linhas |
+| `--hm-div` | 8 | Acima e abaixo de cada divisória (grupo ≈ 17, perto do intervalo entre linhas) |
+| `--hm-tile` | 28 | Pastilha do ícone (raio 9, símbolo 19) |
+| `--hm-ink` / `--hm-ink-2` / `--hm-ink-3` | branco / 86% / 74% | Valor e título / legenda / unidade |
+| `--hm-copper-hi` / `--hm-copper` / `--hm-copper-lo` | `#F7A665` / `#D97B3C` / `#A4501F` | Degradê do "+" (assinatura cobre) |
+| `--hm-date` | `#C3AD99` | Data sob a saudação |
+
+**Material de cada cartão.** Seis camadas: base escura (`--gd`), luz de canto no alto à esquerda (`--gt`), brilho largo embaixo à direita (`--gb`), brilho junto à borda direita (`--g` a 24%), lâmina curva de `JEWEL` e aro de 1 px aceso em toda a volta (`--gr`), mais claro nos dois cantos onde a luz incide (`--gh`).
+
+| Cartão | `--g` | `--gd` | `--gt` | `--gb` | `--gr` | `--gh` |
+|---|---|---|---|---|---|---|
+| Nutrição | `#EE8644` | `#1F0B02` | `#8F421B` | `#A04B21` | `#DE7E43` | `#FFD9A8` |
+| Exercício | `#3FCDB8` | `#01120F` | `#165447` | `#175A4F` | `#3E9C90` | `#A6F4EC` |
+| Sono | `#B784D6` | `#150A1B` | `#52305F` | `#7E4C87` | `#9A6CA8` | `#E6B9EE` |
+| Emocional | `#EE7D84` | `#2E1015` | `#AA4950` | `#A6464F` | `#D56E74` | `#F6AEB0` |
+| Hidratação | `#4EC3E2` | `#00111B` | `#16586F` | `#19637C` | `#3E9DBB` | `#A8F0F8` |
+| Suplementos e Medicamentos | `#DDD068` | `#151505` | `#7A712B` | `#766F2B` | `#A99B4C` | `#F3EA92` |
+| Prioridades | `#E8A25B` | `#251608` | `#B87D42` | `#A86F3A` | `#C38A51` | `#FFE7B4` |
+| Agenda de Saúde | `#7EA5E0` | `#060D1A` | `#46689D` | `#2E4570` | `#5677A8` | `#BFE2FF` |
+
+As cores foram medidas na imagem aprovada, nos mesmos pontos de cada cartão (cantos, centro e borda), e ajustadas até ficarem próximas. Os tokens `--dj-*` da seção 2.1 continuam valendo nos módulos.
+
+**Lâmina de luz (`JEWEL`, materiais com `v35: 1`).** Nasce na base, entre 30% e 55% da largura, e sobe em curva até a borda direita, perto da meia altura. É um fio fino com brilho estreito, estrias acima dele e um ponto quente perto da borda. Na faixa do valor e da legenda (embaixo, à esquerda) fica atenuada pela máscara. Onde o reflexo passaria sob um texto (Hidratação, Prioridades), a curva começa mais à direita, para manter o contraste.
+
+**Tipografia.** Título `--t-sm` com peso 640. Valor `--t-num` com peso 700 em todos os cartões (pilares e indicadores). Unidade `--t-sm` com peso 500. Legenda `--t-cap` com peso 450. "Nenhum agendado" com 15 px e peso 700. Os tamanhos são os mesmos da v24; a referência foi medida pela altura das maiúsculas.
+
+**Cabeçalho.** Seletor de perfil com 46 de altura, avatar de 36 com aro cobre e nome em branco. "+" com 46 × 46, raio 14, degradê cobre e símbolo escuro. Saudação com peso 720 e data em `--hm-date`. Na Home, o topo tem 4 de respiro acima do seletor (8 nas outras telas).
+
+---
+
 ## 4. Layout da Home: motor adaptativo
 
 Ordem (v32): cabeçalho (seletor + "+", saudação, data) · **A** pilares 2 × 2 · divisória · **B** Hidratação + Suplementos e Medicamentos · divisória · **C** Prioridades + Agenda de Saúde. Oito cartões, quatro linhas de dois. O GET saiu da Home e continua em Perfil → Planejamento.
 
 - **`fitTitles`:** se um título não cabe ao lado da pastilha, o ícone vai para cima (`.stack`). Se ainda há palavra que não cabe inteira, os cartões passam a uma coluna (`.one`). Palavras nunca são partidas.
-- **Hierarquia:** pilares nunca mais baixos que os indicadores (+8). O grupo C tem a altura do grupo B.
-- **`spread`:** mede a área entre o topo do conteúdo e a barra fixa e reparte a sobra:
-  1. primeiro o respiro entre grupos (divisórias até +16, cabeçalho até +12);
-  2. só em telas altas, os cartões (pilares até +8, indicadores até +4).
-
-  O que passar disso fica no respiro inferior.
+- **Altura (v35):** as quatro linhas têm a mesma altura (`--hm-h`), a do cartão mais alto no tamanho natural. A última linha entra na conta se a diferença for de até 6. Se o texto dela precisar de outra linha, só ela fica mais alta, e nenhum texto é cortado.
+- **`spread` (v35):** mede a área entre o topo do conteúdo e a barra fixa e reparte pouco da sobra (divisórias até +1, cabeçalho até +4, cartões até +3). O restante fica abaixo da última linha, como na imagem aprovada.
 - **Margem inferior:** calculada da altura real da barra. Ao rolar até o fim, o último cartão fica a `--air-min` dela.
 - **Recalcula** a cada mudança de geometria: Home, barra e página (inclusive a área segura aplicada depois do primeiro desenho), redimensionar, girar e fontes. Uma assinatura de geometria evita passadas repetidas.
 
@@ -236,8 +273,8 @@ Ordem (v32): cabeçalho (seletor + "+", saudação, data) · **A** pilares 2 × 
 
 ## 5. Tipografia
 
-- **Valores:** peso 580, entrelinha 1, `tabular-nums`. Unidades em `--t-sm` com 70% de opacidade e um espaço (~4 px) depois do valor; se a unidade descer de linha, começa na coluna do número.
-- **Títulos:** `--t-sm`, peso 580, uma linha. **Legendas:** `--t-cap`, 86% (92% no estado vazio), entrelinha 1,25.
+- **Valores:** peso 700 na Home (v35) e 580 nos módulos, entrelinha 1, `tabular-nums`. Unidades em `--t-sm` com um espaço (~4 px) depois do valor; se a unidade descer de linha, começa na coluna do número.
+- **Títulos:** `--t-sm`, peso 640 na Home (v35), uma linha; "Suplementos e Medicamentos" e "Agenda de Saúde" quebram entre palavras. **Legendas:** `--t-cap`, 86%, entrelinha 1,25. Só um nome digitado pelo usuário (prioridade principal, compromisso) recebe reticências; os textos do app quebram a linha.
 - **Sem hifenização automática.**
 - **Tamanho de texto do iPhone:** lido de `-apple-system-body` e limitado a 15–24 px. A partir de 19 px vale o arranjo de texto ampliado.
 

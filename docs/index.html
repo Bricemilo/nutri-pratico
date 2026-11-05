@@ -1813,6 +1813,95 @@ html.big-text .seg.fit button{height:auto;min-height:40px;padding:6px 4px;white-
 @media (max-width:350px){.hc.cnt .hc-lg b{font-size:1.06rem}.hc.cnt .hc-lg small{letter-spacing:-.015em}.w-add{grid-template-columns:repeat(2,minmax(0,1fr))}}
 html.big-text .w-add{grid-template-columns:repeat(2,minmax(0,1fr))}
 html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
+/* ===== v35 · Home Premium definitiva (quarta versão aprovada) — ver DESIGN-SYSTEM.md, "Home v35" =====
+   Fundo preto · oito cartões em quatro linhas de altura igual (14 entre linhas, 12 entre colunas) · divisórias sutis entre os três grupos.
+   Material de cada cartão (só CSS + o reflexo vetorial de JEWEL; nenhuma imagem):
+     1 base escura da cor do módulo (--gd) · 2 luz de canto no alto à esquerda (--gt) · 3 brilho largo embaixo à direita (--gb)
+     4 lâmina de luz curva que nasce na base e sobe até a borda direita (JEWEL) · 5 aro de 1 px aceso em toda a volta (--gr),
+     mais claro nos dois cantos onde a luz incide (--gh) · 6 texto branco sobre a zona escura, com halo de leitura na cor da base. */
+:root{
+  --hm-r:20px; --hm-pad:14px; --hm-pt:13px; --hm-pb:11px; --hm-col:12px; --hm-row:14px; --hm-div:8px; --hm-tile:28px;
+  --hm-ink:#FFFFFF; --hm-ink-2:rgba(255,255,255,.86); --hm-ink-3:rgba(255,255,255,.74);
+  --hm-copper-hi:#F7A665; --hm-copper:#D97B3C; --hm-copper-lo:#A4501F; --hm-date:#C3AD99;
+}
+/* materiais: --g cor do módulo (ícone, lâmina) · --gd base · --gt luz do alto · --gb brilho de baixo · --gr aro · --gh aro nos cantos acesos */
+.home .hc.food  {--g:#EE8644;--gd:#1F0B02;--gt:#8F421B;--gb:#A04B21;--gr:#DE7E43;--gh:#FFD9A8}
+.home .hc.move  {--g:#3FCDB8;--gd:#01120F;--gt:#165447;--gb:#175A4F;--gr:#3E9C90;--gh:#A6F4EC}
+.home .hc.sleep {--g:#B784D6;--gd:#150A1B;--gt:#52305F;--gb:#7E4C87;--gr:#9A6CA8;--gh:#E6B9EE}
+.home .hc.wb    {--g:#EE7D84;--gd:#2E1015;--gt:#AA4950;--gb:#A6464F;--gr:#D56E74;--gh:#F6AEB0}
+.home .hc.water {--g:#4EC3E2;--gd:#00111B;--gt:#16586F;--gb:#19637C;--gr:#3E9DBB;--gh:#A8F0F8}
+.home .hc.supp  {--g:#DDD068;--gd:#151505;--gt:#7A712B;--gb:#766F2B;--gr:#A99B4C;--gh:#F3EA92}
+.home .hc.prio  {--g:#E8A25B;--gd:#251608;--gt:#B87D42;--gb:#A86F3A;--gr:#C38A51;--gh:#FFE7B4}
+.home .hc.agenda{--g:#7EA5E0;--gd:#060D1A;--gt:#46689D;--gb:#2E4570;--gr:#5677A8;--gh:#BFE2FF}
+.home .hgrid{gap:var(--hm-row) var(--hm-col)}
+.home .hc,.home .hc.l1,.home .hg-c .hc{min-height:var(--hm-h,0px);padding:var(--hm-pt) var(--hm-pad) var(--hm-pb);border-radius:var(--hm-r);border:1px solid transparent;
+  background:
+    radial-gradient(50% 62% at 100% 52%,color-mix(in srgb,var(--g) 24%,transparent),transparent 72%) padding-box,
+    radial-gradient(92% 82% at 100% 100%,var(--gb),transparent 64%) padding-box,
+    radial-gradient(100% 105% at 0% 0%,var(--gt),transparent 60%) padding-box,
+    linear-gradient(160deg,color-mix(in srgb,var(--gt) 30%,var(--gd)),var(--gd) 46%,var(--gd)) padding-box,
+    linear-gradient(140deg,var(--gh) 0%,var(--gr) 16%,color-mix(in srgb,var(--gr) 62%,transparent) 42%,color-mix(in srgb,var(--gr) 66%,transparent) 60%,var(--gr) 84%,var(--gh) 100%) border-box;
+  box-shadow:inset 0 0 10px -4px color-mix(in srgb,var(--g) 55%,transparent),inset 0 1px 0 rgba(255,255,255,.10),0 14px 26px -18px color-mix(in srgb,var(--g) 45%,#000)}
+.home .hc:active{transform:scale(.98);filter:brightness(1.08)}
+/* reflexo: inteiro no alto e junto à borda direita; na faixa do valor e da legenda (embaixo, à esquerda) fica atenuado */
+.home .hc-fx,.home .hc.l2 .hc-fx{-webkit-mask-image:linear-gradient(to bottom,#000 40%,transparent 60%),linear-gradient(to right,rgba(0,0,0,.2) 40%,rgba(0,0,0,.55) 70%,#000 90%);
+  mask-image:linear-gradient(to bottom,#000 40%,transparent 60%),linear-gradient(to right,rgba(0,0,0,.2) 40%,rgba(0,0,0,.55) 70%,#000 90%)}
+/* ícone: pastilha de vidro escuro com aro aceso na cor do módulo; símbolo claro */
+.home .hc-h{gap:12px}
+.home .hc-i{width:var(--hm-tile);height:var(--hm-tile);border-radius:9px;color:color-mix(in srgb,var(--g) 92%,#fff);
+  background:radial-gradient(120% 80% at 30% 0%,color-mix(in srgb,var(--g) 30%,transparent),transparent 70%) padding-box,linear-gradient(160deg,color-mix(in srgb,var(--g) 22%,var(--gd)),color-mix(in srgb,var(--g) 8%,var(--gd))) padding-box,
+    linear-gradient(150deg,var(--gh),color-mix(in srgb,var(--gr) 60%,transparent) 50%,color-mix(in srgb,var(--gr) 85%,transparent)) border-box;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),inset 0 0 6px -2px color-mix(in srgb,var(--g) 50%,transparent),0 2px 6px -2px rgba(0,0,0,.7)}
+.home .hc-i svg{width:19px;height:19px;stroke-width:1.9}
+.home .hc-t{font-weight:640;letter-spacing:-.012em;color:var(--hm-ink)}
+.home .hc.hc-2l .hc-h .hc-t{padding-top:0}
+.home .hc.hc-2l .hc-h{align-items:center}
+.home.stack .hc-h,.home.stack .hc.hc-2l .hc-h{align-items:flex-start}
+/* valor: 26 em negrito em todos os cartões (pilares e indicadores); unidade e legenda claras */
+.home .hc .hc-v{padding-top:9px}
+.home .hc.l1 .hc-v b:not(.nr),.home .hc.l2:not(.ev):not(.cnt) .hc-v b:not(.nr),.home .hg-c .hc.l2:not(.ev) .hc-v b:not(.nr){font-size:var(--t-num);font-weight:700;letter-spacing:-.02em;color:var(--hm-ink)}
+.home .hc.l1 .hc-v b.long:not(.nr){font-size:1.294rem}
+.home .hc-v small{font-size:var(--t-sm);font-weight:500;color:var(--hm-ink-3)}
+.home .hc-s{margin-top:4px;font-size:var(--t-cap);font-weight:450;letter-spacing:-.01em;color:var(--hm-ink-2)}
+.home .hc.l2 .hc-s{margin-top:4px}
+/* legenda com reticências: a caixa avança 6 sobre o respiro (halo de leitura), o texto fica a 4 do valor como nos outros cartões */
+.home .hc-s.clip,.home .hc.l2 .hc-s.clip{margin-top:-2px}
+.home .hc-v b.nr{font-weight:640;color:var(--hm-ink)}
+.home .hc.ev .hc-v b.nr{display:block;font-size:.882rem;font-weight:700;letter-spacing:-.012em}
+/* a regra genérica .empty b (estados vazios das listas) não vale nos cartões: sem margem extra sob a mensagem */
+.home .hc.empty .hc-v b{margin-bottom:0}
+.home .hc.ev .hc-v b.dt{font-weight:680}
+.home .hc.cnt .hc-lg b{font-weight:720;color:var(--hm-ink)}
+.home .hc.cnt .hc-lg small{font-weight:500;color:var(--hm-ink-2)}
+.home .hc.cnt .hc-v{margin-block:auto 0}
+.home .hc.cnt .hc-v.hc-lg{padding-top:10px}
+/* todas as linhas ancoram valor e legenda na base */
+.home .hc .hc-v,.home .hg-c .hc.l2 .hc-v,.home .hc.l2 .hc-v{margin-top:auto}
+.home .hg-c:not(:has(.hc-s:not(:empty))) .hc-v{margin-block:auto 0}
+/* Suplementos e Medicamentos: os dois contadores ficam centrados no espaço abaixo do título, como na referência */
+.home .hc.cnt .hc-v,.home .hg-b .hc.cnt .hc-v{margin-block:auto}
+/* halo de leitura mais leve que o da v21: o reflexo agora passa à direita e abaixo do texto */
+.home .hc-v,.home .hc-s{text-shadow:0 0 2px var(--gd),0 0 7px color-mix(in srgb,var(--gd) 80%,transparent)}
+/* divisórias entre os grupos: mesmo fio, mais discreto, num intervalo pouco maior que o das linhas */
+.home .hdiv{margin:calc(var(--hm-div) + var(--xd,0px)) 0;opacity:.62}
+/* cabeçalho: seletor de perfil e "+" no acabamento cobre da referência */
+.home .top{padding-top:4px}
+.top .who{min-height:46px;padding:5px 14px 5px 5px;gap:10px;border:1px solid transparent;
+  background:linear-gradient(160deg,#241710,#120C08 70%) padding-box,linear-gradient(135deg,rgba(236,160,98,.75),rgba(150,84,40,.35) 45%,rgba(196,118,62,.6)) border-box;
+  box-shadow:inset 0 1px 0 rgba(255,214,170,.08),0 0 14px -6px rgba(214,122,56,.45)}
+.top .who .av{width:36px;height:36px;font-size:var(--t-sm);font-weight:700;color:#F3A564;border:1px solid transparent;
+  background:radial-gradient(circle at 35% 28%,#4A230A,#2A1203 72%) padding-box,linear-gradient(150deg,#F2A766,#8E4A1C 60%,#C7783D) border-box}
+.top .who b{font-weight:640;color:#fff}
+.top .who svg{color:rgba(255,255,255,.62)}
+.top .icon-btn.accent{width:46px;height:46px;border-radius:14px;color:#140903;border:1px solid transparent;
+  background:radial-gradient(90% 70% at 30% 0%,rgba(255,206,150,.55),transparent 70%) padding-box,linear-gradient(180deg,var(--hm-copper-hi),var(--hm-copper) 48%,var(--hm-copper-lo)) padding-box,
+    linear-gradient(170deg,#FFD3A4,rgba(214,128,66,.6) 50%,#7A3610) border-box;
+  box-shadow:inset 0 1px 0 rgba(255,236,214,.45),inset 0 -2px 4px rgba(90,36,8,.35),0 4px 10px -6px rgba(0,0,0,.8)}
+.top .icon-btn.accent svg{width:22px;height:22px;stroke-width:2.2}
+.home .hi-h h1{font-weight:720;letter-spacing:-.03em}
+.home .hi-h .today{color:var(--hm-date);font-weight:520}
+/* telas estreitas: mesmo material, respiros menores */
+@media (max-width:380px){:root{--hm-pad:12px;--hm-col:8px;--hm-row:10px;--hm-r:18px}.home .hc-h{gap:8px}.home .hc.l1 .hc-v b:not(.nr),.home .hc.l2:not(.ev):not(.cnt) .hc-v b:not(.nr),.home .hg-c .hc.l2:not(.ev) .hc-v b:not(.nr){font-size:1.412rem}}
 </style>
 
 </head>
@@ -2999,20 +3088,19 @@ let homeKey = "";   // período do dia + data em que a Home foi desenhada; muda 
    · fill corpo · glow brilho · sec segundo reflexo (gemas). Sem filtros nem animação; montado uma vez por material e clonado a cada desenho da Home. */
 const JEWEL = (() => {
   const M = {
-    food:  {c: "#E8904C", hi: "#FFE3C4", sx: 52, ey: 12, c1: [112, 126], c2: [148, 66], n: 15, ox: 2.0, oy: 1.6, pk: .74, fill: 0.39, glow: 0.34},
-    move:  {c: "#3CCFAA", hi: "#E2FFF6", sx: 112, ey: -6, ex: 176, c1: [138, 118], c2: [166, 58], n: 9, ox: 2.2, oy: 0.5, pk: 0.72, fill: 0.30, glow: 0.21, hot: .34},
-    sleep: {c: "#A48EF2", hi: "#EEE6FF", sx: 70, ey: 38, c1: [138, 128], c2: [170, 84], n: 8, ox: 3.6, oy: 2.4, pk: 0.76, fill: 0.44, glow: 0.36, sec: 0.42},
-    wb:    {c: "#F07595", hi: "#FFE4EA", sx: 128, ey: -6, ex: 172, c1: [152, 112], c2: [156, 40], n: 6, ox: 2.6, oy: 1.0, pk: 0.6, fill: 0.32, glow: 0.21, hot: .34, sec: 0.22},
-    water: {c: "#38B4F0", hi: "#E2F6FF", sx: 64, ey: 22, c1: [110, 88], c2: [150, 54], n: 6, ox: 2.4, oy: 2.0, pk: 0.8, fill: 0.36, glow: 0.38, sec: 0.4},
+    // v35 (quarta versão aprovada): a lâmina nasce na base, perto do meio do cartão, e sobe em curva até a borda direita, à meia altura;
+    // fio de luz nítido com brilho largo, estrias finas acima dele e ponto quente perto da borda. Os cartões da Home usam só estes oito.
+    food:  {v35: 1, c: "#F2924E", hi: "#FFE6C4", sx: 66, ey: 34, c1: [122, 112], c2: [162, 80], n: 9, ox: 1.5, oy: -2.6, pk: .76, fill: 0.3, glow: 0.62},
+    move:  {v35: 1, c: "#46D6C0", hi: "#DEFFF8", sx: 72, ey: 38, c1: [126, 114], c2: [164, 84], n: 7, ox: 1.5, oy: -2.6, pk: .76, fill: 0.3, glow: 0.56},
+    sleep: {v35: 1, c: "#C590E4", hi: "#F7E6FF", sx: 80, ey: 42, c1: [130, 114], c2: [166, 86], n: 7, ox: 1.5, oy: -2.6, pk: .76, fill: 0.3, glow: 0.58},
+    wb:    {v35: 1, c: "#F88E92", hi: "#FFE4E2", sx: 70, ey: 30, c1: [124, 110], c2: [162, 78], n: 7, ox: 1.5, oy: -2.6, pk: .76, fill: 0.3, glow: 0.56},
+    water: {v35: 1, c: "#5CD0EE", hi: "#E2FAFF", sx: 104, ey: 36, c1: [140, 112], c2: [168, 82], n: 7, ox: 1.5, oy: -2.6, pk: .76, fill: 0.3, glow: 0.58},
     energy:{c: "#DDBB7E", hi: "#F4E4C4", sx: 80, ey: 8, c1: [130, 124], c2: [154, 56], n: 15, ox: 1.9, oy: 1.4, pk: .7, fill: 0.35, glow: 0.27},
-    supp:  {c: "#AFD054", hi: "#F3FFD6", sx: 56, ey: 30, c1: [118, 140], c2: [142, 38], n: 8, ox: 3.0, oy: 2.4, pk: 0.66, fill: 0.32, glow: 0.27, sec: 0.26},
+    supp:  {v35: 1, c: "#EADE72", hi: "#FFFBD2", sx: 72, ey: 50, c1: [126, 118], c2: [164, 92], n: 8, ox: 1.5, oy: -2.6, pk: .76, fill: 0.3, glow: 0.66},
     meds:  {c: "#6E9DF4", hi: "#E3EEFF", sx: 62, ey: 66, c1: [130, 128], c2: [166, 108], n: 8, ox: 3.2, oy: 2.4, pk: 0.82, fill: 0.47, glow: 0.46, sec: 0.5},
-    // v31 · Consultas: âmbar mel (lâmina longa e baixa, como o champanhe); Exames: safira da meia-noite (o material dos medicamentos, que deixaram de ter cartão próprio)
     appt:  {c: "#E5A65E", hi: "#FFEBCD", sx: 78, ey: 14, c1: [128, 124], c2: [154, 60], n: 13, ox: 2.0, oy: 1.5, pk: .72, fill: 0.34, glow: 0.27},
-    // v32 · Prioridades: champanhe (o material do antigo cartão do GET) · Agenda de Saúde: safira da meia-noite (o material de Exames)
-    prio:  {c: "#DDBB7E", hi: "#F4E4C4", sx: 80, ey: 8, c1: [130, 124], c2: [154, 56], n: 15, ox: 1.9, oy: 1.4, pk: .7, fill: 0.35, glow: 0.27},
-    // na Agenda o texto desce até a base: a lâmina sobe mais cedo pela borda direita e fica longe da linha de identificação
-    agenda:{c: "#6E9DF4", hi: "#E3EEFF", sx: 96, ey: 18, c1: [142, 118], c2: [168, 62], n: 8, ox: 3.0, oy: 1.8, pk: 0.74, fill: 0.36, glow: 0.36, sec: 0.3},
+    prio:  {v35: 1, c: "#F4B06A", hi: "#FFF1CE", sx: 72, ey: 38, c1: [120, 112], c2: [160, 82], n: 9, ox: 1.5, oy: -2.6, pk: .76, fill: 0.3, glow: 0.62},
+    agenda:{v35: 1, c: "#8AB2EE", hi: "#E6F2FF", sx: 84, ey: 38, c1: [134, 114], c2: [166, 84], n: 7, ox: 1.5, oy: -2.6, pk: .76, fill: 0.3, glow: 0.56},
     exam:  {c: "#6E9DF4", hi: "#E3EEFF", sx: 62, ey: 66, c1: [130, 128], c2: [166, 108], n: 8, ox: 3.2, oy: 2.4, pk: 0.82, fill: 0.44, glow: 0.42, sec: 0.46}
   };
   const f = v => +v.toFixed(1);
@@ -3022,13 +3110,15 @@ const JEWEL = (() => {
   const cache = {};
   function ribbon(k, o, id, dx, dy, a){
     const n = o.n, A = curve(o, dx, dy), B = curve(o, dx + (n - 1) * o.ox, dy + (n - 1) * o.oy), x1 = f(o.sx + dx), y1 = 126 + dy, y2 = f(o.ey + dy);
-    const g = `<linearGradient id="${id}s" gradientUnits="userSpaceOnUse" x1="${x1}" y1="${y1}" x2="${o.ex || 186}" y2="${y2}"><stop offset="0" stop-color="${o.c}" stop-opacity="0"/><stop offset="${f(o.pk - .34)}" stop-color="${o.c}" stop-opacity=".3"/><stop offset="${o.pk}" stop-color="${o.hi}"/><stop offset="${f(Math.min(o.pk + .16, .97))}" stop-color="${o.c}" stop-opacity=".6"/><stop offset="1" stop-color="${o.c}" stop-opacity=".35"/></linearGradient>`
+    const g = `<linearGradient id="${id}s" gradientUnits="userSpaceOnUse" x1="${x1}" y1="${y1}" x2="${o.ex || 186}" y2="${y2}"><stop offset="0" stop-color="${o.c}" stop-opacity="0"/><stop offset="${o.v35 ? .2 : f(o.pk - .34)}" stop-color="${o.c}" stop-opacity="${o.v35 ? .45 : .3}"/><stop offset="${o.pk}" stop-color="${o.hi}"/><stop offset="${f(Math.min(o.pk + .16, .97))}" stop-color="${o.c}" stop-opacity="${o.v35 ? .8 : .6}"/><stop offset="1" stop-color="${o.c}" stop-opacity="${o.v35 ? .55 : .35}"/></linearGradient>`
       + `<linearGradient id="${id}f" gradientUnits="userSpaceOnUse" x1="${x1}" y1="${y1}" x2="${o.ex || 186}" y2="${y2}"><stop offset="0" stop-color="${o.c}" stop-opacity="0"/><stop offset="${o.pk}" stop-color="${o.c}" stop-opacity="${o.fill}"/><stop offset="1" stop-color="${o.c}" stop-opacity="${f(o.fill * .55)}"/></linearGradient>`
       + `<radialGradient id="${id}h"><stop offset="0" stop-color="${o.hi}" stop-opacity="${o.hot || .62}"/><stop offset=".35" stop-color="${o.c}" stop-opacity=".24"/><stop offset="1" stop-color="${o.c}" stop-opacity="0"/></radialGradient>`;
     const rev = [B[3], B[2], B[1], B[0]];
     let s = `<path d="${d(A)}L${f(B[3][0])} ${f(B[3][1])}C${rev.slice(1).map(q => `${f(q[0])} ${f(q[1])}`).join(" ")}Z" fill="url(#${id}f)"/>`;
     const main = curve(o, dx + Math.round(n * .3) * o.ox, dy + Math.round(n * .3) * o.oy), hot = at(main, o.pk);
-    s += `<path d="${d(main)}" stroke="url(#${id}s)" stroke-width="22" opacity="${f(o.glow * .22 * 100) / 100}"/><path d="${d(main)}" stroke="url(#${id}s)" stroke-width="10" opacity="${f(o.glow * .45 * 100) / 100}"/><path d="${d(main)}" stroke="url(#${id}s)" stroke-width="3.6" opacity="${o.glow}"/>`;
+    // v35: brilho mais estreito ao longo de toda a curva (fio longo e fino, como na referência aprovada)
+    const gw = o.v35 ? [14, 6, 2.4, .16, .36] : [22, 10, 3.6, .22, .45];
+    s += `<path d="${d(main)}" stroke="url(#${id}s)" stroke-width="${gw[0]}" opacity="${f(o.glow * gw[3] * 100) / 100}"/><path d="${d(main)}" stroke="url(#${id}s)" stroke-width="${gw[1]}" opacity="${f(o.glow * gw[4] * 100) / 100}"/><path d="${d(main)}" stroke="url(#${id}s)" stroke-width="${gw[2]}" opacity="${o.glow}"/>`;
     // estrias em três grupos de intensidade (um traço por grupo): textura irregular com poucos nós
     const grp = [[], [], []]; for (let i = 0; i < n; i++) grp[Math.min(2, Math.floor(3 * Math.abs(Math.sin(i * 1.7 + 0.6))))].push(d(curve(o, dx + i * o.ox, dy + i * o.oy)));
     grp.forEach((g, j) => { if (g.length) s += `<path d="${g.join("")}" stroke="url(#${id}s)" stroke-width=".5" opacity="${[.12, .2, .3][j]}"/>`; });
@@ -3111,7 +3201,7 @@ function renderHome(p){
   // C · o que acompanhar (prioridades ativas) e o próximo compromisso de saúde, de qualquer tipo
   const agenda = h("div", {class: "hgrid hg-c"},
     card({lv: "l2", cls: "prio", icon: "target", title: "Prioridades", value: act.length ? String(act.length) : null, unit: act.length === 1 ? "ativa" : "ativas",
-      sub: main ? main.name : "Em acompanhamento", clip: true, empty: ["Nenhuma definida", "Escolha o que acompanhar"],
+      sub: main ? main.name : "Em acompanhamento", clip: !!main, empty: ["Nenhuma definida", "Escolha o que acompanhar"],
       aria: act.length ? `Prioridades: ${plural(act.length, "ativa", "ativas")}${main ? `. Principal: ${main.name}` : ""}.` : "Prioridades: nenhuma definida. Escolha o que acompanhar.",
       fn: () => openMod({hsub: "prioridades"})}),
     jewelEvent({cls: "agenda", icon: "cal", title: "Agenda de Saúde", event: nx, more: nx ? sameTime(p, nx) : 0, line3: e => agendaLabel(p, e), emptyMsg: "Nenhum agendado", emptySub: "Adicionar compromisso",
@@ -3153,15 +3243,17 @@ function settleLayout(ms = 2500){ const run = !settleUntil || performance.now() 
 const over = t => t.scrollWidth > t.clientWidth + 0.5;
 let fitKey = "";
 function fitTitles(force){ measureViewport(); const home = document.querySelector(".home"), c0 = home && home.querySelector(".hc"); if (!c0) return;
-  const st = home.style; for (const k of ["--ha", "--xb", "--xd", "--xh", "--l1-min", "--hbc"]) st.removeProperty(k);
+  const st = home.style; for (const k of ["--ha", "--xb", "--xd", "--xh", "--l1-min", "--hbc", "--hm-h"]) st.removeProperty(k);
   const key = c0.getBoundingClientRect().width.toFixed(1) + "|" + getComputedStyle(document.documentElement).fontSize;
   if (force || key !== fitKey) { fitKey = key;
     home.classList.remove("stack", "one"); const fitT = () => { home.classList.remove("stack"); if ([...home.querySelectorAll(".hc-t")].some(over)) home.classList.add("stack"); };
     fitT(); if ([...home.querySelectorAll(".hc-t,.hc-v,.hc-s:not(.clip)")].some(over)) { home.classList.add("one"); fitT(); } }
-  const a = home.querySelector(".hg-a .hc"), b = home.querySelector(".hg-b .hc"), hb = b ? b.getBoundingClientRect().height : 0;
-  if (b) st.setProperty("--hbc", hb.toFixed(2) + "px");
-  if (a && b && hb + 8 > a.getBoundingClientRect().height) st.setProperty("--l1-min", (hb + 8).toFixed(2) + "px");
-  spread(home); lastSig = sigOf(home); }
+  // v35: as linhas com a mesma altura — a do cartão mais alto dos dois primeiros grupos no tamanho natural (título em duas linhas, texto ampliado);
+  // a última linha entra na conta se a diferença for pequena; se o próprio texto dela precisar de outra linha, só ela fica mais alta (nunca corta texto)
+  st.removeProperty("--hm-h"); const hOf = s => Math.max(0, ...[...home.querySelectorAll(s)].map(c => c.getBoundingClientRect().height));
+  const hab = hOf(".hg-a .hc, .hg-b .hc"), hc = hOf(".hg-c .hc"), hmax = hc - hab <= 6 ? Math.max(hab, hc) : hab;
+  st.setProperty("--hm-h", hmax.toFixed(2) + "px");
+  spread(home, hmax); lastSig = sigOf(home); }
 // assinatura da geometria que importa ao layout; as notificações do observador que não a alteram (a inicial, ou a causada pela própria distribuição) são ignoradas
 let lastSig = "";
 const sigOf = home => { const tb = document.getElementById("tabbar"), c0 = home.querySelector(".hc"); return [innerHeight, tb ? tb.getBoundingClientRect().top : 0, home.getBoundingClientRect().height,
@@ -3170,8 +3262,10 @@ const sigOf = home => { const tb = document.getElementById("tabbar"), c0 = home.
 // 1 · respiro entre os grupos, proporcional: divisórias até +16 acima e abaixo · cabeçalho até +12;
 // 2 · só se ainda sobrar (telas altas): cartões, pouco — pilares até +8, indicadores até +4.
 // Passou dos dois limites, o restante fica no respiro inferior. Sem sobra (tela menor, texto ampliado): tamanhos naturais e rolagem.
-const GROW = {d: 16, h: 12, a: 8, b: 4};
-function spread(home){ const st = home.style, tb = document.getElementById("tabbar"), cards = [...home.querySelectorAll(".hc")];
+// v35 (referência aprovada): as linhas ficam próximas, com o mesmo intervalo; a sobra cresce pouco os cartões (até +3) e o respiro
+// das divisórias (até +1) e do cabeçalho (até +4); o restante fica abaixo da última linha, como na imagem aprovada.
+const GROW = {d: 1, h: 4, a: 3, b: 0};
+function spread(home, h0){ const st = home.style, tb = document.getElementById("tabbar"), cards = [...home.querySelectorAll(".hc")];
   if (!tb || !cards.length || document.body.classList.contains("typing")) return;
   const tbTop = tb.getBoundingClientRect().top, rootPB = parseFloat(getComputedStyle(document.documentElement).paddingBottom) || 0, hs = getComputedStyle(home);
   const air = parseFloat(hs.getPropertyValue("--air")) || 24, airMin = parseFloat(hs.getPropertyValue("--air-min")) || 16;
@@ -3180,11 +3274,10 @@ function spread(home){ const st = home.style, tb = document.getElementById("tabb
   const shift = () => { const t = getComputedStyle(home).transform; return t && t !== "none" ? new DOMMatrixReadOnly(t).m42 : 0; };
   const room = () => tbTop - air - (cards[cards.length - 1].getBoundingClientRect().bottom - shift() + scrollY);
   const free = room(); if (free < 2) return;
-  const ra = new Set([...home.querySelectorAll(".hg-a .hc")].map(c => Math.round(c.getBoundingClientRect().top))).size, nd = home.querySelectorAll(".hdiv").length;
-  const rb = home.querySelectorAll(".hg-b, .hg-c").length, h0 = home.querySelector(".hg-a .hc").getBoundingClientRect().height;
-  const cap1 = nd * 2 * GROW.d + GROW.h, cap2 = ra * GROW.a + rb * GROW.b;
+  const nd = home.querySelectorAll(".hdiv").length, rows = new Set(cards.map(c => Math.round(c.getBoundingClientRect().top))).size;
+  const cap1 = nd * 2 * GROW.d + GROW.h, cap2 = rows * GROW.a;
   const apply = (k1, k2) => { st.setProperty("--xd", (GROW.d * k1).toFixed(2) + "px"); st.setProperty("--xh", (GROW.h * k1).toFixed(2) + "px");
-    st.setProperty("--ha", (h0 + GROW.a * k2).toFixed(2) + "px"); st.setProperty("--xb", (GROW.b * k2).toFixed(2) + "px"); };
+    st.setProperty("--hm-h", (h0 + GROW.a * k2).toFixed(2) + "px"); };
   let k1 = Math.min(1, free / cap1), k2 = Math.min(1, Math.max(0, free - cap1) / cap2); apply(k1, k2);
   // segunda medição: arredondamentos de grade podem absorver parte do acréscimo; corrige a etapa ativa uma vez
   const got = free - room(); if (got > 1 && Math.abs(free - got) > 1) { if (k2 > 0 && k2 < 1) k2 = Math.min(1, k2 + (free - got) / cap2); else if (k1 < 1) k1 = Math.min(1, k1 * free / got); apply(k1, k2); } }
