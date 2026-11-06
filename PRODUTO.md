@@ -1412,3 +1412,11 @@ Em telas estreitas (até 380 pt), o espaço entre os grupos é de 20 pt.
 **Por quê.** Ideia do Camilo, comparada no simulador com o espaço atual (24 sem linha) e com 30 + linha. A diferença em relação às divisórias retiradas na v38: aquelas eram cinza, quase invisíveis e eram duas. Esta é uma só, tem um ponto focal e marca os dois grupos: "o seu dia" e "o que você cuida".
 
 **Custo.** O espaço preto acima da barra cai de ~82 para ~70 pt no iPhone 15.
+
+## 54. v39.1 — Grupos um pouco mais afastados
+
+**O que mudou.** O espaço entre os dois grupos, com a linha-estrela no meio, passou de 36 para 40 pt (de 28 para 32 em telas estreitas). Pedido do Camilo depois de ver a v39 no iPhone. Comparado no simulador com 36 e 44 pt: 44 deixava o bloco de baixo solto.
+
+**Custo.** O espaço preto acima da barra fica em ~66 pt no iPhone 15.
+
+**Não mudou.** Cartões (108 pt), linha, cores, barra, "+" e dados.

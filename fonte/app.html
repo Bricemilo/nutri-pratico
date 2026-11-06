@@ -1880,10 +1880,10 @@ html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
    Antes o intervalo entre grupos (30) era maior que o do cabeçalho (20), invertendo a hierarquia. Telas estreitas: 20. */
 .home{--hm-grp:24px;--sp-head:20px}
 @media (max-width:380px){.home{--hm-grp:20px}}
-/* v39: linha-estrela entre os dois grupos — 36 entre os cartões (17,5 + fio + 17,5; 28 em telas estreitas). Com a linha marcando a divisão,
+/* v39: linha-estrela entre os dois grupos — v39.1: 40 entre os cartões (19,5 + fio + 19,5; 32 em telas estreitas; v39: 36 · 28). Com a linha marcando a divisão,
    o intervalo maior que o do cabeçalho não compete com ele. Fio de 0,6 px com núcleo claro; halo elíptico de 120 × 12 no centro. */
-.home{--hm-star:17.5px}
-@media (max-width:380px){.home{--hm-star:13.5px}}
+.home{--hm-star:19.5px}
+@media (max-width:380px){.home{--hm-star:15.5px}}
 .home .gstar{position:relative;height:1px;margin:var(--hm-star) 0;pointer-events:none}
 .home .gstar::before{content:"";position:absolute;left:10%;right:10%;top:0;height:1px;transform:scaleY(.6);
   background:linear-gradient(90deg,rgba(227,154,96,0),rgba(227,154,96,.22) 25%,rgba(244,180,128,.75) 46%,rgba(255,232,206,1) 50%,rgba(244,180,128,.75) 54%,rgba(227,154,96,.22) 75%,rgba(227,154,96,0))}
