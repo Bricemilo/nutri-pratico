@@ -1896,7 +1896,7 @@ html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
    que não crescem com o tamanho do texto — assim os cinco cabem lado a lado em qualquer iPhone sem empurrar a barra. */
 :root{--tabbar:49px}
 .tabbar{padding:0 max(8px,env(safe-area-inset-right,0px)) var(--sab) max(8px,env(safe-area-inset-left,0px));border-top-width:1px}
-.tabbar-in{grid-template-columns:repeat(5,minmax(0,1fr));gap:0;height:var(--tabbar)}
+.tabbar-in{grid-template-columns:repeat(4,minmax(0,1fr));gap:0;height:var(--tabbar)}
 .tab{height:var(--tabbar);min-width:0;justify-content:flex-start;gap:3px;padding:5px 0 0;border-radius:10px;font-size:13px;line-height:14px;letter-spacing:0;transition:none;-webkit-tap-highlight-color:transparent}
 .tab svg{width:22px;height:22px;flex:none}
 .tab-l{display:block;max-width:100%;white-space:nowrap}
@@ -1904,6 +1904,12 @@ html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
 .tab.on::after{bottom:1px}
 @media (max-width:359px){.tab{font-size:12px}}
 .home .hm-probe{position:absolute;left:0;top:0;visibility:hidden;pointer-events:none;display:flex;flex-direction:column;align-items:flex-start}
+.sheet .sw-me{margin-bottom:18px}
+.li-ic{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;flex:none;color:var(--dj-signal);background:linear-gradient(160deg,#1C1815,#141210);border:1px solid rgba(224,140,78,.22)}
+.li-ic svg{width:19px;height:19px}
+/* v36.1 · cartões da Home na proporção da imagem aprovada (~108 em vez de 103): +5 entre o título e o número; o espaço preto acima da barra
+   fica menor que um cartão e passa a ler como margem, não como uma linha que falta */
+:root{--hm-vt:10px}
 /* a entrada de cada tela só esmaece (sem deslizar): ao trocar de aba nada se desloca diante dos olhos */
 @keyframes in{from{opacity:0}to{opacity:1}}
 </style>
@@ -2270,9 +2276,10 @@ const foodTitle = q => !words(q).length && (S.prefs.fav.length || S.prefs.recent
 
 /* ---------- navegação ---------- */
 const app = $("#app"), tabbar = $("#tabbar");
-// v36 · cinco abas: Hoje (resumo), Nutrição (plano + banco de alimentos), Saúde (movimento, sono, emocional, cuidados), Agenda (consultas, exames,
-// procedimentos, próximos e histórico — o mesmo módulo e os mesmos dados de antes, agora com destino próprio) e Perfil.
-const TABS = [["hoje", "Hoje", "home"], ["alimentacao", "Nutrição", "utensils"], ["saude", "Saúde", "pulse"], ["agenda", "Agenda", "cal"], ["perfil", "Perfil", "user"]];
+// v36.1 · quatro abas: Hoje (resumo), Nutrição (plano + banco de alimentos), Saúde (movimento, sono, emocional, cuidados) e Agenda (consultas,
+// exames, procedimentos, próximos e histórico, com destino próprio). O Perfil saiu da barra e fica no seletor do topo ("Camilo" → Meu perfil),
+// como nos apps da Apple: a pessoa no alto, os destinos de uso diário embaixo. A tela do Perfil é a mesma ("perfil" continua um estado válido).
+const TABS = [["hoje", "Hoje", "home"], ["alimentacao", "Nutrição", "utensils"], ["saude", "Saúde", "pulse"], ["agenda", "Agenda", "cal"]];
 // estado de navegação de cada aba com subtelas (Saúde e Agenda usam as mesmas chaves): guardado ao sair pela barra e devolvido ao voltar,
 // como as abas nativas do iOS — Saúde → Agenda → Saúde reencontra a Saúde onde estava
 const TAB_KEYS = ["hsub", "gid", "ik", "ip", "ir", "iall", "lr", "lk", "ah", "af", "ay", "am", "ahp", "ahc", "asy", "cy", "cf", "xall", "gorg"];
@@ -2326,14 +2333,20 @@ document.addEventListener("focusout", () => setTimeout(() => { const a = documen
 function topBar(...right){
   const p = active();
   return h("header", {class: "top"}, h("div", {class: "top-row"},
-    p ? h("button", {class: "who", "aria-label": `Perfil ativo: ${p.name}. Trocar de perfil`, onclick: switcher}, avatar(p), h("b", null, firstName(p.name)), ic("chev"))
+    p ? h("button", {class: "who", "aria-label": `${p.name}. Meu perfil e família`, onclick: switcher}, avatar(p), h("b", null, firstName(p.name)), ic("chev"))
       : h("div", {class: "brand"}, h("span", {class: "mark", html: ICON.mark}), "BRICEÑO"),
     h("div", {class: "spacer"}), right));
 }
+// abre o Perfil guardando a tela de origem: o "‹" do Perfil volta para ela
+function openProfile(){ go({tab: "perfil", edit: null, ret: view.tab === "perfil" ? view.ret : hereRef()}); }
 function switcher(){
-  sheet("Trocar de perfil", (el, close) => {
-    const ps = [...S.patients].sort((a, b) => a.name.localeCompare(b.name, "pt-BR", {sensitivity: "base"}));
-    el.append(h("h2", null, "Família"), h("p", {class: "sh-sub"}, "Escolha de quem é o plano que você quer ver."),
+  sheet("Perfil e família", (el, close) => {
+    const ps = [...S.patients].sort((a, b) => a.name.localeCompare(b.name, "pt-BR", {sensitivity: "base"})), me = active();
+    // v36.1 · o Perfil (antes uma aba) abre daqui
+    el.append(me ? h("div", {class: "list sw-me"}, h("button", {class: "li", type: "button", onclick: () => { close(); openProfile(); }},
+        h("span", {class: "li-ic", html: ICON.user}), h("div", {class: "li-m"}, h("div", {class: "li-t"}, `Perfil de ${firstName(me.name)}`),
+          h("div", {class: "li-s"}, "Dados, objetivos e configurações")), h("span", {class: "li-go", html: ICON.right}))) : null,
+      h("h2", null, "Família"), h("p", {class: "sh-sub"}, "Escolha de quem é o plano que você quer ver."),
       h("div", {class: "list"}, ps.map(p => h("button", {class: "li", onclick: () => { S.activeId = p.id; save(); close(); go({edit: null, open: []}); }},
         avatar(p), h("div", {class: "li-m"}, h("div", {class: "li-t", html: esc(p.name) + (p.example ? '<span class="chip">exemplo</span>' : "")}),
           h("div", {class: "li-s"}, `${ageLabel(C.ageOf(p.birth))} · ${sexLabel(p.sex)}`)),
@@ -5015,7 +5028,7 @@ function renderPlan(p){
   for (const m of plan.meals) mealsEl.append(buildMeal(m));
   paintPasteNew();
   const head = h("header", {class: "top"}, h("div", {class: "top-row"},
-      h("button", {class: "who", "aria-label": `Perfil ativo: ${p.name}. Trocar de perfil`, onclick: switcher}, avatar(p), h("b", null, firstName(p.name)), ic("chev")),
+      h("button", {class: "who", "aria-label": `${p.name}. Meu perfil e família`, onclick: switcher}, avatar(p), h("b", null, firstName(p.name)), ic("chev")),
       h("div", {class: "spacer"}),
       h("button", {class: "icon-btn", "aria-label": "Copiar plano em texto", onclick: copyPlan}, ic("share")), quickBtn(p, "alimentacao")), sumbar);
   put(app, h("div", {class: "view"},
@@ -5346,6 +5359,7 @@ function renderProfile(p){
   const actLabel = () => { const pick = ["fao", "media"].includes(e.method) ? e.method : "dri";
     return !adult || pick === "dri" ? C.DRI_LV[e.dri ?? 1].toLowerCase() : pick === "fao" ? C.FAO_LV[e.fao ?? 1].toLowerCase() : `${C.FAO_LV[e.fao ?? 1].toLowerCase()} / ${C.DRI_LV[e.dri ?? 1].toLowerCase()}`; };
   put(app, h("div", {class: "view"}, topBar(quickBtn(p, "perfil")),
+    backBtn("Hoje", {tab: "hoje"}),
     h("h1", {class: "pg"}, "Perfil"),
     h("h2", {class: "sec-t"}, "Você"),
     h("section", {class: "panel idc"}, avatar(p), h("div", {class: "pr-m"}, h("b", null, p.name), h("span", null, `${ageLabel(C.ageOf(p.birth))} · ${sexLabel(p.sex)}`), h("span", null, `Nascimento ${fromISO(p.birth)}`)),
@@ -5707,7 +5721,7 @@ function backupSheet(){
 })();
 load();
 measureViewport();
-try { const v = JSON.parse(sessionStorage.getItem(KEY + ".view")); if (v && TABS.some(t => t[0] === v.tab)) view = Object.assign(view, v, {edit: null}); if (view.sub === "favoritos") view.sub = "plano"; } catch (e) {}
+try { const v = JSON.parse(sessionStorage.getItem(KEY + ".view")); if (v && (TABS.some(t => t[0] === v.tab) || v.tab === "perfil")) view = Object.assign(view, v, {edit: null}); if (view.sub === "favoritos") view.sub = "plano"; } catch (e) {}
 render();
 settleLayout();
 })();

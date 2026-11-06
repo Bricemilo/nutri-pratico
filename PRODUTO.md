@@ -1335,3 +1335,9 @@ O iOS muda a altura informada logo depois de abrir o app instalado sem disparar 
 
 **Sem mudança.** Dados (v5, sem migração), cores, degradês, reflexos, ícones dos cartões, saudação, seletor, "+", cálculos.
 
+## 47. v36.1 — Quatro abas e cartões na proporção da imagem aprovada
+
+**Barra com quatro abas: Hoje · Nutrição · Saúde · Agenda.** O Perfil saiu da barra e abre pelo seletor do topo: tocar em "Camilo" mostra "Perfil de Camilo" (dados, objetivos e configurações) acima da lista da família. É o padrão dos apps da Apple (a pessoa no alto, os destinos de uso diário embaixo) e devolve à barra o ar da versão com quatro itens, mantendo a Agenda com destino próprio. A tela do Perfil e os dados são os mesmos; ela ganhou "‹" para a tela de origem. Custo: chegar ao Perfil leva dois toques em vez de um.
+
+**Cartões: 103 → 108 pt**, a proporção da imagem aprovada. Os 5 pt entram entre o título e o número. O espaço preto acima da barra cai de ~110 para ~90 pt no iPhone 15 (a imagem tem ~88): fica menor que um cartão e passa a ler como margem. A altura continua estável com qualquer conteúdo.
+
