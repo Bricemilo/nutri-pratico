@@ -1867,10 +1867,14 @@ html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
 .home .hg-c:not(:has(.hc-s:not(:empty))) .hc-v{margin-block:auto 0}
 /* Suplementos e Medicamentos: os dois contadores ficam centrados no espaço abaixo do título, como na referência */
 .home .hc.cnt .hc-v,.home .hg-b .hc.cnt .hc-v{margin-block:auto}
+/* v38: Suplementos com título de uma linha e legenda ("Em uso"), ancorado na base como os outros sete */
+.home .hc.cnt .hc-v,.home .hg-b .hc.cnt .hc-v,.home .hc.cnt .hc-v.hc-lg{margin-block:auto 0}
 /* halo de leitura mais leve que o da v21: o reflexo agora passa à direita e abaixo do texto */
 .home .hc-v,.home .hc-s{text-shadow:0 0 2px var(--gd),0 0 7px color-mix(in srgb,var(--gd) 80%,transparent)}
 /* divisórias entre os grupos: mesmo fio, mais discreto, num intervalo pouco maior que o das linhas */
 .home .hdiv{margin:calc(var(--hm-div) + var(--xd,0px)) 0;opacity:.62}
+/* v38: sem divisórias na Home — as quatro fileiras com o mesmo intervalo (antes 14 dentro do grupo e ~17 entre grupos) */
+.home .hgrid + .hgrid{margin-top:var(--hm-row)}
 /* cabeçalho: seletor de perfil e "+" no acabamento cobre da referência */
 .home .top{padding-top:4px}
 .top .who{min-height:46px;padding:5px 14px 5px 5px;gap:10px;border:1px solid transparent;
@@ -2523,7 +2527,7 @@ function jewelDivider(){ return h("div", {class: "hdiv", "aria-hidden": "true"})
    (uma linha, com reticências). Sem compromisso: "Nenhum agendado" e "Adicionar compromisso". O toque abre sempre a tela da Agenda de Saúde
    (v33): o cadastro começa pelo "+" de lá, nunca direto do cartão. */
 function jewelEvent(o){ const e = o.event;
-  return h("button", {class: `hc l2 ev hc-2l ${o.cls}` + (e ? "" : " empty"), type: "button", onclick: () => { haptic(); o.open(); },
+  return h("button", {class: `hc l2 ev ${o.cls}` + (e ? "" : " empty"), type: "button", onclick: () => { haptic(); o.open(); },
       "aria-label": e ? `${o.title}: próximo compromisso ${whenSpoken(e)}. ${o.line3(e)}${o.more ? `. E mais ${o.more} no mesmo horário` : ""}.` : `${o.title}: ${o.emptyMsg}. ${o.emptySub}.`},
     h("span", {class: "hc-fx", "aria-hidden": "true"}, JEWEL(o.cls)),
     h("span", {class: "hc-h"}, h("span", {class: "hc-i", html: ICON[o.icon]}), h("span", {class: "hc-t"}, o.title)),
@@ -2532,29 +2536,33 @@ function jewelEvent(o){ const e = o.event;
 /* jewelCare(o) — Suplementos e Medicamentos: título completo (em duas linhas quando não cabe em uma) e os dois contadores reais numa linha
    ("2 supl. · 1 med.": abreviações só aqui, logo abaixo do título por extenso; o VoiceOver lê tudo por extenso). Ativos: não pausados, dentro das datas. */
 function jewelCare(o){
-  return h("button", {class: "hc l2 cnt hc-2l " + o.cls, type: "button", onclick: () => { haptic(); o.fn(); },
+  return h("button", {class: "hc l2 cnt " + o.cls, type: "button", onclick: () => { haptic(); o.fn(); },
       "aria-label": `Suplementos e Medicamentos: ${plural(o.sup, "suplemento ativo", "suplementos ativos")} e ${plural(o.med, "medicamento ativo", "medicamentos ativos")}${o.paused ? `; ${plural(o.paused, "item inativo", "itens inativos")}` : ""}.`},
     h("span", {class: "hc-fx", "aria-hidden": "true"}, JEWEL(o.cls)),
-    h("span", {class: "hc-h"}, h("span", {class: "hc-i", html: ICON.pill}), h("span", {class: "hc-t"}, "Suplementos e Medicamentos")),
-    h("span", {class: "hc-v hc-lg"}, h("b", null, String(o.sup)), h("small", null, " supl."), h("span", {class: "hc-sep"}, " · "), h("b", null, String(o.med)), h("small", null, " med."))); }
+    h("span", {class: "hc-h"}, h("span", {class: "hc-i", html: ICON.pill}), h("span", {class: "hc-t"}, "Suplementos")),
+    h("span", {class: "hc-v hc-lg"}, h("b", null, String(o.sup)), h("small", null, " supl."), h("span", {class: "hc-sep"}, " · "), h("b", null, String(o.med)), h("small", null, " med.")),
+    h("span", {class: "hc-s"}, "Em uso")); }
 function renderHome(p){
-  /* Painel de saúde: oito cartões em quatro linhas de dois, em três grupos separados por duas Signature dividers:
-     A · pilares (Nutrição, Exercício, Sono, Emocional) · B · Hidratação + Suplementos e Medicamentos · C · Prioridades + Agenda de Saúde.
+  /* Painel de saúde: oito cartões em quatro linhas de dois, com o mesmo intervalo entre todas as linhas (v38: sem divisórias):
+     A · pilares (Nutrição, Exercício, Sono, Emocional) · B · Hidratação + Suplementos · C · Prioridades + Agenda.
+     v38: todos os títulos em uma linha (título, valor e legenda na mesma altura nos oito); Nutrição mostra as refeições feitas hoje
+     só para quem marca refeições (sem marcação, "Plano alimentar" — ausência de marcação nunca vira "não comeu").
      Cor só no ícone e numa nuance mínima do fundo; números em destaque, unidades subordinadas, legendas curtas e sempre com o período.
      Cada cartão leva à visão principal do módulo, com ou sem dado (v33: nenhum cartão abre formulário); o "‹" de lá volta para Hoje.
      O cadastro começa pelo "+" do módulo ou pelo "+" do topo. O detalhe nutricional fica na aba Nutrição. */
   const plan = p.plan, t = planTotal(plan), L = logsOf(p), ctx = healthCtx(p), adult = adultOf(p), w = waterOf(p);
   const dayTxt = new Date().toLocaleDateString("pt-BR", {weekday: "long", day: "numeric", month: "long"});
   homeKey = greetOf() + today() + evKey(p);
-  const meals = plan.meals.filter(m => filled(m).length);
+  const meals = plan.meals.filter(m => filled(m).length), nDone = meals.filter(m => doneOf(p, m)).length;
   const sl = ctx.sleep.stats.last, lastNight = sl && C.addDays(sl.date, 1) >= today() ? sl : null;
   const lastMood = [...L.mood].sort((a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : (b.at || 0) - (a.at || 0))[0];
   const mw = ctx.move.week;
   const cc = careCounts(p), nx = nextAgenda(p), pr = goalsOf(p), act = pr.filter(g => g.status === "ativa"), main = act.find(g => g.main);
-  const card = jewelCard, divider = jewelDivider;
+  const card = jewelCard;
   // sem registro não quer dizer que não aconteceu: o cartão diz que não há registro e de que período
   const pillars = h("div", {class: "hgrid hg-a" + (adult ? "" : " odd")},
-    card({lv: "l1", cls: "food", icon: "utensils", title: "Nutrição", value: meals.length ? k0(t.kcal) : null, unit: "kcal", sub: "Plano alimentar",
+    card({lv: "l1", cls: "food", icon: "utensils", title: "Nutrição", value: meals.length ? k0(t.kcal) : null, unit: "kcal", sub: tracks(p) ? `Plano · ${nDone} de ${meals.length} feitas` : "Plano alimentar",
+      aria: meals.length ? `Nutrição: plano de ${k0(t.kcal)} quilocalorias${tracks(p) ? `. ${nDone} de ${plural(meals.length, "refeição feita", "refeições feitas")} hoje` : ""}.` : null,
       fn: () => go({tab: "alimentacao", sub: "plano", open: [], edit: null}), empty: ["Sem plano", "Toque para montar"]}),
     card({lv: "l1", cls: "move", icon: "dumbbell", title: "Exercício", value: mw.total > 0 ? fmtDur(mw.total) : null, sub: "Nesta semana",
       aria: `Exercício: ${mw.total > 0 ? `${fmtDur(mw.total)} registrados nesta semana, ${plural(mw.activeDays, "dia", "dias")} com registro` : "sem registros nesta semana"}.`,
@@ -2574,11 +2582,11 @@ function renderHome(p){
       sub: main ? main.name : "Em acompanhamento", clip: !!main, empty: ["Nenhuma definida", "Toque para escolher"],
       aria: act.length ? `Prioridades: ${plural(act.length, "ativa", "ativas")}${main ? `. Principal: ${main.name}` : ""}.` : "Prioridades: nenhuma definida. Toque para escolher o que acompanhar.",
       fn: () => openMod({hsub: "prioridades"})}),
-    jewelEvent({cls: "agenda", icon: "cal", title: "Agenda de Saúde", event: nx, more: nx ? sameTime(p, nx) : 0, line3: e => agendaLabel(p, e), emptyMsg: "Nenhum agendado", emptySub: "Adicionar compromisso",
+    jewelEvent({cls: "agenda", icon: "cal", title: "Agenda", event: nx, more: nx ? sameTime(p, nx) : 0, line3: e => agendaLabel(p, e), emptyMsg: "Nenhum agendado", emptySub: "Adicionar compromisso",
       open: () => openMod(AG_ENTRY)}));
   put(app, h("div", {class: "view home"}, topBar(quickBtn(p, "hoje")),
     h("header", {class: "hi-h"}, h("h1", null, `${greetOf()}, ${firstName(p.name)}`), h("div", {class: "today"}, dayTxt)),
-    pillars, divider(), careRow, divider(), agenda));
+    pillars, careRow, agenda));
   fitTitlesNow();
 }
 // Altura útil da tela — fonte única, medida no início de toda passada de layout (nunca guardada de uma medição anterior).

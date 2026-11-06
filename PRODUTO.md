@@ -1349,3 +1349,18 @@ O iOS muda a altura informada logo depois de abrir o app instalado sem disparar 
 
 **Ressalva.** A Apple recomenda a barra só para navegação; aqui a exceção é consciente, por praticidade. Se no uso real não convencer, voltar o "+" para o topo é simples e não afeta dados nem telas.
 
+
+## 49. v38 — Acabamento da Home
+
+**O que mudou.**
+- **Sem divisórias.** As duas linhas finas entre as fileiras saíram. As quatro fileiras têm o mesmo intervalo (14 pt); antes eram 14 dentro de cada grupo e ~17 entre grupos.
+- **Títulos de uma linha nos oito cartões.** "Suplementos e Medicamentos" virou **"Suplementos"** e "Agenda de Saúde" virou **"Agenda"** (o mesmo nome da aba). Com isso, título, valor e legenda ficam na mesma altura em todos os cartões. O VoiceOver continua lendo "suplementos ativos e medicamentos ativos" por extenso.
+- **Suplementos com legenda.** O cartão ganhou a legenda "Em uso" (conta só itens ativos: não pausados e dentro das datas) e passou a ter a mesma estrutura dos outros sete: título, valor, legenda.
+- **Nutrição mostra o dia, só para quem marca refeições.** Com o acompanhamento de refeições ativado, a legenda vira "Plano · 3 de 5 feitas" (refeições do plano marcadas como feitas hoje). Sem acompanhamento, continua "Plano alimentar". A ausência de marcação nunca é apresentada como "não comeu".
+
+**Medido (simulador, Chromium).**
+- Cartões: 108 pt de 390 a 430 pt e 106 pt em 375 pt, iguais em todas as variações de dados.
+- Espaço preto acima da barra: ~96 pt no iPhone 15.
+- Rótulos das abas não selecionadas: contraste de ~6:1 (mínimo recomendado 4,5:1).
+
+**Não mudou.** Cores, reflexos, ordem dos cartões, barra, "+", dados.
