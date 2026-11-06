@@ -1341,3 +1341,11 @@ O iOS muda a altura informada logo depois de abrir o app instalado sem disparar 
 
 **Cartões: 103 → 108 pt**, a proporção da imagem aprovada. Os 5 pt entram entre o título e o número. O espaço preto acima da barra cai de ~110 para ~90 pt no iPhone 15 (a imagem tem ~88): fica menor que um cartão e passa a ler como margem. A altura continua estável com qualquer conteúdo.
 
+## 48. v37 — O "+" no centro da barra
+
+**O que mudou.** O botão "+" saiu do canto superior direito e passou para o centro da barra inferior, entre Nutrição e Saúde: Hoje · Nutrição · **+** · Saúde · Agenda. É o mesmo material cobre, em círculo de 48 pt, saindo 8 pt acima da barra, que não ficou mais alta. Motivo: registrar é a ação mais frequente do app, e o centro de baixo é o ponto mais fácil de alcançar com uma mão; o canto de cima, o mais difícil.
+
+**Um só "+", com a ação de cada tela.** Na Home, na Saúde, na Nutrição e no Perfil abre o "Registrar" geral; dentro de um módulo, inicia o registro dele (Hidratação: água; Sono: sono; Agenda: novo compromisso; Consultas: nova consulta). A janela aberta diz o que será registrado. O canto superior direito fica livre; na Nutrição continua o "Copiar plano".
+
+**Ressalva.** A Apple recomenda a barra só para navegação; aqui a exceção é consciente, por praticidade. Se no uso real não convencer, voltar o "+" para o topo é simples e não afeta dados nem telas.
+

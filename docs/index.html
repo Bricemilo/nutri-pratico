@@ -1923,6 +1923,17 @@ html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
 @media (max-width:359px){.tab{font-size:12px}}
 .home .hm-probe{position:absolute;left:0;top:0;visibility:hidden;pointer-events:none;display:flex;flex-direction:column;align-items:flex-start}
 .sheet .sw-me{margin-bottom:18px}
+/* v37 · "+" central: o mesmo material cobre do "+" que ficava no topo, em círculo de 48, saindo 8 acima da barra (a barra não cresce).
+   Um anel da cor do fundo o separa do fio da barra. Não é uma aba: sem rótulo, sem estado selecionado. Ao toque, só escurece. */
+.tabbar-in{grid-template-columns:1fr 1fr 64px 1fr 1fr}
+.fab{align-self:start;justify-self:center;margin-top:-8px;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;color:#140903;border:1px solid transparent;-webkit-tap-highlight-color:transparent;
+  background:radial-gradient(90% 70% at 30% 0%,rgba(255,206,150,.55),transparent 70%) padding-box,linear-gradient(180deg,var(--hm-copper-hi),var(--hm-copper) 48%,var(--hm-copper-lo)) padding-box,
+    linear-gradient(170deg,#FFD3A4,rgba(214,128,66,.6) 50%,#7A3610) border-box;
+  box-shadow:inset 0 1px 0 rgba(255,236,214,.45),inset 0 -2px 4px rgba(90,36,8,.35),0 0 0 4px var(--bg),0 6px 14px -6px rgba(0,0,0,.9)}
+.fab svg{width:22px;height:22px;stroke-width:2.2}
+.fab:active{filter:brightness(.88)}
+.fab[hidden]{display:grid;visibility:hidden}
+@media (max-width:359px){.tabbar-in{grid-template-columns:1fr 1fr 58px 1fr 1fr}}
 .li-ic{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;flex:none;color:var(--dj-signal);background:linear-gradient(160deg,#1C1815,#141210);border:1px solid rgba(224,140,78,.22)}
 .li-ic svg{width:19px;height:19px}
 /* v36.1 · cartões da Home na proporção da imagem aprovada (~108 em vez de 103): +5 entre o título e o número; o espaço preto acima da barra
@@ -3011,10 +3022,14 @@ function tapTab(id){
 }
 /* v36 · barra inferior: um único componente, montado uma vez. A cada tela só mudam o estado selecionado (classe, aria-current) —
    nenhum botão é recriado, nada muda de tamanho ou de lugar ao navegar. */
-let tabBtns = null;
+let tabBtns = null, fabBtn = null, fabAct = null;
+// ação do "+" na tela atual (rótulo para o VoiceOver e função); lida no momento do toque
+function setFab(label, fn){ fabAct = {label, fn}; if (fabBtn) { fabBtn.setAttribute("aria-label", label); fabBtn.hidden = false; } }
 function paintTabs(){
   if (!tabBtns) { tabBtns = TABS.map(([id, label, icon]) => h("button", {class: "tab", type: "button", "data-tab": id, onclick: () => tapTab(id)}, ic(icon), h("span", {class: "tab-l"}, label)));
-    put(tabbar, h("div", {class: "tabbar-in"}, tabBtns)); }
+    fabBtn = h("button", {class: "fab", type: "button", "aria-label": "Registrar", onclick: () => { if (fabAct) { haptic(); fabAct.fn(); } }}, ic("plus"));
+    // duas abas, o "+", duas abas: na ordem de leitura do VoiceOver também
+    put(tabbar, h("div", {class: "tabbar-in"}, tabBtns.slice(0, 2), fabBtn, tabBtns.slice(2))); }
   for (const b of tabBtns) { const on = b.dataset.tab === view.tab; b.classList.toggle("on", on); if (on) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); }
 }
 // telas da Agenda chegam por estados antigos (sessão salva, caminho de volta) com a aba Saúde: passam para a aba Agenda
@@ -3023,10 +3038,11 @@ function normView(){
   if (view.tab === "agenda" && !AGMODS.includes(view.hsub)) Object.assign(view, AG_ENTRY);
 }
 function render(){
-  measureViewport(); normView(); paintTabs();
+  measureViewport(); normView(); paintTabs(); fabAct = null;
   const p = active();
-  if (!p) { renderWelcome(); return; }
+  if (!p) { renderWelcome(); fabBtn.hidden = true; return; }
   ({hoje: renderHome, alimentacao: view.sub === "alimentos" ? renderFoods : renderPlan, saude: renderHealth, agenda: renderAgendaTab, perfil: renderProfile})[view.tab](p);
+  if (!fabAct) fabBtn.hidden = true;
 }
 window.addEventListener("scroll", () => {
   const t = $(".top"); if (!t) return;
@@ -3407,7 +3423,9 @@ function nutritionSheet(p){
   });
 }
 /* Registro universal: o "+" do topo abre os registros, na ordem que faz sentido para a tela atual. */
-function quickBtn(p, ctx){ return h("button", {class: "icon-btn accent", type: "button", "aria-label": "Registrar", onclick: () => quickSheet(p, ctx)}, ic("plus")); }
+/* v37 · o "+" é um só, no centro da barra inferior (ao alcance do polegar). Cada tela só declara o que ele faz ali: quickBtn (o "Registrar"
+   geral) ou modAdd (o registro do módulo). Nada é desenhado no topo; a função devolve null. */
+function quickBtn(p, ctx){ setFab("Registrar", () => quickSheet(p, ctx)); return null; }
 function quickSheet(p, ctx){
   const adult = adultOf(p), meals = [...p.plan.meals].filter(m => filled(m).length).sort(byTime), pending = meals.filter(m => !doneOf(p, m));
   sheet("Registrar", (el, close) => {
@@ -3738,7 +3756,7 @@ const dateTile = e => { const [, m, d] = ymd(e.date); return e.date ? h("span", 
 // cabeçalho dos módulos da Saúde: "‹" para a tela de origem (ou o resumo da Saúde) e título. Um único "+" por tela, no canto superior direito:
 // num módulo com cadastro próprio ele inicia o novo registro daquele módulo (v33); sem cadastro próprio, é o "Registrar" geral.
 // title: texto, ou {t, back} quando a volta é interna ao módulo (ex.: Histórico → Agenda de Saúde)
-const modAdd = (label, fn) => h("button", {class: "icon-btn accent mod-add", type: "button", "aria-label": label, onclick: fn}, ic("plus"));
+const modAdd = (label, fn) => { setFab(label, fn); return null; };
 function modPage(p, title, addLabel, add, ...kids){ const o = typeof title === "string" ? {t: title} : title;
   // na aba Agenda: a raiz é a própria aba (sem "‹"); Consultas, Exames e Procedimentos voltam para a Agenda de Saúde
   const ag = view.tab === "agenda", root = ag && view.hsub === "agenda" && !o.back;

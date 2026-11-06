@@ -122,9 +122,9 @@ O material é construído em seis camadas:
 
 28 × 28 com raio `--dj-r-tile`, fundo tonal do material, aro aceso no alto e sombra de contato mínima. O símbolo tem 17 px. O ícone de Nutrição é o mesmo na Home e na barra inferior.
 
-### 3.4 Botão-ferramenta "+" (`.icon-btn.accent`)
+### 3.4 Botão "+" (`.fab`, v37)
 
-Cobre acetinado, 44 × 44 e raio `--dj-r-tool`. É uma ferramenta, não protagonista: brilho contido e sombra curta.
+**Um único "+" no app, no centro da barra inferior** (entre Nutrição e Saúde), ao alcance do polegar. Cobre acetinado (o mesmo material do "+" que ficava no topo), círculo de 48, saindo 8 acima da barra, que não cresce; um anel da cor do fundo o separa do fio da barra. Não é uma aba: sem rótulo e sem estado selecionado; ao toque só escurece. Faz parte da barra (montado uma vez, mesma posição em todas as telas). Cada tela só declara a ação dele: `quickBtn(p, ctx)` (o "Registrar" geral) ou `modAdd(rótulo, fn)` (o registro do módulo); as duas funções devolvem `null`, porque nada é desenhado no topo. O rótulo do VoiceOver acompanha a tela ("Registrar água", "Nova consulta"). O canto superior direito fica livre, exceto onde já havia outra ferramenta (Copiar plano, na Nutrição). Sem perfil (boas-vindas), o "+" fica invisível, sem deslocar as abas.
 
 ### 3.5 Barra inferior
 
@@ -213,7 +213,7 @@ Uma regra para todas as áreas, com as particularidades de cada módulo respeita
 |---|---|
 | Tocar num cartão da Home ou numa linha de módulo | Abre a **visão principal** do módulo, com ou sem dados. Nenhum cartão abre formulário. |
 | Visão principal | O mais relevante primeiro (próximo compromisso, valor da semana, meta do dia); depois a lista; o histórico recente à vista e o completo a um toque. |
-| "+" | **Um por tela**, no canto superior direito (`.icon-btn.accent`). Num módulo com cadastro próprio, inicia o registro daquele módulo (Agenda: escolha Consulta · Exame · Procedimento; Hidratação: água; Exercício, Sono, Emocional: o registro do pilar; Indicador: a medição). Sem cadastro próprio, é o "Registrar" geral. Seções com tipos diferentes (Suplementos · Medicamentos) mantêm o "+" da seção. |
+| "+" | **Um só, no centro da barra inferior** (`.fab`, v37); a ação muda com a tela. Num módulo com cadastro próprio, inicia o registro daquele módulo (Agenda: escolha Consulta · Exame · Procedimento; Hidratação: água; Exercício, Sono, Emocional: o registro do pilar; Indicador: a medição). Sem cadastro próprio, é o "Registrar" geral. Seções com tipos diferentes (Suplementos · Medicamentos) mantêm o "+" da seção. |
 | Tocar num registro | Abre os **detalhes**. Compromissos: folha de detalhes (tipo · título · situação e data · "Aconteceu?" se passou · informações · Editar / Reagendar / Cancelar · documentos · Calendário · Excluir). Registros diários (exercício, sono, emocional, água) e itens de uso: a própria folha de edição é o detalhe (um passo a menos). |
 | Editar e excluir | Editar abre o formulário já preenchido. Excluir fica dentro dos detalhes ou da edição (botão vermelho), com confirmação quando há documentos ou dados vinculados e Desfazer no aviso. Cancelar não apaga: o compromisso fica no histórico. Sem "x" solto nas listas. |
 | Estado vazio | Explica o que entra ali e aponta o "+" (ou traz um botão explícito); nunca abre formulário sozinho. |
