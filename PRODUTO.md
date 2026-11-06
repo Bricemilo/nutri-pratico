@@ -1325,3 +1325,13 @@ O iOS muda a altura informada logo depois de abrir o app instalado sem disparar 
 
 **Sem mudança.** Dados, cartões, toques, navegação, barra inferior, demais telas.
 
+## 46. v36 — Cartões estáveis, aba Agenda e barra inferior corrigida
+
+**1 · Altura estável dos oito cartões.** A altura deixou de depender do conteúdo. Ela vem de um modelo de cartão (título real, uma linha de número, uma linha de legenda) e é a da composição aprovada com "Bem": 103 pt em telas de 375 a 430 pt. "Mais ou menos", números maiores, cartões vazios e compromissos não mudam mais a geometria. Quando um texto não cabe, ele se ajusta dentro do cartão: "Mais ou menos" fica numa linha com a letra um pouco menor (cerca de 20 em vez de 22); legendas e mensagens de vazio podem reduzir até 12 e 13. A legenda de Prioridades vazia passou de "Escolha o que acompanhar" para "Toque para escolher", o mesmo padrão dos outros cartões vazios, e cabe numa linha. Exceção controlada: no iPhone de 320 pt e com o texto muito ampliado, se mesmo assim não couber, só aquela linha de dois cartões cresce.
+
+**2 · Cinco abas: Hoje · Nutrição · Saúde · Agenda · Perfil.** A Agenda de Saúde (próximos, histórico, visão mensal e anual, categorias) é a mesma tela de antes, agora com destino próprio. Consultas, Exames e Procedimentos ("Registros por tipo") saíram da Saúde e ficam no pé da Agenda. O cartão da Home e a linha do Perfil abrem a aba Agenda, já selecionada. Nenhum dado foi movido ou copiado: só mudou o lugar da tela na navegação. Sessões antigas que estavam numa tela da Agenda dentro da Saúde abrem na aba Agenda. Saúde e Agenda guardam a subtela em que estavam ao trocar de aba.
+
+**3 · Barra inferior.** 49 pt de conteúdo, como a barra nativa (antes 58), mais a área do indicador de início, aplicada uma única vez. A barra passou a ser um único componente montado uma vez; a cada tela só muda a aba selecionada. Causas tratadas: os botões eram recriados a cada tela; a aba tocada encolhia (escala 0,94) e era trocada por uma nova em tamanho normal; a medição da área visível do iOS (defeito do app instalado) só era refeita quando a Home era desenhada; a entrada das telas deslizava 4 pt. Agora a medição vale para todas as telas e acompanha mudanças sem evento, o toque só esmaece a aba e a entrada das telas só esmaece.
+
+**Sem mudança.** Dados (v5, sem migração), cores, degradês, reflexos, ícones dos cartões, saudação, seletor, "+", cálculos.
+

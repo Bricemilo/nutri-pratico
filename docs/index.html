@@ -1907,6 +1907,23 @@ html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
 .home .hi-h .today{color:var(--hm-date);font-weight:520}
 /* telas estreitas: mesmo material, respiros menores */
 @media (max-width:380px){:root{--hm-pad:12px;--hm-col:8px;--hm-row:10px;--hm-r:18px}.home .hc-h{gap:8px}.home .hc.l1 .hc-v b:not(.nr),.home .hc.l2:not(.ev):not(.cnt) .hc-v b:not(.nr),.home .hg-c .hc.l2:not(.ev) .hc-v b:not(.nr){font-size:1.412rem}}
+/* ===== v36 · barra inferior com cinco abas — um único componente, mesma geometria em todas as telas =====
+   Altura do conteúdo: 49, como a barra nativa do iOS (antes 58: o app somava um respiro próprio acima e abaixo dos ícones).
+   Abaixo dela, só a área do indicador de início (--sab, aplicada uma vez, no padding da própria barra). Nada depende da aba ativa:
+   a aba selecionada muda só a cor e o filete cobre (desenhado dentro da altura fixa). Rótulos em 13 fixos, como as abas nativas,
+   que não crescem com o tamanho do texto — assim os cinco cabem lado a lado em qualquer iPhone sem empurrar a barra. */
+:root{--tabbar:49px}
+.tabbar{padding:0 max(8px,env(safe-area-inset-right,0px)) var(--sab) max(8px,env(safe-area-inset-left,0px));border-top-width:1px}
+.tabbar-in{grid-template-columns:repeat(5,minmax(0,1fr));gap:0;height:var(--tabbar)}
+.tab{height:var(--tabbar);min-width:0;justify-content:flex-start;gap:3px;padding:5px 0 0;border-radius:10px;font-size:13px;line-height:14px;letter-spacing:0;transition:none;-webkit-tap-highlight-color:transparent}
+.tab svg{width:22px;height:22px;flex:none}
+.tab-l{display:block;max-width:100%;white-space:nowrap}
+.tab:active{transform:none;opacity:.6}
+.tab.on::after{bottom:1px}
+@media (max-width:359px){.tab{font-size:12px}}
+.home .hm-probe{position:absolute;left:0;top:0;visibility:hidden;pointer-events:none;display:flex;flex-direction:column;align-items:flex-start}
+/* a entrada de cada tela só esmaece (sem deslizar): ao trocar de aba nada se desloca diante dos olhos */
+@keyframes in{from{opacity:0}to{opacity:1}}
 </style>
 
 </head>
@@ -2961,8 +2978,13 @@ const foodTitle = q => !words(q).length && (S.prefs.fav.length || S.prefs.recent
 
 /* ---------- navegação ---------- */
 const app = $("#app"), tabbar = $("#tabbar");
-// Quatro abas: Hoje (resumo), Alimentação (plano + banco de alimentos), Saúde (movimento, sono, bem-estar), Perfil.
-const TABS = [["hoje", "Hoje", "home"], ["alimentacao", "Nutrição", "utensils"], ["saude", "Saúde", "pulse"], ["perfil", "Perfil", "user"]];
+// v36 · cinco abas: Hoje (resumo), Nutrição (plano + banco de alimentos), Saúde (movimento, sono, emocional, cuidados), Agenda (consultas, exames,
+// procedimentos, próximos e histórico — o mesmo módulo e os mesmos dados de antes, agora com destino próprio) e Perfil.
+const TABS = [["hoje", "Hoje", "home"], ["alimentacao", "Nutrição", "utensils"], ["saude", "Saúde", "pulse"], ["agenda", "Agenda", "cal"], ["perfil", "Perfil", "user"]];
+// estado de navegação de cada aba com subtelas (Saúde e Agenda usam as mesmas chaves): guardado ao sair pela barra e devolvido ao voltar,
+// como as abas nativas do iOS — Saúde → Agenda → Saúde reencontra a Saúde onde estava
+const TAB_KEYS = ["hsub", "gid", "ik", "ip", "ir", "iall", "lr", "lk", "ah", "af", "ay", "am", "ahp", "ahc", "asy", "cy", "cf", "xall", "gorg"];
+const tabState = v => Object.fromEntries(TAB_KEYS.map(k => [k, v[k] ?? null]));
 let view = {tab: "hoje", sub: "plano", open: [], edit: null, focusMeal: null, foodSeg: "fav"};
 function go(v, keepScroll){
   view = Object.assign({}, view, v);
@@ -2970,12 +2992,34 @@ function go(v, keepScroll){
   render();
   if (!keepScroll) window.scrollTo(0, 0);
 }
+// toque numa aba: zera o caminho de volta. Tocar na aba já ativa volta à raiz dela; ir para outra aba devolve o estado em que ela ficou.
+function tapTab(id){
+  if (view.tab !== id) haptic();
+  const keep = Object.assign({}, view.keep); if (view.tab === "saude" || view.tab === "agenda") keep[view.tab] = tabState(view);
+  const v = {tab: id, edit: null, ret: null, keep};
+  if (view.tab === id) { if (id === "saude" && HMODS.includes(view.hsub)) v.hsub = "resumo"; if (id === "agenda") Object.assign(v, AG_ENTRY); }
+  else if (id === "saude") Object.assign(v, keep.saude || {hsub: "resumo"});
+  else if (id === "agenda") Object.assign(v, keep.agenda || AG_ENTRY);
+  go(v);
+}
+/* v36 · barra inferior: um único componente, montado uma vez. A cada tela só mudam o estado selecionado (classe, aria-current) —
+   nenhum botão é recriado, nada muda de tamanho ou de lugar ao navegar. */
+let tabBtns = null;
+function paintTabs(){
+  if (!tabBtns) { tabBtns = TABS.map(([id, label, icon]) => h("button", {class: "tab", type: "button", "data-tab": id, onclick: () => tapTab(id)}, ic(icon), h("span", {class: "tab-l"}, label)));
+    put(tabbar, h("div", {class: "tabbar-in"}, tabBtns)); }
+  for (const b of tabBtns) { const on = b.dataset.tab === view.tab; b.classList.toggle("on", on); if (on) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); }
+}
+// telas da Agenda chegam por estados antigos (sessão salva, caminho de volta) com a aba Saúde: passam para a aba Agenda
+function normView(){
+  if (view.tab === "saude" && AGMODS.includes(view.hsub)) view.tab = "agenda";
+  if (view.tab === "agenda" && !AGMODS.includes(view.hsub)) Object.assign(view, AG_ENTRY);
+}
 function render(){
-  put(tabbar, h("div", {class: "tabbar-in"}, TABS.map(([id, label, icon]) =>
-    h("button", {class: "tab" + (view.tab === id ? " on" : ""), "aria-current": view.tab === id ? "page" : null, onclick: () => { if (view.tab !== id) haptic(); go(Object.assign({tab: id, edit: null, ret: null}, view.tab === id && id === "saude" && HMODS.includes(view.hsub) ? {hsub: "resumo"} : {})); }}, ic(icon), label))));
+  measureViewport(); normView(); paintTabs();
   const p = active();
   if (!p) { renderWelcome(); return; }
-  ({hoje: renderHome, alimentacao: view.sub === "alimentos" ? renderFoods : renderPlan, saude: renderHealth, perfil: renderProfile})[view.tab](p);
+  ({hoje: renderHome, alimentacao: view.sub === "alimentos" ? renderFoods : renderPlan, saude: renderHealth, agenda: renderAgendaTab, perfil: renderProfile})[view.tab](p);
 }
 window.addEventListener("scroll", () => {
   const t = $(".top"); if (!t) return;
@@ -3206,8 +3250,8 @@ function renderHome(p){
   // C · o que acompanhar (prioridades ativas) e o próximo compromisso de saúde, de qualquer tipo
   const agenda = h("div", {class: "hgrid hg-c"},
     card({lv: "l2", cls: "prio", icon: "target", title: "Prioridades", value: act.length ? String(act.length) : null, unit: act.length === 1 ? "ativa" : "ativas",
-      sub: main ? main.name : "Em acompanhamento", clip: !!main, empty: ["Nenhuma definida", "Escolha o que acompanhar"],
-      aria: act.length ? `Prioridades: ${plural(act.length, "ativa", "ativas")}${main ? `. Principal: ${main.name}` : ""}.` : "Prioridades: nenhuma definida. Escolha o que acompanhar.",
+      sub: main ? main.name : "Em acompanhamento", clip: !!main, empty: ["Nenhuma definida", "Toque para escolher"],
+      aria: act.length ? `Prioridades: ${plural(act.length, "ativa", "ativas")}${main ? `. Principal: ${main.name}` : ""}.` : "Prioridades: nenhuma definida. Toque para escolher o que acompanhar.",
       fn: () => openMod({hsub: "prioridades"})}),
     jewelEvent({cls: "agenda", icon: "cal", title: "Agenda de Saúde", event: nx, more: nx ? sameTime(p, nx) : 0, line3: e => agendaLabel(p, e), emptyMsg: "Nenhum agendado", emptySub: "Adicionar compromisso",
       open: () => openMod(AG_ENTRY)}));
@@ -3223,9 +3267,13 @@ function renderHome(p){
 // igual (±6) à área segura superior. No Safari, no Claude, em computadores ou em iPhones sem o defeito, --vgap fica 0.
 // O iOS pode mudar essa altura logo depois de abrir o app ou ao voltar do segundo plano SEM disparar evento; por isso, além dos eventos,
 // a geometria é acompanhada quadro a quadro por 2,5 s nesses momentos (settleLayout) e tudo é refeito se algo mudar.
-const vgapProbe = h("div", {style: "position:fixed;visibility:hidden;pointer-events:none;padding-top:env(safe-area-inset-top,0px)", "aria-hidden": "true"});
+// v36 · a medição vale para o app inteiro (não só para a Home): é refeita no início de toda tela (render) e sempre que a área visível muda,
+// mesmo sem evento do iOS — a sonda ocupa a altura da tela (fixa, de cima a baixo) e um observador avisa quando ela muda. Assim a barra
+// inferior tem a mesma altura em todas as abas e nunca "acerta" a altura ao voltar para a Home.
+const vgapProbe = h("div", {style: "position:fixed;top:0;bottom:0;left:0;width:0;visibility:hidden;pointer-events:none;padding-top:env(safe-area-inset-top,0px)", "aria-hidden": "true"});
+let vpRO = null;
 function measureViewport(){
-  if (!vgapProbe.isConnected) document.body.append(vgapProbe);
+  if (!vgapProbe.isConnected) { document.body.append(vgapProbe); if (typeof ResizeObserver === "function") { vpRO = new ResizeObserver(() => syncLayout()); vpRO.observe(vgapProbe); } }
   const standalone = navigator.standalone === true || (window.matchMedia && matchMedia("(display-mode: standalone)").matches);
   const portrait = innerHeight > innerWidth, phys = Math.max(screen.width, screen.height), topInset = parseFloat(getComputedStyle(vgapProbe).paddingTop) || 0;
   const g = phys - innerHeight, ok = standalone && portrait && g > 8 && g < 80 && topInset > 0 && Math.abs(g - topInset) <= 6;
@@ -3253,12 +3301,45 @@ function fitTitles(force){ measureViewport(); const home = document.querySelecto
   if (force || key !== fitKey) { fitKey = key;
     home.classList.remove("stack", "one"); const fitT = () => { home.classList.remove("stack"); if ([...home.querySelectorAll(".hc-t")].some(over)) home.classList.add("stack"); };
     fitT(); if ([...home.querySelectorAll(".hc-t,.hc-v,.hc-s:not(.clip)")].some(over)) { home.classList.add("one"); fitT(); } }
-  // v35: as linhas com a mesma altura — a do cartão mais alto dos dois primeiros grupos no tamanho natural (título em duas linhas, texto ampliado);
-  // a última linha entra na conta se a diferença for pequena; se o próprio texto dela precisar de outra linha, só ela fica mais alta (nunca corta texto)
-  st.removeProperty("--hm-h"); const hOf = s => Math.max(0, ...[...home.querySelectorAll(s)].map(c => c.getBoundingClientRect().height));
-  const hab = hOf(".hg-a .hc, .hg-b .hc"), hc = hOf(".hg-c .hc"), hmax = hc - hab <= 6 ? Math.max(hab, hc) : hab;
-  st.setProperty("--hm-h", hmax.toFixed(2) + "px");
+  // v36 · altura estável: os oito cartões têm a altura de um MODELO, não do conteúdo do momento. O modelo de cada cartão é ele mesmo com
+  // o título real (que não muda) e o conteúdo padrão — uma linha de número e uma linha de legenda. Os dados mudam ("Bem", "Mais ou menos",
+  // vazio, números maiores, compromissos), a geometria não. Depois, o conteúdo real se acomoda dentro dessa altura (fitInside).
+  // começa sempre do zero: sem os ajustes da passada anterior (letra reduzida, linha mais alta)
+  for (const c of home.querySelectorAll(".hc")) { c.style.minHeight = ""; for (const e of c.querySelectorAll(".hc-v, .hc-s, .hc-v b")) { e.style.whiteSpace = ""; e.style.fontSize = ""; } }
+  const hmax = modelH(home); st.setProperty("--hm-h", hmax.toFixed(2) + "px");
+  home.dataset.fit = fitInside(home, hmax) ? "grow" : "ok";
   spread(home, hmax); lastSig = sigOf(home); }
+// cópias invisíveis dos oito cartões, na largura real, com o conteúdo padrão; medidas e removidas na mesma passada (nada chega a ser desenhado)
+function modelH(home){
+  const cards = [...home.querySelectorAll(".hc")], box = h("div", {class: "hm-probe", "aria-hidden": "true"});
+  for (const c of cards) { const k = c.cloneNode(true); k.style.width = c.getBoundingClientRect().width + "px"; k.classList.remove("empty"); k.removeAttribute("id");
+    const v = k.querySelector(".hc-v"), sb = k.querySelector(".hc-s");
+    if (k.classList.contains("cnt")) k.querySelectorAll(".hc-v b").forEach(b => { b.textContent = "0"; });
+    else v.replaceChildren(h("b", {class: k.classList.contains("ev") ? "dt" : null}, "0"));   // Agenda: a linha de data e horário (sempre uma linha)
+    if (sb) { sb.className = "hc-s"; sb.textContent = "0"; }
+    box.append(k); }
+  home.append(box); const H = Math.max(...[...box.children].map(k => k.getBoundingClientRect().height)); box.remove(); return H; }
+// acomoda o conteúdo real na altura do modelo, só nos cartões que não couberem, sem cortar e sem reticências novas:
+// 1 · valor em palavra ("Mais ou menos") numa linha, com a letra reduzida aos poucos até 18 (no tamanho padrão do texto; acompanha o texto ampliado);
+// 2 · mensagem de cartão vazio ("Nenhum agendado") numa linha, até 13; 3 · legenda numa linha, até 12.
+// Se ainda não couber (iPhone muito estreito ou texto muito ampliado), o texto volta a quebrar normalmente e só a linha daquele cartão
+// (os dois cartões lado a lado) fica mais alta — as colunas continuam alinhadas e o resto da Home não se mexe. Devolve true nesse caso.
+function fitInside(home, H){
+  const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 17, cards = [...home.querySelectorAll(".hc")];
+  const oneLine = (box, el, floor) => { box.style.whiteSpace = el.style.whiteSpace = "nowrap"; if (box.scrollWidth <= box.clientWidth + 0.5) return;
+    let fs = parseFloat(getComputedStyle(el).fontSize);
+    while (box.scrollWidth > box.clientWidth + 0.5 && fs - 0.25 >= floor) { fs -= 0.25; el.style.fontSize = fs + "px"; }
+    if (box.scrollWidth > box.clientWidth + 0.5) { box.style.whiteSpace = el.style.whiteSpace = ""; el.style.fontSize = ""; } };
+  for (const c of cards) { if (c.getBoundingClientRect().height <= H + 0.5) continue;
+    const v = c.querySelector(".hc-v"), b = v && v.querySelector("b.txt, b.long"), sb = c.querySelector(".hc-s:not(.clip)");
+    if (b && !c.classList.contains("cnt")) oneLine(v, b, rem * 18 / 17);
+    const nr = v && v.querySelector("b.nr"); if (nr && c.getBoundingClientRect().height > H + 0.5) oneLine(v, nr, rem * 13 / 17);
+    if (sb && c.getBoundingClientRect().height > H + 0.5) oneLine(sb, sb, rem * 12 / 17); }
+  let grew = false;
+  const rows = new Map(); for (const c of cards) { const t = Math.round(c.getBoundingClientRect().top); rows.set(t, [...(rows.get(t) || []), c]); }
+  for (const row of rows.values()) { const m = Math.max(...row.map(c => c.getBoundingClientRect().height));
+    if (m > H + 0.5) { grew = true; for (const c of row) c.style.minHeight = m.toFixed(2) + "px"; } }
+  return grew; }
 // assinatura da geometria que importa ao layout; as notificações do observador que não a alteram (a inicial, ou a causada pela própria distribuição) são ignoradas
 let lastSig = "";
 const sigOf = home => { const tb = document.getElementById("tabbar"), c0 = home.querySelector(".hc"); return [innerHeight, tb ? tb.getBoundingClientRect().top : 0, home.getBoundingClientRect().height,
@@ -3366,6 +3447,8 @@ function moodLine(L, keys){
 }
 // módulos da Saúde abertos a partir do resumo, da Home ou do Perfil: página própria com "‹" para a tela de origem
 const HMODS = ["agenda", "consultas", "exames", "procedimentos", "cuidados", "prioridades", "prioridade", "indicadores", "indicador", "agua"];
+// v36 · módulos que vivem na aba Agenda (os demais ficam na Saúde)
+const AGMODS = ["agenda", "consultas", "exames", "procedimentos"];
 /* v33 · navegação previsível. Quem abre um módulo guarda de onde veio (view.ret: rótulo + estado da tela de origem, encadeado), e o "‹" do módulo
    volta exatamente para lá: Hoje → Agenda volta para Hoje; Saúde → Agenda → Consultas volta para Agenda e depois para Saúde.
    Tocar numa aba zera o caminho. Ir para a tela anterior por um link (ex.: indicador → prioridade de origem) volta em vez de empilhar. */
@@ -3377,7 +3460,10 @@ function hereRef(){ const v = view;
   return {l, v: {tab: v.tab, hsub: v.hsub || "resumo", gid: v.gid || null, ik: v.ik || null, ip: v.ip || null, ah: v.ah || null, af: v.af || null, ay: v.ay ?? null, am: v.am ?? null, ahp: v.ahp || null, ahc: v.ahc || null, ret: v.ret || null}}; }
 const sameMod = (a, b) => a.tab === b.tab && a.hsub === b.hsub && (a.gid || null) === (b.gid || null) && (a.ik || null) === (b.ik || null);
 function openMod(v){
-  const dest = Object.assign({tab: "saude"}, v), r = view.ret;
+  // a Agenda é uma aba: abri-la (cartão da Home, Perfil) é trocar de aba, com a aba Agenda selecionada e sem "‹" — o mesmo destino da barra
+  if (v.hsub === "agenda") { const keep = Object.assign({}, view.keep); if (view.tab === "saude") keep.saude = tabState(view);
+    go(Object.assign({tab: "agenda", edit: null, ret: null, keep}, AG_ENTRY, v)); return; }
+  const dest = Object.assign({tab: AGMODS.includes(v.hsub) ? "agenda" : "saude"}, v), r = view.ret;
   if (r && sameMod(r.v, dest)) { go(Object.assign({}, r.v, v)); return; }
   const ref = hereRef(); let d = 0; for (let x = ref; x; x = x.v.ret) if (++d >= 6) { x.v.ret = null; break; }
   go(Object.assign(dest, {ret: ref}));
@@ -3385,24 +3471,30 @@ function openMod(v){
 function goBack(fallback){ const r = view.ret; go(r ? Object.assign({}, r.v) : Object.assign({ret: null}, fallback)); }
 const backBtn = (label, fallback) => h("button", {class: "back", type: "button", onclick: () => goBack(fallback)}, ic("left"), view.ret ? view.ret.l : label);
 function careHub(p){
-  const c = careOf(p), now = Date.now(), n = nextAgenda(p), cc = careCounts(p), act = goalsSorted(p, "ativa"), star = act.filter(g => g.star);
-  const over = agendaList(p).filter(e => C.isOverdue(e, now)).length, pend = c.exams.filter(e => e.status === "solicitado").length;
+  const cc = careCounts(p), act = goalsSorted(p, "ativa"), star = act.filter(g => g.star);
   const row = (id, icon, cls, title, sub, fn, due) => h("button", {class: "grow hub", type: "button", id, onclick: fn}, h("span", {class: "gr-i c-" + cls, html: ICON[icon]}),
     h("span", {class: "gr-m"}, h("b", null, title), h("span", {class: due ? "due" : null}, sub)), h("span", {class: "li-go", html: ICON.right}));
   const nInd = indChoices(p).filter(k => indSeries(p, k).points.length).length;
   return [star.length ? [h("h2", {class: "sec-t"}, "Em destaque"), h("div", {class: "glist"}, star.map(g => prioRow(p, g)))] : null,
     h("h2", {class: "sec-t"}, "Cuidados"),
     h("div", {class: "glist"},
-      row("agenda", "cal", "agenda", "Agenda de Saúde", n ? `Próximo: ${whenShort(n)} · ${agendaLabel(p, n)}` : over ? `${over} a confirmar` : pend ? plural(pend, "exame pendente", "exames pendentes") : "Nenhum compromisso agendado", () => openMod(AG_ENTRY), !n && (over || pend)),
       row("goals", "target", "goal", "Minhas Prioridades", act.length ? plural(act.length, "prioridade ativa", "prioridades ativas") : "Escolha o que acompanhar", () => openMod({hsub: "prioridades"})),
       row("indicadores", "pulse", "ind", "Indicadores", nInd ? plural(nInd, "indicador com registros", "indicadores com registros") : "Medições, sono, exercício e exames", () => openMod({hsub: "indicadores"})),
-      row("cuidados", "pill", "suplemento", "Suplementos e Medicamentos", `Ativos: ${plural(cc.sup, "suplemento", "suplementos")} · ${plural(cc.med, "medicamento", "medicamentos")}`, () => openMod({hsub: "cuidados"}))),
-    h("h2", {class: "sec-t"}, "Registros por tipo"),
+      row("cuidados", "pill", "suplemento", "Suplementos e Medicamentos", `Ativos: ${plural(cc.sup, "suplemento", "suplementos")} · ${plural(cc.med, "medicamento", "medicamentos")}`, () => openMod({hsub: "cuidados"})))];
+}
+// v36 · "Registros por tipo" (antes na Saúde): Consultas, Exames e Procedimentos, com resultados, documentos e evolução — agora no pé da Agenda
+function agTypes(p){
+  const c = careOf(p), now = Date.now(), pend = c.exams.filter(e => e.status === "solicitado").length;
+  const row = (id, icon, cls, title, sub, fn) => h("button", {class: "grow hub", type: "button", id, onclick: fn}, h("span", {class: "gr-i c-" + cls, html: ICON[icon]}),
+    h("span", {class: "gr-m"}, h("b", null, title), h("span", null, sub)), h("span", {class: "li-go", html: ICON.right}));
+  return [h("h2", {class: "sec-t"}, "Registros por tipo"),
     h("div", {class: "glist"},
       row("consultas", "steth", "appt", "Consultas", c.appts.length ? `${plural(C.upcoming(c.appts, now).length, "agendada", "agendadas")} · histórico anual` : "Agenda e histórico anual", () => openMod({hsub: "consultas"})),
       row("exames", "flask", "exam", "Exames", pend ? plural(pend, "pendente", "pendentes") + " · resultados e evolução" : "Resultados, documentos e evolução", () => openMod({hsub: "exames"})),
       row("procedimentos", "syringe", "proc", "Procedimentos", c.procs.length ? plural(c.procs.length, "registro", "registros") : "Infiltrações, aplicações, cirurgias…", () => openMod({hsub: "procedimentos"})))];
 }
+// aba Agenda: a mesma Agenda de Saúde e as páginas de Consultas, Exames e Procedimentos
+function renderAgendaTab(p){ ({agenda: renderAgenda, consultas: renderAppts, exames: renderExams, procedimentos: renderProcs})[view.hsub](p); }
 function renderHealth(p){
   if (HMODS.includes(view.hsub)) { ({agenda: renderAgenda, consultas: renderAppts, exames: renderExams, procedimentos: renderProcs, cuidados: renderCare, prioridades: renderPriorities,
     prioridade: renderPriority, indicadores: renderIndicators, indicador: renderIndicator, agua: renderWater})[view.hsub](p); return; }
@@ -3635,8 +3727,10 @@ const dateTile = e => { const [, m, d] = ymd(e.date); return e.date ? h("span", 
 // title: texto, ou {t, back} quando a volta é interna ao módulo (ex.: Histórico → Agenda de Saúde)
 const modAdd = (label, fn) => h("button", {class: "icon-btn accent mod-add", type: "button", "aria-label": label, onclick: fn}, ic("plus"));
 function modPage(p, title, addLabel, add, ...kids){ const o = typeof title === "string" ? {t: title} : title;
-  put(app, h("div", {class: "view mod"}, topBar(add ? modAdd(addLabel, add) : quickBtn(p, "saude")),
-    o.back || backBtn("Saúde", {hsub: "resumo"}),
+  // na aba Agenda: a raiz é a própria aba (sem "‹"); Consultas, Exames e Procedimentos voltam para a Agenda de Saúde
+  const ag = view.tab === "agenda", root = ag && view.hsub === "agenda" && !o.back;
+  put(app, h("div", {class: "view mod" + (root ? " ag-root" : "")}, topBar(add ? modAdd(addLabel, add) : quickBtn(p, "saude")),
+    o.back || (root ? (view.ret ? backBtn("Agenda", AG_ENTRY) : null) : ag ? backBtn("Agenda de Saúde", AG_ENTRY) : backBtn("Saúde", {hsub: "resumo"})),
     h("div", {class: "pg-row"}, h("h1", {class: "pg"}, o.t)),
     ...kids));
 }
@@ -4444,6 +4538,7 @@ function renderAgenda(p){
     !month.length && lastM ? agAll(`Último mês com registros: ${MONL[lastM[1] - 1]}${lastM[0] !== s.ty ? " de " + lastM[0] : ""}`, () => go({ay: lastM[0], am: lastM[1] - 1}, true)) : null,
     month.length <= 3 && hasHist && !(!month.length && lastM) ? agAll("Histórico completo", () => agLeave("hist"), true) : null);
   modPage(p, "Agenda de Saúde", "Novo compromisso", () => newEventSheet(p), agSeg(s), h("div", {class: "agst"}, agPanel(p, s), next, hist),
+    agTypes(p),
     h("p", {class: "care-n"}, "O gráfico e o histórico contam só o que foi confirmado como realizado. Lembretes: escolha no cadastro e envie ao app Calendário, que é quem avisa."));
 }
 // agrupa por mês (do mais recente ao mais antigo, ou na ordem recebida)
