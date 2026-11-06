@@ -1880,6 +1880,15 @@ html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
    Antes o intervalo entre grupos (30) era maior que o do cabeçalho (20), invertendo a hierarquia. Telas estreitas: 20. */
 .home{--hm-grp:24px;--sp-head:20px}
 @media (max-width:380px){.home{--hm-grp:20px}}
+/* v39: linha-estrela entre os dois grupos — 36 entre os cartões (17,5 + fio + 17,5; 28 em telas estreitas). Com a linha marcando a divisão,
+   o intervalo maior que o do cabeçalho não compete com ele. Fio de 0,6 px com núcleo claro; halo elíptico de 120 × 12 no centro. */
+.home{--hm-star:17.5px}
+@media (max-width:380px){.home{--hm-star:13.5px}}
+.home .gstar{position:relative;height:1px;margin:var(--hm-star) 0;pointer-events:none}
+.home .gstar::before{content:"";position:absolute;left:10%;right:10%;top:0;height:1px;transform:scaleY(.6);
+  background:linear-gradient(90deg,rgba(227,154,96,0),rgba(227,154,96,.22) 25%,rgba(244,180,128,.75) 46%,rgba(255,232,206,1) 50%,rgba(244,180,128,.75) 54%,rgba(227,154,96,.22) 75%,rgba(227,154,96,0))}
+.home .gstar::after{content:"";position:absolute;left:50%;top:50%;width:120px;height:12px;margin:-6px 0 0 -60px;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(255,240,222,.85),rgba(255,206,160,.38) 14%,rgba(238,163,106,.12) 48%,rgba(238,163,106,0))}
 .home .hgrid + .hgrid.hg-b{margin-top:var(--hm-grp)}
 /* v38.3: brilho suave atrás de textos longos (classe .lt, posta por softGlow): a metade de baixo do reflexo, à direita, vai até 55% em vez de 100%; a metade de cima fica igual */
 .home .hc.lt .hc-fx,.home .hc.l2.lt .hc-fx{-webkit-mask-image:linear-gradient(to bottom,#000 40%,transparent 60%),linear-gradient(to right,rgba(0,0,0,.2) 40%,rgba(0,0,0,.4) 70%,rgba(0,0,0,.55) 90%);
@@ -3220,6 +3229,9 @@ function jewelCard(o){ const has = o.value != null;
     h("span", {class: "hc-v"}, has ? [h("b", {class: [String(o.value).length > 9 ? "long" : "", /^\d/.test(o.value) ? "" : "txt"].join(" ").trim() || null}, o.value), o.unit ? [" ", h("small", null, o.unit)] : null] : h("b", {class: "nr"}, o.empty[0])),
     h("span", {class: "hc-s" + (has && o.clip ? " clip" : "")}, has ? o.sub || "" : o.empty[1])); }
 function jewelDivider(){ return h("div", {class: "hdiv", "aria-hidden": "true"}); }
+/* jewelStar() — linha-estrela (v39): fio de cobre com um ponto de luz no centro que se abre e some para os lados. Uma só na Home,
+   entre os pilares do dia e o que se cuida e organiza. Parada (sem animação), decorativa (escondida do VoiceOver). */
+function jewelStar(){ return h("div", {class: "gstar", "aria-hidden": "true"}); }
 /* jewelEvent(o) — Agenda de Saúde: no máximo três informações — ícone + título (que pode ocupar duas linhas) · data e horário · identificação
    (uma linha, com reticências). Sem compromisso: "Nenhum agendado" e "Adicionar compromisso". O toque abre sempre a tela da Agenda de Saúde
    (v33): o cadastro começa pelo "+" de lá, nunca direto do cartão. */
@@ -3240,7 +3252,7 @@ function jewelCare(o){
     h("span", {class: "hc-v hc-lg"}, h("b", null, String(o.sup)), h("small", null, " supl."), h("span", {class: "hc-sep"}, " · "), h("b", null, String(o.med)), h("small", null, " med.")),
     h("span", {class: "hc-s"}, "Em uso")); }
 function renderHome(p){
-  /* Painel de saúde: oito cartões em quatro linhas de dois, em dois grupos de quatro separados só por espaço (v38.1, sem divisórias):
+  /* Painel de saúde: oito cartões em quatro linhas de dois, em dois grupos de quatro separados pela linha-estrela (v39; v38.1–v38.3: só espaço):
      pilares do dia (Nutrição, Exercício, Sono, Emocional) · o que se cuida e organiza (Hidratação, Suplementos, Prioridades, Agenda).
      v38: todos os títulos em uma linha (título, valor e legenda na mesma altura nos oito); Nutrição mostra as refeições feitas hoje
      só para quem marca refeições (sem marcação, "Planejado por dia" — v38.3: deixa claro que é o plano, não o consumo; ausência de marcação nunca vira "não comeu").
@@ -3283,7 +3295,7 @@ function renderHome(p){
       open: () => openMod(AG_ENTRY)}));
   put(app, h("div", {class: "view home"}, topBar(quickBtn(p, "hoje")),
     h("header", {class: "hi-h"}, h("h1", null, `${greetOf()}, ${firstName(p.name)}`), h("div", {class: "today"}, dayTxt)),
-    pillars, careRow, agenda));
+    pillars, jewelStar(), careRow, agenda));
   fitTitlesNow();
 }
 // Altura útil da tela — fonte única, medida no início de toda passada de layout (nunca guardada de uma medição anterior).

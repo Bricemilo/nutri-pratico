@@ -1402,3 +1402,13 @@ Em telas estreitas (até 380 pt), o espaço entre os grupos é de 20 pt.
 - Por isso, alinhamento e barra ficaram como estavam.
 
 **Design da Home congelado a partir desta versão.**
+
+## 53. v39 — Linha-estrela entre os dois grupos
+
+**O que mudou.** Entre os pilares do dia e os cartões de cuidados entrou uma linha só, delicada: um fio de cobre com um ponto de luz quente no centro, que se abre e some para os lados. É da mesma família do sublinhado da aba ativa e do "+". É parada (sem animação) e o VoiceOver não a lê.
+
+**Espaço entre os dois grupos.** Passou para 36 pt (28 em telas estreitas), com a linha no meio. Dentro de cada grupo, as fileiras continuam a 14 pt.
+
+**Por quê.** Ideia do Camilo, comparada no simulador com o espaço atual (24 sem linha) e com 30 + linha. A diferença em relação às divisórias retiradas na v38: aquelas eram cinza, quase invisíveis e eram duas. Esta é uma só, tem um ponto focal e marca os dois grupos: "o seu dia" e "o que você cuida".
+
+**Custo.** O espaço preto acima da barra cai de ~82 para ~70 pt no iPhone 15.
