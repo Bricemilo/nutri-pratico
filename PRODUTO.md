@@ -1386,3 +1386,19 @@ O iOS muda a altura informada logo depois de abrir o app instalado sem disparar 
 Em telas estreitas (até 380 pt), o espaço entre os grupos é de 20 pt.
 
 **Não mudou.** Cartões (108 pt), cores, barra, "+" e dados.
+
+## 52. v38.3 — Brilho suave atrás de textos longos e "Planejado por dia"
+
+**O que mudou.**
+- **Brilho.** Quando o fim de um texto (valor ou legenda) entra na faixa direita do cartão, onde a lâmina de luz é mais forte, o reflexo da metade de baixo fica mais discreto: vai até 55% em vez de 100%. A metade de cima, os degradês, as cores, as fontes e os tamanhos não mudam.
+  - O critério é o fim real do texto, medido em cada desenho, e não uma lista fixa de cartões.
+  - Com os dados de teste, o efeito vale para Emocional ("Mais ou menos"), Hidratação ("Recomendação diária"), Prioridades ("Em acompanhamento") e Agenda ("Nenhum agendado").
+- **Nutrição.** A legenda passou de "Plano alimentar" para **"Planejado por dia"**. Agora fica claro que as kcal são a referência do plano, não o consumo. Com a marcação de refeições ativada, continua "Plano · 3 de 5 feitas".
+
+**Medido antes de decidir (simulador).**
+- As legendas estão na mesma altura nas quatro fileiras, e os valores lado a lado diferem no máximo 1 a 2 pt.
+- Os rótulos das abas não selecionadas têm contraste de ~6:1, e cada aba mede 78 × 49 pt.
+- O "+" termina 9 pt acima da área do gesto de voltar ao início do iPhone.
+- Por isso, alinhamento e barra ficaram como estavam.
+
+**Design da Home congelado a partir desta versão.**

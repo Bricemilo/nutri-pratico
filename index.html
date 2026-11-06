@@ -1881,6 +1881,9 @@ html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
 .home{--hm-grp:24px;--sp-head:20px}
 @media (max-width:380px){.home{--hm-grp:20px}}
 .home .hgrid + .hgrid.hg-b{margin-top:var(--hm-grp)}
+/* v38.3: brilho suave atrás de textos longos (classe .lt, posta por softGlow): a metade de baixo do reflexo, à direita, vai até 55% em vez de 100%; a metade de cima fica igual */
+.home .hc.lt .hc-fx,.home .hc.l2.lt .hc-fx{-webkit-mask-image:linear-gradient(to bottom,#000 40%,transparent 60%),linear-gradient(to right,rgba(0,0,0,.2) 40%,rgba(0,0,0,.4) 70%,rgba(0,0,0,.55) 90%);
+  mask-image:linear-gradient(to bottom,#000 40%,transparent 60%),linear-gradient(to right,rgba(0,0,0,.2) 40%,rgba(0,0,0,.4) 70%,rgba(0,0,0,.55) 90%)}
 /* cabeçalho: seletor de perfil e "+" no acabamento cobre da referência */
 .home .top{padding-top:4px}
 .top .who{min-height:46px;padding:5px 14px 5px 5px;gap:10px;border:1px solid transparent;
@@ -3240,7 +3243,7 @@ function renderHome(p){
   /* Painel de saúde: oito cartões em quatro linhas de dois, em dois grupos de quatro separados só por espaço (v38.1, sem divisórias):
      pilares do dia (Nutrição, Exercício, Sono, Emocional) · o que se cuida e organiza (Hidratação, Suplementos, Prioridades, Agenda).
      v38: todos os títulos em uma linha (título, valor e legenda na mesma altura nos oito); Nutrição mostra as refeições feitas hoje
-     só para quem marca refeições (sem marcação, "Plano alimentar" — ausência de marcação nunca vira "não comeu").
+     só para quem marca refeições (sem marcação, "Planejado por dia" — v38.3: deixa claro que é o plano, não o consumo; ausência de marcação nunca vira "não comeu").
      Cor só no ícone e numa nuance mínima do fundo; números em destaque, unidades subordinadas, legendas curtas e sempre com o período.
      Cada cartão leva à visão principal do módulo, com ou sem dado (v33: nenhum cartão abre formulário); o "‹" de lá volta para Hoje.
      O cadastro começa pelo "+" do módulo ou pelo "+" do topo. O detalhe nutricional fica na aba Nutrição. */
@@ -3255,7 +3258,7 @@ function renderHome(p){
   const card = jewelCard;
   // sem registro não quer dizer que não aconteceu: o cartão diz que não há registro e de que período
   const pillars = h("div", {class: "hgrid hg-a" + (adult ? "" : " odd")},
-    card({lv: "l1", cls: "food", icon: "utensils", title: "Nutrição", value: meals.length ? k0(t.kcal) : null, unit: "kcal", sub: tracks(p) ? `Plano · ${nDone} de ${meals.length} feitas` : "Plano alimentar",
+    card({lv: "l1", cls: "food", icon: "utensils", title: "Nutrição", value: meals.length ? k0(t.kcal) : null, unit: "kcal", sub: tracks(p) ? `Plano · ${nDone} de ${meals.length} feitas` : "Planejado por dia",
       aria: meals.length ? `Nutrição: plano de ${k0(t.kcal)} quilocalorias${tracks(p) ? `. ${nDone} de ${plural(meals.length, "refeição feita", "refeições feitas")} hoje` : ""}.` : null,
       fn: () => go({tab: "alimentacao", sub: "plano", open: [], edit: null}), empty: ["Sem plano", "Toque para montar"]}),
     card({lv: "l1", cls: "move", icon: "dumbbell", title: "Exercício", value: mw.total > 0 ? fmtDur(mw.total) : null, sub: "Nesta semana",
@@ -3331,7 +3334,12 @@ function fitTitles(force){ measureViewport(); const home = document.querySelecto
   for (const c of home.querySelectorAll(".hc")) { c.style.minHeight = ""; for (const e of c.querySelectorAll(".hc-v, .hc-s, .hc-v b")) { e.style.whiteSpace = ""; e.style.fontSize = ""; } }
   const hmax = modelH(home); st.setProperty("--hm-h", hmax.toFixed(2) + "px");
   home.dataset.fit = fitInside(home, hmax) ? "grow" : "ok";
-  spread(home, hmax); lastSig = sigOf(home); }
+  softGlow(home); spread(home, hmax); lastSig = sigOf(home); }
+// v38.3 · brilho suave atrás de textos longos: onde o fim do texto (valor ou legenda) entra na faixa direita do cartão, em que a lâmina de luz
+// é mais forte, o reflexo da metade de baixo fica mais discreto (.lt). Medido pelo fim real do texto; fonte, tamanho e cores não mudam.
+const textRight = e => { const rg = document.createRange(); rg.selectNodeContents(e); return rg.getBoundingClientRect().right; };
+function softGlow(home){ for (const c of home.querySelectorAll(".hc")) { const r = c.getBoundingClientRect();
+  const end = Math.max(...[...c.querySelectorAll(".hc-v, .hc-s")].map(textRight)); c.classList.toggle("lt", end > r.left + r.width * 0.72); } }
 // cópias invisíveis dos oito cartões, na largura real, com o conteúdo padrão; medidas e removidas na mesma passada (nada chega a ser desenhado)
 function modelH(home){
   const cards = [...home.querySelectorAll(".hc")], box = h("div", {class: "hm-probe", "aria-hidden": "true"});
