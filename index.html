@@ -1875,6 +1875,9 @@ html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
 .home .hdiv{margin:calc(var(--hm-div) + var(--xd,0px)) 0;opacity:.62}
 /* v38: sem divisórias na Home — as quatro fileiras com o mesmo intervalo (antes 14 dentro do grupo e ~17 entre grupos) */
 .home .hgrid + .hgrid{margin-top:var(--hm-row)}
+/* v38.1: dois grupos de quatro separados só por espaço (sem linha): pilares do dia · o que se cuida e organiza. Intervalo ≈ 2× o das fileiras (30 · 22 em telas estreitas) */
+.home{--hm-grp:calc(var(--hm-row) * 2 + 2px)}
+.home .hgrid + .hgrid.hg-b{margin-top:var(--hm-grp)}
 /* cabeçalho: seletor de perfil e "+" no acabamento cobre da referência */
 .home .top{padding-top:4px}
 .top .who{min-height:46px;padding:5px 14px 5px 5px;gap:10px;border:1px solid transparent;
@@ -3231,8 +3234,8 @@ function jewelCare(o){
     h("span", {class: "hc-v hc-lg"}, h("b", null, String(o.sup)), h("small", null, " supl."), h("span", {class: "hc-sep"}, " · "), h("b", null, String(o.med)), h("small", null, " med.")),
     h("span", {class: "hc-s"}, "Em uso")); }
 function renderHome(p){
-  /* Painel de saúde: oito cartões em quatro linhas de dois, com o mesmo intervalo entre todas as linhas (v38: sem divisórias):
-     A · pilares (Nutrição, Exercício, Sono, Emocional) · B · Hidratação + Suplementos · C · Prioridades + Agenda.
+  /* Painel de saúde: oito cartões em quatro linhas de dois, em dois grupos de quatro separados só por espaço (v38.1, sem divisórias):
+     pilares do dia (Nutrição, Exercício, Sono, Emocional) · o que se cuida e organiza (Hidratação, Suplementos, Prioridades, Agenda).
      v38: todos os títulos em uma linha (título, valor e legenda na mesma altura nos oito); Nutrição mostra as refeições feitas hoje
      só para quem marca refeições (sem marcação, "Plano alimentar" — ausência de marcação nunca vira "não comeu").
      Cor só no ícone e numa nuance mínima do fundo; números em destaque, unidades subordinadas, legendas curtas e sempre com o período.

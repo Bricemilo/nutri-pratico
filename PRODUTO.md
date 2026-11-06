@@ -1364,3 +1364,13 @@ O iOS muda a altura informada logo depois de abrir o app instalado sem disparar 
 - Rótulos das abas não selecionadas: contraste de ~6:1 (mínimo recomendado 4,5:1).
 
 **Não mudou.** Cores, reflexos, ordem dos cartões, barra, "+", dados.
+
+## 50. v38.1 — Dois grupos de quatro
+
+**O que mudou.** Os oito cartões formam dois grupos, separados só por espaço, sem linha:
+- **em cima, os pilares do dia:** Nutrição, Exercício, Sono e Emocional;
+- **embaixo, o que se cuida e organiza:** Hidratação, Suplementos, Prioridades e Agenda.
+
+**Espaços.** Dentro de cada grupo, as fileiras continuam a 14 pt; entre os grupos, 30 pt (22 pt em telas estreitas).
+
+**Por que só espaço.** Comparadas três opções no simulador (tudo igual; dois grupos com espaço; dois grupos com espaço e linha), escolhida a segunda. O espaço maior já mostra onde começa o outro grupo; a linha fina quase não aparecia e, mais forte, disputaria atenção com os cartões. É o padrão dos apps da Apple, como Saúde e Ajustes.
