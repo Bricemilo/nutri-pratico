@@ -1893,8 +1893,11 @@ html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
 .home .hdiv{margin:calc(var(--hm-div) + var(--xd,0px)) 0;opacity:.62}
 /* v38: sem divisórias na Home — as quatro fileiras com o mesmo intervalo (antes 14 dentro do grupo e ~17 entre grupos) */
 .home .hgrid + .hgrid{margin-top:var(--hm-row)}
-/* v38.1: dois grupos de quatro separados só por espaço (sem linha): pilares do dia · o que se cuida e organiza. Intervalo ≈ 2× o das fileiras (30 · 22 em telas estreitas) */
-.home{--hm-grp:calc(var(--hm-row) * 2 + 2px)}
+/* v38.1: dois grupos de quatro separados só por espaço (sem linha): pilares do dia · o que se cuida e organiza.
+   v38.2: um ritmo só — o espaço entre os grupos é o mesmo do cabeçalho aos cartões (24 = 20 + até 4 da distribuição); dentro dos grupos, 14.
+   Antes o intervalo entre grupos (30) era maior que o do cabeçalho (20), invertendo a hierarquia. Telas estreitas: 20. */
+.home{--hm-grp:24px;--sp-head:20px}
+@media (max-width:380px){.home{--hm-grp:20px}}
 .home .hgrid + .hgrid.hg-b{margin-top:var(--hm-grp)}
 /* cabeçalho: seletor de perfil e "+" no acabamento cobre da referência */
 .home .top{padding-top:4px}

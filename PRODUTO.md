@@ -1374,3 +1374,15 @@ O iOS muda a altura informada logo depois de abrir o app instalado sem disparar 
 **Espaços.** Dentro de cada grupo, as fileiras continuam a 14 pt; entre os grupos, 30 pt (22 pt em telas estreitas).
 
 **Por que só espaço.** Comparadas três opções no simulador (tudo igual; dois grupos com espaço; dois grupos com espaço e linha), escolhida a segunda. O espaço maior já mostra onde começa o outro grupo; a linha fina quase não aparecia e, mais forte, disputaria atenção com os cartões. É o padrão dos apps da Apple, como Saúde e Ajustes.
+
+## 51. v38.2 — Um ritmo só na Home
+
+**O que mudou.** O espaço entre os dois grupos passou de 30 para 24 pt. O espaço entre a saudação e os primeiros cartões passou de 20 para 24 pt.
+
+**Por quê.** Antes, o espaço entre os grupos era maior que o espaço entre o cabeçalho e o conteúdo, o que invertia a hierarquia. Agora a Home usa só dois espaços:
+- 14 pt entre as fileiras do mesmo grupo;
+- 24 pt entre os blocos (saudação → pilares → cuidados).
+
+Em telas estreitas (até 380 pt), o espaço entre os grupos é de 20 pt.
+
+**Não mudou.** Cartões (108 pt), cores, barra, "+" e dados.
