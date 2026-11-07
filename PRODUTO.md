@@ -1470,3 +1470,38 @@ Em telas estreitas (até 380 pt), o espaço entre os grupos é de 20 pt.
 - A Home ficou idêntica pixel a pixel à v39.1.
 
 **Pendente: conferir no iPhone real.** Animação de abrir e fechar, teclado nos formulários, rolagem no iPhone de 320 pt e resposta ao toque.
+
+## 56. v41 — A janela do "+" volta à sobriedade
+
+**Por quê.** Testada no iPhone, a v40 (os oito cartões da Home dentro do "+") ficou visualmente exagerada e estranha para uma janela de ação. Pedido do Camilo, com a mesma leitura do ChatGPT. A Home é o painel para olhar; o "+" é uma ferramenta: abrir, escolher, registrar, fechar.
+
+**Como ficou.** A base é a janela clássica (grafite, título "Registrar", sem reflexos nem linha-estrela). Ficaram só os avanços funcionais da v40:
+- **"Registro completo":** os quatro pilares de antes, que abrem o formulário.
+- **Registro de um toque,** com "Desfazer":
+  - "Como você está agora?";
+  - "Água agora", em 150, 250, 350 ou 500 mL, mais "Outro" para volume e horário. O total do dia aparece depois do primeiro registro.
+- **Lista de quatro itens** (antes eram sete), com ícones na cor do módulo:
+  - Alimento: no plano ou novo, numa escolha curta;
+  - Suplemento ou medicamento;
+  - Medição;
+  - Agenda: consulta, exame ou procedimento.
+- **Proteções da v40 mantidas:**
+  - uma ação por abertura (toque duplo não registra duas vezes);
+  - o "Desfazer" só remove o registro recém-criado, no perfil certo.
+- **Código da v40 sem uso removido:** os botões de vidro e a linha-estrela na janela.
+
+**Toques a partir da Home.** Emocional e Água em 2 toques (antes 4). Alimento no plano, Novo alimento, Consulta, Exame e Procedimento em 3 (antes 2).
+
+**Altura.** ~670 pt no iPhone 15 (antiga: 681; v40: 544). No iPhone SE, uma pequena rolagem, como na antiga.
+
+**Testes (simulador).**
+- 39 testes novos:
+  - toques repetidos;
+  - isolamento entre familiares;
+  - "Desfazer" depois de trocar de familiar;
+  - formulários completos;
+  - abrir e fechar sem registrar não muda nenhum dado;
+  - permanência ao reabrir;
+  - seis tamanhos de tela, incluindo texto ampliado.
+- Suítes anteriores sem falhas.
+- A Home ficou idêntica pixel a pixel à v39.1.
