@@ -1505,3 +1505,33 @@ Em telas estreitas (até 380 pt), o espaço entre os grupos é de 20 pt.
   - seis tamanhos de tela, incluindo texto ampliado.
 - Suítes anteriores sem falhas.
 - A Home ficou idêntica pixel a pixel à v39.1.
+
+## 57. v42 — O menu clássico do "+", com a rapidez dentro dos fluxos
+
+**Por quê.** No iPhone, a v41 ficou confusa e menos elegante que a antiga. Ela juntava quatro tipos de elemento (pilares, cinco botões de humor, cinco de água e lista) e três títulos explicativos. Avaliação do Camilo, com a mesma leitura do ChatGPT: o menu deve ser calmo e familiar, e a rapidez deve aparecer só quando se pede.
+
+**Como ficou.**
+- **O menu é o clássico da v39:** os quatro pilares e a lista dos sete itens. Dois ajustes, pedidos pelo ChatGPT:
+  - sem o subtítulo "Em segundos, de qualquer tela";
+  - Água no alto da lista.
+- **Emocional:** abre "Como você está agora?" com as cinco opções, maiores e mais legíveis. Um toque registra e fecha, com "Desfazer". Embaixo, discreto, fica "Registrar com energia, estresse ou nota".
+- **Água:** abre 150, 250, 350 ou 500 mL. Um toque registra, e o total do dia aparece. Embaixo, discreto, fica "Outro volume ou horário".
+- **Proteções mantidas:**
+  - uma ação por abertura (toque duplo não registra duas vezes);
+  - o "Desfazer" só remove o registro recém-criado, no perfil certo.
+- **Código das versões 40 e 41 sem uso removido.**
+
+**Toques a partir da Home.** Emocional e Água em 3 toques (na v39 eram 4). Os demais itens, como na v39.
+
+**Testes (simulador).**
+- 38 testes novos:
+  - menu igual ao clássico;
+  - toques repetidos;
+  - isolamento entre familiares;
+  - "Desfazer" depois de trocar de familiar;
+  - janelas rápidas e formulários completos;
+  - fechar sem registrar não muda nada;
+  - permanência ao reabrir;
+  - cinco tamanhos de tela, incluindo texto ampliado.
+- Suítes anteriores sem falhas.
+- A Home ficou idêntica pixel a pixel à v39.1.
