@@ -126,6 +126,16 @@ O material é construído em seis camadas:
 
 **Um único "+" no app, no centro da barra inferior** (entre Nutrição e Saúde), ao alcance do polegar. Cobre acetinado (o mesmo material do "+" que ficava no topo), círculo de 48, saindo 8 acima da barra, que não cresce; um anel da cor do fundo o separa do fio da barra. Não é uma aba: sem rótulo e sem estado selecionado; ao toque só escurece. Faz parte da barra (montado uma vez, mesma posição em todas as telas). Cada tela só declara a ação dele: `quickBtn(p, ctx)` (o "Registrar" geral) ou `modAdd(rótulo, fn)` (o registro do módulo); as duas funções devolvem `null`, porque nada é desenhado no topo. O rótulo do VoiceOver acompanha a tela ("Registrar água", "Nova consulta"). O canto superior direito fica livre, exceto onde já havia outra ferramenta (Copiar plano, na Nutrição). Sem perfil (boas-vindas), o "+" fica invisível, sem deslocar as abas.
 
+
+**Janela "Registrar" (v40, `quickSheet`).**
+- Oito `.qj` (material `.qj.<cls>`, os mesmos tokens dos cartões da Home), em dois `.qjs` de 4 colunas separados por `jewelStar()`.
+- Reflexo em 70%, 80 pt de altura e linha-estrela em 60% de opacidade, para não competir com o registro rápido.
+- `.qnow`, o registro de um toque, fica embaixo:
+  - `.moods` com o matiz do Emocional, botões de 68 pt;
+  - `.qwater` com o matiz da Água, botões de 50 pt.
+- Uma única ação por abertura (`once`).
+- Se um nome não couber, os grupos ganham `.two` (duas colunas, ícone ao lado). Nenhum nome é cortado.
+- Nutrição e Agenda abrem `foodChooser` e `agendaChooser`.
 ### 3.5 Barra inferior
 
 - **v36.1 · quatro abas, nesta ordem: Hoje · Nutrição · Saúde · Agenda.** Quatro colunas iguais (`repeat(4, minmax(0,1fr))`), ícones de 22, rótulos de 13 px fixos (12 abaixo de 360 pt), como as abas nativas, que não crescem com o tamanho do texto. O **Perfil** saiu da barra (v36.1) e abre pelo seletor do topo ("Camilo" → "Perfil de Camilo", acima da lista da família), como nos apps da Apple; a tela do Perfil tem "‹" para a tela de origem e nenhuma aba marcada. (v36 tinha cinco abas, com Perfil no fim.)

@@ -1807,14 +1807,14 @@ html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
   --hm-copper-hi:#F7A665; --hm-copper:#D97B3C; --hm-copper-lo:#A4501F; --hm-date:#C3AD99;
 }
 /* materiais: --g cor do módulo (ícone, lâmina) · --gd base · --gt luz do alto · --gb brilho de baixo · --gr aro · --gh aro nos cantos acesos */
-.home .hc.food  {--g:#EE8644;--gd:#1F0B02;--gt:#8F421B;--gb:#A04B21;--gr:#DE7E43;--gh:#FFD9A8}
-.home .hc.move  {--g:#3FCDB8;--gd:#01120F;--gt:#165447;--gb:#175A4F;--gr:#3E9C90;--gh:#A6F4EC}
-.home .hc.sleep {--g:#B784D6;--gd:#150A1B;--gt:#52305F;--gb:#7E4C87;--gr:#9A6CA8;--gh:#E6B9EE}
-.home .hc.wb    {--g:#EE7D84;--gd:#2E1015;--gt:#AA4950;--gb:#A6464F;--gr:#D56E74;--gh:#F6AEB0}
-.home .hc.water {--g:#4EC3E2;--gd:#00111B;--gt:#16586F;--gb:#19637C;--gr:#3E9DBB;--gh:#A8F0F8}
-.home .hc.supp  {--g:#DDD068;--gd:#151505;--gt:#7A712B;--gb:#766F2B;--gr:#A99B4C;--gh:#F3EA92}
-.home .hc.prio  {--g:#E8A25B;--gd:#251608;--gt:#B87D42;--gb:#A86F3A;--gr:#C38A51;--gh:#FFE7B4}
-.home .hc.agenda{--g:#7EA5E0;--gd:#060D1A;--gt:#46689D;--gb:#2E4570;--gr:#5677A8;--gh:#BFE2FF}
+.home .hc.food,.qj.food{--g:#EE8644;--gd:#1F0B02;--gt:#8F421B;--gb:#A04B21;--gr:#DE7E43;--gh:#FFD9A8}
+.home .hc.move,.qj.move{--g:#3FCDB8;--gd:#01120F;--gt:#165447;--gb:#175A4F;--gr:#3E9C90;--gh:#A6F4EC}
+.home .hc.sleep,.qj.sleep{--g:#B784D6;--gd:#150A1B;--gt:#52305F;--gb:#7E4C87;--gr:#9A6CA8;--gh:#E6B9EE}
+.home .hc.wb,.qj.wb{--g:#EE7D84;--gd:#2E1015;--gt:#AA4950;--gb:#A6464F;--gr:#D56E74;--gh:#F6AEB0}
+.home .hc.water,.qj.water{--g:#4EC3E2;--gd:#00111B;--gt:#16586F;--gb:#19637C;--gr:#3E9DBB;--gh:#A8F0F8}
+.home .hc.supp,.qj.supp{--g:#DDD068;--gd:#151505;--gt:#7A712B;--gb:#766F2B;--gr:#A99B4C;--gh:#F3EA92}
+.home .hc.prio,.qj.prio{--g:#E8A25B;--gd:#251608;--gt:#B87D42;--gb:#A86F3A;--gr:#C38A51;--gh:#FFE7B4}
+.home .hc.agenda,.qj.agenda{--g:#7EA5E0;--gd:#060D1A;--gt:#46689D;--gb:#2E4570;--gr:#5677A8;--gh:#BFE2FF}
 /* v35.1: espaço negativo acima da barra inferior — no fim da rolagem, o último cartão fica a 24 dela (antes 16); a sobra de tela também fica ali */
 .home{--air:28px;--air-min:24px}
 .home .hgrid{gap:var(--hm-row) var(--hm-col)}
@@ -1884,10 +1884,56 @@ html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
    o intervalo maior que o do cabeçalho não compete com ele. Fio de 0,6 px com núcleo claro; halo elíptico de 120 × 12 no centro. */
 .home{--hm-star:19.5px}
 @media (max-width:380px){.home{--hm-star:15.5px}}
-.home .gstar{position:relative;height:1px;margin:var(--hm-star) 0;pointer-events:none}
-.home .gstar::before{content:"";position:absolute;left:10%;right:10%;top:0;height:1px;transform:scaleY(.6);
+/* ===== v40 · "Registrar" (o "+"): a Home em modo ação =====
+   Os mesmos oito materiais, na mesma ordem e posição dos cartões da Home (pilares em cima, cuidados embaixo, a linha-estrela entre eles).
+   Embaixo, perto do polegar, o registro de um toque: como você está e água. Todo registro de um toque mostra "Desfazer". */
+.sheet{--hm-star:15px}
+.sheet .gstar{opacity:.6}
+.sheet h2.q-t{margin:0 0 16px}
+.sheet .qjs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.sheet .qjs.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.qj{position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-width:0;min-height:80px;padding:12px 1px 10px;
+  border-radius:18px;border:1px solid transparent;color:#fff;font-size:.765rem;font-weight:620;letter-spacing:-.015em;line-height:1.35;text-align:center;-webkit-tap-highlight-color:transparent;
+  background:
+    radial-gradient(50% 62% at 100% 52%,color-mix(in srgb,var(--g) 24%,transparent),transparent 72%) padding-box,
+    radial-gradient(92% 82% at 100% 100%,var(--gb),transparent 64%) padding-box,
+    radial-gradient(100% 105% at 0% 0%,var(--gt),transparent 60%) padding-box,
+    linear-gradient(160deg,color-mix(in srgb,var(--gt) 30%,var(--gd)),var(--gd) 46%,var(--gd)) padding-box,
+    linear-gradient(140deg,var(--gh) 0%,var(--gr) 16%,color-mix(in srgb,var(--gr) 62%,transparent) 42%,color-mix(in srgb,var(--gr) 66%,transparent) 60%,var(--gr) 84%,var(--gh) 100%) border-box;
+  box-shadow:inset 0 0 10px -4px color-mix(in srgb,var(--g) 45%,transparent),inset 0 1px 0 rgba(255,255,255,.08),0 10px 18px -16px color-mix(in srgb,var(--g) 35%,#000);
+  transition:transform .16s cubic-bezier(.2,.8,.3,1),filter .16s ease}
+.qj:active{transform:scale(.96);filter:brightness(1.1)}
+.qj:focus-visible{outline:2px solid var(--g);outline-offset:2px}
+.qj-fx{position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.7;
+  -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,.12) 35%,#000 92%);mask-image:linear-gradient(to right,rgba(0,0,0,.12) 35%,#000 92%)}
+.qj-fx svg{display:block;width:100%;height:100%}
+.qj-i{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;flex:none;color:color-mix(in srgb,var(--g) 92%,#fff);border:1px solid transparent;
+  background:radial-gradient(120% 80% at 30% 0%,color-mix(in srgb,var(--g) 30%,transparent),transparent 70%) padding-box,linear-gradient(160deg,color-mix(in srgb,var(--g) 22%,var(--gd)),color-mix(in srgb,var(--g) 8%,var(--gd))) padding-box,
+    linear-gradient(150deg,var(--gh),color-mix(in srgb,var(--gr) 60%,transparent) 50%,color-mix(in srgb,var(--gr) 85%,transparent)) border-box;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),inset 0 0 6px -2px color-mix(in srgb,var(--g) 50%,transparent),0 2px 6px -2px rgba(0,0,0,.7)}
+.qj-i svg{width:18px;height:18px;stroke-width:1.9}
+.qj-l{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 0 2px var(--gd),0 0 7px color-mix(in srgb,var(--gd) 80%,transparent)}
+/* registro de um toque */
+.qnow{margin-top:22px}
+.qnow-h{display:flex;align-items:baseline;justify-content:space-between;margin:0 2px 10px;font-size:var(--t-sm);font-weight:620;color:var(--ink)}
+.qnow-h span{font-size:var(--t-cap);font-weight:450;color:var(--muted)}
+.qnow .moods{margin:0 0 14px}
+.qnow .mood{min-height:68px;padding:11px 2px 9px;font-size:var(--t-sm);font-weight:520;color:var(--ink);background:color-mix(in srgb,#EE7D84 7%,var(--surface-2));border:1px solid color-mix(in srgb,#EE7D84 20%,transparent)}
+.qnow .mood:active{transform:scale(.96);background:color-mix(in srgb,#EE7D84 18%,var(--surface-2))}
+.qwater{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.qwater button{display:grid;place-items:center;min-height:50px;font-size:var(--t-body)!important;padding:0 2px;border-radius:12px;background:color-mix(in srgb,#4EC3E2 9%,var(--surface-2));border:1px solid color-mix(in srgb,#4EC3E2 26%,transparent);color:var(--ink);font-size:var(--t-sm);font-weight:600;font-variant-numeric:tabular-nums}
+.qwater button small{font-size:.706rem;font-weight:500;color:var(--muted);margin-left:2px}
+.qwater button:active{transform:scale(.96);background:color-mix(in srgb,#4EC3E2 22%,var(--surface-2))}
+.qnow .qmeals{margin:0 0 14px}
+.sheet .qjs.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.sheet .qjs.two .qj{flex-direction:row;justify-content:flex-start;min-height:60px;padding:8px 12px;gap:10px;text-align:left}
+@media (max-width:380px){.sheet .qjs{gap:7px}}
+@media (max-width:359px){.sheet .qjs{gap:6px}.qj{font-size:.647rem;letter-spacing:-.025em;min-height:80px}.qj-i{width:28px;height:28px}}
+
+.home .gstar,.sheet .gstar{position:relative;height:1px;margin:var(--hm-star) 0;pointer-events:none}
+.home .gstar::before,.sheet .gstar::before{content:"";position:absolute;left:10%;right:10%;top:0;height:1px;transform:scaleY(.6);
   background:linear-gradient(90deg,rgba(227,154,96,0),rgba(227,154,96,.22) 25%,rgba(244,180,128,.75) 46%,rgba(255,232,206,1) 50%,rgba(244,180,128,.75) 54%,rgba(227,154,96,.22) 75%,rgba(227,154,96,0))}
-.home .gstar::after{content:"";position:absolute;left:50%;top:50%;width:120px;height:12px;margin:-6px 0 0 -60px;border-radius:50%;
+.home .gstar::after,.sheet .gstar::after{content:"";position:absolute;left:50%;top:50%;width:120px;height:12px;margin:-6px 0 0 -60px;border-radius:50%;
   background:radial-gradient(closest-side,rgba(255,240,222,.85),rgba(255,206,160,.38) 14%,rgba(238,163,106,.12) 48%,rgba(238,163,106,0))}
 .home .hgrid + .hgrid.hg-b{margin-top:var(--hm-grp)}
 /* v38.3: brilho suave atrás de textos longos (classe .lt, posta por softGlow): a metade de baixo do reflexo, à direita, vai até 55% em vez de 100%; a metade de cima fica igual */
@@ -3440,25 +3486,68 @@ function nutritionSheet(p){
 /* v37 · o "+" é um só, no centro da barra inferior (ao alcance do polegar). Cada tela só declara o que ele faz ali: quickBtn (o "Registrar"
    geral) ou modAdd (o registro do módulo). Nada é desenhado no topo; a função devolve null. */
 function quickBtn(p, ctx){ setFab("Registrar", () => quickSheet(p, ctx)); return null; }
+/* v40 · "Registrar": a Home em modo ação. Oito botões com o material, a cor e a posição dos cartões da Home — pilares (Nutrição, Exercício,
+   Sono, Emocional), a linha-estrela, cuidados (Água, Suplemento, Medição, Agenda) — e, embaixo, perto do polegar, o registro de um toque
+   (como você está; água). Os botões abrem o registro completo; os de um toque salvam na hora e mostram "Desfazer".
+   Nutrição e Agenda abrem uma escolha curta (o que registrar ali). A ordem não muda com a tela de origem: memória do polegar. */
 function quickSheet(p, ctx){
   const adult = adultOf(p), meals = [...p.plan.meals].filter(m => filled(m).length).sort(byTime), pending = meals.filter(m => !doneOf(p, m));
   sheet("Registrar", (el, close) => {
-    const row = (icon, title, sub, fn, cls) => h("button", {class: "qrow" + (cls ? " " + cls : ""), type: "button", onclick: () => { close(); setTimeout(fn, 60); }},
+    // uma única ação por abertura: um segundo toque (duplo toque, ou durante a animação de fechar) não registra de novo nem abre outra janela
+    let used = false; const once = fn => (...a) => { if (used) return; used = true; fn(...a); };
+    const then = fn => once(() => { haptic(); close(); setTimeout(fn, 60); });
+    const tile = (cls, icon, label, fn, aria) => h("button", {class: "qj " + cls, type: "button", "aria-label": aria, onclick: then(fn)},
+      h("span", {class: "qj-fx", "aria-hidden": "true"}, JEWEL(cls)), h("span", {class: "qj-i", html: ICON[icon], "aria-hidden": "true"}), h("span", {class: "qj-l"}, label));
+    const pillars = h("div", {class: "qjs" + (adult ? "" : " three")},
+      tile("food", "utensils", "Nutrição", () => foodChooser(p), "Nutrição: refeições e alimentos"),
+      tile("move", "dumbbell", "Exercício", () => moveSheet(p), "Registrar exercício"),
+      tile("sleep", "moon", "Sono", () => sleepSheet(p), "Registrar sono"),
+      adult ? tile("wb", "smile", "Emocional", () => moodSheet(p), "Registro emocional completo, com energia, estresse e nota") : null);
+    const care = h("div", {class: "qjs"},
+      tile("water", "drop", "Água", () => waterLogSheet(p), "Registrar água, com volume e horário"),
+      tile("supp", "pill", "Suplemento", () => medSheet(p, null), "Adicionar suplemento ou medicamento"),
+      tile("prio", "pulse", "Medição", () => measSheet(p), "Nova medição: peso, cintura, pressão arterial, dor"),
+      tile("agenda", "cal", "Agenda", () => agendaChooser(p), "Agenda: consulta, exame ou procedimento"));
+    const next = tracks(p) && pending[0], wToday = logsOf(p).water.filter(w => w.date === today()).reduce((a, w) => a + (w.ml || 0), 0);
+    const now = h("div", {class: "qnow"},
+      next ? [h("div", {class: "qnow-h"}, "Próxima refeição", h("span", null, "Toque para marcar como feita")),
+        h("div", {class: "qmeals"}, h("button", {class: "qmeal", type: "button", onclick: once(() => { haptic(); close(); toggleDone(p, next, render); })},
+          h("span", {class: "done"}), h("span", {class: "tm"}, next.time || "—"), h("span", {class: "nm"}, next.name.trim() || "Refeição"), h("span", {class: "kc"}, `${k0(mealTotal(next).kcal)} kcal`)))] : null,
+      adult ? [h("div", {class: "qnow-h"}, "Como você está agora?", h("span", null, "Um toque registra")),
+        h("div", {class: "moods", role: "group", "aria-label": "Como você está agora? Um toque registra"}, MOODS.map((m, i) => h("button", {type: "button", class: "mood m" + (i + 1),
+          "aria-label": `${m}. Registrar agora`, onclick: once(() => { haptic(); saveMood(p, {mood: i + 1, energy: null, stress: null, note: null}, close); })}, h("i"), m)))] : null,
+      h("div", {class: "qnow-h"}, "Água agora", h("span", null, wToday ? `Hoje: ${nf0.format(wToday)} mL` : "Um toque registra")),
+      h("div", {class: "qwater", role: "group", "aria-label": "Água agora. Um toque registra"},
+        WATER_ADD.map(v => h("button", {type: "button", "aria-label": `Registrar ${nf0.format(v)} mililitros de água agora`, onclick: once(() => { haptic(); addWater(p, v, null, close); })}, h("span", null, nf0.format(v), h("small", null, "mL"))))));
+    el.append(h("h2", {class: "q-t"}, "Registrar"), pillars, jewelStar(), care, now);
+    // texto ampliado (ou tela muito estreita): se algum nome não couber, os botões passam a duas colunas, ícone ao lado do nome — nunca cortados
+    requestAnimationFrame(() => { if ([...el.querySelectorAll(".qj-l")].some(over)) el.querySelectorAll(".qjs").forEach(g => g.classList.add("two")); });
+  });
+}
+// Nutrição no "+": o que registrar ali (marcar refeição feita, alimento no plano, novo alimento, abrir o plano)
+function foodChooser(p){
+  const meals = [...p.plan.meals].filter(m => filled(m).length).sort(byTime), pending = meals.filter(m => !doneOf(p, m));
+  sheet("Nutrição", (el, close) => {
+    const row = (icon, title, sub, fn) => h("button", {class: "qrow", type: "button", onclick: () => { close(); setTimeout(fn, 60); }},
       h("span", {class: "qa-i", html: ICON[icon]}), h("div", null, h("b", null, title), sub ? h("span", null, sub) : null));
     const mealRows = tracks(p) && pending.length ? h("div", {class: "qmeals"}, h("div", {class: "lbl2", style: "margin-top:0"}, "Marcar refeição feita"),
       pending.slice(0, 4).map(m => h("button", {class: "qmeal", type: "button", onclick: () => { close(); toggleDone(p, m, render); }},
         h("span", {class: "done"}), h("span", {class: "tm"}, m.time || "—"), h("span", {class: "nm"}, m.name.trim() || "Refeição"), h("span", {class: "kc"}, `${k0(mealTotal(m).kcal)} kcal`)))) : null;
-    const big = (cls, icon, label, fn) => h("button", {class: "qbig " + cls, type: "button", onclick: () => { close(); setTimeout(fn, 60); }}, h("span", {html: ICON[icon], style: "display:contents"}), label);
-    const health = h("div", {class: "qbigs" + (adult ? "" : " three")},
-      big("food", "utensils", "Nutrição", () => go({tab: "alimentacao", sub: "plano"})), big("move", "dumbbell", "Exercício", () => moveSheet(p)),
-      big("sleep", "moon", "Sono", () => sleepSheet(p)), adult ? big("wb", "smile", "Emocional", () => moodSheet(p)) : null);
-    const food = [row("food", "Alimento no plano", "Buscar e adicionar a uma refeição", () => { go({tab: "alimentacao", sub: "alimentos"}); setTimeout(() => { const i = $("#busca-alimento"); if (i) i.focus(); }, 80); }),
-      row("camera", "Novo alimento", embedded ? "Digitar os dados do rótulo" : "Foto da tabela nutricional ou digitação", () => addFoodChooser("", () => render()))];
-    const care = [row("steth", "Consulta", "Agendar ou registrar uma consulta", () => apptSheet(p)), row("flask", "Exame", "Solicitado, agendado ou realizado", () => examSheet(p)),
-      row("syringe", "Procedimento", "Infiltração, aplicação, cirurgia, fisioterapia…", () => procSheet(p)), row("pulse", "Medição", "Peso, cintura, pressão arterial, dor…", () => measSheet(p)),
-      row("drop", "Água", "Registrar o que bebeu (opcional)", () => waterLogSheet(p))];
-    el.append(h("h2", null, "Registrar"), h("p", {class: "sh-sub"}, "Em segundos, de qualquer tela."), health,
-      ...(ctx === "alimentacao" ? [h("div", {class: "qlist"}, food), mealRows, h("div", {class: "qlist"}, care)] : ctx === "saude" ? [h("div", {class: "qlist"}, care), mealRows, h("div", {class: "qlist"}, food)] : [mealRows, h("div", {class: "qlist"}, food, care)]));
+    el.append(h("h2", null, "Nutrição"), h("p", {class: "sh-sub"}, "O que você quer registrar?"), mealRows, h("div", {class: "qlist"},
+      row("food", "Alimento no plano", "Buscar e adicionar a uma refeição", () => { go({tab: "alimentacao", sub: "alimentos"}); setTimeout(() => { const i = $("#busca-alimento"); if (i) i.focus(); }, 80); }),
+      row("camera", "Novo alimento", embedded ? "Digitar os dados do rótulo" : "Foto da tabela nutricional ou digitação", () => addFoodChooser("", () => render())),
+      row("utensils", "Abrir o plano alimentar", "Refeições, quantidades e substituições", () => go({tab: "alimentacao", sub: "plano"}))));
+  });
+}
+// Agenda no "+": consulta, exame ou procedimento
+function agendaChooser(p){
+  sheet("Agenda", (el, close) => {
+    const row = (icon, cls, title, sub, fn) => h("button", {class: "qrow", type: "button", onclick: () => { close(); setTimeout(fn, 60); }},
+      h("span", {class: "qa-i " + cls, html: ICON[icon]}), h("div", null, h("b", null, title), h("span", null, sub)));
+    el.append(h("h2", null, "Agenda"), h("p", {class: "sh-sub"}, "O que você quer registrar?"), h("div", {class: "qlist"},
+      row("steth", "c-appt", "Consulta", "Agendar ou registrar uma consulta", () => apptSheet(p)),
+      row("flask", "c-exam", "Exame", "Solicitado, agendado ou realizado", () => examSheet(p)),
+      row("syringe", "c-proc", "Procedimento", "Infiltração, aplicação, cirurgia, fisioterapia…", () => procSheet(p))));
   });
 }
 const byTime = (a, b) => (a.time || "99") < (b.time || "99") ? -1 : (a.time || "99") > (b.time || "99") ? 1 : 0;
@@ -5008,9 +5097,10 @@ function renderPriority(p){
    histórico e lembretes opcionais pelo app Calendário. O exercício não soma volume automático (ver "Como interpretar"). */
 const WATER_ADD = [150, 250, 350, 500];
 const WDAYS = [["MO", "Seg"], ["TU", "Ter"], ["WE", "Qua"], ["TH", "Qui"], ["FR", "Sex"], ["SA", "Sáb"], ["SU", "Dom"]];
-function addWater(p, ml){
-  const L = logsOf(p), n = new Date(), e = {id: uid(), at: Date.now(), date: today(), time: `${pad2(n.getHours())}:${pad2(n.getMinutes())}`, ml};
-  L.water.push(e); touch(p); render(); toast(`${nf0.format(ml)} mL registrados`, () => { L.water.splice(L.water.indexOf(e), 1); touch(p); render(); });
+// água registrada agora (Hidratação, "+" de um toque) ou pela janela de água com horário: mesmo registro, mesmo "Desfazer" (v40: horário e fechar opcionais)
+function addWater(p, ml, time, close){
+  const L = logsOf(p), n = new Date(), e = {id: uid(), at: Date.now(), date: today(), time: time || `${pad2(n.getHours())}:${pad2(n.getMinutes())}`, ml};
+  L.water.push(e); touch(p); if (close) close(); render(); toast(`${nf0.format(ml)} mL registrados`, () => { const i = L.water.indexOf(e); if (i >= 0) { L.water.splice(i, 1); touch(p); render(); } });
 }
 function waterRemSheet(p){
   const c = careOf(p), d = Object.assign({on: true, every: 120, start: "09:00", end: "19:00", days: WDAYS.map(x => x[0])}, c.waterRem || {});
@@ -5120,8 +5210,7 @@ function waterLogSheet(p, rec){
       if (ok.disabled) return;
       if (editing) { const was = Object.assign({}, rec); Object.assign(rec, {ml, time: time.value || rec.time, updated: Date.now()}); touch(p); close(); render();
         toast("Registro atualizado", () => { Object.assign(rec, was); touch(p); render(); }); return; }
-      const e = {id: uid(), at: Date.now(), date: today(), time: time.value || `${pad2(n.getHours())}:${pad2(n.getMinutes())}`, ml};
-      L.water.push(e); touch(p); close(); render(); toast(`${nf0.format(ml)} mL registrados`, () => { L.water.splice(L.water.indexOf(e), 1); touch(p); render(); });
+      addWater(p, ml, time.value, close);
     }
     custom.addEventListener("input", () => { const v = parseInt(custom.value, 10); ml = v > 0 ? v : null; paint(); });
     paint();
@@ -5213,7 +5302,7 @@ function saveMood(p, data, close){
   const L = logsOf(p), d = new Date();
   const e = Object.assign({id: uid(), at: Date.now(), date: today(), time: `${pad2(d.getHours())}:${pad2(d.getMinutes())}`}, data);
   L.mood.push(e); touch(p); if (close) close(); render();
-  toast(`Registrado: ${MOODS[e.mood - 1].toLowerCase()}`, () => { L.mood.splice(L.mood.indexOf(e), 1); touch(p); render(); });
+  toast(`Registrado: ${MOODS[e.mood - 1].toLowerCase()}`, () => { const i = L.mood.indexOf(e); if (i >= 0) { L.mood.splice(i, 1); touch(p); render(); } });
 }
 function moodSheet(p, rec){
   const editing = !!rec;

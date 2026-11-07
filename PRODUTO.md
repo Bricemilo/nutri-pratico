@@ -1420,3 +1420,53 @@ Em telas estreitas (até 380 pt), o espaço entre os grupos é de 20 pt.
 **Custo.** O espaço preto acima da barra fica em ~66 pt no iPhone 15.
 
 **Não mudou.** Cartões (108 pt), linha, cores, barra, "+" e dados.
+
+## 55. v40 — A janela do "+" (Registrar): a Home em modo ação
+
+**Versão de segurança.** O registro 48722cb (v39.1), no GitHub, é a versão anterior completa.
+
+**O que mudou.**
+- **Oito botões que espelham a Home.** Têm o mesmo material de vidro, as mesmas cores e as mesmas posições dos cartões:
+  - em cima, os pilares: Nutrição, Exercício, Sono e Emocional;
+  - depois, a linha-estrela (mais delicada que a da Home);
+  - embaixo, os cuidados: Água, Suplemento, Medição e Agenda.
+  A ordem não muda com a tela de onde se abre o "+".
+- **Os botões abrem o registro completo.**
+  - Exercício, Sono, Emocional (com energia, estresse e nota), Água (com volume e horário), Suplemento ou medicamento, e Medição.
+  - Nutrição oferece: marcar refeição feita (para quem marca), alimento no plano, novo alimento ou abrir o plano.
+  - Agenda oferece: consulta, exame ou procedimento.
+- **Registro de um toque, embaixo, perto do polegar.**
+  - "Como você está agora?" (só para adultos).
+  - "Água agora": 150, 250, 350 ou 500 mL. Depois do primeiro registro do dia, aparece o total ("Hoje: 250 mL"), somado só dos registros reais daquele perfil.
+  - Para quem marca refeições: a próxima refeição.
+  - Todo registro de um toque mostra "Desfazer".
+- **Menos texto.** Só o título "Registrar". A janela ficou mais baixa (544 pt no iPhone 15, antes 681) e cabe sem rolar de 375 a 430 pt.
+
+**Toques a partir da Home.**
+
+| Registro | Antes | Agora |
+|---|---|---|
+| Emocional | 4 | 2 |
+| Água | 4 | 2 |
+| Sono | 3 | 3 |
+| Exercício | 5 | 5 |
+| Consulta, exame, procedimento | 2 | 3 (passam pela escolha de Agenda) |
+
+**Segurança dos registros.**
+- A janela aceita uma única ação por abertura: um duplo toque ou um toque durante o fechamento não registra de novo nem abre outra janela.
+- O "Desfazer" remove só o registro recém-criado, no perfil em que ele foi feito, mesmo depois de trocar de familiar. Se esse registro já não existir, não remove nada (antes, nesse caso raro, podia remover o último registro da lista).
+
+**Texto ampliado.** Se algum nome não couber, os botões passam a duas colunas, com o ícone ao lado do nome. Nenhum nome é cortado.
+
+**Testes (simulador).**
+- 37 testes novos:
+  - toques repetidos;
+  - isolamento entre Camilo e Lia;
+  - "Desfazer" depois de trocar de familiar;
+  - os oito formulários e as escolhas de Nutrição e Agenda;
+  - permanência dos dados ao reabrir;
+  - seis tamanhos de tela, incluindo texto ampliado.
+- Suítes anteriores sem falhas.
+- A Home ficou idêntica pixel a pixel à v39.1.
+
+**Pendente: conferir no iPhone real.** Animação de abrir e fechar, teclado nos formulários, rolagem no iPhone de 320 pt e resposta ao toque.
