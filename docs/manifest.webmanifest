@@ -1,7 +1,7 @@
 {
-  "name": "BRICEÑO",
-  "short_name": "BRICEÑO",
-  "description": "Pacientes, necessidade energética e plano alimentar com TACO e medidas caseiras do IBGE.",
+  "name": "Briceno Life",
+  "short_name": "Briceno Life",
+  "description": "Saúde, nutrição e rotina da família, com elegância e privacidade.",
   "lang": "pt-BR",
   "start_url": "./",
   "scope": "./",

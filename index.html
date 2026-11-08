@@ -1,7 +1,7 @@
-<title>BRICEÑO</title>
+<title>Briceno Life</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="BRICEÑO">
+<meta name="apple-mobile-web-app-title" content="Briceno Life">
 <style>
 /* Layout: uma coluna de app nativo (máx. 600px) sobre preto quente, barra de abas no rodapé.
    Superfícies em grafite separam os blocos; o cobre marca só o essencial; macros em champanhe, pátina, rosé e sálvia. */
@@ -68,6 +68,7 @@ button{cursor:pointer;border:0;background:none;padding:0;text-align:inherit}
 .brand{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:-.01em;font-size:var(--t-body)}
 .mark{width:28px;height:28px;border-radius:9px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;flex:none}
 .mark svg{width:16px;height:16px}
+.mark-b{display:block;object-fit:cover;background:#140D09;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
 .spacer{flex:1}
 .who{display:flex;align-items:center;gap:9px;padding:4px 10px 4px 4px;border-radius:999px;background:var(--surface);border:1px solid var(--line);max-width:70%}
 .who .av{width:30px;height:30px;font-size:var(--t-cap);border-width:1px}
@@ -3066,11 +3067,13 @@ const coarse = matchMedia("(pointer: coarse)");
 document.addEventListener("focusin", e => { if (coarse.matches && e.target.matches("input:not([type=time]), textarea")) document.body.classList.add("typing"); });
 document.addEventListener("focusout", () => setTimeout(() => { const a = document.activeElement; if (!a || !a.matches("input, textarea")) document.body.classList.remove("typing"); }, 80));
 
+// marca (v43): o ícone do app em miniatura (96 px), embutido para funcionar sem internet
+const BRAND_MARK = "data:image/jpeg;base64,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";
 function topBar(...right){
   const p = active();
   return h("header", {class: "top"}, h("div", {class: "top-row"},
     p ? h("button", {class: "who", "aria-label": `${p.name}. Meu perfil e família`, onclick: switcher}, avatar(p), h("b", null, firstName(p.name)), ic("chev"))
-      : h("div", {class: "brand"}, h("span", {class: "mark", html: ICON.mark}), "BRICEÑO"),
+      : h("div", {class: "brand"}, h("img", {class: "mark mark-b", src: BRAND_MARK, alt: "", width: "28", height: "28"}), "Briceno Life"),
     h("div", {class: "spacer"}), right));
 }
 // abre o Perfil guardando a tela de origem: o "‹" do Perfil volta para ela
@@ -3275,7 +3278,7 @@ function renderHome(p){
   const meals = plan.meals.filter(m => filled(m).length), nDone = meals.filter(m => doneOf(p, m)).length;
   const sl = ctx.sleep.stats.last, lastNight = sl && C.addDays(sl.date, 1) >= today() ? sl : null;
   const lastMood = [...L.mood].sort((a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : (b.at || 0) - (a.at || 0))[0];
-  const mw = ctx.move.week;
+  const mw = ctx.move.week, moveToday = (mw.days.find(d => d.key === today()) || {min: 0}).min;
   const cc = careCounts(p), nx = nextAgenda(p), pr = goalsOf(p), act = pr.filter(g => g.status === "ativa"), main = act.find(g => g.main);
   const card = jewelCard;
   // sem registro não quer dizer que não aconteceu: o cartão diz que não há registro e de que período
@@ -3283,9 +3286,10 @@ function renderHome(p){
     card({lv: "l1", cls: "food", icon: "utensils", title: "Nutrição", value: meals.length ? k0(t.kcal) : null, unit: "kcal", sub: tracks(p) ? `Plano · ${nDone} de ${meals.length} feitas` : "Planejado por dia",
       aria: meals.length ? `Nutrição: plano de ${k0(t.kcal)} quilocalorias${tracks(p) ? `. ${nDone} de ${plural(meals.length, "refeição feita", "refeições feitas")} hoje` : ""}.` : null,
       fn: () => go({tab: "alimentacao", sub: "plano", open: [], edit: null}), empty: ["Sem plano", "Toque para montar"]}),
-    card({lv: "l1", cls: "move", icon: "dumbbell", title: "Exercício", value: mw.total > 0 ? fmtDur(mw.total) : null, sub: "Nesta semana",
-      aria: `Exercício: ${mw.total > 0 ? `${fmtDur(mw.total)} registrados nesta semana, ${plural(mw.activeDays, "dia", "dias")} com registro` : "sem registros nesta semana"}.`,
-      fn: () => openMod({hsub: "movimento"}), empty: ["Sem registros", "Nesta semana"]}),
+    // v43: o número grande é o de hoje (convida a registrar todo dia); a legenda mostra o total da semana (a referência da OMS é semanal)
+    card({lv: "l1", cls: "move", icon: "dumbbell", title: "Exercício", value: mw.total > 0 ? fmtDur(moveToday) : null, sub: `Hoje · ${fmtDur(mw.total)} na semana`,
+      aria: `Exercício: ${mw.total > 0 ? `${moveToday ? fmtDur(moveToday) + " hoje" : "nenhum registro hoje"}; ${fmtDur(mw.total)} nesta semana, ${plural(mw.activeDays, "dia", "dias")} com registro` : "sem registros nesta semana"}.`,
+      fn: () => openMod({hsub: "movimento"}), empty: ["Sem registros", "Hoje e nesta semana"]}),
     card({lv: "l1", cls: "sleep", icon: "moon", title: "Sono", value: lastNight ? fmtDur(lastNight.min) : null, sub: "Última noite",
       fn: () => openMod({hsub: "sono"}), empty: ["Sem registro", "Última noite"]}),
     adult ? card({lv: "l1", cls: "wb", icon: "smile", title: "Emocional", value: lastMood ? MOODS[lastMood.mood - 1] : null, sub: lastMood ? `${relDay(lastMood.date)}${lastMood.time ? ", " + lastMood.time : ""}` : "",
@@ -3740,7 +3744,7 @@ function medSheet(p, m, cat0){
 }
 // lembretes de um item: um evento diário por horário (hora local), do início (ou hoje) até o término, com aviso na hora
 function medCal(p, m){
-  const td = today(), from = m.start && m.start > td ? m.start : td, title = p.notif && p.notif.detail ? m.name : "Lembrete BRICEÑO";
+  const td = today(), from = m.start && m.start > td ? m.start : td, title = p.notif && p.notif.detail ? m.name : "Lembrete Briceno Life";
   const until = m.end ? `;UNTIL=${m.end.replace(/-/g, "")}T235900` : "", rule = m.freq === "Semanal" ? "FREQ=WEEKLY" : m.freq === "Dias alternados" ? "FREQ=DAILY;INTERVAL=2" : "FREQ=DAILY";
   const ics = C.icsCalendar(m.times.map((t, i) => ({uid: `${m.id}-${i}@briceno`, title, date: from, time: t, floating: true, durMin: 5, rrule: rule + until, rem: [0], transparent: true})));
   deliverICS(ics, "lembretes.ics").then(ok => { if (ok) toast("Arquivo do Calendário criado"); }, () => toast("Não foi possível criar o arquivo"));
@@ -4334,7 +4338,7 @@ function calExport(p, e){
   if (!dateOk(e.date)) { toast("Informe a data antes"); return; }
   const k = kindOf(p, e), detail = p.notif && p.notif.detail, seq = ((e.cal && e.cal.seq) || 0) + (e.cal ? 1 : 0);
   const ics = C.icsCalendar([{uid: e.id + "@briceno", title: calTitle(p, e), date: e.date, time: e.time, tz: e.tz || DEVICE_TZ, durMin: k === "exame" ? 30 : 60,
-    location: detail ? [e.place, e.mode === "online" ? "" : e.addr].filter(Boolean).join(" · ") : "", desc: detail ? "Registrado no BRICEÑO." : "", rem: e.rem || [], seq}]);
+    location: detail ? [e.place, e.mode === "online" ? "" : e.addr].filter(Boolean).join(" · ") : "", desc: detail ? "Registrado no Briceno Life." : "", rem: e.rem || [], seq}]);
   deliverICS(ics, `${k === "consulta" ? "consulta" : k === "proc" ? "procedimento" : "exame"}-${e.date}.ics`).then(ok => {
     if (!ok) return; e.cal = {at: Date.now(), seq, sig: calSig(p, e)}; touch(p); render(); toast("Arquivo do Calendário criado");
   }, () => toast("Não foi possível criar o arquivo"));
@@ -4346,7 +4350,7 @@ function calBlock(p, e){
   return h("div", {class: "calb"},
     h("button", {class: "btn ghost block", type: "button", onclick: () => calExport(p, e)}, ic("cal"), e.cal ? "Enviar de novo ao Calendário" : n ? "Adicionar ao Calendário com os lembretes" : "Adicionar ao Calendário"),
     h("p", {class: "note" + (stale ? " warn" : "")}, stale ? "O compromisso mudou depois de ir para o Calendário. Envie de novo e confira lá: o Calendário pode manter também a versão anterior."
-      : e.cal ? `Enviado ao Calendário em ${fmtMoment(e.cal.at)}. Os avisos são do app Calendário; o BRICEÑO não envia notificações.`
+      : e.cal ? `Enviado ao Calendário em ${fmtMoment(e.cal.at)}. Os avisos são do app Calendário; o Briceno Life não envia notificações.`
       : "Os avisos ficam no app Calendário do aparelho, que é quem notifica. No iPhone, escolha Calendário na tela de compartilhar; se não aparecer, salve em Arquivos e toque no arquivo para adicionar."));
 }
 // cancelado ou excluído depois de ir para o Calendário: o app não consegue apagar lá
@@ -5079,7 +5083,7 @@ function waterRemSheet(p){
     function commit(){
       const ev = every(), slots = C.slotTimes(start.value, end.value, ev); if (!slots.length || !d.days.length) return;
       c.waterRem = {on: true, every: d.every === "x" ? ev : d.every, start: start.value, end: end.value, days: WDAYS.map(x => x[0]).filter(k => d.days.includes(k)), at: Date.now()};
-      const rule = c.waterRem.days.length === 7 ? "FREQ=DAILY" : "FREQ=WEEKLY;BYDAY=" + c.waterRem.days.join(","), title = p.notif && p.notif.detail ? "Hidratação · beber água, se quiser" : "Lembrete BRICEÑO";
+      const rule = c.waterRem.days.length === 7 ? "FREQ=DAILY" : "FREQ=WEEKLY;BYDAY=" + c.waterRem.days.join(","), title = p.notif && p.notif.detail ? "Hidratação · beber água, se quiser" : "Lembrete Briceno Life";
       const ics = C.icsCalendar(slots.map((t, i) => ({uid: `agua-${p.id}-${i}@briceno`, title, date: today(), time: t, floating: true, durMin: 5, rrule: rule, rem: [0], transparent: true})), "Hidratação");
       touch(p); close(); render();
       deliverICS(ics, "hidratacao.ics").then(okk => { if (okk) toast("Arquivo do Calendário criado"); }, () => toast("Não foi possível criar o arquivo"));
@@ -6161,7 +6165,7 @@ function renderProfile(p){
       row("lock", "Backup e segurança", "Só neste aparelho", () => backupSheet(), null,
         S.patients.some(x => !x.example) && (days == null || days >= 7), days == null ? "Sem backup" : `Backup ${days === 0 ? "hoje" : days === 1 ? "ontem" : `há ${days} dias`}`),
       row("sliders", "Configurações", tracks(p) ? "Registro do consumo ligado · sugestões" : "Só planejamento · sugestões", () => prefsSheet()),
-      row("book", "Fontes e metodologia", "Como o BRICEÑO calcula", () => scienceSheet(p)))));
+      row("book", "Fontes e metodologia", "Como o Briceno Life calcula", () => scienceSheet(p)))));
 }
 // Necessidade energética: seção recolhível. Fechada mostra só o GET e o protocolo; aberta, o seletor de protocolo,
 // TMB, GET, IMC e a ação de usar como meta. As fórmulas ficam em scienceSheet.
@@ -6291,7 +6295,7 @@ function prefsSheet(){
     const cal = () => h("div", null, h("div", {class: "lbl2"}, `Lembretes de ${firstName(p.name)} no Calendário`),
       h("div", {class: "seg", role: "radiogroup", "aria-label": "Texto dos lembretes"}, [[false, "Título discreto"], [true, "Com detalhes"]].map(([v, l]) =>
         h("button", {type: "button", role: "radio", class: !!(p.notif && p.notif.detail) === v ? "on" : "", "aria-checked": String(!!(p.notif && p.notif.detail) === v), onclick: () => { p.notif = Object.assign({}, p.notif, {detail: v}); touch(p); paint(); }}, l))),
-      h("p", {class: "note"}, "Discreto: o Calendário e a tela bloqueada mostram “Compromisso de saúde” ou “Lembrete BRICEÑO”. Com detalhes: o tipo do compromisso, o nome do item e o local."));
+      h("p", {class: "note"}, "Discreto: o Calendário e a tela bloqueada mostram “Compromisso de saúde” ou “Lembrete Briceno Life”. Com detalhes: o tipo do compromisso, o nome do item e o local."));
     const paint = () => put(body, track(), cal(), list("meals", "Nomes de refeições sugeridos", DEFAULT_MEALS), list("objectives", "Objetivos sugeridos", DEFAULT_OBJ),
       h("div", {class: "lbl2"}, "Alimentos recentes"), h("button", {class: "btn ghost block", type: "button", disabled: !S.prefs.recent.length, onclick: () => { S.prefs.recent = []; save(); paint(); toast("Recentes apagados"); }},
         S.prefs.recent.length ? `Limpar ${S.prefs.recent.length} recentes` : "Nenhum recente"));
@@ -6307,8 +6311,8 @@ function scienceSheet(p){
     h("div", null, h("div", {class: "k"}, "TMB"), h("div", {class: "v"}, tmb == null ? "—" : k0(tmb))),
     h("div", null, h("div", {class: "k"}, fl), h("div", {class: "v"}, fator == null ? "—" : nf2.format(fator))),
     h("div", null, h("div", {class: "k"}, "GET"), h("div", {class: "v acc"}, get == null ? "—" : k0(get))));
-  sheet("Como o BRICEÑO calcula", el => {
-    el.append(h("h2", null, "Como o BRICEÑO calcula"));
+  sheet("Como o Briceno Life calcula", el => {
+    el.append(h("h2", null, "Como o Briceno Life calcula"));
     if (r.ok){
       el.append(h("p", {class: "sh-sub"}, `Cálculo de ${firstName(p.name)}: ${fq.format(e.weight)} kg, ${fq.format(e.height)} cm, ${ageLabel(r.age)}.`),
         h("div", {class: "card-t"}, "FAO/OMS 1985"), resGrid(r.fao.tmb, r.fao.fa, "FA", r.child ? null : r.fao.get),
@@ -6323,7 +6327,7 @@ function scienceSheet(p){
     el.append(methodProse());
   });
 }
-function methodSheet(){ sheet("Como o BRICEÑO calcula", el => el.append(h("h2", null, "Como o BRICEÑO calcula"), methodProse())); }
+function methodSheet(){ sheet("Como o Briceno Life calcula", el => el.append(h("h2", null, "Como o Briceno Life calcula"), methodProse())); }
 function methodProse(){
   return h("div", {class: "prose"},
     h("h3", null, "Gasto energético"),
@@ -6347,7 +6351,7 @@ function methodProse(){
 
 /* ---------- Necessidade energética ----------
    Resumo primeiro (TMB, GET e protocolo escolhido); as equações ficam em "Fórmulas e cálculos". */
-// Limitações em uma frase, exibidas sob o seletor (o detalhe fica em "Como o BRICEÑO calcula").
+// Limitações em uma frase, exibidas sob o seletor (o detalhe fica em "Como o Briceno Life calcula").
 const METHOD_NOTE = {
   dri: "Padrão. Estima o gasto total por idade, peso, altura e atividade. Feita para pessoas saudáveis; em sobrepeso, gestação ou doenças é menos precisa.",
   fao: "Taxa basal pelo peso (Schofield) × fator de atividade. Não usa a altura; os fatores descrevem grupos, não indivíduos.",
@@ -6437,7 +6441,7 @@ function backupSheet(){
       const done = () => { marked(); status.textContent = "Backup gerado. Guarde o arquivo em Arquivos, iCloud ou e-mail."; };
       try {
         const f = new File([blob], name, {type: "application/json"});
-        if (navigator.canShare && navigator.canShare({files: [f]})) { await navigator.share({files: [f], title: "Backup BRICEÑO"}); done(); return; }
+        if (navigator.canShare && navigator.canShare({files: [f]})) { await navigator.share({files: [f], title: "Backup Briceno Life"}); done(); return; }
       } catch (e) { if (e && e.name === "AbortError") return; }
       try { const a = h("a", {href: URL.createObjectURL(blob), download: name}); document.body.append(a); a.click(); a.remove(); done(); }
       catch (e) { status.textContent = "Não foi possível gerar o arquivo neste navegador."; }
@@ -6462,7 +6466,7 @@ function backupSheet(){
     function offerRestore(text, label){
       let b; try { b = JSON.parse(String(text).trim()); } catch (e) {}
       const d = b && (b.data || (Array.isArray(b.patients) ? b : null));
-      if (!d || !Array.isArray(d.patients) || !d.prefs) { status.textContent = "Esse conteúdo não é um backup do BRICEÑO."; return; }
+      if (!d || !Array.isArray(d.patients) || !d.prefs) { status.textContent = "Esse conteúdo não é um backup do Briceno Life."; return; }
       put(confirmBox, h("div", {class: "confirm", style: "flex-wrap:wrap"},
         h("span", {style: "flex:1 1 100%"}, `Substituir ${nPeople(S.patients.length)} deste aparelho por ${nPeople(d.patients.length)} ${label || (b.exported ? "do backup de " + new Date(b.exported).toLocaleDateString("pt-BR") : "do backup")}?`),
         h("button", {class: "btn ghost", type: "button", style: "flex:1", onclick: () => confirmBox.replaceChildren()}, "Cancelar"),

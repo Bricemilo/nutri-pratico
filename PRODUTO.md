@@ -1535,3 +1535,29 @@ Em telas estreitas (até 380 pt), o espaço entre os grupos é de 20 pt.
   - cinco tamanhos de tela, incluindo texto ampliado.
 - Suítes anteriores sem falhas.
 - A Home ficou idêntica pixel a pixel à v39.1.
+
+## 58. v43 — Nome e ícone "Briceno Life"; Exercício com o dia em destaque
+
+**Nome.** O app passa a se chamar **Briceno Life** em todos os textos visíveis: nome na tela de início, título, tela de boas-vindas, "Como o Briceno Life calcula", lembretes e backup. Sem til, para funcionar em qualquer teclado, busca e país (decisão do Camilo, para alcançar o maior número de pessoas).
+
+Os identificadores internos não mudam: a chave de armazenamento `nutripratico.v1` e o endereço do site continuam os mesmos, então nenhum dado é afetado.
+
+**Ícone.** O B com serifa em cobre, com a onda (proposta do ChatGPT, escolhida pelo Camilo).
+- A imagem foi recortada por dentro da moldura (sem a borda acesa) e posta sobre um degradê com as cores do próprio fundo, com o B ocupando ~62% do ícone.
+- Tamanhos gerados: 180 (iPhone), 192, 512 e 512 adaptável.
+- A tela de boas-vindas usa o mesmo ícone em miniatura, no lugar da folha antiga.
+
+**Pendente.**
+- Redesenho em vetor por um designer: onda saindo da haste sem atravessá-la, para não lembrar o ₿.
+- Busca no INPI.
+
+**Exercício na Home.**
+- **Valor:** os minutos de **hoje**, para incentivar o registro diário.
+- **Legenda:** "Hoje · 3 h 45 na semana", porque a referência da OMS é semanal.
+- **Comportamento:**
+  - nos dias sem exercício, mas com registros na semana, aparece "0 min";
+  - sem registros na semana, aparece "Sem registros · Hoje e nesta semana".
+- **VoiceOver:** "45 min hoje; 3 h 45 nesta semana, 2 dias com registro".
+- **Semanas longas:** a legenda pode ficar até 1 ponto menor (por exemplo, "Hoje · 10 h 45 na semana"); a altura dos cartões não muda.
+
+**Como o iPhone atualiza.** O nome e o ícone de um app já instalado na tela de início não mudam sozinhos: é preciso reinstalar. Antes, fazer o backup (Perfil → Backup), porque apagar o ícone apaga os dados guardados nele. Depois, restaurar.
