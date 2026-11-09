@@ -1573,15 +1573,6 @@ html.big-text .hc.l1 .hc-v b.txt{font-size:1.294rem}
 .sx-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
 .sx-c b{font-size:1.412rem;font-weight:690;letter-spacing:-.035em;line-height:1;font-variant-numeric:tabular-nums;color:var(--ink)}
 .sx-c span{font-size:var(--t-cap);color:var(--ink-2);margin-top:4px}
-.sx-leg{flex:1 1 11rem;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 14px}
-.sx-i{display:flex;flex-direction:column;gap:3px;min-width:0}
-.sx-k{display:flex;align-items:center;gap:7px;font-size:var(--t-cap);font-weight:600;color:var(--ink-2);white-space:nowrap}
-.sx-d{width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
-.sx-d.t-p{color:var(--prot-ink)}
-.sx-v{display:flex;align-items:baseline;gap:8px;white-space:nowrap}
-.sx-v b{font-size:1.118rem;font-weight:660;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--ink)}
-.sx-v b small{font-size:var(--t-sm);font-weight:500;color:var(--muted);letter-spacing:0}
-.sx-v em{font-style:normal;font-size:var(--t-sm);color:var(--ink-2);font-variant-numeric:tabular-nums}
 .sx-foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;margin-top:14px;padding-top:10px;border-top:1px solid var(--dj-quiet-rule);font-size:var(--t-cap);color:var(--muted)}
 .sx-note{color:var(--accent-2);font-weight:600}
 .sx-hr{display:flex;align-items:center;gap:8px}
@@ -1589,7 +1580,53 @@ html.big-text .hc.l1 .hc-v b.txt{font-size:1.294rem}
 .sx-gk{font-size:var(--t-cap);color:var(--muted);font-variant-numeric:tabular-nums;line-height:1.2}
 .sx-c{transform:translateY(.25px)}   /* v45.1: o número e "kcal" ficam no centro óptico do anel (mesma folga acima e abaixo) */
 .sx-c span{line-height:1.1}
-@media (max-width:380px){.sx-ring{width:88px}.sx-core{gap:14px}.sx-c b{font-size:1.294rem}}
+/* v47: anel maior e mais fino (o número com folga dentro do círculo), fibras logo abaixo dele, macronutrientes em linhas */
+.sx-core{flex-wrap:nowrap;gap:20px}
+.sx-l{display:flex;flex-direction:column;align-items:center;gap:12px;flex:none}
+.sx-ring{width:112px}
+.sx-ring circle{stroke-width:7}
+.sx-ring .rg{stroke-linecap:round}
+.sx-ring svg{overflow:visible;filter:drop-shadow(0 0 7px rgba(229,141,77,.16))}
+.sx-c b{font-size:1.353rem}
+.sx-c span{color:var(--muted)}
+.sx-ring.anim .sx-sweep{animation:sxSweep 1.15s cubic-bezier(.22,.8,.24,1) .12s both}
+.sx-ring.anim .sx-c{animation:sxRise .7s cubic-bezier(.22,.8,.24,1) .05s both}
+@keyframes sxSweep{to{stroke-dashoffset:0}}
+@keyframes sxRise{from{opacity:0;transform:translateY(5px) scale(.94)}to{opacity:1;transform:translateY(.25px)}}
+.sx-k{display:flex;align-items:center;gap:7px;font-weight:600;color:var(--ink-2);white-space:nowrap}
+.sx-d{width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
+.sx-d.t-p{color:var(--prot-ink)}
+.sx-kg{white-space:nowrap}
+@media (max-width:360px){.sx-hj{display:none}}
+.sx-fib{display:flex;align-items:baseline;gap:6px;font-size:var(--t-cap);font-weight:600;color:var(--ink-2);white-space:nowrap}
+.sx-fib .sx-d{align-self:center}
+.sx-fib b{font-size:var(--t-sm);font-weight:650;color:var(--ink);font-variant-numeric:tabular-nums}
+.sx-fib b small{font-size:var(--t-cap);font-weight:500;color:var(--muted)}
+.sx-d.t-f{color:var(--fib)}
+.sx-rows{flex:1;min-width:0;display:flex;flex-direction:column;gap:11px}
+.sx-r{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;column-gap:10px;row-gap:1px}
+.sx-r .sx-k{min-width:0;font-size:var(--t-sm)}
+.sx-p{font-style:normal;font-size:var(--t-sm);font-weight:650;font-variant-numeric:tabular-nums;text-align:right}
+.sx-g{display:flex;align-items:baseline;white-space:nowrap}
+.sx-g b{font-size:1.176rem;font-weight:660;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--ink);line-height:1.1}
+.sx-g small{margin-left:.2em;font-size:var(--t-sm);font-weight:500;color:var(--muted)}
+.sx-r .sx-gk{text-align:right;white-space:nowrap}
+@media (max-width:380px){.sx-ring{width:100px}.sx-core{gap:16px}.sx-c b{font-size:1.294rem}}
+@media (max-width:340px){.sx-ring{width:92px}.sx-core{gap:12px}.sx-c b{font-size:1.176rem}}
+@media (prefers-reduced-motion:reduce){.sx-ring.anim .sx-sweep,.sx-ring.anim .sx-c{animation:none}}
+/* v47: planos alimentares (um toque troca o plano em uso) */
+.pl-row{display:flex;gap:8px;margin:12px -16px 0;padding:0 16px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.pl-row::-webkit-scrollbar{display:none}
+.pl-c{flex:none;display:inline-flex;align-items:center;gap:6px;height:44px;max-width:15rem;padding:0 15px;border-radius:22px;border:1px solid var(--dj-quiet-line);background:var(--dj-quiet);font-size:var(--t-sm);font-weight:600;color:var(--muted)}
+.pl-c .pl-n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pl-c.on{color:var(--ink);border-color:rgba(224,140,78,.5);background:rgba(224,140,78,.1)}
+.pl-c .pl-x{display:flex;margin-right:-3px}
+.pl-c .pl-x svg{width:15px;height:15px;color:var(--accent-2)}
+.pl-dup{color:var(--ink-2);border-style:dashed;border-color:var(--line-2);background:transparent}
+.pl-dup .pl-i{display:flex}
+.pl-dup.ico{width:44px;padding:0;justify-content:center}
+@media (max-width:360px){.pl-w{display:none}}
+.pl-dup .pl-i svg{width:17px;height:17px;color:var(--accent-2)}
 /* objetivo: três energias lado a lado e nunca confundidas — meta (cobre), plano, gasto estimado */
 .goalcard .goalrow{flex-direction:column;align-items:stretch;gap:12px;padding:14px 16px}
 .gl-top{display:flex;align-items:center;gap:14px;min-width:0}
@@ -2212,6 +2249,13 @@ const db = C.createFoodDB(DATA);
 const calcItem = it => C.calcItem(db, it);
 const mealTotal = m => C.mealTotal(db, m);
 const planTotal = pl => C.planTotal(db, pl);
+/* v47: vários planos alimentares por pessoa (ex.: dia de treino e dia sem treino).
+   p.plan continua sendo o plano em uso (o "Plano do dia", que a Home, o registro e o resumo usam); os outros ficam em p.plans.
+   Nada do que já existia muda de lugar: uma versão anterior do app continua lendo o plano em uso normalmente. */
+const PLAN0 = "Plano principal";
+const planName = pl => (pl && pl.name || "").trim() || PLAN0;
+const allPlans = p => [p.plan, ...(p.plans || [])].sort((a, b) => (a.pos || 0) - (b.pos || 0));
+function setActivePlan(p, pl){ if (!pl || p.plan === pl) return; const rest = allPlans(p).filter(x => x !== pl); p.plan = pl; p.plans = rest; }
 
 /* ---------- dados salvos neste aparelho ---------- */
 // Formato preservado da versão anterior (chave "nutripratico.v1"; perfis continuam em "patients").
@@ -2244,7 +2288,11 @@ function load(){
   for (const p of S.patients){
     p.energy = p.energy || {weight: null, height: null, fao: 1, dri: 1};
     p.plan = p.plan || {objective: "", target: null, meals: []};
-    for (const m of p.plan.meals){ m.time = m.time || ""; m.items = m.items || []; }
+    p.plans = Array.isArray(p.plans) ? p.plans.filter(x => x && typeof x === "object") : [];
+    for (const pl of [p.plan, ...p.plans]){
+      pl.meals = pl.meals || []; pl.id = pl.id || uid(); if (typeof pl.name !== "string") pl.name = ""; if (typeof pl.pos !== "number") pl.pos = 0;
+      for (const m of pl.meals){ m.time = m.time || ""; m.items = m.items || []; }
+    }
     p.logs = p.logs || {};
     for (const k of LOG_KINDS) p.logs[k] = p.logs[k] || [];
     p.care = Object.assign(CARE0(), p.care || {});
@@ -4846,18 +4894,36 @@ function foodNav(){
 /* ---------- Meu plano ---------- */
 // Anel de energia dos macronutrientes (fração da energia de C, P e G pelos fatores 4/4/9, como em C.macroSplit), com o total planejado no centro.
 // O total vem da energia declarada de cada alimento (TACO ou rótulo), não da soma 4/4/9: os dois podem diferir alguns por cento (ver PRODUTO.md §39).
-function macroRing(t, sp){
-  const R = 52, L = 2 * Math.PI * R, segs = [["t-c", sp.c], ["t-p", sp.p], ["t-g", sp.l]].filter(x => x[1] > 0), gap = segs.length > 1 ? 2.6 : 0;
-  let off = 0; const arcs = segs.map(([c, pc]) => { const len = L * pc / 100, d = Math.max(0, len - gap);
-    const a = `<circle class="rg ${c}" cx="60" cy="60" r="${R}" stroke-dasharray="${d.toFixed(2)} ${(L - d).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}"/>`; off += len; return a; }).join("");
-  return h("div", {class: "sx-ring", "aria-hidden": "true"},
-    h("span", {style: "display:contents", html: `<svg viewBox="0 0 120 120"><circle class="rg-trk" cx="60" cy="60" r="${R}"/><g transform="rotate(-90 60 60)">${arcs}</g></svg>`}),
-    h("span", {class: "sx-c"}, h("b", null, k0(t.kcal)), h("span", null, "kcal")));
+// v47: anel mais fino e maior (o número respira), pontas arredondadas com um respiro entre os arcos.
+// Ao entrar na tela (ou trocar de plano), os arcos se desenham num giro e o número sobe até o total; com "Reduzir movimento", aparece pronto.
+const RM = matchMedia("(prefers-reduced-motion: reduce)");
+function macroRing(t, sp, anim){
+  const R = 52, L = 2 * Math.PI * R, SW = 7, segs = [["t-c", sp.c], ["t-p", sp.p], ["t-g", sp.l]].filter(x => x[1] > 0);
+  const gap = segs.length > 1 ? SW + 3.4 : 0;   // com pontas redondas, o espaço visível entre os arcos fica em ~3,4 (de 120)
+  let off = 0; const arcs = segs.map(([c, pc]) => { const len = L * pc / 100, d = Math.max(0.01, len - gap);
+    const a = `<circle class="rg ${c}" cx="60" cy="60" r="${R}" stroke-dasharray="${d.toFixed(2)} ${(L - d).toFixed(2)}" stroke-dashoffset="${(-(off + gap / 2)).toFixed(2)}"/>`; off += len; return a; }).join("");
+  const go = anim && !RM.matches && segs.length > 0;
+  const mask = go ? `<mask id="sx-m" maskUnits="userSpaceOnUse" x="0" y="0" width="120" height="120"><circle class="sx-sweep" cx="60" cy="60" r="${R}" stroke="#fff" stroke-width="16" stroke-dasharray="${L.toFixed(2)} ${L.toFixed(2)}" stroke-dashoffset="${L.toFixed(2)}"/></mask>` : "";
+  const num = h("b", null, k0(go ? 0 : t.kcal));
+  const el = h("div", {class: "sx-ring" + (go ? " anim" : ""), "aria-hidden": "true"},
+    h("span", {style: "display:contents", html: `<svg viewBox="0 0 120 120"><circle class="rg-trk" cx="60" cy="60" r="${R}"/><g transform="rotate(-90 60 60)">${mask}<g${go ? ' mask="url(#sx-m)"' : ""}>${arcs}</g></g></svg>`}),
+    h("span", {class: "sx-c"}, num, h("span", null, "kcal")));
+  if (go){   // o número acompanha o giro (mesma duração e curva de desaceleração)
+    const end = t.kcal, t0 = performance.now() + 120, dur = 1050;
+    const step = now => { if (!num.isConnected && now - t0 > 200) return; const x = Math.min(1, Math.max(0, (now - t0) / dur)), e = 1 - Math.pow(1 - x, 3);
+      num.textContent = k0(end * e); if (x < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  }
+  return el;
 }
 let goalLedOpen = false;   // v45: os números do objetivo (meta, plano, GET) ficam recolhidos; a seta da linha abre
 function renderPlan(p){
   let repaintGoal = null;   // o quadro de energia do objetivo acompanha o total do plano
   const plan = p.plan;
+  // o anel anima ao chegar na tela ou ao trocar de pessoa ou de plano; não a cada alimento editado
+  const ringKey = p.id + ":" + plan.id;
+  let animRing = !app.querySelector(".sumcard") || app.dataset.ring !== ringKey;
+  app.dataset.ring = ringKey;
   const r = C.energyOf(p);
   const target = () => plan.target || (r.ok && r.get ? Math.round(r.get) : null);
   const refs = new Map();   // id -> elementos que mudam sem redesenhar a tela
@@ -4875,13 +4941,17 @@ function renderPlan(p){
     // instrumento: cabeçalho discreto · anel de energia com o total no centro · legenda alinhada (gramas e % da energia), fibras integradas
     put(sumBtn,
       // v45.1: kcal/kg no cabeçalho e g/kg em cada macronutriente (peso do perfil; sem peso, não aparece)
-      h("div", {class: "sx-h"}, h("span", {class: "sx-eye"}, "Planejado para hoje"), h("span", {class: "sx-hr"}, W && t.kcal ? h("span", {class: "sx-kg"}, `${nf1.format(t.kcal / W)} kcal/kg`) : null, h("span", {class: "li-go", html: ICON.right}))),
-      h("div", {class: "sx-core"}, macroRing(t, sp),
-        h("div", {class: "sx-leg"}, [["t-c", "Carboidratos", t.c, sp.c], ["t-p", "Proteínas", t.p, sp.p], ["t-g", "Gorduras", t.l, sp.l], ["t-f", "Fibras", t.f, null]].map(([c, k, g, pc]) =>
-          h("span", {class: "sx-i"}, h("span", {class: "sx-k"}, c === "t-f" ? null : h("i", {class: "sx-d " + c}), k),
-            h("span", {class: "sx-v"}, h("b", null, fmtG(g), h("small", null, " g")), pc == null ? null : h("em", null, `${Math.round(pc)}%`)),
-            W && c !== "t-f" ? h("span", {class: "sx-gk"}, `${nf1.format(g / W)} g/kg`) : null)))),
+      h("div", {class: "sx-h"}, h("span", {class: "sx-eye"}, "Planejado", h("span", {class: "sx-hj"}, " para hoje")), h("span", {class: "sx-hr"}, W && t.kcal ? h("span", {class: "sx-kg"}, `${nf1.format(t.kcal / W)} kcal/kg`) : null, h("span", {class: "li-go", html: ICON.right}))),
+      // v47: fibras sob o anel; cada macronutriente numa linha: nome e % da energia, gramas e g/kg (os mesmos números, em colunas alinhadas)
+      h("div", {class: "sx-core"},
+        h("div", {class: "sx-l"}, macroRing(t, sp, animRing),
+          h("span", {class: "sx-fib"}, h("i", {class: "sx-d t-f"}), "Fibras", h("b", null, fmtG(t.f), h("small", null, " g")))),
+        h("div", {class: "sx-rows"}, [["t-c", "Carboidratos", t.c, sp.c], ["t-p", "Proteínas", t.p, sp.p], ["t-g", "Gorduras", t.l, sp.l]].map(([c, k, g, pc]) =>
+          h("div", {class: "sx-r"},
+            h("span", {class: "sx-k"}, h("i", {class: "sx-d " + c}), k), h("em", {class: "sx-p " + c}, `${Math.round(pc)}%`),
+            h("span", {class: "sx-g"}, h("b", null, fmtG(g)), h("small", null, "g")), W ? h("span", {class: "sx-gk"}, `${nf1.format(g / W)} g/kg`) : h("span"))))),
       note ? h("div", {class: "sx-foot"}, h("span", {class: "sx-note"}, note)) : null);
+    animRing = false;
     if (repaintGoal) repaintGoal();
     put(sumbar,
       h("span", {class: "k"}, h("b", null, k0(t.kcal)), tg ? ` / ${k0(tg)}` : "", h("span", {class: "u"}, " kcal")),
@@ -4890,6 +4960,82 @@ function renderPlan(p){
         h("span", null, h("b", {class: "t-g"}, "G"), fmtG(t.l)), h("span", null, h("b", {class: "t-f"}, "F"), fmtG(t.f))));
   }
   function summarySheet(){ nutritionSheet(p); }
+
+  /* v47: planos alimentares. Um toque troca o plano em uso; tocar no plano em uso abre renomear, duplicar e excluir. */
+  const plansRow = h("div", {class: "pl-row", role: "group", "aria-label": "Planos alimentares"});
+  function paintPlans(){
+    const all = allPlans(p), many = all.length > 1;
+    put(plansRow, all.map(pl => { const on = pl === plan;
+      return h("button", {class: "pl-c" + (on ? " on" : ""), type: "button", "aria-pressed": String(on),
+        "aria-label": on ? `${planName(pl)}: plano em uso. Toque para renomear, duplicar ou excluir` : `Usar ${planName(pl)}, ${k0(planTotal(pl).kcal)} kcal`,
+        onclick: () => on ? planMenu() : usePlan(pl)}, h("span", {class: "pl-n"}, planName(pl)), on ? h("span", {class: "pl-x", html: ICON.chev}) : null); }),
+      h("button", {class: "pl-c pl-dup" + (many ? " ico" : ""), type: "button", "aria-label": `Duplicar ${planName(plan)}`, onclick: dupSheet}, h("span", {class: "pl-i", html: ICON.dup}), many ? null : h("span", null, "Duplicar", h("span", {class: "pl-w"}, " plano"))));
+  }
+  function usePlan(pl){
+    setActivePlan(p, pl); touch(p); haptic();
+    go({edit: null, open: []}, true); toast(`${planName(pl)} em uso hoje`);
+  }
+  const PLAN_SUG = ["Dia de treino", "Dia sem treino", "Fim de semana", "Dia de jogo", "Dia de descanso"];
+  const takenName = (v, except) => allPlans(p).some(x => x !== except && norm(planName(x)) === norm(v));
+  // folha de nome (renomear e duplicar): campo, sugestões que ainda não foram usadas, aviso de nome repetido
+  function nameSheet(o){
+    sheet(o.title, (el, close) => {
+      const inp = h("input", {class: "input", id: "pl-nome", value: o.value || "", placeholder: o.placeholder || "", maxlength: "32", autocomplete: "off", enterkeyhint: "done"});
+      const cur = o.cur ? h("input", {class: "input", id: "pl-atual", value: "", placeholder: PLAN0, maxlength: "32", autocomplete: "off", enterkeyhint: "next"}) : null;
+      const warn = h("p", {class: "note warn", hidden: true});
+      const sugs = h("div", {class: "chips sugs", style: "margin:10px 0 0"});
+      const okB = h("button", {class: "btn primary block", type: "button"}, o.ok);
+      const chosen = () => inp.value.trim() || o.placeholder || "";
+      function check(){
+        const v = chosen(), c = cur ? cur.value.trim() : "";
+        const dup = v && (takenName(v, o.except) || (c && norm(c) === norm(v)));
+        warn.hidden = !dup; warn.textContent = dup ? `Já existe um plano chamado “${v}”.` : "";
+        okB.disabled = !v || !!dup;
+        // a sugestão preenche o campo em que a pessoa está (com dois campos, "deste plano" ou "do novo plano")
+        put(sugs, PLAN_SUG.filter(x => !takenName(x, o.except) && norm(c) !== norm(x) && norm(inp.value.trim()) !== norm(x)).slice(0, 4).map(x =>
+          h("button", {type: "button", onclick: () => { tgt.value = x; check(); }}, x)));
+      }
+      let tgt = inp;
+      inp.addEventListener("input", check); inp.addEventListener("focus", () => { tgt = inp; });
+      if (cur) { cur.addEventListener("input", check); cur.addEventListener("focus", () => { tgt = cur; }); }
+      inp.addEventListener("keydown", e => { if (e.key === "Enter" && !okB.disabled) okB.click(); });
+      okB.addEventListener("click", () => { close(); o.fn(chosen(), cur ? cur.value.trim() : null); });
+      check();
+      el.append(h("h2", null, o.title), o.sub ? h("p", {class: "sh-sub"}, o.sub) : null,
+        cur ? h("div", {class: "field"}, h("label", {for: "pl-atual"}, "Nome deste plano (opcional)"), cur) : null,
+        h("div", {class: "field", style: cur ? "margin-top:14px" : null}, h("label", {for: "pl-nome"}, o.label), inp), sugs, warn,
+        h("div", {class: "confirmbar"}, okB));
+      if (!cur) setTimeout(() => inp.focus(), 60);
+    });
+  }
+  function dupSheet(){
+    const n = allPlans(p).length, unnamed = !plan.name.trim();
+    nameSheet({title: "Duplicar plano", label: "Nome do novo plano", ok: "Duplicar plano", placeholder: `Plano ${n + 1}`, cur: unnamed,
+      sub: `Cria uma cópia de “${planName(plan)}” com as mesmas refeições, objetivo e meta. A cópia abre em seguida para você ajustar; o original não muda.`,
+      fn: (name, curName) => {
+        const old = plan.name, c = JSON.parse(JSON.stringify(plan));
+        if (curName) plan.name = curName;
+        c.id = uid(); c.name = name; c.pos = Math.max(...allPlans(p).map(x => x.pos || 0)) + 1;
+        for (const m of c.meals){ m.id = uid(); for (const it of m.items) it.id = uid(); }
+        p.plans.push(c); setActivePlan(p, c); touch(p);
+        go({edit: null, open: []}, true);
+        toast(`${name} criado`, () => { setActivePlan(p, plan); p.plans = p.plans.filter(x => x !== c); plan.name = old; touch(p); go({edit: null, open: []}, true); });
+      }});
+  }
+  function planMenu(){
+    const all = allPlans(p), n = plan.meals.filter(m => filled(m).length).length;
+    actionSheet(planName(plan), `Plano em uso hoje · ${n === 1 ? "1 refeição" : n + " refeições"} · ${k0(planTotal(plan).kcal)} kcal`, [
+      {label: "Renomear", fn: () => nameSheet({title: "Renomear plano", label: "Nome do plano", ok: "Salvar", value: plan.name, placeholder: "", except: plan,
+        fn: v => { plan.name = v; touch(p); paintPlans(); toast("Plano renomeado"); }})},
+      {label: "Duplicar plano", fn: dupSheet},
+      all.length > 1 ? {label: "Excluir plano", cls: "danger", fn: () => actionSheet(`Excluir “${planName(plan)}”?`,
+        `As refeições deste plano saem junto. Os outros planos e o que já foi registrado como comido não mudam.`, [{label: "Excluir plano", cls: "danger", fn: () => {
+          const i = all.indexOf(plan), next = all[i + 1] || all[i - 1];
+          setActivePlan(p, next); p.plans = p.plans.filter(x => x !== plan); touch(p);
+          go({edit: null, open: []}, true);
+          toast(`${planName(plan)} excluído`, () => { p.plans.push(plan); setActivePlan(p, plan); touch(p); go({edit: null, open: []}, true); });
+        }}])} : null]);
+  }
 
   /* objetivo e meta */
   const obj = h("input", {class: "input", id: "objetivo", placeholder: "Objetivo", value: plan.objective || "", enterkeyhint: "done", "aria-label": "Objetivo"});
@@ -5266,7 +5412,7 @@ function renderPlan(p){
 
   /* ---- copiar plano como texto ---- */
   function copyPlan(){
-    const lines = [`PLANO ALIMENTAR · ${p.name}`];
+    const lines = [`PLANO ALIMENTAR · ${p.name}${(p.plans || []).length ? " · " + planName(plan) : ""}`];
     if (plan.objective) lines.push(`Objetivo: ${plan.objective}`);
     for (const m of plan.meals){
       const its = filled(m);
@@ -5290,7 +5436,7 @@ function renderPlan(p){
       h("div", {class: "spacer"}),
       h("button", {class: "icon-btn", "aria-label": "Copiar plano em texto", onclick: copyPlan}, ic("share")), quickBtn(p, "alimentacao")), sumbar);
   put(app, h("div", {class: "view"},
-    head, h("h1", {class: "pg"}, "Nutrição"), foodNav(),
+    head, h("h1", {class: "pg"}, "Nutrição"), foodNav(), plansRow,
     h("section", {class: "panel sumcard"}, sumBtn),
     h("section", {class: "panel goalcard"}, goalRow, goalEd),
     C.energyOf(p).child ? h("p", {class: "note warn"}, "Para crianças e adolescentes, a meta considera o crescimento. Evite déficit calórico sem acompanhamento profissional.") : null,
@@ -5300,7 +5446,7 @@ function renderPlan(p){
     mealsEl,
     h("div", {class: "add-row"}, h("button", {class: "add-meal", onclick: () => addMeal()}, ic("plus"), "Adicionar refeição")),
     srcNote("Valores planejados. Composição: TACO 4ª ed. (NEPA/UNICAMP, 2011). Medidas caseiras: POF 2008–2009 (IBGE).")));
-  paintSum();
+  paintPlans(); paintSum();
   if (!plan.meals.length) addMeal(null, false);
   if (view.focusMeal){
     const R = refs.get(view.focusMeal); view.focusMeal = null;
@@ -5398,7 +5544,7 @@ function foodDetail(f, after){
       f.own ? h("button", {class: "btn ghost block", type: "button", onclick: () => { close(); foodSheet({food: f}, after); }}, ic("edit"), "Editar alimento") : null);
     const askEl = h("div");
     if (f.own){
-      const uses = S.patients.reduce((n, x) => n + x.plan.meals.reduce((k, m) => k + m.items.filter(i => i.foodId === f.id).length, 0), 0);
+      const uses = S.patients.reduce((n, x) => n + allPlans(x).flatMap(pl => pl.meals).reduce((k, m) => k + m.items.filter(i => i.foodId === f.id).length, 0), 0);
       actions.append(h("button", {class: "btn danger block", type: "button", onclick: () => ask(askEl,
         uses ? `${f.dn} está em ${uses} ${uses === 1 ? "item de plano" : "itens de planos"}. Excluir mesmo assim? Esses itens ficam marcados para substituir.` : `Excluir ${f.dn}?`,
         [{label: "Excluir", fn: () => { S.foods = S.foods.filter(r => r[0] !== f.id); S.prefs.fav = S.prefs.fav.filter(x => x !== f.id); db.remove(f.id); save(); close(); toast("Alimento excluído"); after && after(); }}])}, ic("x"), "Excluir alimento"), askEl);
@@ -5419,7 +5565,7 @@ function pickMeal(f, mlabel){
     go({tab: "alimentacao", sub: "plano", open: [...new Set([...(view.open || []), m.id])], edit: it.id, focusMeal: m.id});
     setTimeout(() => { const q = document.querySelector(".it.edit .qty"); if (q) q.focus(); }, 80);
   };
-  actionSheet("Adicionar em qual refeição?", f.dn, [
+  actionSheet("Adicionar em qual refeição?", (p.plans || []).length ? `${f.dn} · no plano ${planName(plan)}` : f.dn, [
     ...[...plan.meals].sort(byTime).map(m => ({label: `${m.time ? m.time + " · " : ""}${m.name.trim() || "Refeição sem nome"}`, fn: () => go2(m)})),
     {label: "Nova refeição", cls: "primary", fn: () => { const m = {id: uid(), name: "", time: "", items: []}; plan.meals.push(m); go2(m); }}]);
 }
@@ -5706,7 +5852,7 @@ function goalSheet(p){
     const opts = h("div", {class: "chips"}, S.prefs.objectives.map(o => h("button", {type: "button", class: norm(o) === norm(obj.value) ? "on" : "", onclick: () => { obj.value = o; paint(); }}, o)));
     const paint = () => [...opts.children].forEach(b => b.classList.toggle("on", norm(b.textContent) === norm(obj.value)));
     obj.addEventListener("input", paint);
-    el.append(h("h2", null, "Objetivos e metas"), h("p", {class: "sh-sub"}, `Valem para o plano de ${firstName(p.name)}.`),
+    el.append(h("h2", null, "Objetivos e metas"), h("p", {class: "sh-sub"}, (p.plans || []).length ? `Valem para o plano “${planName(plan)}” de ${firstName(p.name)}. Cada plano tem a sua meta.` : `Valem para o plano de ${firstName(p.name)}.`),
       h("div", {class: "field"}, h("label", {for: "pf-obj"}, "Objetivo"), obj), opts,
       h("div", {class: "field", style: "margin-top:14px"}, h("label", {for: "pf-meta"}, "Meta de energia (kcal por dia)"), tgt),
       r.ok && r.get ? h("button", {class: "btn ghost block", type: "button", onclick: () => { tgt.value = String(Math.round(r.get)); }}, `Usar o GET estimado (${k0(r.get)} kcal)`) : null,
@@ -5881,7 +6027,7 @@ function profileSheet(p){
       e.preventDefault(); check(); if (ok.disabled) return;
       if (editing){ p.name = name.value.trim(); p.birth = toISO(birth.value); p.sex = sex; touch(p); close(); render(); return; }
       const np = {id: uid(), name: name.value.trim(), birth: toISO(birth.value), sex, updated: Date.now(),
-        energy: {weight: null, height: null, fao: 1, dri: 1}, plan: {objective: "", target: null, meals: []}};
+        energy: {weight: null, height: null, fao: 1, dri: 1}, plan: {id: uid(), name: "", pos: 0, objective: "", target: null, meals: []}, plans: []};
       S.patients.push(np); S.activeId = np.id; saveNow(); close(); go({tab: "perfil", open: [], edit: null}); toast(`Perfil de ${firstName(np.name)} criado`);
       setTimeout(() => bodySheet(np), 320);   // próximo passo natural: peso e altura
     });

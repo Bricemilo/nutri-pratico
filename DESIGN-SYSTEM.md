@@ -280,6 +280,13 @@ As cores foram medidas na imagem aprovada, nos mesmos pontos de cada cartão (ca
 
 ---
 
+### 3.12 Nutrição: cartão "Planejado" e planos (v47)
+
+- Anel de 112 pt (100 pt até 380 pt; 92 pt até 340 pt), traço 7 de 120, com pontas arredondadas e um respiro de ~3,4 entre os arcos.
+- Animação de entrada: giro de 1,15 s com curva de desaceleração, e o número sobe junto. Só ao entrar na tela ou trocar de plano/pessoa; desligada com "Reduzir movimento".
+- Fibras ficam sob o anel. Cada macronutriente ocupa uma linha: nome e % (na cor do macro), depois gramas e g/kg alinhados à direita.
+- Planos: botões-pílula de 44 pt. O plano em uso tem borda cobre e uma seta (abre o menu). "Duplicar" tem borda tracejada; com dois ou mais planos, vira só o ícone. A fileira rola na horizontal quando não cabe.
+
 ## 4. Layout da Home: motor adaptativo
 
 Ordem (v32): cabeçalho (seletor, saudação, data) · **A** pilares 2 × 2 · **B** Hidratação + Suplementos · **C** Prioridades + Agenda. v38: sem divisórias. v38.1: dois grupos de quatro (pilares · cuidados e organização) separados só por espaço: `--hm-row` (14) dentro do grupo, `--hm-grp` entre os grupos. v38.3: brilho suave atrás de textos longos (`.lt`, `softGlow`: fim do texto além de 72% da largura → reflexo de baixo até 55%); Nutrição com a legenda "Planejado por dia". v39: **linha-estrela** (`jewelStar`, `.gstar`) entre os dois grupos: 19,5 + fio + 19,5 = 40 (`--hm-star`, v39.1; 32 em telas estreitas); fio de cobre de 0,6 px com núcleo claro e halo elíptico de 120 × 12 no centro; uma só na Home, sem animação. **Home congelada a partir da v39.** v38.2: um ritmo só: `--hm-grp` 24 (20 em telas estreitas), igual ao espaço do cabeçalho aos cartões (`--sp-head` 20 + até 4 da distribuição). Oito cartões, quatro linhas de dois. O GET saiu da Home e continua em Perfil → Planejamento.

@@ -1664,3 +1664,33 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
   - dias que ainda não chegaram ficam vazios e não podem ser tocados.
 - **Setas:** área de toque de 44 pt.
 - **iPhone de 320 pt:** o nome do pilar no cartão fica oculto (ele já está na aba logo acima), para caber "‹ 26 out – 1 nov ›".
+
+## 65. v47 — Vários planos alimentares, cartão da Nutrição redesenhado e revisão dos cálculos
+
+- **Vários planos por pessoa** (ex.: "Dia de treino" e "Dia sem treino"):
+  - fileira de planos abaixo de "Plano do dia | Alimentos": um toque troca o plano em uso;
+  - o plano em uso é o que a Home, o registro de refeições e o resumo usam;
+  - "Duplicar plano" cria uma cópia com as mesmas refeições, objetivo e meta. A cópia abre em seguida para edição e o original não muda;
+  - ao duplicar o primeiro plano, a folha também permite nomear o plano atual (opcional);
+  - sugestões de nome: Dia de treino, Dia sem treino, Fim de semana, Dia de jogo e Dia de descanso (só as que ainda não foram usadas);
+  - tocar no plano em uso abre Renomear, Duplicar e Excluir. Excluir só aparece com dois ou mais planos, pede confirmação e oferece "Desfazer";
+  - cada plano tem sua meta de energia e seu objetivo;
+  - nomes repetidos não são aceitos.
+- **Dados:** `p.plan` continua sendo o plano em uso; os outros ficam em `p.plans`. Cada plano ganha `id`, `name` e `pos`. A migração só acrescenta campos, sem apagar nem mover nada, e uma versão anterior do app continua lendo o plano em uso. Planos são por pessoa: nada passa para outro perfil da família.
+- **Cartão "Planejado para hoje":**
+  - anel maior (112 pt) e mais fino, com pontas arredondadas e um respiro entre os arcos; o total em kcal tem folga dentro do círculo;
+  - ao entrar na tela (ou trocar de plano/pessoa), os arcos se desenham num giro e o número sobe até o total (≈1 s). Editar alimentos não repete a animação. Com "Reduzir movimento", aparece pronto;
+  - fibras logo abaixo do anel;
+  - cada macronutriente numa linha: nome e % da energia em cima; gramas e g/kg embaixo, em colunas alinhadas;
+  - em telas de até 360 pt, o cabeçalho mostra só "Planejado".
+- **Revisão dos cálculos:**
+  - os totais do print (2.472 kcal; 284 g C, 148 g P, 89 g G) conferem com a soma dos alimentos;
+  - os % (45/23/32) saem dos fatores 4/4/9 e somam 100%;
+  - os g/kg conferem com 82,1 kg;
+  - a base foi comparada item a item com a leitura do PDF oficial da TACO (596 itens):
+    - a maioria dos valores é idêntica;
+    - 40 valores diferem em 0,1 (arredondamento da fonte);
+    - em 6 linhas (croquete, quibe, estrogonofes, sarapatel) a leitura do PDF saiu desalinhada e a base do app está correta (ex.: estrogonofe de frango 157 kcal);
+  - peito de frango não tem gordura zero na base: grelhado 2,5 g/100 g, cozido 3,2 g, cru 3,0 g, assado com pele 7,6 g;
+  - alimentos com gordura 0 na base são os que a TACO marca como traços (Tr) ou não aplicável (frutas, açúcar, bebidas);
+  - quatro itens que a TACO marca "em reanálise" continuam fora da busca.
