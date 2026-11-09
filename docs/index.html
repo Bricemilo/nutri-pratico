@@ -1579,7 +1579,7 @@ html.big-text .hc.l1 .hc-v b.txt{font-size:1.294rem}
 .sx-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
 .sx-c b{font-size:1.412rem;font-weight:690;letter-spacing:-.035em;line-height:1;font-variant-numeric:tabular-nums;color:var(--ink)}
 .sx-c span{font-size:var(--t-cap);color:var(--ink-2);margin-top:4px}
-.sx-leg{flex:1 1 11rem;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 14px}
+.sx-leg{flex:1 1 11rem;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 14px}
 .sx-i{display:flex;flex-direction:column;gap:3px;min-width:0}
 .sx-k{display:flex;align-items:center;gap:7px;font-size:var(--t-cap);font-weight:600;color:var(--ink-2);white-space:nowrap}
 .sx-d{width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
@@ -1590,6 +1590,11 @@ html.big-text .hc.l1 .hc-v b.txt{font-size:1.294rem}
 .sx-v em{font-style:normal;font-size:var(--t-sm);color:var(--ink-2);font-variant-numeric:tabular-nums}
 .sx-foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;margin-top:14px;padding-top:10px;border-top:1px solid var(--dj-quiet-rule);font-size:var(--t-cap);color:var(--muted)}
 .sx-note{color:var(--accent-2);font-weight:600}
+.sx-hr{display:flex;align-items:center;gap:8px}
+.sx-kg{font-size:var(--t-cap);font-weight:600;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.sx-gk{font-size:var(--t-cap);color:var(--muted);font-variant-numeric:tabular-nums;line-height:1.2}
+.sx-c{transform:translateY(.25px)}   /* v45.1: o número e "kcal" ficam no centro óptico do anel (mesma folga acima e abaixo) */
+.sx-c span{line-height:1.1}
 @media (max-width:380px){.sx-ring{width:88px}.sx-core{gap:14px}.sx-c b{font-size:1.294rem}}
 /* objetivo: três energias lado a lado e nunca confundidas — meta (cobre), plano, gasto estimado */
 .goalcard .goalrow{flex-direction:column;align-items:stretch;gap:12px;padding:14px 16px}
@@ -5540,18 +5545,20 @@ function renderPlan(p){
   const sumbar = h("button", {class: "sumbar", "aria-label": "Ver resumo nutricional completo", onclick: summarySheet});
   const sumBtn = h("button", {class: "sc-btn", type: "button", "aria-label": "Ver resumo nutricional completo", onclick: summarySheet});
   function paintSum(){
-    const t = planTotal(plan), tg = target();
+    const t = planTotal(plan), tg = target(), W = p.energy.weight > 0 ? p.energy.weight : null;
     const e = C.eatenDay(logsOf(p).eaten, today()), sp = C.macroSplit(t);
     const over = tg && t.kcal > tg ? t.kcal - tg : 0;
     const note = [over ? `${k0(over)} kcal acima da meta` : "", e.t.kcal > 0 ? `${k0(e.t.kcal)} kcal consumidas` : ""].filter(Boolean).join(" · ");
     sumBtn.setAttribute("aria-label", `${k0(t.kcal)} quilocalorias planejadas para hoje${note ? `, ${note}` : ""}. Carboidratos ${fmtG(t.c)} gramas, ${Math.round(sp.c)}%. Proteínas ${fmtG(t.p)} gramas, ${Math.round(sp.p)}%. Gorduras ${fmtG(t.l)} gramas, ${Math.round(sp.l)}%. Fibras ${fmtG(t.f)} gramas. Toque para ver o resumo completo.`);
     // instrumento: cabeçalho discreto · anel de energia com o total no centro · legenda alinhada (gramas e % da energia), fibras integradas
     put(sumBtn,
-      h("div", {class: "sx-h"}, h("span", {class: "sx-eye"}, "Planejado para hoje"), h("span", {class: "li-go", html: ICON.right})),
+      // v45.1: kcal/kg no cabeçalho e g/kg em cada macronutriente (peso do perfil; sem peso, não aparece)
+      h("div", {class: "sx-h"}, h("span", {class: "sx-eye"}, "Planejado para hoje"), h("span", {class: "sx-hr"}, W && t.kcal ? h("span", {class: "sx-kg"}, `${nf1.format(t.kcal / W)} kcal/kg`) : null, h("span", {class: "li-go", html: ICON.right}))),
       h("div", {class: "sx-core"}, macroRing(t, sp),
         h("div", {class: "sx-leg"}, [["t-c", "Carboidratos", t.c, sp.c], ["t-p", "Proteínas", t.p, sp.p], ["t-g", "Gorduras", t.l, sp.l], ["t-f", "Fibras", t.f, null]].map(([c, k, g, pc]) =>
           h("span", {class: "sx-i"}, h("span", {class: "sx-k"}, c === "t-f" ? null : h("i", {class: "sx-d " + c}), k),
-            h("span", {class: "sx-v"}, h("b", null, fmtG(g), h("small", null, " g")), pc == null ? null : h("em", null, `${Math.round(pc)}%`)))))),
+            h("span", {class: "sx-v"}, h("b", null, fmtG(g), h("small", null, " g")), pc == null ? null : h("em", null, `${Math.round(pc)}%`)),
+            W && c !== "t-f" ? h("span", {class: "sx-gk"}, `${nf1.format(g / W)} g/kg`) : null)))),
       note ? h("div", {class: "sx-foot"}, h("span", {class: "sx-note"}, note)) : null);
     if (repaintGoal) repaintGoal();
     put(sumbar,

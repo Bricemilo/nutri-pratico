@@ -1639,3 +1639,8 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
 **Home.**
 - Hidratação: "2,7 L", com o "por dia" só na legenda, como na Nutrição.
 - Suplementos: só o que existe ("2 suplementos", "1 medicamento" ou "2 supl. · 1 med."); sem nenhum, "Nenhum".
+
+## 63. v45.1 — Nutrição: kcal/kg, g/kg e o número centrado no anel
+
+- **kcal/kg** no cabeçalho do cartão ("Planejado para hoje · 31,9 kcal/kg") e **g/kg** abaixo de cada macronutriente ("3,7 g/kg"), calculados com o peso do perfil. Sem peso, não aparecem.
+- **Número e "kcal" centrados no anel:** folga igual acima e abaixo (medida no simulador; diferença menor que 1 px).
