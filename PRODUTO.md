@@ -1742,3 +1742,15 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
   - "· 6 alimentos" com a refeição aberta, porque a lista já está à vista.
 - **Medida em gramas:** o alimento mostra só "15 g", e não "15 × Grama · 15 g".
 - **Altura:** o cabeçalho da refeição aberta passou de 140 pt para 105 pt. Ações com 44 pt de toque.
+
+## 71. v50 — Medidas em português natural, total da refeição no padrão novo e nome em branco
+
+- **Medidas como se fala:**
+  - "2 unidades · 100 g", "3 colheres de sopa · 45 g", "2 fatias", "½ colher de sopa", "1½ xícara de chá";
+  - plural a partir de 2: o substantivo e os adjetivos que vêm logo depois dele ("copos americanos", "pratos rasos"), sem mexer no que vem depois de "de" ou entre parênteses ("colheres de sopa", "garrafas (600 ml)");
+  - frações ¼, ½ e ¾;
+  - em gramas, só "15 g";
+  - vale na lista de alimentos, na substituição e no plano copiado em texto;
+  - as 95 medidas da base foram conferidas.
+- **Total da refeição:** a mesma regra do cartão "Planejado". O nome e o % de cada macronutriente ficam na sua cor, as gramas em branco e Fibras em branco.
+- **Refeição aberta:** o nome fica em branco; o cobre fica só no horário.

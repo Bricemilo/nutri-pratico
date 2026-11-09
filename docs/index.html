@@ -206,6 +206,9 @@ h2.sec{font-size:0.765rem;font-weight:650;letter-spacing:.08em;text-transform:up
 .fib .t-f{font-weight:650}
 .fib b{font-weight:650;font-size:var(--t-body)}
 .fib .s{margin-left:auto;color:var(--muted);font-size:var(--t-cap)}
+/* v50: mesma regra do cartão "Planejado": cor = proporção (nome e %), branco = quantidade; Fibras em branco */
+.mgrid .pc.t-c{color:var(--carb)} .mgrid .pc.t-p{color:var(--prot-ink)} .mgrid .pc.t-g{color:var(--fat)}
+.mwrap .fib .t-f{color:var(--ink)}
 .mwrap.sm{margin-top:0;padding-top:0;border-top:0}
 .mwrap.sm .k{font-size:var(--t-cap)}
 .mwrap.sm .v{font-size:1rem}
@@ -560,6 +563,7 @@ h1.pg{font-size:1.765rem;margin:6px 2px 2px}
 .mh-tm{width:42px;flex:none;font-size:0.765rem;font-weight:600;color:var(--accent-2);font-variant-numeric:tabular-nums}
 .mh-n{color:var(--ink);font-size:var(--t-body);font-weight:600}
 .meal.open .mh-n,.meal-name{color:var(--accent-2)}
+.meal.open .mh-n,.meals > .meal .meal-name{color:var(--ink)}   /* v50: nome em branco; o cobre fica só no horário */
 .sec-n{font-size:var(--t-cap);color:var(--muted);font-weight:500}
 @media (max-width:370px){.sc-m{grid-template-columns:repeat(3,minmax(0,1fr));}.sc-m span:last-child{display:none}h1.pg{font-size:1.529rem}}
 
@@ -2918,6 +2922,32 @@ const k0 = v => nf0.format(Math.round(v));
 const g1 = v => nf1.format(v);
 const fmtG = v => v < 10 ? g1(v) : k0(v);       // uma casa decimal abaixo de 10 g
 const fmtQty = q => q == null ? "" : fq.format(q);
+/* v50: medida em português natural — "3 unidades", "2 fatias", "½ colher de sopa", "1½ xícara de chá" (plural a partir de 2).
+   Pluraliza o substantivo e os adjetivos que vêm logo depois dele, até "de", "do", "da" ou parênteses ("copos americanos", "colheres de sopa"). */
+const PL_KEEP = new Set(["tulipa"]);
+function plWord(w){
+  if (PL_KEEP.has(w.toLowerCase()) || /s$/i.test(w)) return w;
+  if (/ão$/i.test(w)) return w.slice(0, -2) + "ões";
+  if (/[rz]$/i.test(w)) return w + "es";
+  if (/al$/i.test(w)) return w.slice(0, -1) + "is";
+  if (/el$/i.test(w)) return w.slice(0, -2) + "éis";
+  if (/ol$/i.test(w)) return w.slice(0, -2) + "óis";
+  if (/m$/i.test(w)) return w.slice(0, -1) + "ns";
+  return w + "s";
+}
+function plMeasure(label){
+  const ws = label.split(" "); let stop = false;
+  return ws.map((w, i) => { if (stop || (i > 0 && /^(de|do|da|dos|das|com|para|\(|\d)/i.test(w)) || /[/(]/.test(w)) { stop = true; return w; } return plWord(w); }).join(" ");
+}
+const FRAC = {25: "¼", 50: "½", 75: "¾"};
+function qtyNum(q){ const w = Math.floor(q), f = Math.round((q - w) * 100); return FRAC[f] && w < 10 ? (w ? w + FRAC[f] : FRAC[f]) : fq.format(q); }
+function qtyMeasure(q, label){
+  if (q == null || !label) return label || "";
+  if (label === "Grama") return `${fq.format(q)} g`;
+  if (/^\d/.test(label)) return `${fmtQty(q)} × ${label}`;
+  const l = q >= 2 ? plMeasure(label) : label;
+  return `${qtyNum(q)} ${l.charAt(0).toLowerCase() + l.slice(1)}`;
+}
 const signed = (v, f) => (v > 0.05 ? "+" : v < -0.05 ? "−" : "") + f(Math.abs(v));
 
 function highlight(text, q){
@@ -5616,7 +5646,7 @@ function macroGrid(t, W, small){
   const s = C.macroSplit(t);
   const cell = (cls, k, grams, pc) => h("div", null,
     h("div", {class: "k " + cls}, k),
-    h("div", {class: "v"}, fmtG(grams), h("small", null, "g"), h("span", {class: "pc"}, `${Math.round(pc)}%`)),
+    h("div", {class: "v"}, fmtG(grams), h("small", null, "g"), h("span", {class: "pc " + cls}, `${Math.round(pc)}%`)),
     h("div", {class: "s"}, W ? `${nf2.format(grams / W)} g/kg` : " "));
   return h("div", {class: "mwrap" + (small ? " sm" : "")},
     h("div", {class: "mgrid"}, cell("t-c", "Carboidratos", t.c, s.c), cell("t-p", "Proteínas", t.p, s.p), cell("t-g", "Gorduras", t.l, s.l)),
@@ -6049,7 +6079,7 @@ function renderPlan(p){
       const c = calcItem(it), ms = f ? C.measureOf(f, it.measure) : null;
       kEl.replaceChildren(c ? k0(c.kcal) : "—", h("small", null, "kcal"));
       // v49: em gramas, só "15 g" (sem "15 × Grama · 15 g")
-      put(subEl, f ? (ms.l === "Grama" && c ? h("b", null, `${fq.format(Math.round(c.g * 10) / 10)} ${unitOf(f)}`) : [h("b", null, it.qty ? `${fmtQty(it.qty)} × ${ms.l}` : ms.l), c ? ` · ${fq.format(Math.round(c.g * 10) / 10)} g` : ` · ${fq.format(ms.g)} g cada`]) : "Substitua ou remova");
+      put(subEl, f ? (ms.l === "Grama" && c ? h("b", null, `${fq.format(Math.round(c.g * 10) / 10)} ${unitOf(f)}`) : [h("b", null, it.qty ? qtyMeasure(it.qty, ms.l) : ms.l), c ? ` · ${fq.format(Math.round(c.g * 10) / 10)} g` : ` · ${fq.format(ms.g)} g cada`]) : "Substitua ou remova");
       if (R.grams) R.grams.textContent = c ? `${fq.format(Math.round(c.g * 10) / 10)} g` : `${fq.format(ms.g)} g`;
       if (R.mac) put(R.mac,
         h("span", null, h("b", {class: "t-c"}, "C"), c ? `${fmtG(c.c)} g` : "—"),
@@ -6137,13 +6167,13 @@ function renderPlan(p){
           const d = o.delta, main = crit === "c" ? d.c : crit === "p" ? d.p : d.kcal;
           return h("button", {class: "so" + (picked && picked.food.id === o.food.id ? " on" : ""), type: "button", onclick: () => { picked = o; paint(); }},
             h("span", {class: "so-n"}, o.food.dn), h("span", {class: "so-k"}, `${k0(o.calc.kcal)} kcal`),
-            h("span", {class: "so-q"}, `${fmtQty(o.qty)} × ${o.measure.l} · ${k0(o.calc.g)} g`),
+            h("span", {class: "so-q"}, `${qtyMeasure(o.qty, o.measure.l)} · ${k0(o.calc.g)} g`),
             h("span", {class: "so-d"}, crit === "kcal" || crit === "free" ? `${signed(d.kcal, k0)} kcal` : crit === "c" ? `C ${signed(d.c, fmtG)} g · ${signed(d.kcal, k0)} kcal` : `P ${signed(d.p, fmtG)} g · ${signed(d.kcal, k0)} kcal`));
         }) : h("div", {class: "empty"}, "Nenhuma alternativa com esse critério. Tente outro critério ou busque um alimento."));
         if (picked){
           const before = planTotal(plan).kcal, after = before + picked.delta.kcal;
           bar.hidden = false;
-          put(bar, h("p", null, `${orig ? orig.dn : "Alimento removido"} → `, h("b", null, picked.food.dn), ` (${fmtQty(picked.qty)} × ${picked.measure.l}). Plano: ${k0(before)} → ${k0(after)} kcal.`),
+          put(bar, h("p", null, `${orig ? orig.dn : "Alimento removido"} → `, h("b", null, picked.food.dn), ` (${qtyMeasure(picked.qty, picked.measure.l)}). Plano: ${k0(before)} → ${k0(after)} kcal.`),
             h("button", {class: "btn primary block", type: "button", onclick: () => {
               it.foodId = picked.food.id; it.measure = picked.measure.l; it.qty = picked.qty;
               noteUse(it.foodId); touch(p); view.edit = it.id; close(); rebuild(m); toast("Alimento substituído");
@@ -6151,7 +6181,7 @@ function renderPlan(p){
         } else bar.hidden = true;
       }
       el.append(h("h2", null, `Substituir ${orig ? orig.dn : "alimento"}`),
-        h("p", {class: "sh-sub"}, base ? `${fmtQty(it.qty)} × ${C.measureOf(orig, it.measure).l} · ${k0(base.g)} g · ${k0(base.kcal)} kcal` : ""),
+        h("p", {class: "sh-sub"}, base ? `${qtyMeasure(it.qty, C.measureOf(orig, it.measure).l)} · ${k0(base.g)} g · ${k0(base.kcal)} kcal` : ""),
         seg, h("div", {class: "search", style: "margin:12px 0 4px"}, ic("search"), sIn), noteEl, listEl, bar);
       paint();
     });
@@ -6168,7 +6198,7 @@ function renderPlan(p){
       for (const i of its){
         const f = db.get(i.foodId); if (!f) continue;
         const ms = C.measureOf(f, i.measure), c = calcItem(i);
-        lines.push(ms.l === "Grama" ? `• ${f.dn}: ${fq.format(i.qty)} g` : `• ${f.dn}: ${fmtQty(i.qty)} ${ms.l.toLowerCase()} (${fq.format(Math.round(c.g))} g)`);
+        lines.push(ms.l === "Grama" ? `• ${f.dn}: ${fq.format(i.qty)} g` : `• ${f.dn}: ${qtyMeasure(i.qty, ms.l)} (${fq.format(Math.round(c.g))} g)`);
       }
     }
     const t = planTotal(plan);
