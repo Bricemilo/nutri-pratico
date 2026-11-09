@@ -1594,6 +1594,10 @@ html.big-text .hc.l1 .hc-v b.txt{font-size:1.294rem}
 @keyframes sxSweep{to{stroke-dashoffset:0}}
 @keyframes sxRise{from{opacity:0;transform:translateY(5px) scale(.94)}to{opacity:1;transform:translateY(.25px)}}
 .sx-k{display:flex;align-items:center;gap:7px;font-weight:600;color:var(--ink-2);white-space:nowrap}
+/* v47.1: sem pontos coloridos: o próprio nome do macronutriente (e de Fibras) leva a cor; o % fica neutro, ao lado da cor */
+.sx-r .sx-k{font-weight:620;letter-spacing:.005em}
+.sx-k.t-c{color:var(--carb)} .sx-k.t-p{color:var(--prot-ink)} .sx-k.t-g{color:var(--fat)}
+.sx-fib{font-size:var(--t-sm)} .sx-fib .t-f{color:var(--fib);font-weight:620}
 .sx-d{width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
 .sx-d.t-p{color:var(--prot-ink)}
 .sx-kg{white-space:nowrap}
@@ -1606,7 +1610,7 @@ html.big-text .hc.l1 .hc-v b.txt{font-size:1.294rem}
 .sx-rows{flex:1;min-width:0;display:flex;flex-direction:column;gap:11px}
 .sx-r{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;column-gap:10px;row-gap:1px}
 .sx-r .sx-k{min-width:0;font-size:var(--t-sm)}
-.sx-p{font-style:normal;font-size:var(--t-sm);font-weight:650;font-variant-numeric:tabular-nums;text-align:right}
+.sx-p{font-style:normal;font-size:var(--t-sm);font-weight:600;color:var(--ink-2);font-variant-numeric:tabular-nums;text-align:right}
 .sx-g{display:flex;align-items:baseline;white-space:nowrap}
 .sx-g b{font-size:1.176rem;font-weight:660;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--ink);line-height:1.1}
 .sx-g small{margin-left:.2em;font-size:var(--t-sm);font-weight:500;color:var(--muted)}
@@ -5633,10 +5637,10 @@ function renderPlan(p){
       // v47: fibras sob o anel; cada macronutriente numa linha: nome e % da energia, gramas e g/kg (os mesmos números, em colunas alinhadas)
       h("div", {class: "sx-core"},
         h("div", {class: "sx-l"}, macroRing(t, sp, animRing),
-          h("span", {class: "sx-fib"}, h("i", {class: "sx-d t-f"}), "Fibras", h("b", null, fmtG(t.f), h("small", null, " g")))),
+          h("span", {class: "sx-fib"}, h("span", {class: "t-f"}, "Fibras"), h("b", null, fmtG(t.f), h("small", null, " g")))),
         h("div", {class: "sx-rows"}, [["t-c", "Carboidratos", t.c, sp.c], ["t-p", "Proteínas", t.p, sp.p], ["t-g", "Gorduras", t.l, sp.l]].map(([c, k, g, pc]) =>
           h("div", {class: "sx-r"},
-            h("span", {class: "sx-k"}, h("i", {class: "sx-d " + c}), k), h("em", {class: "sx-p " + c}, `${Math.round(pc)}%`),
+            h("span", {class: "sx-k " + c}, k), h("em", {class: "sx-p"}, `${Math.round(pc)}%`),
             h("span", {class: "sx-g"}, h("b", null, fmtG(g)), h("small", null, "g")), W ? h("span", {class: "sx-gk"}, `${nf1.format(g / W)} g/kg`) : h("span"))))),
       note ? h("div", {class: "sx-foot"}, h("span", {class: "sx-note"}, note)) : null);
     animRing = false;

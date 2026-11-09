@@ -1694,3 +1694,13 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
   - peito de frango não tem gordura zero na base: grelhado 2,5 g/100 g, cozido 3,2 g, cru 3,0 g, assado com pele 7,6 g;
   - alimentos com gordura 0 na base são os que a TACO marca como traços (Tr) ou não aplicável (frutas, açúcar, bebidas);
   - quatro itens que a TACO marca "em reanálise" continuam fora da busca.
+
+## 66. v47.1 — Cartão da Nutrição sem pontos coloridos
+
+- **Sem pontos coloridos:** o nome de cada macronutriente aparece na sua cor (Carboidratos, Proteínas, Gorduras). O mesmo vale para Fibras, em verde.
+- **% em tom neutro**, para não repetir a cor que já está no nome.
+- **Gramas continuam em destaque, e não o %:**
+  - gramas e g/kg são a prescrição: o que se pesa, se ajusta e se compara com as referências (ex.: proteína em g/kg);
+  - o % da energia já aparece no desenho do anel;
+  - foi feita uma simulação lado a lado com o % em destaque, para comparação.
+- **Contraste dos nomes coloridos** sobre o cartão: de 5,5:1 a 10,1:1, acima do mínimo AA de 4,5:1.
