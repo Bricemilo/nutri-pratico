@@ -1704,3 +1704,12 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
   - o % da energia já aparece no desenho do anel;
   - foi feita uma simulação lado a lado com o % em destaque, para comparação.
 - **Contraste dos nomes coloridos** sobre o cartão: de 5,5:1 a 10,1:1, acima do mínimo AA de 4,5:1.
+
+## 67. v47.2 — Cada macronutriente numa cor só, com o % em destaque
+
+- **Decisão do Camilo:** o anel e as cores falam de proporção, então o % ao lado do nome forma par com o anel. Gramas e g/kg ficam juntos à direita, como o bloco da prescrição, e a linha fica mais limpa (o % ocupa menos espaço que as gramas totais).
+- **Cada linha inteira na cor do macronutriente:**
+  - nome e % em destaque à esquerda;
+  - gramas e g/kg à direita, com as gramas um pouco mais fortes.
+- **Fibras em branco**, sem cor, sob o anel.
+- **Contraste:** o g/kg usa a cor cheia, sem transparência. A versão mais clara chegaria a 3,9:1 no rosado e ficou descartada; com a cor cheia, o mínimo é de 5,5:1.
