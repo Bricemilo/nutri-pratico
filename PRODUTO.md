@@ -1728,3 +1728,17 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
 - Remover acontece na hora e oferece "Desfazer" por 5 segundos (o alimento volta para a mesma posição), no lugar da pergunta de confirmação.
 - A edição passou de 283 pt para 190 pt de altura (−33%).
 - Para fechar a edição: tocar no nome do alimento ou em Enter.
+
+## 70. v49 — Refeição aberta: um horário só e a caixa de cima com as ações
+
+- **Caixa de cima (a da refeição):**
+  - primeira linha: nome, kcal e a seta;
+  - segunda linha: o horário em cobre, com o ícone de relógio, e as ações (favoritar, duplicar e ⋯);
+  - tocar no horário abre o seletor de hora do iPhone. Sem horário, aparece "Definir horário";
+  - a ordem das refeições segue o relógio, como antes.
+- **Caixa de baixo:** só os alimentos.
+- **O que saiu:**
+  - o campo de horário repetido ("09:00 AM") dentro da lista;
+  - "· 6 alimentos" com a refeição aberta, porque a lista já está à vista.
+- **Medida em gramas:** o alimento mostra só "15 g", e não "15 × Grama · 15 g".
+- **Altura:** o cabeçalho da refeição aberta passou de 140 pt para 105 pt. Ações com 44 pt de toque.

@@ -327,6 +327,19 @@ h2.sec{font-size:0.765rem;font-weight:650;letter-spacing:.08em;text-transform:up
 /* v48: edição do alimento enxuta. O resumo "3 × Unidade · 12 g" some enquanto os campos mostram o mesmo;
    ações em texto numa linha só, separadas por um filete, como uma barra de ferramentas */
 .it.edit .it-sub{display:none}
+/* v49: refeição aberta — a caixa de cima tem nome, kcal e seta; embaixo dela, o horário (toque para mudar) e as ações. A caixa de baixo só tem alimentos */
+.meals > .meal.open .mh{padding-bottom:4px}
+.meal.open .mh-s{display:none}
+.mh-x{flex:1 0 100%;display:flex;align-items:center;min-height:44px;margin:0 -2px 0 0}
+.mh-x .spacer{flex:1}
+.mh-x .tool{width:44px;height:44px}
+.mh-x .tool svg{width:19px;height:19px}
+.mh-x .tool.on{color:var(--accent-2)}
+.mt-w{position:relative;display:flex;align-items:center;min-height:44px;min-width:92px;padding-right:10px;cursor:pointer}
+.mt-v{display:flex;align-items:center;gap:7px;font-size:var(--t-body);font-weight:640;color:var(--accent-2);font-variant-numeric:tabular-nums;pointer-events:none;white-space:nowrap}
+.mt-i{display:flex} .mt-i svg{width:16px;height:16px}
+.mt-w:not(.has) .mt-v{color:var(--muted);font-weight:500;font-size:var(--t-sm)}
+.mh-x .meal-time{position:absolute;inset:0;width:100%;height:100%;opacity:0;font-size:16px;border:0;padding:0;margin:0;cursor:pointer}
 .it.edit .it-main{padding-bottom:10px}
 .it-ed .ed-m{margin-top:12px;color:var(--muted)}
 .it-ed .ed-a{display:flex;flex-wrap:nowrap;gap:0;margin:10px -6px 0;padding-top:4px;border-top:1px solid var(--line)}
@@ -5246,6 +5259,9 @@ function renderPlan(p){
     refs.get(m.id).done = done;
     const head = h("div", {class: "mh", role: isOpen ? null : "button", tabindex: isOpen ? null : "0", "aria-expanded": String(isOpen)}, done,
       h("div", {class: "mh-m"}, isOpen ? h("div", {class: "acw"}, nameEl) : nameEl, subEl), kcalEl, chev);
+    // v49: aberta, a caixa de cima reúne tudo da refeição (nome, horário editável, favoritar, duplicar e ⋯); a de baixo fica só com os alimentos
+    const headX = isOpen ? h("div", {class: "mh-x"}) : null;
+    if (headX) head.append(headX);
     if (!isOpen){
       head.addEventListener("click", () => toggle(m));
       head.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(m); } });
@@ -5253,9 +5269,12 @@ function renderPlan(p){
     card.append(head);
     let addIn = null;
     if (isOpen){
-      const time = h("input", {class: "meal-time", type: "time", value: m.time || "", "aria-label": "Horário da refeição"});
-      const tw = h("label", {class: "tw" + (m.time ? " has" : "")}, h("span", {html: ICON.clock + "Horário"}), time);
-      const setTime = () => { m.time = time.value || ""; tw.classList.toggle("has", !!m.time); touch(p); paintMeal(m); };
+      const time = h("input", {class: "meal-time", type: "time", value: m.time || "", "aria-label": "Horário da refeição. Toque para mudar"});
+      const twL = h("span", {class: "mt-v"});
+      const paintTw = () => put(twL, h("span", {class: "mt-i", html: ICON.clock}), m.time || "Definir horário");
+      const tw = h("label", {class: "mt-w" + (m.time ? " has" : "")}, twL, time);
+      const setTime = () => { m.time = time.value || ""; tw.classList.toggle("has", !!m.time); paintTw(); touch(p); paintMeal(m); };
+      paintTw();
       time.addEventListener("input", setTime);
       time.addEventListener("change", () => { setTime(); orderByTime(m); });
       time.addEventListener("blur", () => { setTime(); orderByTime(m); });
@@ -5268,12 +5287,12 @@ function renderPlan(p){
         onEnter: () => { if (!addIn.value.trim()) addMeal(); }
       });
       addIn.addEventListener("focus", () => setTimeout(() => addIn.scrollIntoView({block: "center", behavior: "smooth"}), 40));
-      card.append(
-        h("div", {class: "mtools"}, tw, h("div", {class: "spacer"}),
+      headX.append(tw, h("div", {class: "spacer"}),
           filled(m).length ? h("button", {class: "tool" + (isFavMeal(m) ? " on" : ""), type: "button", "aria-pressed": String(isFavMeal(m)), "aria-label": isFavMeal(m) ? "Atualizar nas refeições favoritas" : "Salvar como refeição favorita",
             html: isFavMeal(m) ? ICON.starOn : ICON.star, onclick: () => { saveFavMeal(m); rebuild(m); }}) : null,
           filled(m).length ? h("button", {class: "tool", type: "button", "aria-label": "Duplicar refeição", html: ICON.dup, onclick: () => duplicateMeal(m)}) : null,
-          h("button", {class: "tool", type: "button", onclick: () => mealMenu(m), "aria-label": "Mais ações da refeição", html: ICON.more})),
+          h("button", {class: "tool", type: "button", onclick: () => mealMenu(m), "aria-label": "Mais ações da refeição", html: ICON.more}));
+      card.append(
         askEl, body,
         h("div", {class: "add"}, h("label", {class: "add-l"}, ic("plus"), h("div", {class: "acw", style: "flex:1"}, addIn))),
         footEl);
@@ -5321,7 +5340,8 @@ function renderPlan(p){
     function paint(){
       const c = calcItem(it), ms = f ? C.measureOf(f, it.measure) : null;
       kEl.replaceChildren(c ? k0(c.kcal) : "—", h("small", null, "kcal"));
-      put(subEl, f ? [h("b", null, it.qty ? `${fmtQty(it.qty)} × ${ms.l}` : ms.l), c ? ` · ${fq.format(Math.round(c.g * 10) / 10)} g` : ` · ${fq.format(ms.g)} g cada`] : "Substitua ou remova");
+      // v49: em gramas, só "15 g" (sem "15 × Grama · 15 g")
+      put(subEl, f ? (ms.l === "Grama" && c ? h("b", null, `${fq.format(Math.round(c.g * 10) / 10)} ${unitOf(f)}`) : [h("b", null, it.qty ? `${fmtQty(it.qty)} × ${ms.l}` : ms.l), c ? ` · ${fq.format(Math.round(c.g * 10) / 10)} g` : ` · ${fq.format(ms.g)} g cada`]) : "Substitua ou remova");
       if (R.grams) R.grams.textContent = c ? `${fq.format(Math.round(c.g * 10) / 10)} g` : `${fq.format(ms.g)} g`;
       if (R.mac) put(R.mac,
         h("span", null, h("b", {class: "t-c"}, "C"), c ? `${fmtG(c.c)} g` : "—"),
