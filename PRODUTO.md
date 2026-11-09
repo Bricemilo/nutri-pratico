@@ -1713,3 +1713,9 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
   - gramas e g/kg à direita, com as gramas um pouco mais fortes.
 - **Fibras em branco**, sem cor, sob o anel.
 - **Contraste:** o g/kg usa a cor cheia, sem transparência. A versão mais clara chegaria a 3,9:1 no rosado e ficou descartada; com a cor cheia, o mínimo é de 5,5:1.
+
+## 68. v47.3 — Cor é proporção, branco é quantidade
+
+- Nome e % de cada macronutriente ficam na sua cor, como o anel: a cor mostra proporção.
+- Gramas e g/kg ficam em branco e cinza claro, como o total de kcal, as fibras e o kcal/kg: o branco mostra quantidade.
+- Resultado: metade da cor no cartão, e as gramas (a prescrição) voltam a se destacar sem precisar de letra grande. Decidido pelo Camilo após a comparação lado a lado com a v47.2.

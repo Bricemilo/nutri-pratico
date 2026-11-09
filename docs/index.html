@@ -1618,12 +1618,14 @@ html.big-text .hc.l1 .hc-v b.txt{font-size:1.294rem}
 .sx-fib{font-size:var(--t-sm)} .sx-fib .t-f{color:var(--fib);font-weight:620}
 /* v47.2: cada linha inteira na cor do macronutriente (nome, %, gramas e g/kg); Fibras em branco */
 .sx-r.t-c{--mc:var(--carb)} .sx-r.t-p{--mc:var(--prot-ink)} .sx-r.t-g{--mc:var(--fat)}
-.sx-r .sx-k,.sx-r .sx-p,.sx-r .sx-g b,.sx-r .sx-g small{color:var(--mc)}
+.sx-r .sx-k,.sx-r .sx-g b,.sx-r .sx-g small{color:var(--mc)}
+/* v47.3: cor = proporção (nome e %, como o anel); branco = quantidade (gramas e g/kg, como kcal e fibras) */
+.sx-r .sx-p{color:var(--ink)} .sx-r .sx-p small{color:var(--ink-2)}
 .sx-r .sx-p{font-size:var(--t-sm);font-weight:640}
 .sx-r .sx-p small{font-size:inherit;font-weight:500}
 .sx-r .sx-g b{font-size:1.294rem;font-weight:660}
 .sx-r .sx-g small{margin-left:.06em;font-size:var(--t-sm);font-weight:600}
-.sx-r .sx-gk{color:var(--mc);font-weight:450}
+.sx-r .sx-gk{color:var(--ink-2);font-weight:450}
 .sx-fib span{color:var(--ink);font-weight:620}
 .sx-fib b,.sx-fib b small{color:var(--ink)}
 .sx-d{width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
