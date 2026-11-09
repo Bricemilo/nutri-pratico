@@ -1608,3 +1608,34 @@ Ganho: a legenda volta ao tamanho normal mesmo em semanas longas, porque "10 h 4
 - Os registros antigos ficam sem horário. Nenhum horário é inventado, nem tirado da hora em que o registro foi salvo.
 
 **"Desfazer" do registro de exercício.** Agora só remove o registro recém-criado; se ele já não existir, não remove nada.
+
+## 62. v45 — Saúde padronizada, Nutrição mais limpa, dois textos da Home
+
+**Saúde: Exercício, Sono e Emocional no mesmo molde.** Os três cartões têm a mesma estrutura e a mesma altura (350 pt no iPhone 15):
+- ícone e título;
+- número grande com o período;
+- gráfico de 7 dias numa área de altura fixa;
+- uma linha de legenda;
+- "Referência".
+
+As frases explicativas foram para dentro de "Referência": os minutos de atividade moderada ou vigorosa no Exercício e a variação do horário de dormir no Sono.
+
+**Caixa do dia.**
+- **Exercício:** abre em **hoje**, mesmo sem treino ("Nenhum treino registrado hoje."). Qualquer dia passado pode ser tocado.
+- **Emocional:** ganhou a mesma caixa (registros do dia, com horário, energia e estresse; tocar abre a edição).
+
+**Emocional.**
+- **Gráfico:** no padrão dos outros, uma coluna por dia dos últimos 7. A altura da barra é o estado (de Muito mal, baixa, a Muito bem, alta), na cor de cada estado.
+- **Saíram do cartão** os botões de humor e o link "Registrar com energia…": o registro é pelo "+", como nos outros pilares.
+- **Saiu** a caixa "Últimos 14 dias"; o Histórico continua.
+
+**Nutrição.**
+- Anel menor (96 pt), alinhado ao bloco dos macronutrientes.
+- Fibras sem o ponto colorido, porque os pontos indicam as cores do anel e as fibras não fazem parte dele.
+- Sem a frase "% da energia dos macronutrientes". O aviso de meta ou consumo aparece só quando existe.
+- **Objetivo numa linha** ("Objetivo · Hipertrofia" e uma seta). Tocar abre a meta, o plano de hoje e o GET, com "Editar objetivo e meta" no fim.
+- **Refeições em duas colunas:** à esquerda, o nome e, abaixo, o horário em cobre e a quantidade de alimentos; à direita, as calorias.
+
+**Home.**
+- Hidratação: "2,7 L", com o "por dia" só na legenda, como na Nutrição.
+- Suplementos: só o que existe ("2 suplementos", "1 medicamento" ou "2 supl. · 1 med."); sem nenhum, "Nenhum".

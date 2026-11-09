@@ -589,6 +589,7 @@ h1.pg{font-size:1.765rem;margin:6px 2px 2px}
 /* v44 · semana do exercício */
 .mw,.mwd{--lv:#A9E5DC;--md:var(--move);--vg:#14A38F}
 .mw{margin-top:14px}
+.mw.mw-k{margin-top:10px}
 .mw-g{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:0}   /* sem intervalo: cada dia é um alvo de toque de 44+ pt (a barra ocupa 68% da coluna, o respiro visual continua) */
 .mw-d{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0;min-height:44px;padding:4px 0 6px;border-radius:12px;color:var(--ink-2);-webkit-tap-highlight-color:transparent}
 .mw-d:disabled{opacity:1;cursor:default}
@@ -618,6 +619,20 @@ h1.pg{font-size:1.765rem;margin:6px 2px 2px}
 .mw-e time{color:var(--muted);font-variant-numeric:tabular-nums}
 .mw-e .li-go{width:16px;height:16px;color:var(--muted)}
 .mv-when{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+/* v45 · os três pilares da Saúde no mesmo molde: gráfico numa área de altura fixa, uma linha de legenda, "Referência" */
+.hp.full .hp-chart{height:130px;margin-top:12px;display:flex;flex-direction:column;justify-content:flex-end}
+.hp.full .hp-chart > *{margin-top:0}
+.hp.full .hp-chart .mw-b{height:76px}
+.hp.full .hp-chart .bars{height:112px;margin:0 2px}
+.hp.full .hp-chart .strip{height:112px;margin:0 2px}
+.hp.full .mw-k{margin:10px 2px 0}
+.mw-mood .mw-s{width:68%;max-width:28px}
+.mw-mood .mw-s i{flex:1 1 0;border-radius:7px 7px 4px 4px}
+.mood-s.m1 i,.mood-dot.m1{background:#6F6A86} .mood-s.m2 i,.mood-dot.m2{background:#8C7F92} .mood-s.m3 i,.mood-dot.m3{background:#A89280} .mood-s.m4 i,.mood-dot.m4{background:#D49A6A} .mood-s.m5 i,.mood-dot.m5{background:var(--accent-2)}
+.mw-mood .mw-d.on{background:color-mix(in srgb,var(--mood) 12%,transparent)} .mw-mood .mw-d.on .mw-w{color:var(--mood)}
+.mw-em i{border-radius:50%}
+.mw-em span:not(.li-go){white-space:normal;overflow:visible;line-height:1.25}
+.mw-none{margin:2px 2px 4px;font-size:var(--t-sm);color:var(--muted)}
 .mv-when .input{width:120px}
 .qbig:active{transform:scale(.97)}
 @media (max-width:370px){.qbig{font-size:var(--t-cap);padding:14px 2px 10px}}
@@ -1538,13 +1553,13 @@ html.big-text .hc.l1 .hc-v b.txt{font-size:1.294rem}
 .sx-eye{font-size:var(--t-cap);font-weight:650;letter-spacing:.14em;text-transform:uppercase;color:#B9937A}
 .sx-h .li-go svg{width:18px;height:18px;color:var(--muted);display:block}
 .sx-core{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-.sx-ring{position:relative;width:112px;aspect-ratio:1;flex:none}
+.sx-ring{position:relative;width:96px;aspect-ratio:1;flex:none}   /* v45: anel na altura do bloco dos macros (mesma folga acima e abaixo) */
 .sx-ring svg{display:block;width:100%;height:100%}
 .sx-ring circle{fill:none;stroke-width:8.5}
 .sx-ring .rg-trk{stroke:rgba(255,255,255,.07)}
 .sx-ring .rg.t-c{stroke:var(--carb)} .sx-ring .rg.t-p{stroke:var(--prot-ink)} .sx-ring .rg.t-g{stroke:var(--fat)}
 .sx-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
-.sx-c b{font-size:1.529rem;font-weight:690;letter-spacing:-.035em;line-height:1;font-variant-numeric:tabular-nums;color:var(--ink)}
+.sx-c b{font-size:1.412rem;font-weight:690;letter-spacing:-.035em;line-height:1;font-variant-numeric:tabular-nums;color:var(--ink)}
 .sx-c span{font-size:var(--t-cap);color:var(--ink-2);margin-top:4px}
 .sx-leg{flex:1 1 11rem;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 14px}
 .sx-i{display:flex;flex-direction:column;gap:3px;min-width:0}
@@ -1557,7 +1572,7 @@ html.big-text .hc.l1 .hc-v b.txt{font-size:1.294rem}
 .sx-v em{font-style:normal;font-size:var(--t-sm);color:var(--ink-2);font-variant-numeric:tabular-nums}
 .sx-foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;margin-top:14px;padding-top:10px;border-top:1px solid var(--dj-quiet-rule);font-size:var(--t-cap);color:var(--muted)}
 .sx-note{color:var(--accent-2);font-weight:600}
-@media (max-width:380px){.sx-ring{width:100px}.sx-core{gap:14px}.sx-c b{font-size:1.412rem}}
+@media (max-width:380px){.sx-ring{width:88px}.sx-core{gap:14px}.sx-c b{font-size:1.294rem}}
 /* objetivo: três energias lado a lado e nunca confundidas — meta (cobre), plano, gasto estimado */
 .goalcard .goalrow{flex-direction:column;align-items:stretch;gap:12px;padding:14px 16px}
 .gl-top{display:flex;align-items:center;gap:14px;min-width:0}
@@ -1577,6 +1592,16 @@ html.big-text .hc.l1 .hc-v b.txt{font-size:1.294rem}
 .meals > .meal .mh-tm{width:auto;min-width:calc(3.05em + 12px);padding-right:12px;margin-right:2px;align-self:stretch;display:flex;align-items:center;border-right:1px solid var(--dj-quiet-rule);font-size:var(--t-body);letter-spacing:-.01em}
 @media (max-width:380px){.meals > .meal .mh{gap:10px}.meals > .meal .mh-tm{min-width:calc(3.05em + 8px);padding-right:8px;font-size:var(--t-sm)}}
 .meals > .meal .chev{color:var(--muted)}
+/* v45 · refeição em duas colunas: nome e, abaixo, o horário em cobre · alimentos; calorias à direita */
+.mh-st{color:var(--accent-2);font-weight:620}
+/* v45 · objetivo numa linha; a seta abre meta, plano e GET */
+.goalcard .goalrow{min-height:56px}
+.gl-x{width:32px;height:32px;display:grid;place-items:center;flex:none;color:var(--muted);transition:transform .2s}
+.gl-x svg{width:18px;height:18px}
+.gl-x.on{transform:rotate(180deg)}
+.goalcard .gl-m{flex-direction:row;align-items:baseline;gap:10px;flex-wrap:wrap}
+.gl-edit{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;margin-top:6px;border-top:1px solid var(--dj-quiet-rule);font-size:var(--t-sm);font-weight:600;color:var(--accent-2)}
+.gl-edit svg{width:15px;height:15px}
 /* nome nunca espremido: abaixo de ~5,5 caracteres de largura (tela estreita com texto ampliado), calorias e seta descem para a linha de baixo, à direita */
 .meals > .meal .mh{flex-wrap:wrap;row-gap:2px}
 .meals > .meal .mh-m{flex:1 1 5.5em}
@@ -3296,7 +3321,10 @@ function jewelCare(o){
       "aria-label": `Suplementos e Medicamentos: ${plural(o.sup, "suplemento ativo", "suplementos ativos")} e ${plural(o.med, "medicamento ativo", "medicamentos ativos")}${o.paused ? `; ${plural(o.paused, "item inativo", "itens inativos")}` : ""}.`},
     h("span", {class: "hc-fx", "aria-hidden": "true"}, JEWEL(o.cls)),
     h("span", {class: "hc-h"}, h("span", {class: "hc-i", html: ICON.pill}), h("span", {class: "hc-t"}, "Suplementos")),
-    h("span", {class: "hc-v hc-lg"}, h("b", null, String(o.sup)), h("small", null, " supl."), h("span", {class: "hc-sep"}, " · "), h("b", null, String(o.med)), h("small", null, " med.")),
+    // v45: só o que existe — "2 suplementos", "1 medicamento" ou, com os dois, "2 supl. · 1 med."; sem nenhum, "Nenhum"
+    h("span", {class: "hc-v hc-lg"}, o.sup && o.med ? [h("b", null, String(o.sup)), h("small", null, " supl."), h("span", {class: "hc-sep"}, " · "), h("b", null, String(o.med)), h("small", null, " med.")]
+      : o.sup ? [h("b", null, String(o.sup)), h("small", null, o.sup === 1 ? " suplemento" : " suplementos")]
+      : o.med ? [h("b", null, String(o.med)), h("small", null, o.med === 1 ? " medicamento" : " medicamentos")] : h("b", {class: "nr"}, "Nenhum")),
     h("span", {class: "hc-s"}, "Em uso")); }
 function renderHome(p){
   /* Painel de saúde: oito cartões em quatro linhas de dois, em dois grupos de quatro separados pela linha-estrela (v39; v38.1–v38.3: só espaço):
@@ -3331,7 +3359,7 @@ function renderHome(p){
       fn: () => openMod({hsub: "bem-estar"}), empty: ["Sem registros", "Como você está?"]}) : null);
   // B · hidratação (meta diária do perfil) e suplementos e medicamentos ativos. O GET saiu da Home: continua em Perfil → Planejamento.
   const careRow = h("div", {class: "hgrid hg-b"},
-    card({lv: "l2", cls: "water", icon: "drop", title: "Hidratação", value: w.ml ? fmtL(w.ml) : null, unit: "L/dia", sub: w.src === "manual" ? "Meta definida por você" : "Recomendação diária",
+    card({lv: "l2", cls: "water", icon: "drop", title: "Hidratação", value: w.ml ? fmtL(w.ml) : null, unit: "L", sub: w.src === "manual" ? "Meta definida por você" : "Recomendação diária",
       fn: () => openMod({hsub: "agua"}), empty: ["Não definida", "Toque para definir"]}),
     jewelCare({cls: "supp", sup: cc.sup, med: cc.med, paused: cc.paused, fn: () => openMod({hsub: "cuidados"})}));
   // C · o que acompanhar (prioridades ativas) e o próximo compromisso de saúde, de qualquer tipo
@@ -3625,28 +3653,52 @@ let moveSel = null;
 function moveWeekChart(p, L, mw, nowI){
   const keys = mw.days.map(d => d.key), byDay = keys.map(k => L.move.filter(e => e.date === k && e.min > 0).sort((a, b) => (a.time || "99:99") < (b.time || "99:99") ? -1 : 1));
   const max = Math.max(60, ...mw.days.map(d => d.min));
-  if (!moveSel || !keys.includes(moveSel) || !byDay[keys.indexOf(moveSel)].length) { let i = nowI; while (i >= 0 && !byDay[i].length) i--; moveSel = i >= 0 ? keys[i] : null; }
+  if (!moveSel || !keys.includes(moveSel) || keys.indexOf(moveSel) > nowI) moveSel = keys[nowI];
   const IN = {leve: "lv", moderada: "md", vigorosa: "vg"};
   const cols = keys.map((k, i) => { const list = byDay[i], tot = mw.days[i].min, fut = i > nowI, on = k === moveSel;
     const label = `${WD[i]}${tot ? `: ${tot} minutos` : fut ? "" : ": sem registro"}`;
-    return h("button", {class: "mw-d" + (on ? " on" : "") + (i === nowI ? " now" : "") + (fut ? " fut" : ""), type: "button", disabled: !list.length, "aria-pressed": list.length ? String(on) : null, "aria-label": label,
+    return h("button", {class: "mw-d" + (on ? " on" : "") + (i === nowI ? " now" : "") + (fut ? " fut" : ""), type: "button", disabled: fut, "aria-pressed": fut ? null : String(on), "aria-label": label,
         onclick: () => { moveSel = k; render(); }},
       h("span", {class: "mw-n"}, tot ? String(tot) : ""),
       h("span", {class: "mw-b"}, list.length ? h("span", {class: "mw-s", style: `height:${Math.max(8, tot / max * 100)}%`}, list.map(e => h("i", {class: IN[e.intensity] || "md", style: `flex:${e.min} 1 0`}))) : fut ? null : h("i", {class: "mw-z"})),
       h("span", {class: "mw-w"}, WD[i])); });
   return h("div", {class: "mw"},
     h("div", {class: "mw-g", role: "group", "aria-label": "Minutos de exercício por dia nesta semana. Toque num dia para ver os treinos."}, cols),
-    h("div", {class: "mw-k", "aria-hidden": "true"}, h("span", null, h("i", {class: "lv"}), "leve"), h("span", null, h("i", {class: "md"}), "moderada"), h("span", null, h("i", {class: "vg"}), "vigorosa"), h("span", null, h("i", {class: "mw-z"}), "sem registro")),
     null);
+}
+/* v45 · semana do emocional: o mesmo desenho do exercício (uma coluna por dia, últimos 7 dias). A altura da barra é o estado do dia
+   (Muito mal = baixa … Muito bem = alta), na cor de cada estado; dia sem registro = traço. Tocar num dia mostra os registros dele numa caixa abaixo. */
+let moodSel = null;
+function moodWeekChart(L, keys){
+  const t = today(), last = k => [...L.mood].filter(x => x.date === k).sort((a, b) => (a.at || 0) - (b.at || 0)).pop();
+  if (!moodSel || !keys.includes(moodSel)) moodSel = t;
+  const cols = keys.map(k => { const e = last(k), on = k === moodSel, wd = WD[(new Date(k + "T12:00").getDay() + 6) % 7];
+    return h("button", {class: "mw-d" + (on ? " on" : "") + (k === t ? " now" : ""), type: "button", "aria-pressed": String(on), "aria-label": `${wd}: ${e ? MOODS[e.mood - 1] : "sem registro"}`, onclick: () => { moodSel = k; render(); }},
+      h("span", {class: "mw-n"}, ""),
+      h("span", {class: "mw-b"}, e ? h("span", {class: "mw-s mood-s m" + e.mood, style: `height:${20 + (e.mood - 1) * 20}%`}, h("i")) : h("i", {class: "mw-z"})),
+      h("span", {class: "mw-w"}, wd)); });
+  return h("div", {class: "mw mw-mood"}, h("div", {class: "mw-g", role: "group", "aria-label": "Como você esteve nos últimos 7 dias. Toque num dia para ver os registros."}, cols));
+}
+function moodDayPanel(p, L){
+  if (!moodSel) return null;
+  const sel = L.mood.filter(e => e.date === moodSel).sort((a, b) => (a.time || "") < (b.time || "") ? -1 : 1);
+  const dayName = k => new Date(k + "T12:00").toLocaleDateString("pt-BR", {weekday: "long", day: "2-digit", month: "2-digit"});
+  return h("div", {class: "panel mwd", "aria-live": "polite"},
+    h("div", {class: "mw-dh"}, h("b", null, dayName(moodSel)), h("span", null, sel.length ? (sel.length === 1 ? "1 registro" : `${sel.length} registros`) : "")),
+    sel.length ? sel.map(e => h("button", {class: "mw-e mw-em", type: "button", onclick: () => EDIT_LOG.mood(p, e), "aria-label": `${MOODS[e.mood - 1]}${e.time ? ", às " + e.time : ""}. Ver ou editar.`},
+      h("i", {class: "mood-dot m" + e.mood}), h("b", null, MOODS[e.mood - 1]), h("span", null, [e.energy ? "energia " + e.energy : "", e.stress ? "estresse " + e.stress : ""].filter(Boolean).join(" · ")),
+      h("time", null, e.time || ""), h("span", {class: "li-go", html: ICON.right})))
+      : h("p", {class: "mw-none"}, moodSel === today() ? "Nenhum registro hoje." : "Nenhum registro neste dia."));
 }
 // caixa própria com os treinos do dia escolhido no gráfico (tipo, minutos, intensidade, horário); tocar abre a edição
 function moveDayPanel(p, L, mw){
   if (!moveSel) return null;
-  const sel = L.move.filter(e => e.date === moveSel && e.min > 0).sort((a, b) => (a.time || "99:99") < (b.time || "99:99") ? -1 : 1); if (!sel.length) return null;
+  const sel = L.move.filter(e => e.date === moveSel && e.min > 0).sort((a, b) => (a.time || "99:99") < (b.time || "99:99") ? -1 : 1);
   const IN = {leve: "lv", moderada: "md", vigorosa: "vg"}, tot = sel.reduce((a, e) => a + e.min, 0);
   const dayName = k => new Date(k + "T12:00").toLocaleDateString("pt-BR", {weekday: "long", day: "2-digit", month: "2-digit"});
   return h("div", {class: "panel mwd", "aria-live": "polite"},
       h("div", {class: "mw-dh"}, h("b", null, dayName(moveSel)), h("span", null, `${tot} min`)),
+      sel.length ? null : h("p", {class: "mw-none"}, moveSel === today() ? "Nenhum treino registrado hoje." : "Nenhum treino registrado neste dia."),
       sel.map(e => h("button", {class: "mw-e", type: "button", onclick: () => EDIT_LOG.move(p, e), "aria-label": `${e.type}, ${e.min} minutos${e.intensity ? ", " + e.intensity : ""}${e.time ? ", às " + e.time : ""}. Ver ou editar.`},
         h("i", {class: IN[e.intensity] || "md"}), h("b", null, e.type), h("span", null, `${e.min} min${e.intensity ? " · " + e.intensity : ""}`), h("time", null, e.time || ""), h("span", {class: "li-go", html: ICON.right}))));
 }
@@ -3672,8 +3724,8 @@ function renderHealth(p){
   const sleepBars = () => !ss.count ? null : ss.count < 3 ? strip(ss.nights.map(n => n.min ? "on" : ""), ss.nights.map(n => wdOf(n.key)), 6)
     : bars(ss.nights.map(n => n.min || 0), 600, ss.nights.map(n => wdOf(n.key)), 6);
   // dias da semana que ainda não chegaram ficam em branco (não são "sem registro")
-  const moveBars = () => mw.activeDays ? moveWeekChart(p, L, mw, nowI) : null;
-  const moodChart = () => !moodN ? null : moodN < 3 ? strip(moodDays.map(x => x ? "on m" + x.mood : ""), last7.map(wdOf), 6) : moodLine(L, last7);
+  const moveBars = () => moveWeekChart(p, L, mw, nowI);
+  const moodChart = () => moodN ? moodWeekChart(L, last7) : null;
   const more = (title, ...ps) => h("details", {class: "src more"}, h("summary", null, title), ...ps.filter(Boolean).map(x => h("p", null, x)));
   // o número principal de cada pilar; médias só com dados suficientes
   const P = {
@@ -3700,25 +3752,25 @@ function renderHealth(p){
       h("div", {class: "hp-h"}, h("span", {class: "hp-i", html: ICON[c.icon]}),
         full ? h("span", {class: "hp-t"}, c.title) : h("button", {class: "hp-t link0", type: "button", onclick: () => go({hsub: k})}, c.title, h("span", {class: "li-go", html: ICON.right})),
         full ? null : h("button", {class: "hp-add", type: "button", "aria-label": c.addL, onclick: c.add}, ic("plus"))),
-      c.has ? [h("div", {class: "hp-v"}, h("b", {class: c.value.length > 8 ? "long" : null}, c.value), h("span", null, c.ctx)), c.chart()] : h("p", {class: "hc-e"}, c.empty, full ? [h("br"), "Para registrar, toque em + no alto da tela."] : null),
-      k === "bem-estar" && full ? h("div", {class: "moods", role: "group", "aria-label": "Registrar como você está"}, MOODS.map((m, i) => h("button", {type: "button", class: "mood m" + (i + 1) + (todayM && todayM.mood === i + 1 ? " on" : ""),
-        onclick: () => saveMood(p, {mood: i + 1})}, h("i"), m))) : null, ...extra);
+      c.has ? [h("div", {class: "hp-v"}, h("b", {class: c.value.length > 8 ? "long" : null}, c.value), h("span", null, c.ctx)), full ? h("div", {class: "hp-chart"}, c.chart()) : c.chart()] : h("p", {class: "hc-e"}, c.empty, full ? [h("br"), "Para registrar, toque em + no alto da tela."] : null),
+...extra);
   };
   const detail = {
-    movimento: () => [card("movimento", true, mref && mref.week && !mref.perDay && L.move.length ? h("p", {class: "hp-n"}, `${mw.mv} min de atividade moderada ou vigorosa nesta semana.`) : null,
-        more("Referência", mref ? mref.text : "Abaixo de 5 anos o app não usa meta numérica de atividade.", "O app não converte atividade em calorias: as estimativas variam muito entre pessoas.")),
-      mw.activeDays ? moveDayPanel(p, L, mw) : null,
+    movimento: () => [card("movimento", true, mw.activeDays ? h("div", {class: "mw mw-k", "aria-hidden": "true"}, h("span", null, h("i", {class: "lv"}), "leve"), h("span", null, h("i", {class: "md"}), "moderada"), h("span", null, h("i", {class: "vg"}), "vigorosa"), h("span", null, h("i", {class: "mw-z"}), "sem registro")) : null,
+        more("Referência", mref && mref.week && !mref.perDay && L.move.length ? `Nesta semana: ${mw.mv} min de atividade moderada ou vigorosa (a leve não entra na conta).` : null,
+          mref ? mref.text : "Abaixo de 5 anos o app não usa meta numérica de atividade.", "O app não converte atividade em calorias: as estimativas variam muito entre pessoas.")),
+      L.move.length ? moveDayPanel(p, L, mw) : null,
       L.move.length ? h("div", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Histórico")), hist("move", [...L.move].sort(byDate), e => [h("b", null, e.type), ` · ${fmtMin(e.min)}${e.intensity ? " · " + INTENS.find(x => x[0] === e.intensity)[1].toLowerCase() : ""}`, h("span", null, " " + relDay(e.date) + (e.time ? " " + e.time : ""))])) : null],
-    sono: () => [card("sono", true, L.sleep.length ? h("p", {class: "hp-k"}, h("i"), "noite sem registro") : null, L.sleep.length ? h("p", {class: "hp-n"}, ss.count < 3 ? "Média a partir de 3 noites nos últimos 7 dias; regularidade a partir de 5."
+    sono: () => [card("sono", true, L.sleep.length ? h("div", {class: "mw mw-k"}, h("span", null, h("i", {class: "mw-z"}), "noite sem registro")) : null,
+        more("Referência", L.sleep.length ? (ss.count < 3 ? "Média a partir de 3 noites nos últimos 7 dias; regularidade a partir de 5."
           : ss.count >= 5 && ss.bedSD != null ? `Horário de dormir variou cerca de ${Math.round(ss.bedSD)} minutos para mais ou para menos nos últimos 7 dias.` : "Regularidade a partir de 5 noites registradas.") : null,
-        sref ? more("Referência", sref.text) : null),
+          sref ? sref.text : null)),
       L.sleep.length ? h("div", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Histórico")), hist("sleep", [...L.sleep].sort(byDate), e => [h("b", null, fmtDur(C.sleepMinutes(e.bed, e.wake))), ` · ${e.bed}–${e.wake}${e.quality ? " · " + QUAL[e.quality - 1].toLowerCase() : ""}`, h("span", null, " " + relDay(e.date))])) : null],
-    "bem-estar": () => [card("bem-estar", true, h("button", {class: "link hp-link", type: "button", onclick: () => moodSheet(p)}, "Registrar com energia, estresse ou nota")),
-      L.mood.length ? h("div", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Últimos 14 dias")),
-        h("div", {class: "dots"}, Array.from({length: 14}, (_, i) => C.addDays(t, i - 13)).map(k => { const x = dayMood(k); return h("span", {class: x ? "m" + x.mood : "", title: `${relDay(k)}: ${x ? MOODS[x.mood - 1] : "sem registro"}`}); })),
-        more("Como ler", "Dias sem registro não significam nada. O app não faz diagnósticos."),
-        hist("mood", [...L.mood].sort(byDate), e => [h("b", null, MOODS[e.mood - 1]), e.energy ? ` · energia ${e.energy}` : "", e.stress ? ` · estresse ${e.stress}` : "", e.note ? ` · “${e.note}”` : "", h("span", null, ` ${relDay(e.date)}${e.time ? " " + e.time : ""}`)])) : null]};
-  const tabs = [["resumo", "Resumo"], ["movimento", "Exercício"], ["sono", "Sono"], adult ? ["bem-estar", "Emocional"] : null].filter(Boolean);
+    "bem-estar": () => [card("bem-estar", true, L.mood.length ? h("div", {class: "mw mw-k"}, h("span", null, h("i", {class: "mw-z"}), "dia sem registro")) : null,
+        more("Referência", "A altura da barra indica como você estava (de Muito mal a Muito bem); com mais de um registro no dia, vale o último.", "Dias sem registro não significam nada. O app não faz diagnósticos.")),
+      L.mood.length ? moodDayPanel(p, L) : null,
+      L.mood.length ? h("div", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Histórico")),
+        hist("mood", [...L.mood].sort(byDate), e => [h("b", null, MOODS[e.mood - 1]), e.energy ? ` · energia ${e.energy}` : "", e.stress ? ` · estresse ${e.stress}` : "", e.note ? ` · “${e.note}”` : "", h("span", null, ` ${relDay(e.date)}${e.time ? " " + e.time : ""}`)])) : null]};  const tabs = [["resumo", "Resumo"], ["movimento", "Exercício"], ["sono", "Sono"], adult ? ["bem-estar", "Emocional"] : null].filter(Boolean);
   // um "+" por tela: no Exercício, no Sono e no Emocional ele registra aquele pilar; no resumo, é o "Registrar" geral
   put(app, h("div", {class: "view"}, topBar(sub === "resumo" ? quickBtn(p, "saude") : modAdd(P[sub].addL, P[sub].add)),
     view.ret && sub !== "resumo" ? backBtn("Saúde", {hsub: "resumo"}) : null,
@@ -5455,6 +5507,7 @@ function macroRing(t, sp){
     h("span", {style: "display:contents", html: `<svg viewBox="0 0 120 120"><circle class="rg-trk" cx="60" cy="60" r="${R}"/><g transform="rotate(-90 60 60)">${arcs}</g></svg>`}),
     h("span", {class: "sx-c"}, h("b", null, k0(t.kcal)), h("span", null, "kcal")));
 }
+let goalLedOpen = false;   // v45: os números do objetivo (meta, plano, GET) ficam recolhidos; a seta da linha abre
 function renderPlan(p){
   let repaintGoal = null;   // o quadro de energia do objetivo acompanha o total do plano
   const plan = p.plan;
@@ -5477,9 +5530,9 @@ function renderPlan(p){
       h("div", {class: "sx-h"}, h("span", {class: "sx-eye"}, "Planejado para hoje"), h("span", {class: "li-go", html: ICON.right})),
       h("div", {class: "sx-core"}, macroRing(t, sp),
         h("div", {class: "sx-leg"}, [["t-c", "Carboidratos", t.c, sp.c], ["t-p", "Proteínas", t.p, sp.p], ["t-g", "Gorduras", t.l, sp.l], ["t-f", "Fibras", t.f, null]].map(([c, k, g, pc]) =>
-          h("span", {class: "sx-i"}, h("span", {class: "sx-k"}, h("i", {class: "sx-d " + c}), k),
+          h("span", {class: "sx-i"}, h("span", {class: "sx-k"}, c === "t-f" ? null : h("i", {class: "sx-d " + c}), k),
             h("span", {class: "sx-v"}, h("b", null, fmtG(g), h("small", null, " g")), pc == null ? null : h("em", null, `${Math.round(pc)}%`)))))),
-      h("div", {class: "sx-foot"}, note ? h("span", {class: "sx-note"}, note) : null, h("span", null, "% da energia dos macronutrientes")));
+      note ? h("div", {class: "sx-foot"}, h("span", {class: "sx-note"}, note)) : null);
     if (repaintGoal) repaintGoal();
     put(sumbar,
       h("span", {class: "k"}, h("b", null, k0(t.kcal)), tg ? ` / ${k0(tg)}` : "", h("span", {class: "u"}, " kcal")),
@@ -5504,18 +5557,21 @@ function renderPlan(p){
   // três energias distintas, nunca equivalentes: a meta (definida por você), o que o plano soma hoje e o gasto total estimado (GET, cálculo)
   const goalLine = () => { const tot = planTotal(plan).kcal, tg = plan.target, get = r.ok && r.get ? r.get : null, d = tg ? Math.round(tot) - tg : null;
     const cell = (cls, k, v, n) => h("span", {class: "gl-c " + cls}, h("span", {class: "gl-k"}, k, h("span", {class: "gl-n"}, n)), h("b", null, v == null ? "—" : k0(v), v == null ? null : h("small", null, " kcal")));
-    goalRow.setAttribute("aria-label", `Objetivo: ${plan.objective || "não definido"}. Meta diária: ${tg ? k0(tg) + " kcal" : "não definida"}. No plano: ${k0(tot)} kcal. Gasto energético total estimado: ${get ? k0(get) + " kcal" : "faltam dados"}. Toque para editar.`);
-    return [h("span", {class: "gl-top"}, h("span", {class: "gl-i", html: ICON.target}),
+    goalRow.setAttribute("aria-label", `Objetivo: ${plan.objective || "não definido"}. ${goalLedOpen ? "Toque para recolher" : "Toque para ver a meta e o gasto estimado"}. Meta diária: ${tg ? k0(tg) + " kcal" : "não definida"}. No plano: ${k0(tot)} kcal. Gasto energético total estimado: ${get ? k0(get) + " kcal" : "faltam dados"}. Toque para editar.`);
+    return [h("span", {class: "gl-top"},
         h("span", {class: "gl-m"}, h("span", {class: "gl-t"}, "Objetivo"), h("span", {class: "gl-o" + (plan.objective ? "" : " dim")}, plan.objective || "Definir objetivo")),
-        h("span", {class: "gl-e", html: ICON.edit})),
-      h("span", {class: "gl-led"},
+        h("span", {class: "gl-x" + (goalLedOpen ? " on" : ""), html: ICON.chev})),
+      goalLedOpen ? h("span", {class: "gl-led"},
         cell("meta", "Meta diária", tg, tg ? "definida por você" : get ? `sugestão ${k0(get)}` : "não definida"),
         cell("plan", "No plano de hoje", tot, d == null ? "" : d === 0 ? "igual à meta" : `${k0(Math.abs(d))} ${d > 0 ? "acima" : "abaixo"}`),
-        cell("get", "Gasto estimado", get, "GET, cálculo"))]; };
+        cell("get", "Gasto estimado", get, "GET, cálculo"),
+        h("span", {class: "gl-edit", role: "button", tabindex: "0", "data-edit": "1"}, h("span", {html: ICON.edit}), "Editar objetivo e meta")) : null]; };
   const goalRow = h("button", {class: "goalrow", type: "button", "aria-expanded": "false", "aria-label": "Editar objetivo e meta"});
   const goalEd = h("div", {class: "plan-head"});
   const setGoalOpen = on => { goalEd.hidden = !on; goalRow.hidden = on; goalRow.setAttribute("aria-expanded", String(on)); if (!on) put(goalRow, goalLine()); };
-  goalRow.addEventListener("click", () => { setGoalOpen(true); setTimeout(() => obj.focus(), 30); });
+  // v45: tocar na linha abre/fecha os números; "Editar objetivo e meta" (dentro) abre os campos
+  goalRow.addEventListener("click", e => { if (e.target.closest("[data-edit]")) { setGoalOpen(true); setTimeout(() => obj.focus(), 30); return; }
+    goalLedOpen = !goalLedOpen; put(goalRow, goalLine()); goalRow.setAttribute("aria-expanded", String(goalLedOpen)); });
   const tgt = h("input", {class: "input num", id: "meta", inputmode: "numeric", placeholder: r.ok && r.get ? k0(r.get) : "kcal", value: plan.target ? String(plan.target) : "", "aria-label": "Meta de calorias"});
   tgt.addEventListener("input", () => { const v = parseInt(tgt.value.replace(/\D/g, ""), 10); plan.target = v > 0 ? v : null; touch(p); paintSum(); });
   goalEd.append(h("div", {class: "field", style: "margin:0"}, h("label", {for: "objetivo"}, "Objetivo"), h("div", {class: "acw"}, obj)),
@@ -5666,7 +5722,6 @@ function renderPlan(p){
     const done = h("span", {class: "done-w"});
     refs.get(m.id).done = done;
     const head = h("div", {class: "mh", role: isOpen ? null : "button", tabindex: isOpen ? null : "0", "aria-expanded": String(isOpen)}, done,
-      isOpen ? null : h("span", {class: "mh-tm"}, m.time || "—"),
       h("div", {class: "mh-m"}, isOpen ? h("div", {class: "acw"}, nameEl) : nameEl, subEl), kcalEl, chev);
     if (!isOpen){
       head.addEventListener("click", () => toggle(m));
@@ -5708,7 +5763,7 @@ function renderPlan(p){
     const R = refs.get(m.id); if (!R) return;
     const t = mealTotal(m), n = filled(m).length;
     R.kcalEl.replaceChildren(k0(t.kcal), h("small", null, "kcal"));
-    R.subEl.textContent = [R.card.classList.contains("open") ? m.time : "", nItems(n), doneOf(p, m) ? "feita" : ""].filter(Boolean).join(" · ");
+    put(R.subEl, m.time ? h("span", {class: "mh-st"}, m.time) : null, m.time ? " · " : null, [nItems(n), doneOf(p, m) ? "feita" : ""].filter(Boolean).join(" · "));
     put(R.done, tracks(p) || doneOf(p, m) ? doneBtn(p, m, () => paintMeal(m)) : null);
     R.footEl.hidden = !t.kcal;
     put(R.footEl, h("div", {class: "eyebrow"}, totalOf(m.name)), macroGrid(t, p.energy.weight, true), missNote(t));
