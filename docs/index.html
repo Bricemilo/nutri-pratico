@@ -209,6 +209,20 @@ h2.sec{font-size:0.765rem;font-weight:650;letter-spacing:.08em;text-transform:up
 /* v50: mesma regra do cartão "Planejado": cor = proporção (nome e %), branco = quantidade; Fibras em branco */
 .mgrid .pc.t-c{color:var(--carb)} .mgrid .pc.t-p{color:var(--prot-ink)} .mgrid .pc.t-g{color:var(--fat)}
 .mwrap .fib .t-f{color:var(--ink)}
+.mgrid .pv{font-weight:680}
+.mgrid .pv small{font-size:.62em;font-weight:600;margin-left:1px;letter-spacing:0}
+.mgrid .gv{margin-left:7px;font-size:var(--t-sm);font-weight:620;color:var(--ink);letter-spacing:0}
+.mgrid .gv small{font-size:var(--t-cap);font-weight:500;color:var(--muted);margin:0}
+/* v51: lixeira na linha da quantidade */
+.it-ed .ed-l{grid-template-columns:62px minmax(0,1fr) auto 44px;gap:8px}
+.key .v.pv small{color:inherit;margin-left:1px}
+.key .s.gs{color:var(--ink);font-weight:620;font-size:var(--t-sm)}
+.key .s.gs small{color:var(--muted);font-weight:500;font-size:var(--t-cap)}
+.dial-d .t-f{color:var(--ink)}
+@media (max-width:370px){.mwrap.sm .mgrid .k{letter-spacing:-.02em}.mwrap.sm .mgrid > div{padding:0 2px}}
+.ed-del{width:44px;height:44px;display:grid;place-items:center;border-radius:12px;color:var(--danger)}
+.ed-del svg{width:20px;height:20px}
+.ed-del:active{background:var(--danger-soft)}
 .mwrap.sm{margin-top:0;padding-top:0;border-top:0}
 .mwrap.sm .k{font-size:var(--t-cap)}
 .mwrap.sm .v{font-size:1rem}
@@ -2856,6 +2870,7 @@ const ICON = {
   edit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4Z"/><path d="m13.5 6.5 4 4"/></svg>',
   x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
   lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+  trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 7h15M10 4h4M6.5 7l.9 11.6A2 2 0 0 0 9.4 20.5h5.2a2 2 0 0 0 2-1.9L17.5 7M10.2 11v5.5M13.8 11v5.5"/></svg>',
   clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>',
   more:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="19" cy="12" r="1.9"/></svg>',
   copy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>',
@@ -5618,12 +5633,13 @@ function dial(t, tg, W, o = {}){
   function paintKeys(){
     put(keys, MAC.map(([k, name, cls, g, share]) => h("button", {class: "key" + (sel === k ? " on" : "") + (sel && sel !== k ? " dim" : ""), type: "button", "aria-pressed": String(sel === k),
       onclick: () => { sel = sel === k ? null : k; paintKeys(); }},
-      h("span", {class: "k " + cls}, name), h("span", {class: "v"}, fmtG(g), h("small", null, "g")), h("span", {class: "s"}, `${Math.round(share)}%`))));
+      // v51: mesmo padrão do cartão — % primeiro, na cor do macronutriente; gramas embaixo, em branco
+      h("span", {class: "k " + cls}, name), h("span", {class: "v pv " + cls}, String(Math.round(share)), h("small", null, "%")), h("span", {class: "s gs"}, fmtG(g), h("small", null, " g")))));
     arcs.forEach(a => { a.classList.toggle("sel", sel === a.dataset.k); a.classList.toggle("dim", !!sel && sel !== a.dataset.k); });
     const m = MAC.find(x => x[0] === sel);
     const seg = (...x) => h("span", {class: "nw"}, ...x);
     put(detail, m ? [seg(h("b", {class: m[2]}, m[1]), ` ${fmtG(m[3])} g`), seg(` · ${Math.round(m[4])}% da energia`), W ? seg(` · ${nf2.format(m[3] / W)} g/kg`) : null, seg(` · ${k0(m[3] * (m[0] === "l" ? 9 : 4))} kcal`)]
-      : [seg(h("b", {class: "t-f"}, "Fibras"), ` ${fmtG(t.f)} g${t.miss.f ? "*" : ""}`), t.kcal ? seg(` · ${g1(t.f * 1000 / t.kcal)} g por 1.000 kcal`) : null]);
+      : [seg(h("b", {class: "t-f"}, "Fibras"), ` ${fmtG(t.f)} g${t.miss.f ? "*" : ""}`)]);
   }
   paintKeys();
   requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -5646,12 +5662,12 @@ function macroGrid(t, W, small){
   const s = C.macroSplit(t);
   const cell = (cls, k, grams, pc) => h("div", null,
     h("div", {class: "k " + cls}, k),
-    h("div", {class: "v"}, fmtG(grams), h("small", null, "g"), h("span", {class: "pc " + cls}, `${Math.round(pc)}%`)),
+    // v51: como no cartão do anel — o % primeiro (na cor), depois as gramas (em branco); g/kg embaixo
+    h("div", {class: "v"}, h("span", {class: "pv " + cls}, String(Math.round(pc)), h("small", null, "%")), h("span", {class: "gv"}, fmtG(grams), h("small", null, " g"))),
     h("div", {class: "s"}, W ? `${nf2.format(grams / W)} g/kg` : " "));
   return h("div", {class: "mwrap" + (small ? " sm" : "")},
     h("div", {class: "mgrid"}, cell("t-c", "Carboidratos", t.c, s.c), cell("t-p", "Proteínas", t.p, s.p), cell("t-g", "Gorduras", t.l, s.l)),
-    h("div", {class: "fib"}, h("span", {class: "t-f"}, "Fibras"), h("b", null, `${fmtG(t.f)} g${t.miss.f ? "*" : ""}`),
-      t.kcal ? h("span", {class: "s"}, `${g1(t.f * 1000 / t.kcal)} g por 1.000 kcal`) : null));
+    h("div", {class: "fib"}, h("span", {class: "t-f"}, "Fibras"), h("b", null, `${fmtG(t.f)} g${t.miss.f ? "*" : ""}`)));
 }
 function missNote(t){
   const n = Object.values(t.miss || {}).reduce((a, b) => Math.max(a, b), 0);
@@ -6090,37 +6106,39 @@ function renderPlan(p){
     R.paint = paint;
     if (editing && f){
       const qty = h("input", {class: "cell qty", inputmode: "decimal", "aria-label": "Quantidade", placeholder: "1", value: fmtQty(it.qty), enterkeyhint: "done"});
-      const meas = h("input", {class: "cell", "aria-label": "Medida caseira", value: C.measureOf(f, it.measure).l, autocapitalize: "off"});
+      // v51: a medida acompanha a quantidade ("2 unidades", "1 colher de sopa"), em minúsculas, como se fala
+      const disp = () => { const l = C.measureOf(f, it.measure).l; return l === "Grama" ? "gramas" : (/^\d/.test(l) ? l : ((it.qty || 1) >= 2 ? plMeasure(l) : l).toLowerCase()); };
+      const meas = h("input", {class: "cell", "aria-label": "Medida caseira", value: disp(), autocapitalize: "off"});
       R.qty = qty; R.grams = h("div", {class: "grams"}); R.mac = h("div", {class: "ed-m"});
       const live = () => { paint(); paintMeal(m); paintSum(); };
-      qty.addEventListener("input", () => { it.qty = parseQty(qty.value); touch(p); live(); });
+      qty.addEventListener("input", () => { it.qty = parseQty(qty.value); touch(p); live(); if (document.activeElement !== meas) meas.value = disp(); });
       qty.addEventListener("focus", () => setTimeout(() => { if (document.activeElement === qty) qty.select(); }, 0));
       qty.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); closeEdit(m, it, "add"); } });
+      // v51: digitou a quantidade e tocou em OK no teclado: a linha fecha e o cursor vai para "Adicionar alimento"
+      qty.addEventListener("blur", () => setTimeout(() => {
+        if (view.edit !== it.id || !row.isConnected) return;
+        const a = document.activeElement; if (a && row.contains(a)) return;
+        if (a && a !== document.body && a.matches("input, textarea, select")) return;   // foi para outro campo: não puxa o cursor
+        closeEdit(m, it, "add");
+      }, 120));
       autocomplete(meas, {
         items: q => {
-          const cur = C.measureOf(f, it.measure).l, qt = words(q);
-          const all = (q === cur || !qt.length) ? f.measures : f.measures.filter(x => { const w = words(x.l); return qt.every(t => w.some(y => y.startsWith(t))); });
+          const qt = words(q);
+          const all = (q === disp() || !qt.length) ? f.measures : f.measures.filter(x => { const w = words(x.l); return qt.every(t => w.some(y => y.startsWith(t))); });
           return all.map(x => ({label: x.l, meta: `${fq.format(x.g)} g`, value: x}));
         },
-        onPick: x => { it.measure = x.value.l; meas.value = x.value.l; touch(p); live(); qty.focus(); },
-        onBlur: () => { meas.value = C.measureOf(f, it.measure).l; }
+        onPick: x => { it.measure = x.value.l; meas.value = disp(); touch(p); live(); qty.focus(); },
+        onBlur: () => { meas.value = disp(); }
       });
       meas.addEventListener("focus", () => setTimeout(() => { if (document.activeElement === meas) meas.select(); }, 0));
-      // v48: edição enxuta — quantidade, medida e gramas; uma linha discreta de macros; três ações em texto (sem caixas).
-      // Sai: a fileira de atalhos (¼ ½ … 5), que repetia o teclado numérico; e a confirmação de remover (agora há "Desfazer").
-      const act = (icon, label, fn, cls) => h("button", {class: "ed-t" + (cls ? " " + cls : ""), type: "button", onclick: fn}, ic(icon), label);
-      row.append(h("div", {class: "it-ed"},
-        h("div", {class: "ed-l"}, qty, h("div", {class: "acw"}, meas), R.grams), R.mac,
-        h("div", {class: "ed-a"},
-          act("swap", "Substituir", () => swapSheet(m, it)),
-          act("copy", "Duplicar", () => {
-            const c = {id: uid(), foodId: it.foodId, measure: it.measure, qty: it.qty || 1};
-            m.items.splice(m.items.indexOf(it) + 1, 0, c); view.edit = null; touch(p); rebuild(m); toast("Alimento duplicado");
-          }),
-          act("x", "Remover", () => {
-            const i = m.items.indexOf(it); m.items.splice(i, 1); view.edit = null; touch(p); rebuild(m);
-            toast(`${f.dn} removido`, () => { m.items.splice(Math.min(i, m.items.length), 0, it); touch(p); rebuild(m); });
-          }, "del"))));
+      // v51: só excluir (lixeira na linha da quantidade, sem linha a mais); Substituir e Duplicar saíram daqui
+      const del = h("button", {class: "ed-del", type: "button", "aria-label": `Excluir ${f.dn}`, html: ICON.trash});
+      del.addEventListener("mousedown", e => e.preventDefault());
+      del.addEventListener("click", () => {
+        const i = m.items.indexOf(it); m.items.splice(i, 1); view.edit = null; touch(p); rebuild(m);
+        toast(`${f.dn} excluído`, () => { m.items.splice(Math.min(i, m.items.length), 0, it); touch(p); rebuild(m); });
+      });
+      row.append(h("div", {class: "it-ed"}, h("div", {class: "ed-l"}, qty, h("div", {class: "acw"}, meas), R.grams, del), R.mac));
     } else if (editing){
       const askEl = h("div");
       row.append(h("div", {class: "it-ed"}, h("div", {class: "ed-a"},

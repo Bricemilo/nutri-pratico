@@ -1754,3 +1754,19 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
   - as 95 medidas da base foram conferidas.
 - **Total da refeição:** a mesma regra do cartão "Planejado". O nome e o % de cada macronutriente ficam na sua cor, as gramas em branco e Fibras em branco.
 - **Refeição aberta:** o nome fica em branco; o cobre fica só no horário.
+
+## 72. v51 — Totais com o % primeiro, edição do alimento só com a lixeira e quantidade que fecha a linha
+
+- **Total da refeição e Resumo nutricional:** mesmo padrão do cartão do anel.
+  - o % vem primeiro, grande e na cor do macronutriente; as gramas vêm depois, em branco; o g/kg fica embaixo;
+  - Fibras em branco;
+  - saiu o "g por 1.000 kcal" das fibras (no total da refeição e no resumo).
+- **Edição do alimento:**
+  - ficou só a lixeira, na mesma linha da quantidade, da medida e das gramas (alvo de 44 pt; nenhuma linha a mais);
+  - Substituir e Duplicar saíram dessa caixa (a substituição continua disponível para alimento que saiu da base);
+  - excluir mostra "Desfazer";
+  - altura: 283 pt (v47) → 175 pt (v48) → 123 pt (v51).
+- **Quantidade digitada:**
+  - a medida acompanha o número, no plural quando passa de 2 ("2 unidades", "1 colher de sopa");
+  - ao tocar em OK no teclado, a linha fecha e o cursor vai para "Adicionar alimento";
+  - tocar na medida não fecha a linha, para permitir trocar a medida.
