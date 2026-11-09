@@ -1770,3 +1770,19 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
   - a medida acompanha o número, no plural quando passa de 2 ("2 unidades", "1 colher de sopa");
   - ao tocar em OK no teclado, a linha fecha e o cursor vai para "Adicionar alimento";
   - tocar na medida não fecha a linha, para permitir trocar a medida.
+
+## 73. v52 — Correção: alimento próprio cadastrado pela coluna da porção
+
+- **Problema:** no cadastro de alimento, "Os valores abaixo são por" já vinha marcado em "100 g".
+  - quem preenchia a porção (ex.: 1 medidor = 34 g) e digitava a coluna da porção do rótulo salvava valores como se fossem de 100 g;
+  - todas as quantidades saíam menores, na razão porção ÷ 100 (com 34 g, cerca de 3 vezes menos);
+  - o cálculo do plano estava certo; o erro estava na base dos números salvos.
+- **Correção:**
+  - alimento novo começa sem a base escolhida e só salva depois da escolha;
+  - os botões mostram a porção pelo nome: "100 g" | "medidor (34 g)";
+  - um quadro "Confira com o rótulo" mostra, ao vivo, os valores em 100 g e na porção, para comparar com as duas colunas da embalagem;
+  - valores impossíveis bloqueiam o salvar com aviso: mais de ~900 kcal em 100 g, ou C + P + G acima de 100 g em 100 g;
+  - a base escolhida fica guardada; ao editar, o alimento reabre como foi digitado;
+  - os valores por 100 g são guardados com 2 casas, para reabrir exatamente.
+- **Leitura de rótulo por foto:** sem mudança. Ela já identifica a coluna de 100 g.
+- **Alimentos já cadastrados:** o app não sabe qual coluna foi digitada, então nada é alterado sozinho. Para corrigir, abra Editar alimento, escolha a porção em "Os valores abaixo são por", confira o quadro e salve. Os planos recalculam na hora.

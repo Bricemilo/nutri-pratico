@@ -202,6 +202,11 @@ h2.sec{font-size:0.765rem;font-weight:650;letter-spacing:.08em;text-transform:up
 .key .s.gs small{color:var(--muted);font-weight:500;font-size:var(--t-cap)}
 .dial-d .t-f{color:var(--ink)}
 @media (max-width:370px){.mwrap.sm .mgrid .k{letter-spacing:-.02em}.mwrap.sm .mgrid > div{padding:0 2px}}
+.al-chk{margin:2px 0 12px}
+.al-chk-b{padding:11px 13px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line);font-size:var(--t-sm);font-variant-numeric:tabular-nums}
+.al-chk-t{font-size:var(--t-cap);font-weight:650;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.al-chk-r{display:flex;flex-wrap:wrap;gap:2px 8px;padding:3px 0;color:var(--ink-2)}
+.al-chk-r b{color:var(--ink);font-weight:620;min-width:5.5em}
 .ed-del{width:44px;height:44px;display:grid;place-items:center;border-radius:12px;color:var(--danger)}
 .ed-del svg{width:20px;height:20px}
 .ed-del:active{background:var(--danger-soft)}
@@ -6439,10 +6444,14 @@ function foodSheet(opt, done){
   const f = opt.food, scan = opt.scan, meta = (f && f.meta) || {};
   const flags = (scan && scan.flags) || {};
   sheet(f ? "Editar alimento" : "Novo alimento", (el, close) => {
-    const v0 = k => scan ? scan.per100[k] : f ? (k === "kcal" ? f.kcal : k === "c" ? f.c : k === "p" ? f.p : k === "fat" ? f.fat : k === "fib" ? f.fib : (meta.extra || {})[k]) : null;
     let oldMs = f ? f.measures.filter(x => x.l !== "Grama") : [];
     const portion0 = scan ? scan.portion : meta.portion || (oldMs[0] ? {amount: oldMs[0].g, unit: "g", label: oldMs[0].l} : null);
-    let basis = "100", unit = (portion0 && portion0.unit) || "g";
+    // v52: a base dos valores (100 g ou porção) é uma escolha explícita. Antes vinha marcada em "100 g" e quem digitava a coluna
+    // da porção salvava valores ~3 vezes menores. Alimento novo começa sem escolha; ao editar, reabre como foi digitado.
+    let basis = scan ? "100" : f ? (meta.basis === "porcao" && portion0 && portion0.amount > 0 ? "porcao" : "100") : null, unit = (portion0 && portion0.unit) || "g";
+    const k0p = basis === "porcao" ? portion0.amount / 100 : 1;
+    const v0 = k => { const x = scan ? scan.per100[k] : f ? (k === "kcal" ? f.kcal : k === "c" ? f.c : k === "p" ? f.p : k === "fat" ? f.fat : k === "fib" ? f.fib : (meta.extra || {})[k]) : null;
+      return x == null ? null : k0p === 1 ? x : Math.round(x * k0p * 10) / 10; };
     const nm = h("input", {class: "input", id: "al-nome", value: f ? f.name : (opt.prefill || ""), placeholder: "Ex.: Granola tradicional", autocomplete: "off"});
     const br = h("input", {class: "input", id: "al-marca", value: meta.brand || "", placeholder: "Fabricante", autocomplete: "off"});
     const num = (id, v) => h("input", {class: "input num", id, inputmode: "decimal", placeholder: "—", autocomplete: "off", value: v == null ? "" : fq.format(v)});
@@ -6458,23 +6467,37 @@ function foodSheet(opt, done){
     const pLbl = h("input", {class: "input", id: "al-porcao-nome", value: (portion0 && portion0.label) || (f && f.measures.find(x => x.l !== "Grama") || {}).l || "", placeholder: "Ex.: Colher de sopa", autocomplete: "off"});
     const basisSeg = h("div", {class: "seg", role: "radiogroup", "aria-label": "Valores informados por"});
     const unitSeg = h("div", {class: "seg", role: "radiogroup", "aria-label": "Unidade da porção"});
+    const portionName = () => { const a = val(pAmt), l = pLbl.value.trim(); return a > 0 ? `${l ? l.charAt(0).toLowerCase() + l.slice(1) : "porção"} (${fq.format(a)} ${unit})` : "Porção"; };
     const paintSegs = () => {
-      put(basisSeg, [["100", `100 ${unit}`], ["porcao", "Porção"]].map(([k, l]) => h("button", {type: "button", class: basis === k ? "on" : "", role: "radio", "aria-checked": String(basis === k), onclick: () => { basis = k; paintSegs(); check(); }}, l)));
+      put(basisSeg, [["100", `100 ${unit}`], ["porcao", portionName()]].map(([k, l]) => h("button", {type: "button", class: basis === k ? "on" : "", role: "radio", "aria-checked": String(basis === k), onclick: () => { basis = k; paintSegs(); check(); }}, l)));
       put(unitSeg, [["g", "g"], ["ml", "ml"]].map(([k, l]) => h("button", {type: "button", class: unit === k ? "on" : "", role: "radio", "aria-checked": String(unit === k), onclick: () => { unit = k; paintSegs(); }}, l)));
     };
     const ok = h("button", {class: "btn primary block", type: "submit"}, f ? "Salvar" : "Salvar alimento");
-    const status = h("div"), dupBox = h("div");
+    const status = h("div"), dupBox = h("div"), checkBox = h("div", {class: "al-chk", "aria-live": "polite"});
     const val = x => { const n = parseFloat(String(x.value).replace(",", ".")); return isFinite(n) && n >= 0 ? n : null; };
     const g2 = (...a) => h("div", {class: "g2"}, a);
     const main = [fld("al-kcal", "Energia (kcal)", "kcal", true), fld("al-cho", "Carboidratos (g)", "c", true), fld("al-ptn", "Proteínas (g)", "p", true),
       fld("al-lip", "Gorduras totais (g)", "fat", true), fld("al-fib", "Fibras (g)", "fib", false)];
     const extraFields = EXTRA.map(([k, l, u]) => fld("al-" + k, `${l} (${u})`, k, false));
     const hasExtra = EXTRA.some(([k]) => v0(k) != null);
+    // v52: conferência ao vivo — mostra 100 g e a porção lado a lado, para comparar com as duas colunas do rótulo; bloqueia o impossível
     function check(){
-      const req = ["kcal", "c", "p", "fat"].every(k => val(fields[k]) != null);
-      ok.disabled = !(nm.value.trim() && req && (basis === "100" || val(pAmt) > 0));
+      const req = ["kcal", "c", "p", "fat"].every(k => val(fields[k]) != null), a = val(pAmt);
+      let err = "";
+      if (!basis) err = "Escolha acima se os valores são de 100 " + unit + " ou da porção.";
+      else if (basis === "porcao" && !(a > 0)) err = "Informe a quantidade da porção.";
+      const k = basis === "porcao" && a > 0 ? 100 / a : 1;
+      const p100 = key => { const x = val(fields[key]); return x == null ? null : x * k; };
+      if (!err && basis && req){
+        if (p100("kcal") > 905) err = `Em 100 ${unit} daria ${k0(p100("kcal"))} kcal, acima do possível (máx. ~900). Confira se os valores são de 100 ${unit} ou da porção.`;
+        else if (p100("c") + p100("p") + p100("fat") > 100.5) err = `Em 100 ${unit}, carboidratos, proteínas e gorduras somariam ${k0(p100("c") + p100("p") + p100("fat"))} g, mais que 100 g. Confira se os valores são de 100 ${unit} ou da porção.`;
+      }
+      const line = (lbl, f2) => h("div", {class: "al-chk-r"}, h("b", null, lbl), h("span", null, `${k0(p100("kcal") * f2)} kcal · C ${fmtG(p100("c") * f2)} · P ${fmtG(p100("p") * f2)} · G ${fmtG(p100("fat") * f2)} g`));
+      put(checkBox, err ? h("p", {class: "note warn"}, err) : basis && req ? h("div", {class: "al-chk-b"}, h("div", {class: "al-chk-t"}, "Confira com o rótulo"),
+        line(`100 ${unit}`, 1), a > 0 ? line(`1 ${portionName()}`, a / 100) : null) : null);
+      ok.disabled = !(nm.value.trim() && req && !err);
     }
-    [nm, pAmt, ...Object.values(fields)].forEach(x => x.addEventListener("input", () => { x.classList.remove("flag"); check(); }));
+    [nm, pAmt, pLbl, ...Object.values(fields)].forEach(x => x.addEventListener("input", () => { x.classList.remove("flag"); if (x === pAmt || x === pLbl) paintSegs(); check(); }));
     paintSegs(); check();
     const form = h("form", null,
       h("h2", null, f ? "Editar alimento" : scan ? "Confira os valores lidos" : "Novo alimento"),
@@ -6488,7 +6511,7 @@ function foodSheet(opt, done){
       g2(h("div", {class: "field"}, h("label", {for: "al-porcao"}, "Quantidade", flags.portion ? h("span", {class: "opt"}, " não encontrada") : ""), pAmt), h("div", {class: "field"}, h("label", null, "Unidade"), unitSeg)),
       h("div", {class: "field"}, h("label", {for: "al-porcao-nome"}, "Medida caseira", h("span", {class: "opt"}, " opcional")), pLbl),
       h("div", {class: "field"}, h("label", null, "Os valores abaixo são por"), basisSeg),
-      g2(main[0], main[1]), g2(main[2], main[3]), g2(main[4], h("div")),
+      g2(main[0], main[1]), g2(main[2], main[3]), g2(main[4], h("div")), checkBox,
       h("details", {class: "adv", open: hasExtra || null}, h("summary", null, "Mais nutrientes", h("span", {class: "opt"}, " opcional")),
         g2(extraFields[0], extraFields[1]), g2(extraFields[2], extraFields[3]), g2(extraFields[4], h("div"))),
       unit === "ml" || (scan && scan.unitMl) ? h("p", {class: "note"}, "Para líquidos, o planejamento considera 1 ml ≈ 1 g.") : null,
@@ -6496,14 +6519,14 @@ function foodSheet(opt, done){
       h("div", {class: "row-actions"}, h("button", {class: "btn ghost", type: "button", onclick: close}, "Cancelar"), ok));
     function persist(id){
       const k = basis === "porcao" ? 100 / val(pAmt) : 1;
-      const per = key => { const x = val(fields[key]); return x == null ? null : Math.round(x * k * 10) / 10; };
+      const per = key => { const x = val(fields[key]); return x == null ? null : Math.round(x * k * 100) / 100; };   // v52: 2 casas, para reabrir exatamente como foi digitado
       const portion = val(pAmt) > 0 ? {amount: val(pAmt), unit, label: pLbl.value.trim()} : null;
       // a porção vira a medida principal; as outras medidas já usadas nos planos são mantidas
       const pl = portion && (portion.label || "Porção");
       const ms = (portion ? [[pl, portion.amount]] : []).concat(oldMs.filter(x => x.l !== pl).map(x => [x.l, x.g]));
       const extra = {}; for (const [key] of EXTRA){ const x = per(key); if (x != null) extra[key] = x; }
-      const raw = [id, nm.value.trim(), Math.round(per("kcal")), per("c"), per("p"), per("fat"), per("fib"), "Alimento próprio", ms,
-        {brand: br.value.trim(), portion, extra, source: scan || meta.source === "rotulo" ? "rotulo" : "manual", updated: Date.now()}];
+      const raw = [id, nm.value.trim(), Math.round(per("kcal") * 10) / 10, per("c"), per("p"), per("fat"), per("fib"), "Alimento próprio", ms,
+        {brand: br.value.trim(), portion, extra, basis, source: scan || meta.source === "rotulo" ? "rotulo" : "manual", updated: Date.now()}];
       S.foods = S.foods.filter(r => r[0] !== id).concat([raw]); save();
       const nf = db.add(raw);
       close(); toast(f ? "Alimento atualizado" : "Alimento cadastrado"); done && done(nf);
