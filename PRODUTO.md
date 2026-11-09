@@ -1719,3 +1719,12 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
 - Nome e % de cada macronutriente ficam na sua cor, como o anel: a cor mostra proporção.
 - Gramas e g/kg ficam em branco e cinza claro, como o total de kcal, as fibras e o kcal/kg: o branco mostra quantidade.
 - Resultado: metade da cor no cartão, e as gramas (a prescrição) voltam a se destacar sem precisar de letra grande. Decidido pelo Camilo após a comparação lado a lado com a v47.2.
+
+## 69. v48 — Edição do alimento enxuta
+
+- Enquanto se edita um alimento, a linha "3 × Unidade · 12 g" some: os campos logo abaixo mostram o mesmo.
+- Sai a fileira de atalhos de quantidade (¼ ½ ¾ 1 1½ 2 3 4 5), que repetia o teclado numérico. Para meia porção, basta digitar 0,5.
+- Substituir, Duplicar e Remover viram uma linha de ações em texto, separada por um filete fino, cada uma com 44 pt de toque. Remover fica em vermelho.
+- Remover acontece na hora e oferece "Desfazer" por 5 segundos (o alimento volta para a mesma posição), no lugar da pergunta de confirmação.
+- A edição passou de 283 pt para 190 pt de altura (−33%).
+- Para fechar a edição: tocar no nome do alimento ou em Enter.
