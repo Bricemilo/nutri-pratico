@@ -327,6 +327,7 @@ h2.sec{font-size:0.765rem;font-weight:650;letter-spacing:.08em;text-transform:up
 .it.edit{background:var(--bg)}
 .it.edit .it-main{padding-bottom:6px}
 .it-ed{padding:0 16px 14px}
+.it.edit .it-ed{padding-bottom:6px}
 .ed-l{display:grid;grid-template-columns:62px minmax(0,1fr) auto;gap:8px;align-items:center}
 .cell{height:44px;border-radius:12px;border:1px solid var(--line-2);background:var(--surface-2);padding:0 12px;font-size:var(--t-body);outline:none;width:100%;min-width:0;text-overflow:ellipsis}
 .cell:focus{border-color:var(--accent-line);box-shadow:0 0 0 3px var(--accent-soft)}
@@ -341,6 +342,16 @@ h2.sec{font-size:0.765rem;font-weight:650;letter-spacing:.08em;text-transform:up
 .quick button.next{background:var(--accent);color:var(--accent-ink);margin-left:auto;padding:0 14px}
 .ed-a{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .ed-a .btn{flex:1 1 auto}
+/* v48: edição do alimento enxuta. O resumo "3 × Unidade · 12 g" some enquanto os campos mostram o mesmo;
+   ações em texto numa linha só, separadas por um filete, como uma barra de ferramentas */
+.it.edit .it-sub{display:none}
+.it.edit .it-main{padding-bottom:10px}
+.it-ed .ed-m{margin-top:12px;color:var(--muted)}
+.it-ed .ed-a{display:flex;flex-wrap:nowrap;gap:0;margin:10px -6px 0;padding-top:4px;border-top:1px solid var(--line)}
+.ed-t{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:0 6px;font-size:var(--t-sm);font-weight:600;color:var(--ink-2);border-radius:10px}
+.ed-t svg{width:17px;height:17px;color:var(--accent-2);flex:none}
+.ed-t.del,.ed-t.del svg{color:var(--danger)}
+.ed-t:active{background:rgba(255,255,255,.05)}
 .add{padding:8px 12px 10px 16px;border-top:1px solid var(--line)}
 .add-in{width:100%;height:44px;border:0;background:transparent;font-size:var(--t-body);outline:none;padding:0}
 .add-in::placeholder{color:var(--muted)}
@@ -6045,35 +6056,26 @@ function renderPlan(p){
         onBlur: () => { meas.value = C.measureOf(f, it.measure).l; }
       });
       meas.addEventListener("focus", () => setTimeout(() => { if (document.activeElement === meas) meas.select(); }, 0));
-      const quick = h("div", {class: "quick"});
-      for (const [lbl, v] of [["¼", .25], ["½", .5], ["¾", .75], ["1", 1], ["1½", 1.5], ["2", 2], ["3", 3], ["4", 4], ["5", 5]]){
-        const b = h("button", {type: "button", "aria-label": `Quantidade ${lbl}`}, lbl);
-        b.addEventListener("mousedown", e => e.preventDefault());
-        b.addEventListener("click", () => { it.qty = v; closeEdit(m, it, "add"); });
-        quick.append(b);
-      }
-      const done = h("button", {type: "button", class: "next"}, "Pronto");
-      done.addEventListener("mousedown", e => e.preventDefault());
-      done.addEventListener("click", () => closeEdit(m, it, "add"));
-      quick.append(done);
-      const askEl = h("div");
+      // v48: edição enxuta — quantidade, medida e gramas; uma linha discreta de macros; três ações em texto (sem caixas).
+      // Sai: a fileira de atalhos (¼ ½ … 5), que repetia o teclado numérico; e a confirmação de remover (agora há "Desfazer").
+      const act = (icon, label, fn, cls) => h("button", {class: "ed-t" + (cls ? " " + cls : ""), type: "button", onclick: fn}, ic(icon), label);
       row.append(h("div", {class: "it-ed"},
-        h("div", {class: "ed-l"}, qty, h("div", {class: "acw"}, meas), R.grams), R.mac, quick,
+        h("div", {class: "ed-l"}, qty, h("div", {class: "acw"}, meas), R.grams), R.mac,
         h("div", {class: "ed-a"},
-          h("button", {class: "btn ghost sm", type: "button", onclick: () => swapSheet(m, it)}, ic("swap"), "Substituir"),
-          h("button", {class: "btn ghost sm", type: "button", onclick: () => {
+          act("swap", "Substituir", () => swapSheet(m, it)),
+          act("copy", "Duplicar", () => {
             const c = {id: uid(), foodId: it.foodId, measure: it.measure, qty: it.qty || 1};
             m.items.splice(m.items.indexOf(it) + 1, 0, c); view.edit = null; touch(p); rebuild(m); toast("Alimento duplicado");
-          }}, ic("copy"), "Duplicar"),
-          h("button", {class: "btn danger sm", type: "button", onclick: () => ask(askEl, `Excluir ${f.dn}?`, [{label: "Excluir", fn: () => {
-            m.items = m.items.filter(x => x !== it); view.edit = null; touch(p); rebuild(m);
-          }}])}, ic("x"), "Remover")),
-        askEl));
+          }),
+          act("x", "Remover", () => {
+            const i = m.items.indexOf(it); m.items.splice(i, 1); view.edit = null; touch(p); rebuild(m);
+            toast(`${f.dn} removido`, () => { m.items.splice(Math.min(i, m.items.length), 0, it); touch(p); rebuild(m); });
+          }, "del"))));
     } else if (editing){
       const askEl = h("div");
       row.append(h("div", {class: "it-ed"}, h("div", {class: "ed-a"},
-        h("button", {class: "btn ghost sm", type: "button", onclick: () => swapSheet(m, it)}, ic("swap"), "Substituir"),
-        h("button", {class: "btn danger sm", type: "button", onclick: () => { m.items = m.items.filter(x => x !== it); view.edit = null; touch(p); rebuild(m); }}, ic("x"), "Remover")), askEl));
+        h("button", {class: "ed-t", type: "button", onclick: () => swapSheet(m, it)}, ic("swap"), "Substituir"),
+        h("button", {class: "ed-t del", type: "button", onclick: () => { m.items = m.items.filter(x => x !== it); view.edit = null; touch(p); rebuild(m); }}, ic("x"), "Remover")), askEl));
     }
     paint();
     return row;
