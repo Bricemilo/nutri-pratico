@@ -586,6 +586,39 @@ h1.pg{font-size:1.765rem;margin:6px 2px 2px}
   background:color-mix(in srgb,var(--c) 14%,var(--surface-2));border:1px solid color-mix(in srgb,var(--c) 26%,transparent);min-width:0}
 .qbig svg{width:26px;height:26px;color:var(--c)}
 .qbig.move{--c:var(--move)} .qbig.sleep{--c:var(--sleep)} .qbig.wb{--c:var(--mood)}
+/* v44 · semana do exercício */
+.mw,.mwd{--lv:#A9E5DC;--md:var(--move);--vg:#14A38F}
+.mw{margin-top:14px}
+.mw-g{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:0}   /* sem intervalo: cada dia é um alvo de toque de 44+ pt (a barra ocupa 68% da coluna, o respiro visual continua) */
+.mw-d{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0;min-height:44px;padding:4px 0 6px;border-radius:12px;color:var(--ink-2);-webkit-tap-highlight-color:transparent}
+.mw-d:disabled{opacity:1;cursor:default}
+.mw-d.on{background:color-mix(in srgb,var(--move) 12%,transparent)}
+.mw-n{height:16px;font-size:var(--t-cap);font-weight:650;color:var(--ink);font-variant-numeric:tabular-nums}
+.mw-b{display:flex;align-items:flex-end;justify-content:center;width:100%;height:96px}
+.mw-s{display:flex;flex-direction:column-reverse;gap:2px;width:68%;max-width:28px}
+.mw-s i{display:block;min-height:3px;border-radius:4px}
+.mw-s i:last-child{border-radius:7px 7px 4px 4px}
+.mw i.lv,.mwd i.lv{background:var(--lv)} .mw i.md,.mwd i.md{background:var(--md)} .mw i.vg,.mwd i.vg{background:var(--vg)}
+.mw i.mw-z{display:block;width:14px;height:3px;border-radius:2px;background:color-mix(in srgb,var(--ink) 22%,transparent);margin-bottom:2px}
+.mw-w{font-size:var(--t-cap);line-height:16px}
+.mw-d.now .mw-w{color:var(--ink);font-weight:700}
+.mw-d.on .mw-w{color:var(--move);font-weight:700}
+.mw-k{display:flex;flex-wrap:wrap;gap:6px 12px;margin:12px 2px 0;font-size:var(--t-cap);color:var(--muted)}
+.mw-k span{display:inline-flex;align-items:center;gap:5px}
+.mw-k i{display:inline-block;width:10px;height:10px;border-radius:3px}
+.mw-k i.mw-z{width:12px;height:3px;margin:0}
+.mwd{margin-top:12px}
+.mw-dh{display:flex;align-items:baseline;justify-content:space-between;margin:2px 2px 6px;font-size:var(--t-body)}
+.mw-dh b{font-weight:650;color:var(--ink)} .mw-dh b::first-letter{text-transform:uppercase}
+.mw-dh span{color:var(--muted);font-variant-numeric:tabular-nums}
+.mw-e{display:grid;grid-template-columns:10px minmax(0,auto) 1fr auto 16px;align-items:center;gap:10px;width:100%;min-height:44px;padding:4px 2px;text-align:left;font-size:var(--t-sm);color:var(--ink-2)}
+.mw-e i{width:10px;height:10px;border-radius:3px}
+.mw-e b{font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mw-e span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mw-e time{color:var(--muted);font-variant-numeric:tabular-nums}
+.mw-e .li-go{width:16px;height:16px;color:var(--muted)}
+.mv-when{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.mv-when .input{width:120px}
 .qbig:active{transform:scale(.97)}
 @media (max-width:370px){.qbig{font-size:var(--t-cap);padding:14px 2px 10px}}
 /* Home v6: saudação, quatro pilares e o instrumento de nutrição centrado */
@@ -2897,6 +2930,38 @@ function agTypes(p){
 }
 // aba Agenda: a mesma Agenda de Saúde e as páginas de Consultas, Exames e Procedimentos
 function renderAgendaTab(p){ ({agenda: renderAgenda, consultas: renderAppts, exames: renderExams, procedimentos: renderProcs})[view.hsub](p); }
+/* v44 · semana do exercício: uma coluna por dia (seg–dom), barra empilhada com um pedaço por treino (tom pela intensidade: leve, moderada,
+   vigorosa), minutos do dia no alto; dia passado sem registro = traço; dias que ainda não chegaram ficam vazios. Tocar num dia mostra, logo abaixo,
+   cada treino: tipo, minutos, intensidade e horário (quando informado). Ao abrir: hoje, se houver registro; senão, o dia mais recente com registro. */
+let moveSel = null;
+function moveWeekChart(p, L, mw, nowI){
+  const keys = mw.days.map(d => d.key), byDay = keys.map(k => L.move.filter(e => e.date === k && e.min > 0).sort((a, b) => (a.time || "99:99") < (b.time || "99:99") ? -1 : 1));
+  const max = Math.max(60, ...mw.days.map(d => d.min));
+  if (!moveSel || !keys.includes(moveSel) || !byDay[keys.indexOf(moveSel)].length) { let i = nowI; while (i >= 0 && !byDay[i].length) i--; moveSel = i >= 0 ? keys[i] : null; }
+  const IN = {leve: "lv", moderada: "md", vigorosa: "vg"};
+  const cols = keys.map((k, i) => { const list = byDay[i], tot = mw.days[i].min, fut = i > nowI, on = k === moveSel;
+    const label = `${WD[i]}${tot ? `: ${tot} minutos` : fut ? "" : ": sem registro"}`;
+    return h("button", {class: "mw-d" + (on ? " on" : "") + (i === nowI ? " now" : "") + (fut ? " fut" : ""), type: "button", disabled: !list.length, "aria-pressed": list.length ? String(on) : null, "aria-label": label,
+        onclick: () => { moveSel = k; render(); }},
+      h("span", {class: "mw-n"}, tot ? String(tot) : ""),
+      h("span", {class: "mw-b"}, list.length ? h("span", {class: "mw-s", style: `height:${Math.max(8, tot / max * 100)}%`}, list.map(e => h("i", {class: IN[e.intensity] || "md", style: `flex:${e.min} 1 0`}))) : fut ? null : h("i", {class: "mw-z"})),
+      h("span", {class: "mw-w"}, WD[i])); });
+  return h("div", {class: "mw"},
+    h("div", {class: "mw-g", role: "group", "aria-label": "Minutos de exercício por dia nesta semana. Toque num dia para ver os treinos."}, cols),
+    h("div", {class: "mw-k", "aria-hidden": "true"}, h("span", null, h("i", {class: "lv"}), "leve"), h("span", null, h("i", {class: "md"}), "moderada"), h("span", null, h("i", {class: "vg"}), "vigorosa"), h("span", null, h("i", {class: "mw-z"}), "sem registro")),
+    null);
+}
+// caixa própria com os treinos do dia escolhido no gráfico (tipo, minutos, intensidade, horário); tocar abre a edição
+function moveDayPanel(p, L, mw){
+  if (!moveSel) return null;
+  const sel = L.move.filter(e => e.date === moveSel && e.min > 0).sort((a, b) => (a.time || "99:99") < (b.time || "99:99") ? -1 : 1); if (!sel.length) return null;
+  const IN = {leve: "lv", moderada: "md", vigorosa: "vg"}, tot = sel.reduce((a, e) => a + e.min, 0);
+  const dayName = k => new Date(k + "T12:00").toLocaleDateString("pt-BR", {weekday: "long", day: "2-digit", month: "2-digit"});
+  return h("div", {class: "panel mwd", "aria-live": "polite"},
+      h("div", {class: "mw-dh"}, h("b", null, dayName(moveSel)), h("span", null, `${tot} min`)),
+      sel.map(e => h("button", {class: "mw-e", type: "button", onclick: () => EDIT_LOG.move(p, e), "aria-label": `${e.type}, ${e.min} minutos${e.intensity ? ", " + e.intensity : ""}${e.time ? ", às " + e.time : ""}. Ver ou editar.`},
+        h("i", {class: IN[e.intensity] || "md"}), h("b", null, e.type), h("span", null, `${e.min} min${e.intensity ? " · " + e.intensity : ""}`), h("time", null, e.time || ""), h("span", {class: "li-go", html: ICON.right}))));
+}
 function renderHealth(p){
   if (HMODS.includes(view.hsub)) { ({agenda: renderAgenda, consultas: renderAppts, exames: renderExams, procedimentos: renderProcs, cuidados: renderCare, prioridades: renderPriorities,
     prioridade: renderPriority, indicadores: renderIndicators, indicador: renderIndicator, agua: renderWater})[view.hsub](p); return; }
@@ -2919,13 +2984,12 @@ function renderHealth(p){
   const sleepBars = () => !ss.count ? null : ss.count < 3 ? strip(ss.nights.map(n => n.min ? "on" : ""), ss.nights.map(n => wdOf(n.key)), 6)
     : bars(ss.nights.map(n => n.min || 0), 600, ss.nights.map(n => wdOf(n.key)), 6);
   // dias da semana que ainda não chegaram ficam em branco (não são "sem registro")
-  const moveBars = () => !mw.activeDays ? null : mw.activeDays < 3 ? strip(mw.days.map((d, i) => i > nowI ? "fut" : d.min ? "on" : ""), WD, nowI)
-    : bars(mw.days.map((d, i) => i > nowI ? null : d.min), Math.max(60, ...mw.days.map(d => d.min)), WD, nowI);
+  const moveBars = () => mw.activeDays ? moveWeekChart(p, L, mw, nowI) : null;
   const moodChart = () => !moodN ? null : moodN < 3 ? strip(moodDays.map(x => x ? "on m" + x.mood : ""), last7.map(wdOf), 6) : moodLine(L, last7);
   const more = (title, ...ps) => h("details", {class: "src more"}, h("summary", null, title), ...ps.filter(Boolean).map(x => h("p", null, x)));
   // o número principal de cada pilar; médias só com dados suficientes
   const P = {
-    movimento: {cls: "move", icon: "dumbbell", title: "Exercício", has: L.move.length > 0, value: fmtDur(mw.total), ctx: mw.activeDays ? `nesta semana · ${mw.activeDays} ${mw.activeDays === 1 ? "dia" : "dias"}` : mw.last ? `nesta semana · último ${relDay(mw.last).toLowerCase()}` : "nesta semana",
+    movimento: {cls: "move", icon: "dumbbell", title: "Exercício", has: L.move.length > 0, value: fmtMin(mw.total), ctx: mw.activeDays ? `nesta semana · ${mw.activeDays} ${mw.activeDays === 1 ? "dia" : "dias"}` : mw.last ? `nesta semana · último ${relDay(mw.last).toLowerCase()}` : "nesta semana",
       empty: "Caminhada, musculação, tênis… registre em segundos.", chart: moveBars, add: () => moveSheet(p), addL: "Registrar exercício"},
     sono: {cls: "sleep", icon: "moon", title: "Sono", has: L.sleep.length > 0, value: ss.count >= 3 ? fmtDur(ss.avg) : ss.last ? fmtDur(ss.last.min) : "—",
       ctx: ss.count >= 3 ? `média de ${ss.count} noites` : ss.last ? `última noite registrada · ${relDay(ss.last.date).toLowerCase()}` : "",
@@ -2953,9 +3017,10 @@ function renderHealth(p){
         onclick: () => saveMood(p, {mood: i + 1})}, h("i"), m))) : null, ...extra);
   };
   const detail = {
-    movimento: () => [card("movimento", true, L.move.length ? h("p", {class: "hp-k"}, h("i"), "dia sem registro") : null, mref && mref.week && !mref.perDay && L.move.length ? h("p", {class: "hp-n"}, `${mw.mv} min de atividade moderada ou vigorosa nesta semana.`) : null,
+    movimento: () => [card("movimento", true, mref && mref.week && !mref.perDay && L.move.length ? h("p", {class: "hp-n"}, `${mw.mv} min de atividade moderada ou vigorosa nesta semana.`) : null,
         more("Referência", mref ? mref.text : "Abaixo de 5 anos o app não usa meta numérica de atividade.", "O app não converte atividade em calorias: as estimativas variam muito entre pessoas.")),
-      L.move.length ? h("div", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Histórico")), hist("move", [...L.move].sort(byDate), e => [h("b", null, e.type), ` · ${fmtDur(e.min)}${e.intensity ? " · " + INTENS.find(x => x[0] === e.intensity)[1].toLowerCase() : ""}`, h("span", null, " " + relDay(e.date))])) : null],
+      mw.activeDays ? moveDayPanel(p, L, mw) : null,
+      L.move.length ? h("div", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Histórico")), hist("move", [...L.move].sort(byDate), e => [h("b", null, e.type), ` · ${fmtMin(e.min)}${e.intensity ? " · " + INTENS.find(x => x[0] === e.intensity)[1].toLowerCase() : ""}`, h("span", null, " " + relDay(e.date) + (e.time ? " " + e.time : ""))])) : null],
     sono: () => [card("sono", true, L.sleep.length ? h("p", {class: "hp-k"}, h("i"), "noite sem registro") : null, L.sleep.length ? h("p", {class: "hp-n"}, ss.count < 3 ? "Média a partir de 3 noites nos últimos 7 dias; regularidade a partir de 5."
           : ss.count >= 5 && ss.bedSD != null ? `Horário de dormir variou cerca de ${Math.round(ss.bedSD)} minutos para mais ou para menos nos últimos 7 dias.` : "Regularidade a partir de 5 noites registradas.") : null,
         sref ? more("Referência", sref.text) : null),
@@ -4494,21 +4559,24 @@ function moveSheet(p, done, rec){
   const types = [...new Set([...Object.keys(freq).sort((a, b) => freq[b] - freq[a]), ...MOVE_TYPES])].filter(x => x !== "Outra").concat("Outra");
   const last = [...L.move].sort((a, b) => (b.at || 0) - (a.at || 0))[0];
   let type = rec ? rec.type : null, min = rec ? rec.min : null, intensity = rec ? rec.intensity || null : null, day = 0;
+  const nowHM = () => { const n = new Date(); return `${pad2(n.getHours())}:${pad2(n.getMinutes())}`; };
   sheet(editing ? "Editar exercício" : "Registrar exercício", (el, close) => {
     const body = h("div"), other = h("input", {class: "input", id: "mv-outra", placeholder: "Qual atividade?", autocomplete: "off"});
     const custom = h("input", {class: "input num", id: "mv-min", inputmode: "numeric", placeholder: "Outro", "aria-label": "Minutos", autocomplete: "off"});
     const ok = h("button", {class: "btn primary block", type: "button", onclick: () => commit()}, editing ? "Salvar alterações" : "Salvar");
     const when = h("input", {class: "input dt-in", type: "date", id: "mv-data", value: rec ? rec.date : today(), max: today(), min: "1900-01-01"});
+    const hour = h("input", {class: "input dt-in", type: "time", id: "mv-hora", value: rec ? rec.time || "" : nowHM(), "aria-label": "Horário do exercício"});
     if (rec && ![15, 20, 30, 45, 60, 90].includes(rec.min)) custom.value = String(rec.min);
     const finalType = () => type === "Outra" ? other.value.trim() : type;
     const check = () => { ok.disabled = !(finalType() && min > 0 && min <= 1440 && (!editing || dateOk(when.value))); };
     function commit(e){
-      if (editing) { const was = Object.assign({}, rec); Object.assign(rec, {type: finalType(), min, intensity, date: when.value, updated: Date.now()}); touch(p); close(); render();
+      if (editing) { const was = Object.assign({}, rec); Object.assign(rec, {type: finalType(), min, intensity, date: when.value, time: hour.value || null, updated: Date.now()}); touch(p); close(); render();
         toast("Registro atualizado", () => { for (const k of Object.keys(rec)) delete rec[k]; Object.assign(rec, was); touch(p); render(); }); return; }
-      const entry = e || {type: finalType(), min, intensity, date: C.addDays(today(), -day)};
+      const entry = e || {type: finalType(), min, intensity, date: C.addDays(today(), -day), time: hour.value || null};
       entry.id = uid(); entry.at = Date.now();
       L.move.push(entry); touch(p); close(); render();
-      toast(`${entry.type} · ${fmtDur(entry.min)} registrado`, () => { L.move.splice(L.move.indexOf(entry), 1); touch(p); render(); });
+      moveSel = entry.date;
+      toast(`${entry.type} · ${fmtMin(entry.min)} registrado`, () => { const i = L.move.indexOf(entry); if (i >= 0) { L.move.splice(i, 1); touch(p); render(); } });
       done && done();
     }
     custom.addEventListener("input", () => { const v = parseInt(custom.value, 10); min = v > 0 ? v : null; paint(); });
@@ -4519,15 +4587,16 @@ function moveSheet(p, done, rec){
         type === "Outra" ? h("div", {style: "margin-top:8px"}, other) : null,
         h("div", {class: "lbl2"}, "Duração"), h("div", {class: "chips dur"}, [15, 20, 30, 45, 60, 90].map(v => h("button", {type: "button", class: min === v && !custom.value ? "on" : "", onclick: () => { custom.value = ""; min = v; paint(); }}, `${v} min`)), custom),
         h("div", {class: "lbl2"}, "Intensidade ", h("span", {class: "opt"}, "opcional")), chips(INTENS, intensity, v => { intensity = v; paint(); }, "opt"),
-        editing ? h("div", {style: "margin-top:14px"}, field("mv-data", "Data", when)) : [h("div", {class: "lbl2"}, "Quando"), chips([[0, "Hoje"], [1, "Ontem"]], day, v => { day = v; paint(); })]);
+        editing ? h("div", {class: "g2", style: "margin-top:14px"}, field("mv-data", "Data", when), field("mv-hora", "Horário", hour))
+          : [h("div", {class: "lbl2"}, "Quando"), h("div", {class: "mv-when"}, chips([[0, "Hoje"], [1, "Ontem"]], day, v => { if (v !== day) hour.value = v === 0 ? nowHM() : ""; day = v; paint(); }), hour)]);
       check();
     }
     when.addEventListener("input", check); when.addEventListener("change", check);
     if (rec && !types.includes(rec.type)) { type = "Outra"; other.value = rec.type; }
     paint();
     el.append(h("h2", null, editing ? "Editar exercício" : "Registrar exercício"),
-      editing ? h("p", {class: "sh-sub"}, `Registrado ${relDay(rec.date).toLowerCase()}.`) : last ? h("button", {class: "repeat", type: "button", onclick: () => commit({type: last.type, min: last.min, intensity: last.intensity || null, date: today()})},
-        h("span", {class: "qa-i", html: ICON.repeat}), h("div", null, h("b", null, "Repetir hoje"), `${last.type} · ${fmtDur(last.min)}${last.intensity ? " · " + last.intensity : ""}`)) : h("p", {class: "sh-sub"}, "Tipo e duração. A intensidade é opcional."),
+      editing ? h("p", {class: "sh-sub"}, `Registrado ${relDay(rec.date).toLowerCase()}.`) : last ? h("button", {class: "repeat", type: "button", onclick: () => commit({type: last.type, min: last.min, intensity: last.intensity || null, date: today(), time: nowHM()})},
+        h("span", {class: "qa-i", html: ICON.repeat}), h("div", null, h("b", null, "Repetir hoje"), `${last.type} · ${fmtMin(last.min)}${last.intensity ? " · " + last.intensity : ""}`)) : h("p", {class: "sh-sub"}, "Tipo e duração. A intensidade é opcional."),
       body, h("p", {class: "note"}, "O app não converte atividade em calorias: as estimativas de gasto variam muito de pessoa para pessoa."),
       editing ? delLog(p, "move", rec, close) : null,
       h("div", {class: "confirmbar"}, ok));

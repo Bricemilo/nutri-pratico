@@ -1581,3 +1581,30 @@ Ganho: a legenda volta ao tamanho normal mesmo em semanas longas, porque "10 h 4
 **Detalhes.**
 - Acima de mil minutos, o número usa ponto (por exemplo, "1.050 min").
 - O VoiceOver lê "45 minutos hoje; 225 minutos nesta semana".
+
+## 61. v44 — Semana do Exercício: barras por treino, intensidade, horário
+
+**Gráfico da semana (Saúde → Exercício).**
+- **Uma coluna por dia (seg–dom).** A barra é empilhada, com um pedaço por treino, e os minutos do dia aparecem no alto.
+- **Dias:** um dia passado sem registro mostra um traço; os dias que ainda não chegaram ficam vazios.
+- **Cor pela intensidade** (pedido do Camilo):
+  - leve: o verde mais claro;
+  - moderada: o verde do app;
+  - vigorosa: o verde mais intenso.
+  Uma legenda curta fica embaixo do gráfico.
+- **Toque:** cada coluna é um alvo de 44 pt ou mais nos iPhones de 375 a 430 pt; no de 320 pt, 37 pt.
+
+**Caixa do dia,** separada do cartão, entre o gráfico e o Histórico.
+- Ao abrir, mostra hoje, se houver registro; senão, o dia mais recente com registro.
+- Tocar numa barra troca o dia.
+- Cada treino aparece com tipo, minutos, intensidade e horário. Tocar no treino abre a edição.
+
+**Tudo em minutos.** O total ("180 min nesta semana · 2 dias"), o Resumo, o Histórico, o aviso de registro e o "Repetir hoje".
+
+**Horário do treino (novo, opcional).**
+- Hoje: vem com a hora atual.
+- Ontem: em branco.
+- Na edição: aparece ao lado da data.
+- Os registros antigos ficam sem horário. Nenhum horário é inventado, nem tirado da hora em que o registro foi salvo.
+
+**"Desfazer" do registro de exercício.** Agora só remove o registro recém-criado; se ele já não existir, não remove nada.
