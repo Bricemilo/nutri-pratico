@@ -1786,3 +1786,17 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
   - os valores por 100 g são guardados com 2 casas, para reabrir exatamente.
 - **Leitura de rótulo por foto:** sem mudança. Ela já identifica a coluna de 100 g.
 - **Alimentos já cadastrados:** o app não sabe qual coluna foi digitada, então nada é alterado sozinho. Para corrigir, abra Editar alimento, escolha a porção em "Os valores abaixo são por", confira o quadro e salve. Os planos recalculam na hora.
+
+## 74. v53 — Cadastro de alimento organizado como o rótulo
+
+- **Primeira pergunta: "Os valores que você vai digitar são"**, com duas opções grandes:
+  - **Da porção:** a coluna da porção do rótulo, mostrada pelo nome ("1 medidor (34 g)"). É o padrão do alimento novo, o jeito mais prático;
+  - **De 100 g:** a coluna de 100 g.
+- **Logo abaixo, os campos mudam com a escolha:**
+  - "Da porção": título "Porção do rótulo", com quantidade, unidade e medida caseira (ex.: 34 g = 1 medidor);
+  - "De 100 g": título "Medida caseira" (opcional, para usar no plano em medidas).
+- **Título dos valores com a base escrita:** "Valores em 1 medidor (34 g)" ou "Valores em 100 g". Não dá mais para ter dúvida de a que os números se referem.
+- **Mantidos da v52:**
+  - o quadro "Confira com o rótulo" (100 g e porção lado a lado);
+  - o bloqueio de valores impossíveis;
+  - o alimento reabrindo, ao editar, como foi digitado.
