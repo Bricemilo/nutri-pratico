@@ -1644,3 +1644,23 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
 
 - **kcal/kg** no cabeçalho do cartão ("Planejado para hoje · 31,9 kcal/kg") e **g/kg** abaixo de cada macronutriente ("3,7 g/kg"), calculados com o peso do perfil. Sem peso, não aparecem.
 - **Número e "kcal" centrados no anel:** folga igual acima e abaixo (medida no simulador; diferença menor que 1 px).
+
+## 64. v46 — Saúde por semana (segunda a domingo), com "‹ ›"
+
+- **Exercício, Sono e Emocional mostram a semana de segunda a domingo.** Na segunda-feira, os três recomeçam juntos; antes, Sono e Emocional usavam "os últimos 7 dias".
+- **"‹ Esta semana ›" no cabeçalho do cartão:**
+  - "‹" volta uma semana; "›" avança até a semana atual;
+  - as semanas anteriores aparecem pelas datas ("2–8 nov");
+  - a semana escolhida é a mesma nos três pilares; o Resumo mostra sempre a semana atual;
+  - o "‹" para na semana do registro mais antigo.
+- **O número grande resume a semana mostrada:**
+  - Exercício: total;
+  - Sono: média das noites registradas;
+  - Emocional: o estado mais frequente (empate: o mais recente).
+- **Semana vazia:** aparece "Sem registros" em tamanho menor, no lugar do traço grande. A altura dos cartões não muda (350 pt no iPhone 15).
+- **Caixa do dia:**
+  - na semana atual, abre em hoje;
+  - nas anteriores, no último dia com registro;
+  - dias que ainda não chegaram ficam vazios e não podem ser tocados.
+- **Setas:** área de toque de 44 pt.
+- **iPhone de 320 pt:** o nome do pilar no cartão fica oculto (ele já está na aba logo acima), para caber "‹ 26 out – 1 nov ›".

@@ -633,6 +633,18 @@ h1.pg{font-size:1.765rem;margin:6px 2px 2px}
 .mw-em i{border-radius:50%}
 .mw-em span:not(.li-go){white-space:normal;overflow:visible;line-height:1.25}
 .mw-none{margin:2px 2px 4px;font-size:var(--t-sm);color:var(--muted)}
+/* v46 · navegação por semanas no cabeçalho do cartão */
+.wk{display:flex;align-items:center;gap:0;margin-left:auto;flex:none}
+.wk-b{width:44px;height:44px;margin:0 -6px;position:relative;display:grid;place-items:center;color:var(--ink-2);-webkit-tap-highlight-color:transparent}
+.wk-b svg{width:16px;height:16px}
+.wk-b:disabled{opacity:.25}
+.wk-l{min-width:0;padding:0 2px;position:relative;z-index:0;pointer-events:none;text-align:center;font-size:var(--t-cap);font-weight:600;color:var(--ink-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.hp.full .hp-t{flex:1;min-width:0}
+@media (max-width:380px){.hp.full .hp-h{gap:10px}.wk-b{margin:0 -8px}}
+@media (max-width:340px){.hp.full .hp-t{visibility:hidden}}   /* iPhone de 320: o nome do pilar já está na aba selecionada logo acima; fica só o ícone e as semanas */
+.hp-v b.none{font-size:var(--t-sec);font-weight:600;color:var(--ink-2)}
+.hp.full .hp-v{min-height:2.471rem}   /* "Sem registros" ocupa a mesma altura do número: os três cartões não mudam de tamanho */
+.hp .bar.nd i{height:3px!important;width:14px;border-radius:2px;background:color-mix(in srgb,var(--ink) 22%,transparent)!important}
 .mv-when .input{width:120px}
 .qbig:active{transform:scale(.97)}
 @media (max-width:370px){.qbig{font-size:var(--t-cap);padding:14px 2px 10px}}
@@ -2970,7 +2982,7 @@ let moveSel = null;
 function moveWeekChart(p, L, mw, nowI){
   const keys = mw.days.map(d => d.key), byDay = keys.map(k => L.move.filter(e => e.date === k && e.min > 0).sort((a, b) => (a.time || "99:99") < (b.time || "99:99") ? -1 : 1));
   const max = Math.max(60, ...mw.days.map(d => d.min));
-  if (!moveSel || !keys.includes(moveSel) || keys.indexOf(moveSel) > nowI) moveSel = keys[nowI];
+  if (!moveSel || !keys.includes(moveSel) || keys.indexOf(moveSel) > nowI) { let i = nowI; if (!keys.includes(today())) { while (i > 0 && !byDay[i].length) i--; } moveSel = keys[i]; }
   const IN = {leve: "lv", moderada: "md", vigorosa: "vg"};
   const cols = keys.map((k, i) => { const list = byDay[i], tot = mw.days[i].min, fut = i > nowI, on = k === moveSel;
     const label = `${WD[i]}${tot ? `: ${tot} minutos` : fut ? "" : ": sem registro"}`;
@@ -2986,15 +2998,15 @@ function moveWeekChart(p, L, mw, nowI){
 /* v45 · semana do emocional: o mesmo desenho do exercício (uma coluna por dia, últimos 7 dias). A altura da barra é o estado do dia
    (Muito mal = baixa … Muito bem = alta), na cor de cada estado; dia sem registro = traço. Tocar num dia mostra os registros dele numa caixa abaixo. */
 let moodSel = null;
-function moodWeekChart(L, keys){
+function moodWeekChart(L, keys, nowI){
   const t = today(), last = k => [...L.mood].filter(x => x.date === k).sort((a, b) => (a.at || 0) - (b.at || 0)).pop();
-  if (!moodSel || !keys.includes(moodSel)) moodSel = t;
-  const cols = keys.map(k => { const e = last(k), on = k === moodSel, wd = WD[(new Date(k + "T12:00").getDay() + 6) % 7];
-    return h("button", {class: "mw-d" + (on ? " on" : "") + (k === t ? " now" : ""), type: "button", "aria-pressed": String(on), "aria-label": `${wd}: ${e ? MOODS[e.mood - 1] : "sem registro"}`, onclick: () => { moodSel = k; render(); }},
+  if (!moodSel || !keys.includes(moodSel) || keys.indexOf(moodSel) > nowI) { let i = nowI; if (!keys.includes(t)) { while (i > 0 && !last(keys[i])) i--; } moodSel = keys[i]; }
+  const cols = keys.map((k, i) => { const e = last(k), on = k === moodSel, wd = WD[i], fut = i > nowI;
+    return h("button", {class: "mw-d" + (on ? " on" : "") + (k === t ? " now" : "") + (fut ? " fut" : ""), type: "button", disabled: fut, "aria-pressed": fut ? null : String(on), "aria-label": `${wd}${fut ? "" : `: ${e ? MOODS[e.mood - 1] : "sem registro"}`}`, onclick: () => { moodSel = k; render(); }},
       h("span", {class: "mw-n"}, ""),
-      h("span", {class: "mw-b"}, e ? h("span", {class: "mw-s mood-s m" + e.mood, style: `height:${20 + (e.mood - 1) * 20}%`}, h("i")) : h("i", {class: "mw-z"})),
+      h("span", {class: "mw-b"}, e ? h("span", {class: "mw-s mood-s m" + e.mood, style: `height:${20 + (e.mood - 1) * 20}%`}, h("i")) : fut ? null : h("i", {class: "mw-z"})),
       h("span", {class: "mw-w"}, wd)); });
-  return h("div", {class: "mw mw-mood"}, h("div", {class: "mw-g", role: "group", "aria-label": "Como você esteve nos últimos 7 dias. Toque num dia para ver os registros."}, cols));
+  return h("div", {class: "mw mw-mood"}, h("div", {class: "mw-g", role: "group", "aria-label": "Como você esteve na semana. Toque num dia para ver os registros."}, cols));
 }
 function moodDayPanel(p, L){
   if (!moodSel) return null;
@@ -3019,13 +3031,27 @@ function moveDayPanel(p, L, mw){
       sel.map(e => h("button", {class: "mw-e", type: "button", onclick: () => EDIT_LOG.move(p, e), "aria-label": `${e.type}, ${e.min} minutos${e.intensity ? ", " + e.intensity : ""}${e.time ? ", às " + e.time : ""}. Ver ou editar.`},
         h("i", {class: IN[e.intensity] || "md"}), h("b", null, e.type), h("span", null, `${e.min} min${e.intensity ? " · " + e.intensity : ""}`), h("time", null, e.time || ""), h("span", {class: "li-go", html: ICON.right}))));
 }
+/* v46 · os três pilares mostram a semana de segunda a domingo; "‹ ›" no cabeçalho do cartão percorre as semanas anteriores
+   (a mesma semana vale para Exercício, Sono e Emocional; o Resumo mostra sempre a semana atual). */
+let hWeek = 0;
 function renderHealth(p){
   if (HMODS.includes(view.hsub)) { ({agenda: renderAgenda, consultas: renderAppts, exames: renderExams, procedimentos: renderProcs, cuidados: renderCare, prioridades: renderPriorities,
     prioridade: renderPriority, indicadores: renderIndicators, indicador: renderIndicator, agua: renderWater})[view.hsub](p); return; }
   const L = logsOf(p), t = today(), age = C.ageOf(p.birth), adult = adultOf(p);
-  const mw = C.moveWeek(L.move, t), mref = C.moveRef(age), ss = C.sleepStats(L.sleep, t), sref = C.sleepRef(age);
-  const nowI = C.weekKeys(t).indexOf(t), last7 = Array.from({length: 7}, (_, i) => C.addDays(t, i - 6));
   const sub = ["movimento", "sono", "bem-estar"].includes(view.hsub) && (adult || view.hsub !== "bem-estar") ? view.hsub : "resumo";
+  // a semana mais antiga com algum registro limita o "‹"
+  const first = [...L.move, ...L.sleep, ...L.mood].map(e => e.date).filter(Boolean).sort()[0] || t;
+  const minWk = -Math.max(0, Math.round((new Date(C.weekKeys(t)[0] + "T12:00") - new Date(C.weekKeys(first)[0] + "T12:00")) / 864e5 / 7));
+  if (hWeek < minWk) hWeek = minWk; if (hWeek > 0) hWeek = 0;
+  const wk = sub === "resumo" ? 0 : hWeek, wkKeys = C.weekKeys(C.addDays(t, 7 * wk)), sun = wkKeys[6], cur = wk === 0;
+  const mw = C.moveWeek(L.move, cur ? t : sun), mref = C.moveRef(age), ss = C.sleepStats(L.sleep, sun), sref = C.sleepRef(age);
+  const nowI = cur ? wkKeys.indexOf(t) : 6, last7 = wkKeys;
+  const wkLabel = cur ? "Esta semana" : (() => { const a = new Date(wkKeys[0] + "T12:00"), b = new Date(sun + "T12:00"), m = d => d.toLocaleDateString("pt-BR", {month: "short"}).replace(".", "");
+    return a.getMonth() === b.getMonth() ? `${a.getDate()}–${b.getDate()} ${m(b)}` : `${a.getDate()} ${m(a)} – ${b.getDate()} ${m(b)}`; })();
+  const wkNav = () => h("div", {class: "wk", role: "group", "aria-label": "Semana"},
+    h("button", {class: "wk-b", type: "button", disabled: wk <= minWk, "aria-label": "Semana anterior", html: ICON.left, onclick: () => { hWeek--; moveSel = moodSel = null; render(); }}),
+    h("span", {class: "wk-l", "aria-live": "polite"}, wkLabel),
+    h("button", {class: "wk-b wk-n", type: "button", disabled: cur, "aria-label": "Semana seguinte", html: ICON.right, onclick: () => { hWeek++; moveSel = moodSel = null; render(); }}));
   const byDate = (a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : (b.at || 0) - (a.at || 0);
   // histórico: os 5 mais recentes à vista; os outros (até 12) por expansão
   const hist = (kind, list, line) => { if (!list.length) return null;
@@ -3038,20 +3064,23 @@ function renderHealth(p){
   const wdOf = k => WD[(new Date(k + "T12:00").getDay() + 6) % 7];
   const strip = (cls, labels, mark) => h("div", {class: "strip", "aria-hidden": "true"}, cls.map((c, i) => h("div", {class: "st" + (mark === i ? " now" : "")}, h("i", {class: c || null}), h("span", null, labels[i]))));
   const moodDays = last7.map(k => dayMood(k)), moodN = moodDays.filter(Boolean).length;
-  const sleepBars = () => !ss.count ? null : ss.count < 3 ? strip(ss.nights.map(n => n.min ? "on" : ""), ss.nights.map(n => wdOf(n.key)), 6)
-    : bars(ss.nights.map(n => n.min || 0), 600, ss.nights.map(n => wdOf(n.key)), 6);
+  // estado mais frequente da semana (todos os registros); empate: o mais recente entre os empatados
+  const wkMoods = L.mood.filter(e => e.date >= wkKeys[0] && e.date <= sun).sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : (a.at || 0) - (b.at || 0)), wkMoodN = wkMoods.length;
+  const wkMood = (() => { if (!wkMoodN) return null; const n = {}; let best = null; for (const e of wkMoods) { n[e.mood] = (n[e.mood] || 0) + 1; if (best == null || n[e.mood] >= n[best]) best = e.mood; } return best; })();
+  const sleepBars = () => bars(ss.nights.map((n, i) => i > nowI ? null : n.min || 0), 600, ss.nights.map(n => wdOf(n.key)), cur ? nowI : -1);
   // dias da semana que ainda não chegaram ficam em branco (não são "sem registro")
   const moveBars = () => moveWeekChart(p, L, mw, nowI);
-  const moodChart = () => moodN ? moodWeekChart(L, last7) : null;
+  const moodChart = () => moodWeekChart(L, last7, nowI);
   const more = (title, ...ps) => h("details", {class: "src more"}, h("summary", null, title), ...ps.filter(Boolean).map(x => h("p", null, x)));
   // o número principal de cada pilar; médias só com dados suficientes
   const P = {
-    movimento: {cls: "move", icon: "dumbbell", title: "Exercício", has: L.move.length > 0, value: fmtMin(mw.total), ctx: mw.activeDays ? `nesta semana · ${mw.activeDays} ${mw.activeDays === 1 ? "dia" : "dias"}` : mw.last ? `nesta semana · último ${relDay(mw.last).toLowerCase()}` : "nesta semana",
+    movimento: {cls: "move", icon: "dumbbell", title: "Exercício", has: L.move.length > 0, value: fmtMin(mw.total), ctx: mw.activeDays ? `${cur ? "nesta" : "na"} semana · ${mw.activeDays} ${mw.activeDays === 1 ? "dia" : "dias"}` : cur ? "nesta semana" : "na semana",
       empty: "Caminhada, musculação, tênis… registre em segundos.", chart: moveBars, add: () => moveSheet(p), addL: "Registrar exercício"},
-    sono: {cls: "sleep", icon: "moon", title: "Sono", has: L.sleep.length > 0, value: ss.count >= 3 ? fmtDur(ss.avg) : ss.last ? fmtDur(ss.last.min) : "—",
-      ctx: ss.count >= 3 ? `média de ${ss.count} noites` : ss.last ? `última noite registrada · ${relDay(ss.last.date).toLowerCase()}` : "",
+    sono: {cls: "sleep", icon: "moon", title: "Sono", has: L.sleep.length > 0, value: ss.count ? fmtDur(ss.avg) : "Sem registros", none: !ss.count,
+      ctx: ss.count > 1 ? `média de ${ss.count} noites` : ss.count === 1 ? "1 noite registrada" : cur ? "nesta semana" : "na semana",
       empty: "Hora de dormir e de acordar. Sem notas nem competição.", chart: sleepBars, add: () => sleepSheet(p), addL: "Registrar sono"},
-    "bem-estar": {cls: "wb", icon: "smile", title: "Emocional", has: L.mood.length > 0, value: todayM ? MOODS[todayM.mood - 1] : "—", ctx: todayM ? `hoje às ${todayM.time}` : "sem registro hoje",
+    "bem-estar": {cls: "wb", icon: "smile", title: "Emocional", has: L.mood.length > 0, value: wkMood ? MOODS[wkMood - 1] : "Sem registros", none: !wkMood,
+      ctx: wkMood ? (wkMoodN > 1 ? `mais frequente · ${wkMoodN} registros` : "1 registro") : cur ? "nesta semana" : "na semana",
       empty: "Um toque para dizer como você está. Fica só com você.", chart: moodChart, add: () => moodSheet(p), addL: "Registrar estado emocional"}};
   // resumo: cartão compacto (ícone, nome, valor e período) que leva ao detalhe; o detalhe tem gráfico, registro e histórico
   const row = k => { const c = P[k];
@@ -3068,12 +3097,13 @@ function renderHealth(p){
     return h("section", {class: "hp " + c.cls + (full ? " full" : ""), id: k},
       h("div", {class: "hp-h"}, h("span", {class: "hp-i", html: ICON[c.icon]}),
         full ? h("span", {class: "hp-t"}, c.title) : h("button", {class: "hp-t link0", type: "button", onclick: () => go({hsub: k})}, c.title, h("span", {class: "li-go", html: ICON.right})),
+        full && c.has ? wkNav() : null,
         full ? null : h("button", {class: "hp-add", type: "button", "aria-label": c.addL, onclick: c.add}, ic("plus"))),
-      c.has ? [h("div", {class: "hp-v"}, h("b", {class: c.value.length > 8 ? "long" : null}, c.value), h("span", null, c.ctx)), full ? h("div", {class: "hp-chart"}, c.chart()) : c.chart()] : h("p", {class: "hc-e"}, c.empty, full ? [h("br"), "Para registrar, toque em + no alto da tela."] : null),
+      c.has ? [h("div", {class: "hp-v"}, h("b", {class: c.none ? "none" : c.value.length > 8 ? "long" : null}, c.value), h("span", null, c.ctx)), full ? h("div", {class: "hp-chart"}, c.chart()) : c.chart()] : h("p", {class: "hc-e"}, c.empty, full ? [h("br"), "Para registrar, toque em + no alto da tela."] : null),
 ...extra);
   };
   const detail = {
-    movimento: () => [card("movimento", true, mw.activeDays ? h("div", {class: "mw mw-k", "aria-hidden": "true"}, h("span", null, h("i", {class: "lv"}), "leve"), h("span", null, h("i", {class: "md"}), "moderada"), h("span", null, h("i", {class: "vg"}), "vigorosa"), h("span", null, h("i", {class: "mw-z"}), "sem registro")) : null,
+    movimento: () => [card("movimento", true, L.move.length ? h("div", {class: "mw mw-k", "aria-hidden": "true"}, h("span", null, h("i", {class: "lv"}), "leve"), h("span", null, h("i", {class: "md"}), "moderada"), h("span", null, h("i", {class: "vg"}), "vigorosa"), h("span", null, h("i", {class: "mw-z"}), "sem registro")) : null,
         more("Referência", mref && mref.week && !mref.perDay && L.move.length ? `Nesta semana: ${mw.mv} min de atividade moderada ou vigorosa (a leve não entra na conta).` : null,
           mref ? mref.text : "Abaixo de 5 anos o app não usa meta numérica de atividade.", "O app não converte atividade em calorias: as estimativas variam muito entre pessoas.")),
       L.move.length ? moveDayPanel(p, L, mw) : null,
