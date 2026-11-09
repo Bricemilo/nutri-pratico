@@ -2598,8 +2598,8 @@ function renderHome(p){
     card({lv: "l1", cls: "food", icon: "utensils", title: "Nutrição", value: meals.length ? k0(t.kcal) : null, unit: "kcal", sub: tracks(p) ? `Plano · ${nDone} de ${meals.length} feitas` : "Planejado por dia",
       aria: meals.length ? `Nutrição: plano de ${k0(t.kcal)} quilocalorias${tracks(p) ? `. ${nDone} de ${plural(meals.length, "refeição feita", "refeições feitas")} hoje` : ""}.` : null,
       fn: () => go({tab: "alimentacao", sub: "plano", open: [], edit: null}), empty: ["Sem plano", "Toque para montar"]}),
-    // v43: o número grande é o de hoje (convida a registrar todo dia); a legenda mostra o total da semana (a referência da OMS é semanal)
-    card({lv: "l1", cls: "move", icon: "dumbbell", title: "Exercício", value: mw.total > 0 ? fmtDur(moveToday) : null, sub: `Hoje · ${fmtDur(mw.total)} na semana`,
+    // v43.1: o número grande é o de hoje, com "hoje" ao lado (como "kcal" na Nutrição); a legenda é o total da semana (a referência da OMS é semanal)
+    card({lv: "l1", cls: "move", icon: "dumbbell", title: "Exercício", value: mw.total > 0 ? fmtDur(moveToday) : null, unit: "hoje", sub: `${fmtDur(mw.total)} na semana`,
       aria: `Exercício: ${mw.total > 0 ? `${moveToday ? fmtDur(moveToday) + " hoje" : "nenhum registro hoje"}; ${fmtDur(mw.total)} nesta semana, ${plural(mw.activeDays, "dia", "dias")} com registro` : "sem registros nesta semana"}.`,
       fn: () => openMod({hsub: "movimento"}), empty: ["Sem registros", "Hoje e nesta semana"]}),
     card({lv: "l1", cls: "sleep", icon: "moon", title: "Sono", value: lastNight ? fmtDur(lastNight.min) : null, sub: "Última noite",

@@ -1561,3 +1561,13 @@ Os identificadores internos não mudam: a chave de armazenamento `nutripratico.v
 - **Semanas longas:** a legenda pode ficar até 1 ponto menor (por exemplo, "Hoje · 10 h 45 na semana"); a altura dos cartões não muda.
 
 **Como o iPhone atualiza.** O nome e o ícone de um app já instalado na tela de início não mudam sozinhos: é preciso reinstalar. Antes, fazer o backup (Perfil → Backup), porque apagar o ícone apaga os dados guardados nele. Depois, restaurar.
+
+## 59. v43.1 — Exercício: "hoje" ao lado do número
+
+**Antes.** "45 min" na segunda linha e "Hoje · 3 h 45 na semana" na legenda.
+
+**Agora,** a pedido do Camilo, seguindo o padrão da Nutrição ("2.472 kcal"):
+- **Segunda linha:** **"45 min hoje"**, com "hoje" pequeno ao lado do número.
+- **Terceira linha:** **"3 h 45 na semana"**.
+
+Ganho: a legenda volta ao tamanho normal mesmo em semanas longas, porque "10 h 45 na semana" cabe sem reduzir a letra.
