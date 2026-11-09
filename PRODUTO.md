@@ -1571,3 +1571,13 @@ Os identificadores internos não mudam: a chave de armazenamento `nutripratico.v
 - **Terceira linha:** **"3 h 45 na semana"**.
 
 Ganho: a legenda volta ao tamanho normal mesmo em semanas longas, porque "10 h 45 na semana" cabe sem reduzir a letra.
+
+## 60. v43.2 — Exercício todo em minutos
+
+**O que mudou.** As duas linhas do Exercício passam a ser sempre em minutos: "45 min hoje" e "225 min na semana" (antes, "3 h 45"). A partir de 60 minutos também: "90 min hoje".
+
+**Por quê.** A referência da OMS é em minutos (150 a 300 por semana para adultos). Assim, a pessoa compara o total da semana com a meta sem converter horas. Decisão do Camilo.
+
+**Detalhes.**
+- Acima de mil minutos, o número usa ponto (por exemplo, "1.050 min").
+- O VoiceOver lê "45 minutos hoje; 225 minutos nesta semana".
