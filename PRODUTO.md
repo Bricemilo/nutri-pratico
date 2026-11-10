@@ -1800,3 +1800,16 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
   - o quadro "Confira com o rótulo" (100 g e porção lado a lado);
   - o bloqueio de valores impossíveis;
   - o alimento reabrindo, ao editar, como foi digitado.
+
+## 75. v54 — Semana | Mês nos pilares da Saúde
+
+- **Decisão: sem nota por pilar.** Uma nota de 0 a 10 exigiria uma fórmula arbitrária, puniria o dia sem registro e avaliaria sentimentos (Emocional). A evolução aparece pelos próprios registros.
+- **Semana | Mês** em Exercício, Sono e Emocional, no canto direito da linha "Referência" (espaço que já existia):
+  - o cabeçalho segue igual (ícone, nome e "‹ período ›") e a altura do cartão não muda (medido em 320, 375, 393 e 430 px);
+  - no Mês, "‹ ›" percorre os meses do calendário, até o mês do primeiro registro;
+  - a escolha vale para os três pilares; o Resumo mostra sempre a semana atual.
+- **Mês:** uma barra fina por dia (só leitura; para ver os treinos ou registros de um dia, use a Semana), rótulos 1 · 8 · 15 · 22 · 29, dia passado sem registro = traço, dias futuros vazios.
+  - Exercício: total em horas e dias com treino ("5 h 40 neste mês · 6 dias"), barras pela intensidade;
+  - Sono: média das noites registradas no mês;
+  - Emocional: o estado mais frequente, sem avaliação.
+- **Testada e descartada:** a linha "↑ X min em relação à semana anterior" (aumentava a altura do cartão) e o botão no lugar do ícone e do nome (tirava a identidade do pilar; com o ícone, o cabeçalho quebrava em duas linhas).
