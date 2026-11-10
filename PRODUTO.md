@@ -1824,3 +1824,20 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
   - O mês atual aparece mais baixo enquanto está em andamento (é o total até hoje).
 - **Meses pela inicial:** com três letras, os nomes ficavam a 1–3 px um do outro em telas de 360 a 393 px.
 - A altura dos cartões continua a de antes (medida em 320, 375, 393 e 430 px).
+
+## 77. v56 — Cronômetro de treino
+
+- **"Iniciar treino" na tela Exercício → toque no tipo → o tempo começa.** Início e fim vêm do relógio, não da memória.
+  - O app guarda só a hora de início, por pessoa da família (`p.timer = {type, start}`): fechar o app ou bloquear a tela não perde nada.
+  - Ao encerrar vira um registro comum de exercício, com dois campos novos e opcionais: `end` (horário do fim) e `src: "timer"`. Versões anteriores do app leem o registro normalmente.
+  - Duração = fim − início nos horários mostrados (09:20–10:00 é sempre 40 min).
+- **Barra ao vivo acima das abas, em todas as telas** (como um mini player): ponto que pulsa, tipo, tempo e "desde 09:20". Fica dentro da barra inferior, então o conteúdo e a Home sobem junto.
+- **Cronômetro aberto:** tempo grande e dois botões, Trocar e Encerrar.
+  - Trocar encerra um exercício e começa o outro no mesmo instante (bicicleta → musculação).
+  - O "desde 09:20" é tocável para corrigir o início (esqueceu de ligar na hora).
+- **Ao encerrar, uma pergunta só:** intensidade (opcional). Um toque salva e fecha; "Agora não" salva sem intensidade; Desfazer no aviso.
+- **Esqueceu ligado:** depois de 3 horas a barra pergunta "Ainda treinando?". A pessoa diz a que horas terminou ou continua; nada é salvo com tempo não confirmado.
+- Menos de 1 minuto não é registrado. Toque duplo não duplica (os botões ficam inativos por um instante a cada troca de estado).
+- Lista do dia e Histórico mostram início–fim; abaixo de 360 px a lista do dia mostra só o início.
+- **Decisão: mínimo de botões.** Saíram, na revisão: Descartar (o Desfazer cobre o início sem querer), Ajustar fim (a pergunta das 3 horas e a edição cobrem), Concluir (a intensidade já conclui) e a linha do cronômetro no "+".
+- **Limite:** como app da web no iPhone, o tempo não aparece na tela de bloqueio nem na Dynamic Island, e não há alerta sonoro com a tela apagada.
