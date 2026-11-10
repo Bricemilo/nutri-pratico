@@ -726,17 +726,13 @@ h1.pg{font-size:1.765rem;margin:6px 2px 2px}
 .per{display:inline-grid;grid-auto-flow:column;grid-auto-columns:auto;flex:none;padding:3px;border-radius:12px;background:color-mix(in srgb,var(--ink) 6%,transparent)}
 .per button{min-width:0;height:32px;padding:0 12px;border-radius:9px;font-size:var(--t-cap);font-weight:600;color:var(--ink-2);-webkit-tap-highlight-color:transparent}
 .per button.on{background:color-mix(in srgb,var(--c) 24%,var(--surface-3));color:var(--ink)}
-/* mês: uma coluna fina por dia, só leitura; rótulos 1 · 8 · 15 · 22 · 29 */
-.mo-g,.mo-w{display:grid;gap:0}
-.mo-g{height:92px;align-items:end}
-.mo-d{display:flex;align-items:flex-end;justify-content:center;height:100%;min-width:0}
-.mo-s{display:flex;flex-direction:column-reverse;gap:1px;width:64%;max-width:8px}
-.mo-s i{display:block;min-height:2px;border-radius:2px}
-.mo-s.one i{flex:1 1 0;border-radius:3px 3px 2px 2px}
-.mo-sl i{background:var(--sleep)}
-.mo-z{display:block;width:64%;max-width:7px;height:2px;border-radius:1px;background:color-mix(in srgb,var(--ink) 20%,transparent)}
-.mo-w span{margin-top:8px;font-size:var(--t-cap);line-height:16px;color:var(--ink-2);text-align:center;white-space:nowrap;overflow:visible;font-variant-numeric:tabular-nums}
-.mo-w span.now{color:var(--ink);font-weight:700}
+/* v55 · Mês: 12 colunas do ano (o mesmo desenho da semana); meses pela inicial (J F M A…): com 3 letras os nomes encostavam em telas de 360–393 px */
+.yr .mw-g{grid-template-columns:repeat(12,minmax(0,1fr))}
+.yr .mw-s{width:72%;max-width:18px}
+.yr .mw-s.one i{flex:1 1 0;border-radius:6px 6px 3px 3px}
+.yr-sl .mw-s i{background:var(--sleep)}
+.yr .mw-w{font-size:var(--t-cap);white-space:nowrap}
+.hp.sleep .mw-d.on{background:color-mix(in srgb,var(--sleep) 14%,transparent)} .hp.sleep .mw-d.on .mw-w{color:var(--sleep)}
 @media (max-width:370px){.per button{padding:0 9px}}   /* "Sem registros" ocupa a mesma altura do número: os três cartões não mudam de tamanho */
 .hp .bar.nd i{height:3px!important;width:14px;border-radius:2px;background:color-mix(in srgb,var(--ink) 22%,transparent)!important}
 .mv-when .input{width:120px}
@@ -3923,43 +3919,48 @@ function renderHealth(p){
   const nowI = cur ? wkKeys.indexOf(t) : 6, last7 = wkKeys;
   const wkLabel = cur ? "Esta semana" : (() => { const a = new Date(wkKeys[0] + "T12:00"), b = new Date(sun + "T12:00"), m = d => d.toLocaleDateString("pt-BR", {month: "short"}).replace(".", "");
     return a.getMonth() === b.getMonth() ? `${a.getDate()}–${b.getDate()} ${m(b)}` : `${a.getDate()} ${m(a)} – ${b.getDate()} ${m(b)}`; })();
-  // v54 · mês do calendário (navegável até o mês do primeiro registro)
-  const mon = sub !== "resumo" && hPer === "mes", tD = new Date(t + "T12:00"), fD = new Date(first + "T12:00");
-  const minMon = -((tD.getFullYear() - fD.getFullYear()) * 12 + tD.getMonth() - fD.getMonth());
+  /* v55 · Mês: o ano em 12 colunas (jan–dez); tocar num mês mostra o número dele. "‹ ›" troca o ano (até o do primeiro registro).
+     hMon = mês escolhido, contado a partir do mês atual (0 = este mês). */
+  const mon = sub !== "resumo" && hPer === "mes", tD = new Date(t + "T12:00"), fD = new Date(first + "T12:00"), tY = tD.getFullYear(), tM = tD.getMonth();
+  const minMon = -((tY - fD.getFullYear()) * 12 + tM - fD.getMonth());
   if (hMon < minMon) hMon = minMon; if (hMon > 0) hMon = 0;
-  const monthOf = off => { const d = new Date(tD.getFullYear(), tD.getMonth() + off, 1), n = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate(), k0 = `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-01`;
-    return {d, keys: Array.from({length: n}, (_, i) => C.addDays(k0, i))}; };
-  const M = monthOf(hMon), curM = hMon === 0, mName = (d, cap) => { const x = d.toLocaleDateString("pt-BR", {month: "long"}); return (cap ? x[0].toUpperCase() + x.slice(1) : x) + (d.getFullYear() !== tD.getFullYear() ? " " + d.getFullYear() : ""); };
-  const navLabel = mon ? (curM ? "Este mês" : mName(M.d, true)) : wkLabel, atMin = mon ? hMon <= minMon : wk <= minWk, atMax = mon ? curM : cur;
-  const step = d => { if (mon) hMon += d; else hWeek += d; moveSel = moodSel = null; render(); };
-  const wkNav = () => h("div", {class: "wk", role: "group", "aria-label": mon ? "Mês" : "Semana"},
-    h("button", {class: "wk-b", type: "button", disabled: atMin, "aria-label": mon ? "Mês anterior" : "Semana anterior", html: ICON.left, onclick: () => step(-1)}),
+  const monthOf = off => { const d = new Date(tY, tM + off, 1), n = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate(), k0 = `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-01`;
+    return {d, y: d.getFullYear(), m: d.getMonth(), keys: Array.from({length: n}, (_, i) => C.addDays(k0, i))}; };
+  const M = monthOf(hMon), curM = hMon === 0, offOf = (y, m) => (y - tY) * 12 + m - tM;
+  const navLabel = mon ? String(M.y) : wkLabel, atMin = mon ? M.y <= fD.getFullYear() : wk <= minWk, atMax = mon ? M.y >= tY : cur;
+  const step = d => { if (mon) hMon = Math.min(0, Math.max(minMon, hMon + 12 * d)); else hWeek += d; moveSel = moodSel = null; render(); };
+  const wkNav = () => h("div", {class: "wk", role: "group", "aria-label": mon ? "Ano" : "Semana"},
+    h("button", {class: "wk-b", type: "button", disabled: atMin, "aria-label": mon ? "Ano anterior" : "Semana anterior", html: ICON.left, onclick: () => step(-1)}),
     h("span", {class: "wk-l", "aria-live": "polite"}, navLabel),
-    h("button", {class: "wk-b wk-n", type: "button", disabled: atMax, "aria-label": mon ? "Mês seguinte" : "Semana seguinte", html: ICON.right, onclick: () => step(1)}));
+    h("button", {class: "wk-b wk-n", type: "button", disabled: atMax, "aria-label": mon ? "Ano seguinte" : "Semana seguinte", html: ICON.right, onclick: () => step(1)}));
   const perSeg = () => h("div", {class: "per", role: "group", "aria-label": "Período"}, [["sem", "Semana"], ["mes", "Mês"]].map(([k, l]) =>
-    h("button", {type: "button", class: hPer === k ? "on" : null, "aria-pressed": String(hPer === k), onclick: () => { if (hPer === k) return; hPer = k; moveSel = moodSel = null; render(); }}, l)));
+    h("button", {type: "button", class: hPer === k ? "on" : null, "aria-pressed": String(hPer === k), onclick: () => { if (hPer === k) return; hPer = k; hMon = 0; moveSel = moodSel = null; render(); }}, l)));
   const inK = (list, keys) => { const set = new Set(keys); return list.filter(e => set.has(e.date)); };
   const sleepAvg = keys => { const ms = inK(L.sleep, keys).map(e => C.sleepMinutes(e.bed, e.wake)).filter(m => m != null); return {n: ms.length, avg: ms.length ? ms.reduce((x, m) => x + m, 0) / ms.length : null}; };
-  // mês: uma coluna por dia (só leitura)
-  const monthChart = (cell, aria, cls) => { const n = M.keys.length, gt = `grid-template-columns:repeat(${n},minmax(0,1fr))`;
-    return h("div", {class: "mw mo" + (cls ? " " + cls : ""), role: "img", "aria-label": aria},
-      h("div", {class: "mo-g", style: gt}, M.keys.map(k => { const fut = k > t, c = fut ? null : cell(k); return h("span", {class: "mo-d"}, c || (fut ? null : h("i", {class: "mo-z"}))); })),
-      h("div", {class: "mo-w", style: gt, "aria-hidden": "true"}, M.keys.map((k, i) => h("span", {class: k === t ? "now" : null}, [1, 8, 15, 22, 29].includes(i + 1) ? String(i + 1) : "")))); };
+  const moodBest = keys => { const l = inK(L.mood, keys).sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : (a.at || 0) - (b.at || 0)); if (!l.length) return {n: 0, best: null};
+    const c = {}; let best = null; for (const e of l) { c[e.mood] = (c[e.mood] || 0) + 1; if (best == null || c[e.mood] >= c[best]) best = e.mood; } return {n: l.length, best}; };
+  // ano: 12 colunas (botões); mês futuro vazio, mês sem registro = traço; o escolhido fica aceso
+  const yearChart = (cell, aria, cls) => h("div", {class: "mw yr" + (cls ? " " + cls : "")},
+    h("div", {class: "mw-g", role: "group", "aria-label": aria}, MON.map((_, i) => { const off = offOf(M.y, i), fut = off > 0, early = off < minMon, on = off === hMon, c = fut || early ? null : cell(monthOf(off).keys, i);
+      return h("button", {class: "mw-d" + (on ? " on" : "") + (fut ? " fut" : ""), type: "button", disabled: fut || early, "aria-pressed": fut || early ? null : String(on),
+          "aria-label": `${cap1(MONL[i])}${fut || early ? "" : c ? "" : ": sem registro"}`, onclick: () => { hMon = off; render(); }},
+        h("span", {class: "mw-b"}, c || (fut || early ? null : h("i", {class: "mw-z"}))),
+        h("span", {class: "mw-w"}, MON[i][0].toUpperCase())); })));
   const refRow = (has, d) => has ? h("div", {class: "hp-ft"}, d, perSeg()) : d;
   const IN0 = {leve: "lv", moderada: "md", vigorosa: "vg"};
-  const moMove = () => { const by = new Map(); for (const e of L.move) if (e.min > 0) by.set(e.date, [...(by.get(e.date) || []), e]);
-    const max = Math.max(60, ...M.keys.map(k => (by.get(k) || []).reduce((x, e) => x + e.min, 0)));
-    return monthChart(k => { const l = by.get(k); if (!l) return null; const tot = l.reduce((x, e) => x + e.min, 0);
-      return h("span", {class: "mo-s", style: `height:${Math.max(6, tot / max * 100)}%`}, l.map(e => h("i", {class: IN0[e.intensity] || "md", style: `flex:${e.min} 1 0`}))); }, `Minutos de exercício por dia em ${mName(M.d)}.`); };
-  const moSleep = () => monthChart(k => { const e = L.sleep.find(x => x.date === k), m = e ? C.sleepMinutes(e.bed, e.wake) : null; if (m == null) return null;
-      return h("span", {class: "mo-s one mo-sl", style: `height:${Math.max(6, Math.min(100, m / 600 * 100))}%`}, h("i")); }, `Horas de sono por noite em ${mName(M.d)}.`);
-  const moMood = () => monthChart(k => { const e = [...L.mood].filter(x => x.date === k).sort((a, b) => (a.at || 0) - (b.at || 0)).pop(); if (!e) return null;
-      return h("span", {class: "mo-s one mood-s m" + e.mood, style: `height:${20 + (e.mood - 1) * 20}%`}, h("i")); }, `Como você esteve em ${mName(M.d)}.`);
-  // valores do mês
+  const yrMove = () => { const sums = MON.map((_, i) => { const off = offOf(M.y, i); if (off > 0 || off < minMon) return null; const l = inK(L.move, monthOf(off).keys).filter(e => e.min > 0);
+      const by = {lv: 0, md: 0, vg: 0}; for (const e of l) by[IN0[e.intensity] || "md"] += e.min; return by; });
+    const tot = b => b ? b.lv + b.md + b.vg : 0, max = Math.max(60, ...sums.map(tot));
+    return yearChart((keys, i) => { const b = sums[i]; if (!tot(b)) return null;
+      return h("span", {class: "mw-s", style: `height:${Math.max(6, tot(b) / max * 100)}%`}, ["lv", "md", "vg"].filter(k => b[k]).map(k => h("i", {class: k, style: `flex:${b[k]} 1 0`}))); },
+      `Horas de exercício por mês em ${M.y}. Toque num mês para ver o total.`); };
+  const yrSleep = () => yearChart(keys => { const a = sleepAvg(keys); if (!a.n) return null;
+      return h("span", {class: "mw-s one", style: `height:${Math.max(6, Math.min(100, a.avg / 600 * 100))}%`}, h("i")); }, `Média de sono por mês em ${M.y}. Toque num mês para ver a média.`, "yr-sl");
+  const yrMood = () => yearChart(keys => { const r = moodBest(keys); if (!r.best) return null;
+      return h("span", {class: "mw-s mood-s m" + r.best, style: `height:${20 + (r.best - 1) * 20}%`}, h("i")); }, `Estado mais frequente por mês em ${M.y}. Toque num mês para ver.`, "mw-mood");
+  // valores do mês escolhido
   const moMv = (() => { const l = inK(L.move, M.keys).filter(e => e.min > 0); return {total: l.reduce((x, e) => x + e.min, 0), days: new Set(l.map(e => e.date)).size}; })();
-  const moSl = sleepAvg(M.keys);
-  const moMd = (() => { const l = inK(L.mood, M.keys).sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : (a.at || 0) - (b.at || 0)); if (!l.length) return {n: 0, best: null};
-    const c = {}; let best = null; for (const e of l) { c[e.mood] = (c[e.mood] || 0) + 1; if (best == null || c[e.mood] >= c[best]) best = e.mood; } return {n: l.length, best}; })();
+  const moSl = sleepAvg(M.keys), moMd = moodBest(M.keys), inMon = curM ? "neste mês" : "em " + MONL[M.m];
   const byDate = (a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : (b.at || 0) - (a.at || 0);
   // histórico: os 5 mais recentes à vista; os outros (até 12) por expansão
   const hist = (kind, list, line) => { if (!list.length) return null;
@@ -3982,16 +3983,16 @@ function renderHealth(p){
   const more = (title, ...ps) => h("details", {class: "src more"}, h("summary", null, title), ...ps.filter(Boolean).map(x => h("p", null, x)));
   // o número principal de cada pilar; médias só com dados suficientes
   const P = {
-    movimento: mon ? {cls: "move", icon: "dumbbell", title: "Exercício", has: L.move.length > 0, value: fmtDur(moMv.total), ctx: `${curM ? "neste" : "no"} mês${moMv.days ? ` · ${moMv.days} ${moMv.days === 1 ? "dia" : "dias"}` : ""}`,
-      chart: moMove, add: () => moveSheet(p), addL: "Registrar exercício"} : {cls: "move", icon: "dumbbell", title: "Exercício", has: L.move.length > 0, value: fmtMin(mw.total), ctx: mw.activeDays ? `${cur ? "nesta" : "na"} semana · ${mw.activeDays} ${mw.activeDays === 1 ? "dia" : "dias"}` : cur ? "nesta semana" : "na semana",
+    movimento: mon ? {cls: "move", icon: "dumbbell", title: "Exercício", has: L.move.length > 0, value: fmtDur(moMv.total), ctx: `${inMon}${moMv.days ? ` · ${moMv.days} ${moMv.days === 1 ? "dia" : "dias"}` : ""}`,
+      chart: yrMove, add: () => moveSheet(p), addL: "Registrar exercício"} : {cls: "move", icon: "dumbbell", title: "Exercício", has: L.move.length > 0, value: fmtMin(mw.total), ctx: mw.activeDays ? `${cur ? "nesta" : "na"} semana · ${mw.activeDays} ${mw.activeDays === 1 ? "dia" : "dias"}` : cur ? "nesta semana" : "na semana",
       empty: "Caminhada, musculação, tênis… registre em segundos.", chart: moveBars, add: () => moveSheet(p), addL: "Registrar exercício"},
     sono: mon ? {cls: "sleep", icon: "moon", title: "Sono", has: L.sleep.length > 0, value: moSl.n ? fmtDur(moSl.avg) : "Sem registros", none: !moSl.n,
-      ctx: moSl.n > 1 ? `média de ${moSl.n} noites` : moSl.n === 1 ? "1 noite registrada" : curM ? "neste mês" : "no mês", chart: moSleep, add: () => sleepSheet(p), addL: "Registrar sono"}
+      ctx: moSl.n > 1 ? `média de ${moSl.n} noites` : moSl.n === 1 ? "1 noite registrada" : inMon, chart: yrSleep, add: () => sleepSheet(p), addL: "Registrar sono"}
       : {cls: "sleep", icon: "moon", title: "Sono", has: L.sleep.length > 0, value: ss.count ? fmtDur(ss.avg) : "Sem registros", none: !ss.count,
       ctx: ss.count > 1 ? `média de ${ss.count} noites` : ss.count === 1 ? "1 noite registrada" : cur ? "nesta semana" : "na semana",
       empty: "Hora de dormir e de acordar. Sem notas nem competição.", chart: sleepBars, add: () => sleepSheet(p), addL: "Registrar sono"},
     "bem-estar": mon ? {cls: "wb", icon: "smile", title: "Emocional", has: L.mood.length > 0, value: moMd.best ? MOODS[moMd.best - 1] : "Sem registros", none: !moMd.best,
-      ctx: moMd.best ? (moMd.n > 1 ? `mais frequente · ${moMd.n} registros` : "1 registro") : curM ? "neste mês" : "no mês", chart: moMood, add: () => moodSheet(p), addL: "Registrar estado emocional"}
+      ctx: moMd.best ? (moMd.n > 1 ? `mais frequente · ${moMd.n} registros` : "1 registro") : inMon, chart: yrMood, add: () => moodSheet(p), addL: "Registrar estado emocional"}
       : {cls: "wb", icon: "smile", title: "Emocional", has: L.mood.length > 0, value: wkMood ? MOODS[wkMood - 1] : "Sem registros", none: !wkMood,
       ctx: wkMood ? (wkMoodN > 1 ? `mais frequente · ${wkMoodN} registros` : "1 registro") : cur ? "nesta semana" : "na semana",
       empty: "Um toque para dizer como você está. Fica só com você.", chart: moodChart, add: () => moodSheet(p), addL: "Registrar estado emocional"}};
