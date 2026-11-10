@@ -2162,7 +2162,7 @@ html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
 :root{--live:0px} body.live{--live:70px}
 .cr-slot{max-width:600px;margin:0 auto;padding:8px 0 16px}
 .cr-slot[hidden]{display:none}
-.cr-bar{display:flex;align-items:center;gap:10px;width:100%;height:46px;padding:0 10px 0 16px;border-radius:23px;color:var(--ink);text-align:left;-webkit-tap-highlight-color:transparent;
+.cr-bar{display:flex;align-items:center;gap:10px;width:100%;height:46px;padding:0 18px 0 16px;border-radius:23px;color:var(--ink);text-align:left;-webkit-tap-highlight-color:transparent;
   background:linear-gradient(180deg,color-mix(in srgb,var(--move) 15%,var(--surface-2)),color-mix(in srgb,var(--move) 6%,var(--surface)));
   border:1px solid color-mix(in srgb,var(--move) 30%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 8px 20px -12px rgba(0,0,0,.9)}
 .cr-bar:active{filter:brightness(.9)}
@@ -2170,38 +2170,37 @@ html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
 .cr-n{font-size:1.059rem;font-weight:650;color:var(--move);font-variant-numeric:tabular-nums;letter-spacing:-.01em;flex:none}
 .cr-q{font-size:var(--t-sm);font-weight:600;color:var(--energy);flex:none}
 .cr-s{margin-left:auto;font-size:var(--t-cap);color:var(--muted);white-space:nowrap;flex:none}
-.cr-bar .li-go{flex:none;color:var(--muted)}
 .cr-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--move);flex:none;box-shadow:0 0 0 0 color-mix(in srgb,var(--move) 55%,transparent);animation:cr-pulse 2s ease-out infinite}
 .cr-bar.ask .cr-dot{background:var(--energy);animation:none}
 @keyframes cr-pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--move) 55%,transparent)}70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
-@media (max-width:359px){.cr-s{display:none}.cr-bar .li-go{margin-left:auto}}
+@media (max-width:359px){.cr-s{display:none}}
 /* folha do cronômetro */
-.cr-sh{text-align:center;padding-top:4px}
-.cr-sh h2{text-align:center}
-.cr-sh .sh-sub{text-align:center}
-.cr-k{display:inline-flex;align-items:center;gap:8px;margin:0 0 6px;font-size:var(--t-cap);font-weight:650;letter-spacing:.08em;text-transform:uppercase;color:var(--move)}
-.cr-t{font-size:1.412rem}
-.cr-big{margin:6px 0 10px;font-size:clamp(3.6rem,19vw,4.8rem);font-weight:250;line-height:1.05;letter-spacing:-.035em;font-variant-numeric:tabular-nums;color:var(--ink)}
-.cr-ini{display:inline-flex;align-items:center;gap:10px;font-size:var(--t-sm);color:var(--muted)}
-.cr-ini .input.dt-in{width:auto;height:36px;line-height:36px;padding:0 12px;border-radius:10px;font-size:var(--t-body);font-weight:600;color:var(--ink-2)}
-.cr-act{display:grid;gap:10px;margin-top:22px}
-.cr-two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cr-sh{text-align:center;padding-top:6px;-webkit-user-select:none;user-select:none}
+.cr-sh input{-webkit-user-select:auto;user-select:auto}
+.cr-sh h2,.cr-sh .sh-sub{text-align:center}
+.cr-t{display:inline-flex;align-items:center;gap:10px;font-size:1.294rem}
+.cr-big{margin:4px 0 2px;font-size:clamp(3.8rem,20vw,5rem);font-weight:250;line-height:1.05;letter-spacing:-.035em;font-variant-numeric:tabular-nums;color:var(--ink)}
+.cr-ini{display:inline-flex;align-items:baseline;gap:5px;font-size:var(--t-sm);color:var(--muted)}
+.cr-hm{-webkit-appearance:none;appearance:none;background:none;border:0;padding:0;margin:0;width:auto;min-width:0;font:inherit;font-weight:600;color:var(--ink-2);font-variant-numeric:tabular-nums;text-decoration:underline dotted color-mix(in srgb,var(--ink-2) 45%,transparent);text-underline-offset:4px}
+.cr-hm::-webkit-calendar-picker-indicator{display:none}
+.cr-hm::-webkit-date-and-time-value{text-align:left}
+.cr-two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:26px}
 .cr-two .btn{padding:0 10px}
-.cr-two .btn svg{width:18px;height:18px}
-.cr-del{color:var(--muted)}
+.cr-two .btn.on{background:transparent}
 .cr-sh.cr-hold{pointer-events:none}
-.cr-sh .ask{text-align:left}
-.cr-sh .lbl2,.cr-sh .chips{text-align:left}
-.cr-sh .field{text-align:left;margin-top:16px}
-.cr-err{min-height:0;margin:6px 0 0;font-size:var(--t-sm);color:var(--danger);text-align:left}
+.cr-sh .field{text-align:left;margin-top:18px}
+.cr-err{margin:6px 0 0;font-size:var(--t-sm);color:var(--danger);text-align:left}
 .cr-err:empty{display:none}
-.cr-ok{width:52px;height:52px;margin:6px auto 12px;border-radius:50%;display:grid;place-items:center;color:#04140F;background:var(--move)}
-.cr-ok svg{width:26px;height:26px}
+.cr-ok{width:48px;height:48px;margin:4px auto 12px;border-radius:50%;display:grid;place-items:center;color:#04140F;background:var(--move)}
+.cr-ok svg{width:24px;height:24px}
 .cr-c{font-variant-numeric:tabular-nums}
+.cr-qi{margin:22px 0 10px;font-size:var(--t-cap);font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.cr-in{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.cr-in button,.cr-types button{height:52px;padding:0 10px;border-radius:14px;background:var(--surface-2);border:1px solid var(--line-2);font-size:var(--t-body);font-weight:600;color:var(--ink);text-align:center;-webkit-tap-highlight-color:transparent}
+.cr-in button:active,.cr-types button:active{background:color-mix(in srgb,var(--move) 22%,var(--surface-2));border-color:color-mix(in srgb,var(--move) 45%,transparent)}
+.cr-skip{margin-top:8px;color:var(--muted)}
 .cr-types{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
-.cr-types button{height:52px;padding:0 12px;text-align:center;border-radius:14px;background:var(--surface-2);border:1px solid var(--line-2);font-size:var(--t-body);font-weight:600;color:var(--ink);-webkit-tap-highlight-color:transparent}
-.cr-types button:active{background:color-mix(in srgb,var(--move) 22%,var(--surface-2));border-color:color-mix(in srgb,var(--move) 45%,transparent)}
-.cr-sh .cr-types{margin-top:0}
+.cr-sh .cr-types{margin-top:22px}
 .cr-o{display:grid;gap:10px;margin-top:10px}
 .cr-o[hidden]{display:none}
 /* Exercício: iniciar logo abaixo do cartão */
@@ -2212,15 +2211,11 @@ html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
 .cr-gt{display:flex;flex-direction:column;gap:2px;min-width:0}
 .cr-gt b{font-size:var(--t-body);font-weight:620;letter-spacing:-.01em}
 .cr-gt span{font-size:var(--t-sm);color:var(--muted)}
-.cr-go .li-go{margin-left:auto;color:var(--muted)}
-.repeat.cr-row{background:color-mix(in srgb,var(--move) 9%,transparent);border-color:color-mix(in srgb,var(--move) 26%,transparent)}
 /* painel do dia: com início–fim, a intensidade (já dita pela cor e pelo VoiceOver) cede lugar em telas estreitas; abaixo de 360 fica só o início */
 .mw-e em{font-style:normal}
 .mw-e time .cr-end{overflow:visible}
 @media (max-width:420px){.mw-e:has(.cr-end) .mw-in{display:none}}
 @media (max-width:359px){.mw-e .cr-end{display:none}}
-.cr-row .qa-i{background:color-mix(in srgb,var(--move) 22%,var(--surface-2));color:var(--move)}
-.cr-row [data-cr]{font-variant-numeric:tabular-nums;color:var(--move);font-weight:600}
 </style>
 
 <div class="app" id="app"></div>
@@ -4066,7 +4061,7 @@ function renderHealth(p){
     movimento: () => [card("movimento", true, L.move.length ? h("div", {class: "mw mw-k", "aria-hidden": "true"}, h("span", null, h("i", {class: "lv"}), "leve"), h("span", null, h("i", {class: "md"}), "moderada"), h("span", null, h("i", {class: "vg"}), "vigorosa"), h("span", null, h("i", {class: "mw-z"}), "sem registro")) : null,
         refRow(L.move.length > 0, more("Referência", mref && mref.week && !mref.perDay && L.move.length ? `Nesta semana: ${mw.mv} min de atividade moderada ou vigorosa (a leve não entra na conta).` : null,
           mref ? mref.text : "Abaixo de 5 anos o app não usa meta numérica de atividade.", "O app não converte atividade em calorias: as estimativas variam muito entre pessoas."))),
-      crOf(p) ? null : h("button", {class: "cr-go", type: "button", onclick: () => crStartSheet(p)}, h("span", {class: "cr-pl"}), h("span", {class: "cr-gt"}, h("b", null, "Iniciar treino"), h("span", null, "Início e fim marcados sozinhos")), h("span", {class: "li-go", html: ICON.right})),
+      crOf(p) ? null : h("button", {class: "cr-go", type: "button", onclick: () => crStartSheet(p)}, h("span", {class: "cr-pl"}), h("span", {class: "cr-gt"}, h("b", null, "Iniciar treino"), h("span", null, "Início e fim marcados sozinhos"))),
       L.move.length && !mon ? moveDayPanel(p, L, mw) : null,
       L.move.length ? h("div", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Histórico")), hist("move", [...L.move].sort(byDate), e => [h("b", null, e.type), ` · ${fmtMin(e.min)}${e.intensity ? " · " + INTENS.find(x => x[0] === e.intensity)[1].toLowerCase() : ""}`, h("span", null, " " + relDay(e.date) + (e.time ? " " + e.time + (e.end ? "\u2060–\u2060" + e.end : "") : ""))])) : null],
     sono: () => [card("sono", true, L.sleep.length ? h("div", {class: "mw mw-k"}, h("span", null, h("i", {class: "mw-z"}), "noite sem registro")) : null,
@@ -5644,11 +5639,7 @@ function moveSheet(p, done, rec){
     when.addEventListener("input", check); when.addEventListener("change", check);
     if (rec && !types.includes(rec.type)) { type = "Outra"; other.value = rec.type; }
     paint();
-    const T = crOf(p);
     el.append(h("h2", null, editing ? "Editar exercício" : "Registrar exercício"),
-      editing ? null : h("button", {class: "repeat cr-row", type: "button", onclick: () => { close(); setTimeout(() => T ? crSheet(p) : crStartSheet(p), 280); }},
-        h("span", {class: "qa-i", html: T ? '<i class="cr-dot"></i>' : ICON.clock}), T ? h("div", null, h("b", null, `${T.type} em andamento`), h("span", {"data-cr": T.start}, clockOf(Date.now() - T.start)))
-          : h("div", null, h("b", null, "Iniciar cronômetro"), "Marca o início e o fim sozinho")),
       editing ? h("p", {class: "sh-sub"}, `Registrado ${relDay(rec.date).toLowerCase()}.`) : last ? h("button", {class: "repeat", type: "button", onclick: () => commit({type: last.type, min: last.min, intensity: last.intensity || null, date: today(), time: nowHM()})},
         h("span", {class: "qa-i", html: ICON.repeat}), h("div", null, h("b", null, "Repetir hoje"), `${last.type} · ${fmtMin(last.min)}${last.intensity ? " · " + last.intensity : ""}`)) : h("p", {class: "sh-sub"}, "Tipo e duração. A intensidade é opcional."),
       body, h("p", {class: "note"}, "O app não converte atividade em calorias: as estimativas de gasto variam muito de pessoa para pessoa."),
@@ -5675,7 +5666,8 @@ function crStop(p, end = Date.now()){
   const T = crOf(p); if (!T) return null;
   const ms = end - T.start; delete p.timer;
   if (ms < 60e3) { touch(p); return null; }
-  const e = {id: uid(), at: Date.now(), type: T.type, min: Math.min(1440, Math.max(1, Math.round(ms / 60e3))), intensity: null, date: C.dayKey(new Date(T.start)),
+  // duração = diferença entre os horários mostrados (09:20–10:00 é sempre 40 min, nunca 39 ou 41)
+  const e = {id: uid(), at: Date.now(), type: T.type, min: Math.min(1440, Math.max(1, Math.floor(end / 60e3) - Math.floor(T.start / 60e3))), intensity: null, date: C.dayKey(new Date(T.start)),
     time: hmOf(T.start), end: hmOf(end), src: "timer"};
   logsOf(p).move.push(e); touch(p); moveSel = e.date; return e;
 }
@@ -5697,7 +5689,7 @@ function paintLive(){
   put(liveSlot, h("button", {class: "cr-bar" + (crAskOn ? " ask" : ""), type: "button", onclick: () => crSheet(p), "aria-label": crAskOn ? `${T.type}: cronômetro ligado desde ${hmOf(T.start)}. Ainda treinando?` : `${T.type} em andamento desde ${hmOf(T.start)}. Abrir cronômetro.`},
     h("i", {class: "cr-dot"}), h("b", null, T.type),
     crAskOn ? h("span", {class: "cr-q"}, "Ainda treinando?") : h("span", {class: "cr-n", "data-cr": T.start}, clockOf(Date.now() - T.start)),
-    h("span", {class: "cr-s"}, `desde ${hmOf(T.start)}`), h("span", {class: "li-go", html: ICON.right})));
+    h("span", {class: "cr-s"}, `desde ${hmOf(T.start)}`)));
   if (!crTick) crTick = setInterval(crRun, 1000);
 }
 document.addEventListener("visibilitychange", () => { if (!document.hidden) { paintLive(); crRun(); } });
@@ -5719,48 +5711,49 @@ function crGo(p, type){ crStart(p, type); toast(`${type} · cronômetro iniciado
 function crSheet(p){
   const L = logsOf(p);
   sheet("Cronômetro de treino", (el, close) => {
-    const body = h("div", {class: "cr-sh"}), slot = h("div");
+    const body = h("div", {class: "cr-sh"});
     let mode = "run", done = null, was = null;
     const T0 = () => crOf(p);
-    // a cada troca de estado (encerrar, trocar, perguntar) os botões mudam de lugar: um toque duplo não pode cair no botão novo
+    // a cada troca de estado os botões mudam de lugar: um toque duplo não pode cair no botão novo
     const hold = () => { body.classList.add("cr-hold"); clearTimeout(hold.t); hold.t = setTimeout(() => body.classList.remove("cr-hold"), 450); };
     let last = "";
+    // encerrado: uma pergunta só (intensidade, opcional). Tocar já salva e fecha; o Desfazer vem no aviso
+    const leave = () => { const e = done, T = was; close(); toast(`${e.type} · ${fmtDur(e.min)}${e.intensity ? " · " + e.intensity : ""} registrado`, () => crUndoStop(p, T, e)); };
     function paint(){
       const T = T0(), key = mode + (T ? T.type + T.start : "");
       if (key !== last) { last = key; hold(); }
       if (mode === "done" && done) return put(body,
-        h("div", {class: "cr-ok", html: ICON.check}), h("h2", null, `${done.type} · ${fmtDur(done.min)}`), h("p", {class: "sh-sub cr-c"}, `${relDay(done.date)} · ${done.time}–${done.end}`),
-        h("div", {class: "lbl2"}, "Intensidade ", h("span", {class: "opt"}, "opcional")), chips(INTENS, done.intensity, v => { done.intensity = v; done.updated = Date.now(); touch(p); paint(); render(); }, "opt"),
-        h("div", {class: "cr-act"}, h("button", {class: "btn primary block", type: "button", onclick: close}, "Concluir"),
-          h("button", {class: "btn plain block", type: "button", onclick: () => { crUndoStop(p, was, done); done = null; mode = "run"; paint(); }}, "Desfazer")));
+        h("div", {class: "cr-ok", html: ICON.check}), h("h2", null, `${done.type} · ${fmtDur(done.min)}`), h("p", {class: "sh-sub cr-c"}, `${done.time}–${done.end}`),
+        h("p", {class: "cr-qi"}, "Intensidade"),
+        h("div", {class: "cr-in"}, INTENS.map(([v, l]) => h("button", {type: "button", onclick: () => { done.intensity = v; done.updated = Date.now(); touch(p); render(); leave(); }}, l))),
+        h("button", {class: "btn plain block cr-skip", type: "button", onclick: leave}, "Agora não"));
       if (!T) { close(); return; }
-      const el0 = Date.now() - T.start, asking = crAsk(T);
-      if (asking || mode === "end") {
-        // pergunta: a pessoa diz a que horas terminou (pré-preenchido com agora; nada é salvo sem confirmar)
+      const el0 = Date.now() - T.start;
+      if (crAsk(T)) {
+        // esqueceu ligado: a pessoa diz a que horas terminou (pré-preenchido com agora; nada é salvo sem confirmar)
         const end = h("input", {class: "input dt-in", type: "time", id: "cr-fim", value: hmOf(Date.now()), "aria-label": "Que horas terminou?"}), msg = h("p", {class: "cr-err", role: "alert"});
         const endMs = () => { const v = end.value; if (!/^\d\d:\d\d$/.test(v)) return null; const d = new Date(T.start); d.setHours(+v.slice(0, 2), +v.slice(3), 0, 0);
           let ms = d.getTime(); while (ms < T.start) ms += 864e5; return ms <= Date.now() + 60e3 && ms - T.start <= 864e5 ? Math.min(ms, Date.now()) : null; };
-        const ok = h("button", {class: "btn primary block", type: "button", onclick: () => { const ms = endMs(); if (ms == null) { msg.textContent = "Escolha um horário entre o início e agora."; return; } finish(ms); }}, "Encerrar e salvar");
         end.addEventListener("input", () => { msg.textContent = ""; });
-        return put(body, asking ? null : h("p", {class: "cr-k"}, h("i", {class: "cr-dot"}), "Ajustar o fim"), h("h2", null, asking ? "Ainda treinando?" : T.type),
-          h("p", {class: "sh-sub"}, `${T.type} desde ${hmOf(T.start)}${relDay(C.dayKey(new Date(T.start))) !== "Hoje" ? " de " + relDay(C.dayKey(new Date(T.start))).toLowerCase() : ""} · ${fmtDur(el0 / 60e3)} até agora.`),
+        const day = relDay(C.dayKey(new Date(T.start)));
+        return put(body, h("h2", null, "Ainda treinando?"),
+          h("p", {class: "sh-sub"}, `${T.type} desde ${hmOf(T.start)}${day !== "Hoje" ? " de " + day.toLowerCase() : ""} · ${fmtDur(el0 / 60e3)} até agora.`),
           field("cr-fim", "Que horas terminou?", end), msg,
-          h("div", {class: "cr-act"}, ok, asking ? h("button", {class: "btn ghost block", type: "button", onclick: () => { p.timer.askedAt = Date.now(); touch(p); paintLive(); mode = "run"; paint(); }}, "Continuar treinando")
-            : h("button", {class: "btn plain block", type: "button", onclick: () => { mode = "run"; paint(); }}, "Voltar")));
+          h("div", {class: "cr-two"}, h("button", {class: "btn ghost", type: "button", onclick: () => { p.timer.askedAt = Date.now(); touch(p); paintLive(); paint(); }}, "Continuar"),
+            h("button", {class: "btn primary", type: "button", onclick: () => { const ms = endMs(); if (ms == null) { msg.textContent = "Escolha um horário entre o início e agora."; return; } finish(ms); }}, "Encerrar")));
       }
-      const startIn = h("input", {class: "input dt-in", type: "time", id: "cr-ini", value: hmOf(T.start), "aria-label": "Horário de início"});
+      // o início é corrigível (esqueceu de ligar na hora): parece texto, abre o seletor de horário do iPhone
+      const startIn = h("input", {class: "cr-hm", type: "time", id: "cr-ini", value: hmOf(T.start), "aria-label": "Horário de início"});
       startIn.addEventListener("change", () => { const v = startIn.value; if (!/^\d\d:\d\d$/.test(v)) return; const d = new Date(); d.setHours(+v.slice(0, 2), +v.slice(3), 0, 0);
         let ms = d.getTime(); if (ms > Date.now()) ms -= 864e5; T.start = ms; touch(p); paintLive(); paint(); });
+      const sw = mode === "swap";
       put(body,
-        h("p", {class: "cr-k"}, h("i", {class: "cr-dot"}), "Em andamento"), h("h2", {class: "cr-t"}, T.type),
+        h("h2", {class: "cr-t"}, h("i", {class: "cr-dot"}), T.type),
         h("div", {class: "cr-big", "data-cr": T.start, role: "timer", "aria-live": "off"}, clockOf(el0)),
-        h("label", {class: "cr-ini", for: "cr-ini"}, h("span", null, "Início"), startIn),
-        mode === "swap" ? [h("div", {class: "lbl2"}, "Trocar para"), h("div", {class: "cr-types"}, moveTypes(L).filter(t => t !== T.type && t !== "Outra").map(t => h("button", {type: "button", onclick: () => swap(t)}, t)))] : null,
-        h("div", {class: "cr-act"}, h("button", {class: "btn primary block", type: "button", onclick: () => finish(Date.now())}, "Encerrar"),
-          h("div", {class: "cr-two"}, h("button", {class: "btn ghost", type: "button", "aria-expanded": String(mode === "swap"), onclick: () => { mode = mode === "swap" ? "run" : "swap"; paint(); }}, ic("swap"), "Trocar"),
-            h("button", {class: "btn ghost", type: "button", onclick: () => { mode = "end"; paint(); }}, ic("clock"), "Ajustar fim")),
-          h("button", {class: "btn plain block cr-del", type: "button", onclick: () => ask(slot, "Descartar este treino? Nada será registrado.", [{label: "Descartar", fn: () => { const T1 = crOf(p); delete p.timer; touch(p); close(); render();
-            toast("Treino descartado", () => { p.timer = T1; touch(p); render(); }); }}])}, "Descartar")), slot);
+        h("label", {class: "cr-ini", for: "cr-ini"}, "desde ", startIn),
+        sw ? h("div", {class: "cr-types"}, moveTypes(L).filter(t => t !== T.type && t !== "Outra").map(t => h("button", {type: "button", onclick: () => swap(t)}, t))) : null,
+        h("div", {class: "cr-two"}, h("button", {class: "btn ghost" + (sw ? " on" : ""), type: "button", "aria-expanded": String(sw), onclick: () => { mode = sw ? "run" : "swap"; paint(); }}, sw ? "Cancelar" : "Trocar"),
+          h("button", {class: "btn primary", type: "button", onclick: () => finish(Date.now())}, "Encerrar")));
     }
     function finish(ms){ was = Object.assign({}, T0()); done = crStop(p, ms); render();
       if (!done) { close(); toast("Menos de 1 minuto: não registrado", () => { p.timer = was; touch(p); render(); }); return; }
