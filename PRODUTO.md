@@ -1813,3 +1813,14 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
   - Sono: média das noites registradas no mês;
   - Emocional: o estado mais frequente, sem avaliação.
 - **Testada e descartada:** a linha "↑ X min em relação à semana anterior" (aumentava a altura do cartão) e o botão no lugar do ícone e do nome (tirava a identidade do pilar; com o ícone, o cabeçalho quebrava em duas linhas).
+
+## 76. v55 — Mês mostra o ano (jan–dez)
+
+- **No modo Mês, o gráfico mostra o ano em 12 colunas (J F M A M J J A S O N D).** Os dias de um mês só repetiam a Semana; a evolução aparece com os meses lado a lado.
+  - Tocar num mês acende a coluna e muda o número grande ("17 h em maio · 16 dias"). Ao abrir, fica aceso o mês atual.
+  - "‹ ano ›" troca o ano, até o ano do primeiro registro (ao voltar, fica aceso o mesmo mês do ano anterior, ou o primeiro mês com registro).
+  - Exercício: horas do mês, separadas por intensidade. Sono: média do mês. Emocional: estado mais frequente.
+  - Mês sem registro = traço; meses futuros (e anteriores ao primeiro registro) ficam vazios e não respondem ao toque.
+  - O mês atual aparece mais baixo enquanto está em andamento (é o total até hoje).
+- **Meses pela inicial:** com três letras, os nomes ficavam a 1–3 px um do outro em telas de 360 a 393 px.
+- A altura dos cartões continua a de antes (medida em 320, 375, 393 e 430 px).
