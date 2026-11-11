@@ -1857,3 +1857,16 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
   - Com o Face ID ligado, nada dos dados é desenhado antes de a pessoa entrar. Ao sair do app a tela é coberta na hora (a miniatura do iPhone não mostra dados); ao voltar, pede o rosto conforme o tempo escolhido (na hora, 1 min ou 5 min). Desligar exige o rosto.
   - Limite: quem sabe o código do iPhone também entra.
 - **Regra a partir daqui:** cada recurso registra a evidência que o sustenta e a força dela (forte, moderada, fraca); evidência fraca não vira peça central.
+
+## 79. v58 — O que me faz bem (Emocional)
+
+- **Lista da própria pessoa em quatro grupos:** Pessoas, Lugares, Sabores e Momentos. Fica no Emocional, abaixo do dia.
+  - Primeira vez: uma frase e duas sugestões por grupo (um toque adiciona) + "Escrever o meu".
+  - No dia a dia: a linha inteira marca "fiz hoje" (com Desfazer); à direita, só o fato: hoje, ontem, há N dias, ainda não.
+  - "Editar" (um botão): renomear, trocar de grupo, remover; mostra as sugestões que faltam.
+  - Remover só esconde o item (`off`): as vezes registradas ficam.
+- **Dados:** itens em `p.care.joys` ({id, g, name, at, off?}); vezes em `p.logs.joy` ({id, at, date, item}). Novo tipo de registro `joy` em LOG_KINDS; nada existente muda.
+- **Evidência (forte para o humor):** ativação comportamental — fazer com frequência o que traz prazer ou sentido (meta-análises de 2014 e 2021). Conexão social: associada a menor mortalidade (Holt-Lunstad, 2010/2015; associação, não causa).
+- **Fora de propósito:** pontos, metas, sequências e comparações (apps de saúde mental perdem quase todos os usuários em 2 semanas; gamificação é contestada e vira cobrança). Diário de gratidão: evidência mais fraca nas revisões recentes, não entrou.
+- **Privacidade:** nada disso aparece na Hoje; cada pessoa da família tem a sua lista.
+- **Segurança:** a Referência do Emocional passa a ter a linha fixa "Se precisar conversar agora: CVV, ligue 188 — 24 horas, gratuito e sigiloso."
