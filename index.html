@@ -2244,6 +2244,30 @@ html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
 .fc-code{display:block;width:100%;margin:18px 0 6px;padding:18px 10px;border-radius:16px;background:var(--surface-2);border:1px dashed var(--line-2);font-size:1.65rem;font-weight:600;letter-spacing:.14em;text-align:center;font-variant-numeric:tabular-nums;color:var(--ink);-webkit-user-select:all;user-select:all}
 .fc-hint{margin:0 0 18px;font-size:var(--t-cap);color:var(--muted);text-align:center}
 .fc-seg{margin-top:4px}
+/* v58 · O que me faz bem: lista da própria pessoa, em quatro grupos. Linha inteira = marcar "fiz hoje" (o círculo enche no tom do Emocional);
+   à direita, só o fato: hoje, ontem, há N dias, ainda não. "Editar" troca as linhas por edição e mostra sugestões para acrescentar. */
+.jy{--c:var(--mood)}
+.jy .panel-h{margin-bottom:4px}
+.jy-ed{font-size:var(--t-sm);font-weight:600;color:var(--c);padding:6px 2px 6px 10px}
+.jy-intro{margin:0 2px 6px;font-size:var(--t-sm);color:var(--muted);line-height:1.45}
+.jy-g{margin:14px 2px 4px;font-size:var(--t-cap);font-weight:650;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.jy-r{display:grid;grid-template-columns:26px minmax(0,1fr) auto;align-items:center;gap:12px;width:100%;min-height:48px;padding:6px 2px;text-align:left;color:var(--ink);-webkit-tap-highlight-color:transparent}
+.jy-r + .jy-r{border-top:1px solid var(--line)}
+.jy-r:active{opacity:.7}
+.jy-r b{font-weight:550;font-size:var(--t-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jy-c{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--line-2);display:grid;place-items:center;color:#1A0E12;transition:background .18s,border-color .18s}
+.jy-c svg{width:14px;height:14px;stroke-width:3}
+.jy-r.on .jy-c{background:var(--c);border-color:var(--c)}
+.jy-r.ed{grid-template-columns:minmax(0,1fr) auto}
+.jy-r.ed .li-go{color:var(--muted)}
+.jy-a{font-size:var(--t-sm);color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.jy-r.on .jy-a{color:var(--c);font-weight:600}
+.jy-sug{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 4px}
+.jy-sug button{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border-radius:18px;border:1px dashed var(--line-2);font-size:var(--t-sm);color:var(--ink-2);-webkit-tap-highlight-color:transparent}
+.jy-sug button svg{width:14px;height:14px;color:var(--c)}
+.jy-sug button:active{background:color-mix(in srgb,var(--c) 14%,transparent)}
+.jy-own{display:inline-flex;align-items:center;gap:8px;margin:16px 0 2px;padding:6px 2px;font-size:var(--t-sm);font-weight:600;color:var(--c)}
+.jy-own svg{width:16px;height:16px}
 </style>
 
 <div class="app" id="app"></div>
@@ -3162,8 +3186,8 @@ const DEFAULT_OBJ = ["Alimentação equilibrada", "Manutenção do peso", "Emagr
 const DEFAULT_MEALS = ["Café da manhã", "Colação", "Almoço", "Lanche da tarde 1", "Lanche da tarde 2", "Pré-treino", "Pós-treino", "Jantar", "Ceia"];
 let S;
 // listas por perfil: registros diários (logs) e cuidados (care). water: meta de água definida pela pessoa (mL) · waterRem: lembretes de água
-const LOG_KINDS = ["move", "sleep", "mood", "eaten", "meas", "water"];
-const CARE0 = () => ({water: null, waterRem: null, meds: [], exams: [], goals: [], appts: [], labs: [], procs: []});
+const LOG_KINDS = ["move", "sleep", "mood", "eaten", "meas", "water", "joy"];   // v58: joy = vezes em que a pessoa fez algo da lista "O que me faz bem"
+const CARE0 = () => ({water: null, waterRem: null, meds: [], exams: [], goals: [], appts: [], labs: [], procs: [], joys: []});
 function blankState(){ return {version: VERSION, patients: [], foods: [], activeId: null, prefs: {objectives: DEFAULT_OBJ.slice(), meals: DEFAULT_MEALS.slice(), use: {}, last: {}, fav: [], recent: []}}; }
 function load(){
   let raw = null;
@@ -3950,6 +3974,58 @@ function moodWeekChart(L, keys, nowI){
       h("span", {class: "mw-w"}, wd)); });
   return h("div", {class: "mw mw-mood"}, h("div", {class: "mw-g", role: "group", "aria-label": "Como você esteve na semana. Toque num dia para ver os registros."}, cols));
 }
+/* v58 · O que me faz bem (Emocional). Base: ativação comportamental — fazer com frequência o que traz prazer ou sentido é uma das estratégias
+   com melhor evidência para o humor (meta-análises: Ekers 2014; Stein 2021). A pessoa monta a própria lista (pessoas, lugares, sabores, momentos);
+   um toque marca "fiz hoje" e cada item mostra só o fato: há quantos dias foi a última vez. Sem pontos, metas, sequências ou comparação.
+   Itens: p.care.joys = [{id, g, name, at, off?}] · vezes: p.logs.joy = [{id, at, date, item}]. Excluir só esconde o item: as vezes registradas ficam. */
+const JOY_G = [["pessoas", "Pessoas"], ["lugares", "Lugares"], ["sabores", "Sabores"], ["momentos", "Momentos"]];
+const JOY_SUG = {pessoas: ["Tempo com a família", "Encontrar amigos"], lugares: ["Natureza", "Praia"], sabores: ["Cozinhar algo que gosto", "Café sem pressa"], momentos: ["Música", "Leitura"]};
+const joysOf = p => { const c = careOf(p); return c.joys || (c.joys = []); };
+let joyEdit = false;
+function joyAdd(p, g, name){ const j = {id: uid(), g, name, at: Date.now()}; joysOf(p).push(j); touch(p); return j; }
+function joyPanel(p){
+  const L = logsOf(p), all = joysOf(p), J = all.filter(j => !j.off), t = today();
+  const last = id => { let k = null; for (const e of L.joy) if (e.item === id && (!k || e.date > k)) k = e.date; return k; };
+  const ago = k => { if (!k) return "ainda não"; const n = Math.round((new Date(t + "T12:00") - new Date(k + "T12:00")) / 864e5); return n <= 0 ? "hoje" : n === 1 ? "ontem" : `há ${n} dias`; };
+  const used = new Set(J.map(j => norm(j.name)));
+  const sugs = g => JOY_SUG[g].filter(s => !used.has(norm(s)));
+  const sugRow = g => { const l = sugs(g); return l.length ? h("div", {class: "jy-sug"}, l.map(s => h("button", {type: "button", onclick: () => { joyAdd(p, g, s); joyEdit = true; haptic(); render(); }}, ic("plus"), s))) : null; };
+  const own = h("button", {class: "jy-own", type: "button", onclick: () => joySheet(p)}, ic("plus"), "Escrever o meu");
+  if (!J.length) return h("section", {class: "panel jy", id: "faz-bem"},
+    h("div", {class: "panel-h"}, h("span", null, "O que me faz bem")),
+    h("p", {class: "jy-intro"}, "Pessoas, lugares, sabores e momentos que fazem você se sentir bem. Toque quando fizer: o app mostra há quanto tempo foi a última vez."),
+    JOY_G.map(([g, l]) => [h("div", {class: "jy-g"}, l), sugRow(g)]), own);
+  const toggle = j => { const i = L.joy.findIndex(e => e.item === j.id && e.date === t); haptic();
+    if (i >= 0) { const e = L.joy.splice(i, 1)[0]; touch(p); render(); toast(`${j.name}: desmarcado`, () => { L.joy.push(e); touch(p); render(); }); return; }
+    const e = {id: uid(), at: Date.now(), date: t, item: j.id}; L.joy.push(e); touch(p); render();
+    toast(`${j.name} · hoje`, () => { const k = L.joy.indexOf(e); if (k >= 0) { L.joy.splice(k, 1); touch(p); render(); } }); };
+  return h("section", {class: "panel jy" + (joyEdit ? " edit" : ""), id: "faz-bem"},
+    h("div", {class: "panel-h"}, h("span", null, "O que me faz bem"), h("button", {class: "jy-ed", type: "button", "aria-pressed": String(joyEdit), onclick: () => { joyEdit = !joyEdit; render(); }}, joyEdit ? "OK" : "Editar")),
+    JOY_G.map(([g, l]) => { const items = J.filter(j => j.g === g); if (!items.length && !joyEdit) return null;
+      return [h("div", {class: "jy-g"}, l), items.map(j => { const k = last(j.id), on = k === t;
+        return joyEdit ? h("button", {class: "jy-r ed", type: "button", onclick: () => joySheet(p, j), "aria-label": `${j.name}. Editar.`}, h("b", null, j.name), h("span", {class: "li-go", html: ICON.right}))
+          : h("button", {class: "jy-r" + (on ? " on" : ""), type: "button", "aria-pressed": String(on), onclick: () => toggle(j), "aria-label": `${j.name}. Última vez: ${ago(k)}. ${on ? "Marcado hoje; toque para desmarcar." : "Toque para marcar hoje."}`},
+            h("span", {class: "jy-c", html: on ? ICON.check : ""}), h("b", null, j.name), h("span", {class: "jy-a"}, ago(k))); }),
+        joyEdit ? sugRow(g) : null]; }), joyEdit ? own : null);
+}
+function joySheet(p, j, g0){
+  const editing = !!j; let g = j ? j.g : g0 || "pessoas";
+  sheet(editing ? "Editar" : "Adicionar", (el, close) => {
+    const name = h("input", {class: "input", id: "jy-nome", value: j ? j.name : "", placeholder: {pessoas: "Ex.: almoço com meus pais", lugares: "Ex.: caminhar na praia", sabores: "Ex.: pizza de sexta", momentos: "Ex.: tocar violão"}[g], autocomplete: "off", maxlength: "60"});
+    const ok = h("button", {class: "btn primary block", type: "button", onclick: () => { const v = name.value.trim(); if (!v || ok.dataset.done) return; ok.dataset.done = "1";   // toque duplo: um só
+      if (editing) { const was = {name: j.name, g: j.g}; Object.assign(j, {name: v, g}); touch(p); close(); render(); toast("Alterado", () => { Object.assign(j, was); touch(p); render(); }); }
+      else { const n = joyAdd(p, g, v); joyEdit = true; close(); render(); toast(`${v} adicionado`, () => { n.off = true; touch(p); render(); }); } }}, editing ? "Salvar" : "Adicionar");
+    const seg = h("div");
+    const paint = () => { put(seg, chips(JOY_G, g, v => { g = v; paint(); })); };   // chips quebram a linha: cabem em 320
+    const check = () => { ok.disabled = !name.value.trim(); }; name.addEventListener("input", check); name.addEventListener("keydown", e => { if (e.key === "Enter") ok.click(); });
+    paint(); check();
+    el.append(h("h2", null, editing ? "Editar" : "O que faz você se sentir bem?"), editing ? null : h("p", {class: "sh-sub"}, "Quanto mais específico, mais fácil de lembrar e de fazer."),
+      field("jy-nome", "Nome", name), h("div", {class: "lbl2"}, "Grupo"), seg,
+      editing ? h("button", {class: "btn danger block", type: "button", style: "margin-top:16px", onclick: () => { j.off = true; touch(p); close(); render(); toast(`${j.name} removido`, () => { delete j.off; touch(p); render(); }); }}, "Remover da lista") : null,
+      h("div", {class: "confirmbar"}, ok));
+    setTimeout(() => name.focus(), 320);
+  });
+}
 function moodDayPanel(p, L){
   if (!moodSel) return null;
   const sel = L.mood.filter(e => e.date === moodSel).sort((a, b) => (a.time || "") < (b.time || "") ? -1 : 1);
@@ -4100,8 +4176,9 @@ function renderHealth(p){
           sref ? sref.text : null))),
       L.sleep.length ? h("div", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Histórico")), hist("sleep", [...L.sleep].sort(byDate), e => [h("b", null, fmtDur(C.sleepMinutes(e.bed, e.wake))), ` · ${e.bed}–${e.wake}${e.quality ? " · " + QUAL[e.quality - 1].toLowerCase() : ""}`, h("span", null, " " + relDay(e.date))])) : null],
     "bem-estar": () => [card("bem-estar", true, L.mood.length ? h("div", {class: "mw mw-k"}, h("span", null, h("i", {class: "mw-z"}), "dia sem registro")) : null,
-        refRow(L.mood.length > 0, more("Referência", "A altura da barra indica como você estava (de Muito mal a Muito bem); com mais de um registro no dia, vale o último.", "Dias sem registro não significam nada. O app não faz diagnósticos."))),
+        refRow(L.mood.length > 0, more("Referência", "A altura da barra indica como você estava (de Muito mal a Muito bem); com mais de um registro no dia, vale o último.", "Dias sem registro não significam nada. O app não faz diagnósticos.", "Se precisar conversar agora: CVV, ligue 188 — 24 horas, gratuito e sigiloso."))),
       L.mood.length && !mon ? moodDayPanel(p, L) : null,
+      joyPanel(p),
       L.mood.length ? h("div", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Histórico")),
         hist("mood", [...L.mood].sort(byDate), e => [h("b", null, MOODS[e.mood - 1]), e.energy ? ` · energia ${e.energy}` : "", e.stress ? ` · estresse ${e.stress}` : "", e.note ? ` · “${e.note}”` : "", h("span", null, ` ${relDay(e.date)}${e.time ? " " + e.time : ""}`)])) : null]};  const tabs = [["resumo", "Resumo"], ["movimento", "Exercício"], ["sono", "Sono"], adult ? ["bem-estar", "Emocional"] : null].filter(Boolean);
   // um "+" por tela: no Exercício, no Sono e no Emocional ele registra aquele pilar; no resumo, é o "Registrar" geral
