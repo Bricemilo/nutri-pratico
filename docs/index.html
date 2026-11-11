@@ -2299,6 +2299,23 @@ html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
 .jy-sug button:active{background:color-mix(in srgb,var(--c) 14%,transparent)}
 .jy-own{display:inline-flex;align-items:center;gap:8px;margin:16px 0 2px;padding:6px 2px;font-size:var(--t-sm);font-weight:600;color:var(--c)}
 .jy-own svg{width:16px;height:16px}
+/* v59 · Meus planos (Quando…, eu vou…) e Acompanhamento. Planos em frase corrida, com "Quando" e "eu vou" mais apagados.
+   Sessões: data à esquerda, especialidade e profissional; um lápis discreto indica que há anotação (o texto só aparece ao abrir). */
+.jy-ed svg{width:20px;height:20px}
+.if-r{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;width:100%;min-height:52px;padding:10px 2px;text-align:left;font-size:var(--t-body);line-height:1.4;color:var(--ink)}
+.if-r + .if-r{border-top:1px solid var(--line)}
+.if-r em{font-style:normal;color:var(--muted)}
+.if-r .li-go,.ps-r .li-go{color:var(--muted)}
+.ps-pr{margin:6px 0 10px;padding:12px 14px;border-radius:14px;background:color-mix(in srgb,var(--c) 10%,transparent);border:1px solid color-mix(in srgb,var(--c) 22%,transparent)}
+.ps-pr span{display:block;font-size:var(--t-cap);font-weight:650;letter-spacing:.08em;text-transform:uppercase;color:var(--c)}
+.ps-pr p{margin:4px 0 0;font-size:var(--t-body);line-height:1.4;color:var(--ink)}
+.ps-k{display:flex;flex-wrap:wrap;gap:4px 16px;margin:4px 2px 6px;font-size:var(--t-sm);color:var(--muted)}
+.ps-k b{font-weight:600;color:var(--ink-2)}
+.ps-r{display:grid;grid-template-columns:58px minmax(0,1fr) auto 16px;align-items:center;gap:10px;width:100%;min-height:48px;padding:6px 2px;text-align:left;font-size:var(--t-sm);color:var(--ink-2)}
+.ps-r + .ps-r{border-top:1px solid var(--line)}
+.ps-d{font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ps-m{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ps-n{color:var(--c);display:grid} .ps-n svg{width:15px;height:15px}
 </style>
 
 </head>
@@ -3220,7 +3237,7 @@ const DEFAULT_MEALS = ["Café da manhã", "Colação", "Almoço", "Lanche da tar
 let S;
 // listas por perfil: registros diários (logs) e cuidados (care). water: meta de água definida pela pessoa (mL) · waterRem: lembretes de água
 const LOG_KINDS = ["move", "sleep", "mood", "eaten", "meas", "water", "joy"];   // v58: joy = vezes em que a pessoa fez algo da lista "O que me faz bem"
-const CARE0 = () => ({water: null, waterRem: null, meds: [], exams: [], goals: [], appts: [], labs: [], procs: [], joys: []});
+const CARE0 = () => ({water: null, waterRem: null, meds: [], exams: [], goals: [], appts: [], labs: [], procs: [], joys: [], ifs: []});
 function blankState(){ return {version: VERSION, patients: [], foods: [], activeId: null, prefs: {objectives: DEFAULT_OBJ.slice(), meals: DEFAULT_MEALS.slice(), use: {}, last: {}, fav: [], recent: []}}; }
 function load(){
   let raw = null;
@@ -4059,6 +4076,88 @@ function joySheet(p, j, g0){
     setTimeout(() => name.focus(), 320);
   });
 }
+/* v59 · Planos "Quando…, eu vou…" e Acompanhamento (psicologia e psiquiatria), no Emocional.
+   Planos: intenções de implementação — escrever a situação e a ação ajuda a fazer o que se pretende (Gollwitzer & Sheeran; efeito real,
+   menor do que se dizia: revisão de 2024). p.care.ifs = [{id, when, will, at, off?}]; remover só esconde.
+   Acompanhamento: as sessões são as consultas da Agenda de Psicologia/Psiquiatria/Terapia (nada duplicado). Em cada sessão, duas anotações
+   opcionais — "O que levo desta sessão" e "O que vou praticar" — guardadas na própria consulta (a.take, a.todo). Ter por escrito o que ficou
+   da sessão e o que praticar melhora o resultado de uma sessão para a outra (revisão sistemática, 2023). As anotações ficam fechadas na lista:
+   só a data aparece; o texto abre com um toque. "Praticando" mostra o que foi combinado na sessão mais recente. */
+const ifsOf = p => { const c = careOf(p); return c.ifs || (c.ifs = []); };
+const isPsy = a => /psic|psiq|terap/.test(norm(a.spec || ""));
+const agoOf = k => { if (!k) return ""; const n = -daysTo(k); return n <= 0 ? "hoje" : n === 1 ? "ontem" : `há ${n} dias`; };
+function ifPanel(p){
+  const I = ifsOf(p).filter(x => !x.off);
+  return h("section", {class: "panel jy ifp", id: "planos"},
+    h("div", {class: "panel-h"}, h("span", null, "Meus planos"), I.length ? h("button", {class: "jy-ed", type: "button", "aria-label": "Novo plano", onclick: () => ifSheet(p)}, ic("plus")) : null),
+    I.length ? I.map(x => h("button", {class: "if-r", type: "button", onclick: () => ifSheet(p, x), "aria-label": `Quando ${x.when}, eu vou ${x.will}. Editar.`},
+        h("span", null, h("em", null, "Quando "), x.when, h("em", null, ", eu vou "), x.will), h("span", {class: "li-go", html: ICON.right})))
+      : [h("p", {class: "jy-intro"}, "Escreva a situação e o que vai fazer nela. Planos assim ajudam a transformar intenção em ação."),
+        h("button", {class: "jy-own", type: "button", onclick: () => ifSheet(p)}, ic("plus"), "Criar um plano")]);
+}
+function ifSheet(p, x){
+  const editing = !!x;
+  sheet(editing ? "Editar plano" : "Novo plano", (el, close) => {
+    const when = h("input", {class: "input", id: "if-q", value: x ? x.when : "", placeholder: "chegar sexta à noite", autocomplete: "off", maxlength: "80"});
+    const will = h("input", {class: "input", id: "if-v", value: x ? x.will : "", placeholder: "ligar para um amigo", autocomplete: "off", maxlength: "80"});
+    const clean = v => v.trim().replace(/^(quando|eu vou)\s+/i, "").replace(/[,.]$/, "");
+    const ok = h("button", {class: "btn primary block", type: "button", onclick: () => { const a = clean(when.value), b = clean(will.value); if (!a || !b || ok.dataset.done) return; ok.dataset.done = "1";
+      if (editing) { const was = {when: x.when, will: x.will}; Object.assign(x, {when: a, will: b, updated: Date.now()}); touch(p); close(); render(); toast("Plano alterado", () => { Object.assign(x, was); touch(p); render(); }); }
+      else { const n = {id: uid(), when: a, will: b, at: Date.now()}; ifsOf(p).push(n); touch(p); close(); render(); toast("Plano criado", () => { n.off = true; touch(p); render(); }); } }}, editing ? "Salvar" : "Criar plano");
+    const check = () => { ok.disabled = !(clean(when.value) && clean(will.value)); }; when.addEventListener("input", check); will.addEventListener("input", check); check();
+    el.append(h("h2", null, editing ? "Editar plano" : "Quando…, eu vou…"), editing ? null : h("p", {class: "sh-sub"}, "Uma situação concreta e uma ação pequena."),
+      field("if-q", "Quando…", when), field("if-v", "eu vou…", will),
+      editing ? h("button", {class: "btn danger block", type: "button", style: "margin-top:16px", onclick: () => { x.off = true; touch(p); close(); render(); toast("Plano removido", () => { delete x.off; touch(p); render(); }); }}, "Remover plano") : null,
+      h("div", {class: "confirmbar"}, ok));
+    setTimeout(() => when.focus(), 320);
+  });
+}
+function psyPanel(p){
+  const A = careOf(p).appts.filter(a => isPsy(a) && a.date), now = Date.now();
+  const past = A.filter(a => ["realizada", "confirmar"].includes(apptState(a, now))).sort((a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : (b.time || "").localeCompare(a.time || ""));
+  const next = C.upcoming(A.filter(a => apptState(a, now) === "futura"), now)[0] || null;
+  const todo = (past.find(a => (a.todo || "").trim()) || {}).todo;
+  const row = a => h("button", {class: "ps-r", type: "button", onclick: () => sessSheet(p, a), "aria-label": `Sessão de ${dLong(a.date)}${a.prof ? ", " + a.prof : ""}. ${a.take || a.todo ? "Com anotações. " : ""}Abrir.`},
+    h("span", {class: "ps-d"}, dShort(a.date)), h("span", {class: "ps-m"}, [a.spec, a.prof].filter(Boolean).join(" · ")),
+    a.take || a.todo ? h("span", {class: "ps-n", html: ICON.edit, title: "Com anotações"}) : h("span"), h("span", {class: "li-go", html: ICON.right}));
+  if (!past.length && !next) return h("section", {class: "panel jy psy", id: "acompanhamento"}, h("div", {class: "panel-h"}, h("span", null, "Acompanhamento")),
+    h("p", {class: "jy-intro"}, "Se faz ou já fez terapia, registre as sessões e anote o que leva de cada uma. Ter por escrito o que ficou ajuda a aplicar no dia a dia."),
+    h("button", {class: "jy-own", type: "button", onclick: () => sessSheet(p)}, ic("plus"), "Registrar uma sessão"));
+  return h("section", {class: "panel jy psy", id: "acompanhamento"},
+    h("div", {class: "panel-h"}, h("span", null, "Acompanhamento"), h("button", {class: "jy-ed", type: "button", "aria-label": "Registrar sessão", onclick: () => sessSheet(p)}, ic("plus"))),
+    todo ? h("div", {class: "ps-pr"}, h("span", null, "Praticando"), h("p", null, todo)) : null,
+    h("div", {class: "ps-k"}, past.length ? h("span", null, h("b", null, "Última sessão "), `${dShort(past[0].date)} · ${agoOf(past[0].date)}`) : null,
+      next ? h("span", null, h("b", null, "Próxima "), whenShort(next)) : null),
+    past.slice(0, 3).map(row),
+    past.length > 3 ? h("details", {class: "src hmore"}, h("summary", null, `Mostrar mais ${Math.min(past.length - 3, 12)}`), past.slice(3, 15).map(row)) : null);
+}
+// uma sessão: as duas anotações; nova sessão: também data, especialidade e profissional (vira uma consulta "realizada" na Agenda)
+function sessSheet(p, a){
+  const editing = !!a, prev = careOf(p).appts.filter(isPsy).sort((x, y) => (y.date || "").localeCompare(x.date || ""))[0];
+  let spec = a ? a.spec : prev ? prev.spec : "Psicologia";
+  sheet(editing ? "Sessão" : "Registrar sessão", (el, close) => {
+    const take = area("ss-take", a ? a.take : "", "Ex.: perceber o pensamento antes de reagir", 1000), todo = area("ss-todo", a ? a.todo : "", "Ex.: respirar devagar quando a ansiedade subir", 500);
+    take.rows = 3;
+    const date = h("input", {class: "input dt-in", type: "date", id: "ss-data", value: today(), max: today(), min: "1900-01-01"});
+    const prof = txtIn("ss-prof", prev ? prev.prof : "", "Ex.: Dra. Ana", {autocapitalize: "words"});
+    const specBox = h("div"), paintSpec = () => put(specBox, chips([["Psicologia", "Psicologia"], ["Psiquiatria", "Psiquiatria"]].concat(["Psicologia", "Psiquiatria"].includes(spec) ? [] : [[spec, spec]]), spec, v => { if (v) { spec = v; paintSpec(); } }));
+    const ok = h("button", {class: "btn primary block", type: "button", onclick: () => { if (ok.dataset.done) return;
+      const tk = take.value.trim(), td = todo.value.trim();
+      if (editing) { if (tk === (a.take || "") && td === (a.todo || "")) { close(); return; } ok.dataset.done = "1"; const was = {take: a.take, todo: a.todo};
+        Object.assign(a, {take: tk, todo: td, updated: Date.now()}); touch(p); close(); render(); toast("Anotações salvas", () => { Object.assign(a, was); touch(p); render(); }); return; }
+      if (!dateOk(date.value)) return; ok.dataset.done = "1";
+      const rec = {id: uid(), at: Date.now(), docs: [], spec, prof: prof.value.trim(), date: date.value, time: "", place: "", mode: "presencial", addr: "", reason: "", notes: "", status: "realizada", rem: [], tz: DEVICE_TZ, take: tk, todo: td};
+      careOf(p).appts.push(rec); touch(p); close(); render();
+      toast("Sessão registrada", () => { const i = careOf(p).appts.indexOf(rec); if (i >= 0) { careOf(p).appts.splice(i, 1); touch(p); render(); } }); }}, editing ? "Salvar" : "Registrar");
+    paintSpec();
+    el.append(h("h2", null, editing ? `Sessão de ${dShort(a.date)}` : "Registrar sessão"),
+      editing ? h("p", {class: "sh-sub"}, [a.spec, a.prof].filter(Boolean).join(" · ") || "Acompanhamento") : h("p", {class: "sh-sub"}, "As anotações ficam só neste aparelho e não aparecem na tela Hoje."),
+      editing ? null : [h("div", {class: "g2"}, field("ss-data", "Data", date), field("ss-prof", "Profissional", prof, true)), h("div", {class: "lbl2", style: "margin-top:0"}, "Especialidade"), specBox, h("div", {style: "height:14px"})],
+      field("ss-take", "O que levo desta sessão", take, true), field("ss-todo", "O que vou praticar até a próxima", todo, true),
+      editing ? h("button", {class: "btn plain block", type: "button", style: "margin-top:8px", onclick: () => { close(); setTimeout(() => apptSheet(p, a), 280); }}, "Ver consulta na Agenda") : null,
+      h("div", {class: "confirmbar"}, ok));
+  });
+}
 function moodDayPanel(p, L){
   if (!moodSel) return null;
   const sel = L.mood.filter(e => e.date === moodSel).sort((a, b) => (a.time || "") < (b.time || "") ? -1 : 1);
@@ -4211,7 +4310,7 @@ function renderHealth(p){
     "bem-estar": () => [card("bem-estar", true, L.mood.length ? h("div", {class: "mw mw-k"}, h("span", null, h("i", {class: "mw-z"}), "dia sem registro")) : null,
         refRow(L.mood.length > 0, more("Referência", "A altura da barra indica como você estava (de Muito mal a Muito bem); com mais de um registro no dia, vale o último.", "Dias sem registro não significam nada. O app não faz diagnósticos.", "Se precisar conversar agora: CVV, ligue 188 — 24 horas, gratuito e sigiloso."))),
       L.mood.length && !mon ? moodDayPanel(p, L) : null,
-      joyPanel(p),
+      joyPanel(p), ifPanel(p), psyPanel(p),
       L.mood.length ? h("div", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Histórico")),
         hist("mood", [...L.mood].sort(byDate), e => [h("b", null, MOODS[e.mood - 1]), e.energy ? ` · energia ${e.energy}` : "", e.stress ? ` · estresse ${e.stress}` : "", e.note ? ` · “${e.note}”` : "", h("span", null, ` ${relDay(e.date)}${e.time ? " " + e.time : ""}`)])) : null]};  const tabs = [["resumo", "Resumo"], ["movimento", "Exercício"], ["sono", "Sono"], adult ? ["bem-estar", "Emocional"] : null].filter(Boolean);
   // um "+" por tela: no Exercício, no Sono e no Emocional ele registra aquele pilar; no resumo, é o "Registrar" geral
