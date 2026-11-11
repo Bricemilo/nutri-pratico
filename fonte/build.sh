@@ -27,7 +27,7 @@ pwa_head = """<!doctype html>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
-<style>
+__LAUNCH__<style>
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:var(--sab,env(safe-area-inset-bottom,0px))}
 body{margin:0}
 img{max-width:100%}
@@ -45,6 +45,10 @@ if (navigator.storage && navigator.storage.persist) navigator.storage.persist().
 </body>
 </html>
 """
+# v57 · imagens de abertura do iPhone (o ícone no fundo escuro, igual à abertura do app): aparecem no primeiro instante, sem tela vazia
+DEV = [(440,956,3),(420,912,3),(402,874,3),(430,932,3),(393,852,3),(428,926,3),(390,844,3),(375,812,3),(414,896,3),(414,896,2),(414,736,3),(375,667,2),(320,568,2)]
+launch = "".join(f'<link rel="apple-touch-startup-image" media="screen and (device-width: {w}px) and (device-height: {h}px) and (-webkit-device-pixel-ratio: {r}) and (orientation: portrait)" href="icons/launch/{w*r}x{h*r}.png">\n' for w, h, r in DEV)
+pwa_head = pwa_head.replace("__LAUNCH__", launch)
 open(f"{R}/docs/index.html", "w", encoding="utf-8").write(pwa_head + head + "</head>\n<body>\n" + body + pwa_tail)
 sw = open(f"{R}/docs/sw.js", encoding="utf-8").read()
 sw = re.sub(r'const VERSION = "[^"]*";', f'const VERSION = "{ver}";', sw)

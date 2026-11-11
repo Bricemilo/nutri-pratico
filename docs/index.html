@@ -9,6 +9,19 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-startup-image" media="screen and (device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="icons/launch/1320x2868.png">
+<link rel="apple-touch-startup-image" media="screen and (device-width: 420px) and (device-height: 912px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="icons/launch/1260x2736.png">
+<link rel="apple-touch-startup-image" media="screen and (device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="icons/launch/1206x2622.png">
+<link rel="apple-touch-startup-image" media="screen and (device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="icons/launch/1290x2796.png">
+<link rel="apple-touch-startup-image" media="screen and (device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="icons/launch/1179x2556.png">
+<link rel="apple-touch-startup-image" media="screen and (device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="icons/launch/1284x2778.png">
+<link rel="apple-touch-startup-image" media="screen and (device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="icons/launch/1170x2532.png">
+<link rel="apple-touch-startup-image" media="screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="icons/launch/1125x2436.png">
+<link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="icons/launch/1242x2688.png">
+<link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="icons/launch/828x1792.png">
+<link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="icons/launch/1242x2208.png">
+<link rel="apple-touch-startup-image" media="screen and (device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="icons/launch/750x1334.png">
+<link rel="apple-touch-startup-image" media="screen and (device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="icons/launch/640x1136.png">
 <style>
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:var(--sab,env(safe-area-inset-bottom,0px))}
 body{margin:0}
@@ -2234,11 +2247,40 @@ html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
 .mw-e time .cr-end{overflow:visible}
 @media (max-width:420px){.mw-e:has(.cr-end) .mw-in{display:none}}
 @media (max-width:359px){.mw-e .cr-end{display:none}}
+/* v57 · Abertura e Face ID. A abertura é o ícone do app no fundo escuro, no mesmo lugar e tamanho da imagem de abertura do iPhone,
+   então não há tela vazia nem salto. Se o carregamento passar de 0,7 s, um feixe de luz cruza o ícone; ao ficar pronto, ele esmaece e o app aparece.
+   Nada espera de propósito. Com o Face ID ligado, a mesma tela vira a tranca: o ícone fica e o pedido do iPhone aparece por cima. */
+#boot{position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:#0A0908;opacity:1;visibility:visible;transition:opacity .34s ease}
+#boot.inst{transition:none}
+#boot.out{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .34s ease,visibility 0s linear .34s}
+.bt-i{position:relative;width:96px;height:96px;border-radius:22px;overflow:hidden;box-shadow:0 0 0 .5px rgba(255,255,255,.07),0 26px 50px -26px rgba(224,140,78,.5)}
+.bt-i img{display:block;width:100%;height:100%}
+.bt-i::after{content:"";position:absolute;inset:0;mix-blend-mode:screen;opacity:0;background:linear-gradient(115deg,rgba(255,214,170,0) 38%,rgba(255,214,170,.07) 44%,rgba(255,226,196,.30) 50%,rgba(255,214,170,.07) 56%,rgba(255,214,170,0) 62%) no-repeat;
+  background-size:300% 100%;background-position:100% 0;animation:bt-sweep 2.2s cubic-bezier(.45,0,.25,1) .7s infinite}
+@keyframes bt-sweep{0%{background-position:100% 0;opacity:0}10%{opacity:1}75%{opacity:1}100%{background-position:0 0;opacity:0}}
+#boot.lock .bt-i::after,#boot.veil .bt-i::after{animation:none;opacity:0}
+.bt-ctl{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 54px);display:grid;justify-items:center;gap:16px;padding:0 24px;transition:opacity .2s}
+#boot:not(.lock) .bt-ctl,#boot.veil .bt-ctl{display:none}
+#boot.busy .bt-ctl{opacity:0;pointer-events:none}
+.bt-face{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-width:210px;height:52px;padding:0 24px;border-radius:26px;color:#F4EEE8;font-size:1rem;font-weight:600;letter-spacing:-.01em;-webkit-tap-highlight-color:transparent;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.11);box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.bt-face:active{background:rgba(255,255,255,.12)}
+.bt-face svg{width:22px;height:22px;color:var(--accent-2)}
+.bt-rec{font-size:var(--t-sm);color:var(--muted);padding:6px 10px}
+.bt-form{display:grid;grid-template-columns:1fr auto;gap:8px;width:min(100%,320px)}
+.bt-form .input{text-align:center;letter-spacing:.12em;text-transform:uppercase;font-variant-numeric:tabular-nums}
+.bt-msg{min-height:18px;margin:0;font-size:var(--t-sm);color:var(--danger);text-align:center}
+.bt-msg:empty{display:none}
+/* folha "Abrir com Face ID" */
+.fc-code{display:block;width:100%;margin:18px 0 6px;padding:18px 10px;border-radius:16px;background:var(--surface-2);border:1px dashed var(--line-2);font-size:1.65rem;font-weight:600;letter-spacing:.14em;text-align:center;font-variant-numeric:tabular-nums;color:var(--ink);-webkit-user-select:all;user-select:all}
+.fc-hint{margin:0 0 18px;font-size:var(--t-cap);color:var(--muted);text-align:center}
+.fc-seg{margin-top:4px}
 </style>
 
 </head>
 <body>
 <div class="app" id="app"></div>
+<div id="boot" aria-hidden="true"><div class="bt-i"><img src="data:image/jpeg;base64,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" alt="" width="96" height="96"></div><div class="bt-ctl"></div></div>
 <nav class="tabbar" id="tabbar" aria-label="Navegação principal"></nav>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -3003,6 +3045,7 @@ const ICON = {
   left:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg>',
   syringe:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="M19 9 8.7 19.3a2.4 2.4 0 0 1-3.4 0l-.6-.6a2.4 2.4 0 0 1 0-3.4L15 5"/><path d="m9 11 4 4"/><path d="m5 19-3 3"/><path d="m14 4 6 6"/></svg>',
   bell:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>',
+  faceid:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6.5A2.5 2.5 0 0 1 6.5 4H8M16 4h1.5A2.5 2.5 0 0 1 20 6.5V8M20 16v1.5a2.5 2.5 0 0 1-2.5 2.5H16M8 20H6.5A2.5 2.5 0 0 1 4 17.5V16M9 9.2v1.3M15 9.2v1.3M12 9.2v3.6h-.9M9.4 15.4c1.5 1.1 3.7 1.1 5.2 0"/></svg>',
   bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3 5 13.5h6L10 21l8-10.5h-6z"/></svg>'
 };
 const ic = k => h("span", {html: ICON[k], style: "display:contents"});
@@ -6861,6 +6904,7 @@ function renderProfile(p){
     h("div", {class: "prows"},
       row("lock", "Backup e segurança", "Só neste aparelho", () => backupSheet(), null,
         S.patients.some(x => !x.example) && (days == null || days >= 7), days == null ? "Sem backup" : `Backup ${days === 0 ? "hoje" : days === 1 ? "ontem" : `há ${days} dias`}`),
+      row("faceid", "Abrir com Face ID", lockCfg() ? "Ligado neste aparelho" : "Desligado", () => lockSheet()),
       row("sliders", "Configurações", tracks(p) ? "Registro do consumo ligado · sugestões" : "Só planejamento · sugestões", () => prefsSheet()),
       row("book", "Fontes e metodologia", "Como o Briceno Life calcula", () => scienceSheet(p)))));
 }
@@ -7192,6 +7236,103 @@ function backupSheet(){
   });
 }
 
+/* ---------- v57 · abertura e Face ID ----------
+   Face ID opcional: uma passkey deste aparelho (WebAuthn, com verificação do usuário obrigatória — rosto ou, se falhar, o código do iPhone).
+   É uma tranca na entrada do app, não criptografia: os dados continuam neste aparelho como antes, e nada deles muda.
+   A configuração fica numa chave à parte (KEY + ".lock"): não entra no backup nem é restaurada em outro aparelho, onde a passkey poderia não existir.
+   Código de recuperação: mostrado uma única vez ao ativar; o app guarda só o resumo (SHA-256), nunca o código. */
+const LOCK_KEY = KEY + ".lock";
+const lockCfg = () => { try { const c = JSON.parse(localStorage.getItem(LOCK_KEY)); return c && c.on && c.id && c.rec ? c : null; } catch (e) { return null; } };
+const lockSave = c => { try { if (c) localStorage.setItem(LOCK_KEY, JSON.stringify(c)); else localStorage.removeItem(LOCK_KEY); return true; } catch (e) { return false; } };
+const b64u = buf => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+const unb64u = s => Uint8Array.from(atob(s.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((s.length + 3) % 4)), c => c.charCodeAt(0));
+const rnd = n => crypto.getRandomValues(new Uint8Array(n));
+const recNorm = s => String(s || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+const recHash = async s => b64u(await crypto.subtle.digest("SHA-256", new TextEncoder().encode("briceno-life:" + recNorm(s))));
+function recNew(){ const A = "ABCDEFGHJKMNPQRSTUVWXYZ23456789", r = rnd(8); let c = ""; for (let i = 0; i < 8; i++) c += A[r[i] % A.length]; return c.slice(0, 4) + "-" + c.slice(4); }
+async function faceOK(){ try { return !!(window.PublicKeyCredential && window.isSecureContext && await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()); } catch (e) { return false; } }
+async function faceCreate(){
+  const cred = await navigator.credentials.create({publicKey: {challenge: rnd(32), rp: {name: "Briceno Life"}, user: {id: rnd(16), name: "Briceno Life", displayName: "Briceno Life"},
+    pubKeyCredParams: [{type: "public-key", alg: -7}, {type: "public-key", alg: -257}], timeout: 60000, attestation: "none",
+    authenticatorSelection: {authenticatorAttachment: "platform", userVerification: "required", residentKey: "preferred"}}});
+  return b64u(cred.rawId);
+}
+// confere a resposta: mesma passkey, mesmo desafio, tipo "get" e verificação do usuário feita (bit UV dos dados do autenticador)
+async function faceCheck(id){
+  const ch = rnd(32);
+  const a = await navigator.credentials.get({publicKey: {challenge: ch, allowCredentials: [{type: "public-key", id: unb64u(id)}], userVerification: "required", timeout: 60000}});
+  const cd = JSON.parse(new TextDecoder().decode(a.response.clientDataJSON)), ad = new Uint8Array(a.response.authenticatorData);
+  return cd.type === "webauthn.get" && cd.challenge === b64u(ch) && ad.length > 32 && (ad[32] & 4) === 4 && b64u(a.rawId) === id;
+}
+const boot = document.getElementById("boot"), bootCtl = boot.querySelector(".bt-ctl");
+let locked = false, lockBusy = false, hiddenAt = 0, appShown = false;
+// o app aparece: a abertura esmaece (se não estiver trancado)
+function bootDone(){ if (locked) return; boot.classList.remove("lock", "veil", "busy"); boot.classList.add("out"); boot.setAttribute("aria-hidden", "true"); boot.removeAttribute("role"); }
+function bootCover(cls){ boot.classList.add("inst", cls); boot.classList.remove("out"); requestAnimationFrame(() => requestAnimationFrame(() => boot.classList.remove("inst"))); }
+function paintLock(mode){
+  boot.classList.toggle("busy", mode === "busy");
+  if (mode === "busy") return;
+  const msg = h("p", {class: "bt-msg", role: "alert"});
+  if (mode === "rec") {
+    const inp = h("input", {class: "input", id: "bt-cod", placeholder: "XXXX-XXXX", autocomplete: "off", autocapitalize: "characters", spellcheck: "false", "aria-label": "Código de recuperação"});
+    const go = async () => { const c = lockCfg(); if (c && recNorm(inp.value).length === 8 && await recHash(inp.value) === c.rec) { inp.blur(); lockOff(); } else msg.textContent = "Código não confere."; };
+    inp.addEventListener("keydown", e => { if (e.key === "Enter") go(); });
+    put(bootCtl, h("div", {class: "bt-form"}, inp, h("button", {class: "btn primary", type: "button", onclick: go}, "Entrar")), msg,
+      h("button", {class: "bt-rec", type: "button", onclick: () => paintLock("idle")}, "Voltar ao Face ID"));
+    setTimeout(() => inp.focus(), 50); return;
+  }
+  put(bootCtl, h("button", {class: "bt-face", type: "button", onclick: () => unlock()}, h("span", {html: ICON.faceid, style: "display:contents"}), "Desbloquear"),
+    h("button", {class: "bt-rec", type: "button", onclick: () => paintLock("rec")}, "Usar código de recuperação"));
+}
+function lockShow(){
+  locked = true; bootCover("lock"); boot.classList.remove("veil"); boot.setAttribute("aria-hidden", "false"); boot.setAttribute("role", "dialog"); boot.setAttribute("aria-label", "Briceno Life bloqueado");
+  paintLock("idle"); unlock();   // pede o rosto na hora (iOS 17.4 ou mais novo permite sem toque); se o iPhone exigir um toque, fica o botão
+}
+async function unlock(){
+  const c = lockCfg(); if (!c) { lockOff(); return; }
+  if (lockBusy) return; lockBusy = true; paintLock("busy");
+  let ok = false; try { ok = await faceCheck(c.id); } catch (e) {}
+  lockBusy = false;
+  if (ok) lockOff(); else if (locked) paintLock("idle");
+}
+function lockOff(){ locked = false; if (!appShown) { appShown = true; render(); settleLayout(); } bootDone(); }
+// sair do app: cobre na hora (a miniatura do iPhone não mostra dados); ao voltar, pede o rosto se passou o tempo escolhido
+document.addEventListener("visibilitychange", () => {
+  const c = lockCfg(); if (!c) return;
+  if (document.hidden) { if (!locked) { hiddenAt = Date.now(); bootCover("veil"); } return; }
+  if (locked) { if (!lockBusy) unlock(); return; }
+  if (Date.now() - hiddenAt >= (c.after || 0) * 60e3) lockShow(); else bootDone();
+});
+// Perfil → Abrir com Face ID: ativar (passkey + código de recuperação), escolher quando travar, desativar (confirmando com o rosto)
+function lockSheet(){
+  sheet("Abrir com Face ID", (el, close) => {
+    const body = h("div"); el.append(body);
+    const AFTER = [[0, "Na hora"], [1, "1 min"], [5, "5 min"]];
+    async function paint(step, code){
+      const c = lockCfg();
+      if (step === "code") return put(body, h("h2", null, "Código de recuperação"),
+        h("p", {class: "sh-sub"}, "Abre o app se o Face ID deixar de funcionar. Guarde em um lugar seguro: ele aparece só agora."),
+        h("div", {class: "fc-code"}, code), h("p", {class: "fc-hint"}, "Toque e segure para copiar."),
+        h("button", {class: "btn primary block", type: "button", onclick: async () => { const ok = lockSave({on: true, id: paint.id, rec: await recHash(code), after: 0, at: Date.now()}); close(); render();
+          toast(ok ? "Face ID ativado" : "Não foi possível salvar neste aparelho"); }}, "Guardei o código"));
+      if (c) return put(body, h("h2", null, "Abrir com Face ID"), h("p", {class: "sh-sub"}, "Ligado neste aparelho. Ao abrir o app, o iPhone confirma que é você."),
+        h("div", {class: "lbl2"}, "Travar ao sair do app"),
+        h("div", {class: "seg fc-seg", role: "radiogroup", "aria-label": "Travar ao sair do app"}, AFTER.map(([v, l]) => h("button", {type: "button", role: "radio", class: (c.after || 0) === v ? "on" : "", "aria-checked": String((c.after || 0) === v),
+          onclick: () => { c.after = v; lockSave(c); paint(); }}, l))),
+        h("div", {style: "height:22px"}),
+        h("button", {class: "btn danger block", type: "button", onclick: async () => { let ok = false; try { ok = await faceCheck(c.id); } catch (e) {}
+          if (!ok) { toast("Não confirmado"); return; } lockSave(null); close(); render(); toast("Face ID desligado"); }}, "Desligar"));
+      if (!await faceOK()) return put(body, h("h2", null, "Abrir com Face ID"), h("p", {class: "sh-sub"}, "Este aparelho ou navegador não oferece Face ID para apps da web. No iPhone, abra o Briceno Life pelo ícone na tela de início."));
+      put(body, h("h2", null, "Abrir com Face ID"),
+        h("p", {class: "sh-sub"}, "Ao abrir o Briceno Life, o iPhone confirma que é você. Se o rosto não for reconhecido, vale o código do iPhone."),
+        h("p", {class: "note"}, "É uma tranca na entrada do app: os dados continuam só neste aparelho, como hoje."),
+        h("div", {class: "confirmbar"}, h("button", {class: "btn primary block", type: "button", onclick: async () => {
+          try { paint.id = await faceCreate(); } catch (e) { toast("Face ID não ativado"); return; }
+          paint("code", recNew()); }}, "Ativar")));
+    }
+    put(body, h("h2", null, "Abrir com Face ID")); paint();
+  });
+}
 /* ---------- início ---------- */
 (() => {   // tamanho de texto do iPhone (Ajustes → Tela e Brilho → Tamanho do Texto), com limite para o layout não quebrar
   const pr = document.createElement("span"); pr.style.font = "-apple-system-body"; pr.textContent = "a"; document.body.append(pr);
@@ -7202,8 +7343,8 @@ function backupSheet(){
 load();
 measureViewport();
 try { const v = JSON.parse(sessionStorage.getItem(KEY + ".view")); if (v && (TABS.some(t => t[0] === v.tab) || v.tab === "perfil")) view = Object.assign(view, v, {edit: null}); if (view.sub === "favoritos") view.sub = "plano"; } catch (e) {}
-render();
-settleLayout();
+// v57 · com o Face ID ligado, nada da pessoa é desenhado antes de ela entrar
+if (lockCfg()) lockShow(); else { appShown = true; render(); settleLayout(); requestAnimationFrame(() => requestAnimationFrame(bootDone)); }
 })();
 </script>
 
