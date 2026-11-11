@@ -1870,3 +1870,16 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
 - **Fora de propósito:** pontos, metas, sequências e comparações (apps de saúde mental perdem quase todos os usuários em 2 semanas; gamificação é contestada e vira cobrança). Diário de gratidão: evidência mais fraca nas revisões recentes, não entrou.
 - **Privacidade:** nada disso aparece na Hoje; cada pessoa da família tem a sua lista.
 - **Segurança:** a Referência do Emocional passa a ter a linha fixa "Se precisar conversar agora: CVV, ligue 188 — 24 horas, gratuito e sigiloso."
+
+## 80. v59 — Meus planos e Acompanhamento (Emocional)
+
+- **Meus planos — "Quando…, eu vou…":** uma situação concreta e uma ação pequena, em frase corrida ("Quando chegar sexta à noite, eu vou ligar para um amigo").
+  - "+" cria; tocar edita ou remove (remover só esconde). Se a pessoa digitar "Quando"/"eu vou", o app não repete.
+  - Dados: `p.care.ifs` = [{id, when, will, at, off?}].
+  - Evidência (moderada): intenções de implementação (Gollwitzer & Sheeran 2006; revisão de 2024 com efeito menor após correção de viés).
+- **Acompanhamento (psicologia e psiquiatria):** as sessões são as consultas da Agenda cuja especialidade contém psic/psiq/terap — nada duplicado.
+  - "Praticando" (o que vou praticar da sessão mais recente), última sessão (data e há quantos dias), próxima, e a lista (3 + "Mostrar mais").
+  - Em cada sessão, duas anotações opcionais guardadas na própria consulta: `take` ("O que levo desta sessão") e `todo` ("O que vou praticar até a próxima").
+  - "Registrar sessão" cria uma consulta realizada na Agenda (data, especialidade, profissional) com as anotações.
+  - Evidência: resumo escrito do que ficou da sessão e da tarefa até a próxima melhora o resultado de sessão para sessão (revisão sistemática, 2023); adesão às tarefas associa-se a melhores resultados (r ≈ 0,26).
+- **Privacidade:** na lista, só data e profissional (um lápis indica anotação); o texto só aparece ao abrir. Nada disso aparece na Hoje; cada pessoa da família tem os seus.
