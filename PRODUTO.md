@@ -1841,3 +1841,19 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
 - Lista do dia e Histórico mostram início–fim; abaixo de 360 px a lista do dia mostra só o início.
 - **Decisão: mínimo de botões.** Saíram, na revisão: Descartar (o Desfazer cobre o início sem querer), Ajustar fim (a pergunta das 3 horas e a edição cobrem), Concluir (a intensidade já conclui) e a linha do cronômetro no "+".
 - **Limite:** como app da web no iPhone, o tempo não aparece na tela de bloqueio nem na Dynamic Island, e não há alerta sonoro com a tela apagada.
+
+## 78. v57 — Abertura sem tela vazia e Face ID opcional
+
+- **Abertura:** o ícone do app no fundo escuro desde o primeiro desenho (antes: tela vazia até o app terminar de carregar; numa simulação de celular lento, ~1 s vazio → ícone em ~0,2 s).
+  - A camada fica logo depois do app no HTML, antes dos scripts grandes, então aparece já no primeiro desenho.
+  - Passando de 0,7 s, um brilho suave cruza o ícone; quando o app fica pronto, a abertura esmaece. Nenhuma espera artificial.
+  - Imagens de abertura do iPhone (`apple-touch-startup-image`, 13 tamanhos, em `docs/icons/launch/`) com o mesmo ícone no mesmo lugar. Podem só valer depois de reinstalar o ícone; **não reinstalar sem backup** (apagar o ícone apaga os dados no iPhone).
+  - Base: Apple HIG (a abertura deve parecer a primeira tela, não propaganda) e limites de tempo de resposta de Nielsen (abaixo de 1 s, sem indicador; de 1 a 10 s, indicador leve).
+- **Face ID (opcional, Perfil → Abrir com Face ID):** passkey deste aparelho (WebAuthn, verificação do usuário obrigatória; se o rosto falhar, o código do iPhone).
+  - O app confere a resposta: mesma passkey, mesmo desafio e verificação do usuário feita.
+  - É uma tranca na entrada, não criptografia: os dados continuam neste aparelho como antes. Criptografar foi descartado porque perder a passkey perderia os dados.
+  - Código de recuperação mostrado uma vez ao ativar; o app guarda só o resumo SHA-256.
+  - Configuração numa chave à parte (`nutripratico.v1.lock`): não vai no backup nem é restaurada em outro aparelho.
+  - Com o Face ID ligado, nada dos dados é desenhado antes de a pessoa entrar. Ao sair do app a tela é coberta na hora (a miniatura do iPhone não mostra dados); ao voltar, pede o rosto conforme o tempo escolhido (na hora, 1 min ou 5 min). Desligar exige o rosto.
+  - Limite: quem sabe o código do iPhone também entra.
+- **Regra a partir daqui:** cada recurso registra a evidência que o sustenta e a força dela (forte, moderada, fraca); evidência fraca não vira peça central.
