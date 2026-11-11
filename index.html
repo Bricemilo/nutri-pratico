@@ -2285,6 +2285,18 @@ html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
 .ps-d{font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
 .ps-m{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ps-n{color:var(--c);display:grid} .ps-n svg{width:15px;height:15px}
+/* v60 · Exercício por tipo: nome e "tempo · treinos" na mesma linha; barra fina no tom do Exercício (proporcional ao maior tipo do período);
+   embaixo, o horário habitual em cinza. Rodapé diz de onde vem o horário. */
+.tp-p{font-size:var(--t-sm);font-weight:500;color:var(--muted)}
+.tp-r{padding:10px 2px 12px}
+.tp-r + .tp-r{border-top:1px solid var(--line)}
+.tp-l{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:2px 12px}
+.tp-l b{font-weight:600;font-size:var(--t-body);color:var(--ink);overflow-wrap:anywhere;min-width:0}
+.tp-l span{font-size:var(--t-sm);color:var(--ink-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tp-b{height:6px;margin-top:8px;border-radius:3px;background:color-mix(in srgb,var(--move) 10%,transparent);overflow:hidden}
+.tp-b i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,color-mix(in srgb,var(--move) 70%,transparent),var(--move))}
+.tp-h{margin:7px 0 0;font-size:var(--t-sm);color:var(--muted)}
+.tp-f{margin:6px 2px 2px;font-size:var(--t-cap);color:var(--muted)}
 </style>
 
 <div class="app" id="app"></div>
@@ -4207,6 +4219,28 @@ function renderHealth(p){
   // valores do mês escolhido
   const moMv = (() => { const l = inK(L.move, M.keys).filter(e => e.min > 0); return {total: l.reduce((x, e) => x + e.min, 0), days: new Set(l.map(e => e.date)).size}; })();
   const moSl = sleepAvg(M.keys), moMd = moodBest(M.keys), inMon = curM ? "neste mês" : "em " + MONL[M.m];
+  /* v60 · Por tipo: no período escolhido (a semana ou o mês do gráfico), o tempo e o número de treinos de cada tipo, do maior para o menor.
+     Embaixo de cada tipo, o horário habitual — só fatos e só com base suficiente: nos últimos 90 dias, a partir de 3 treinos com horário,
+     e só quando um período do dia reúne pelo menos metade deles ("de manhã, por volta das 7h · 7 de 9"); senão, "horários variados". */
+  const typePanel = () => {
+    const l = inK(L.move, mon ? M.keys : wkKeys).filter(e => e.min > 0); if (!l.length) return null;
+    const by = new Map(); for (const e of l) { const x = by.get(e.type) || {n: 0, min: 0}; x.n++; x.min += e.min; by.set(e.type, x); }
+    const rows = [...by.entries()].sort((a, b) => b[1].min - a[1].min || a[0].localeCompare(b[0])), max = rows[0][1].min;
+    const since = C.addDays(t, -89), PER = [["de madrugada", 0], ["de manhã", 300], ["à tarde", 720], ["à noite", 1080]];
+    const habit = type => { const ms = L.move.filter(e => e.type === type && e.min > 0 && e.date >= since && /^\d\d:\d\d$/.test(e.time || "")).map(e => +e.time.slice(0, 2) * 60 + +e.time.slice(3));
+      if (ms.length < 3) return null;
+      const per = m => m >= 1080 ? 3 : m >= 720 ? 2 : m >= 300 ? 1 : 0, cnt = [0, 0, 0, 0]; for (const m of ms) cnt[per(m)]++;
+      const top = cnt.indexOf(Math.max(...cnt)); if (cnt[top] * 2 < ms.length) return `horários variados · ${ms.length} treinos`;
+      const v = ms.filter(m => per(m) === top).sort((a, b) => a - b), med = v[Math.floor((v.length - 1) / 2)], r30 = Math.round(med / 30) * 30;
+      return `${PER[top][0]}, por volta das ${Math.floor(r30 / 60) % 24}h${r30 % 60 ? "30" : ""} · ${cnt[top]} de ${ms.length}`; };
+    let anyHb = false;
+    return h("section", {class: "panel tp", "aria-label": "Exercício por tipo"},
+      h("div", {class: "panel-h"}, h("span", null, "Por tipo"), h("span", {class: "tp-p"}, mon ? inMon : cur ? "nesta semana" : wkLabel)),
+      rows.map(([type, x]) => { const hb = habit(type); if (hb) anyHb = true;
+        return h("div", {class: "tp-r"}, h("div", {class: "tp-l"}, h("b", null, type), h("span", null, `${fmtDur(x.min)} · ${x.n} ${x.n === 1 ? "treino" : "treinos"}`)),
+          h("div", {class: "tp-b", "aria-hidden": "true"}, h("i", {style: `width:${Math.max(4, x.min / max * 100)}%`})), hb ? h("p", {class: "tp-h"}, hb) : null); }),
+      anyHb ? h("p", {class: "tp-f"}, "Horário habitual: últimos 90 dias, a partir de 3 treinos com horário.") : null);
+  };
   const byDate = (a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : (b.at || 0) - (a.at || 0);
   // histórico: os 5 mais recentes à vista; os outros (até 12) por expansão
   const hist = (kind, list, line) => { if (!list.length) return null;
@@ -4268,6 +4302,7 @@ function renderHealth(p){
           mref ? mref.text : "Abaixo de 5 anos o app não usa meta numérica de atividade.", "O app não converte atividade em calorias: as estimativas variam muito entre pessoas."))),
       crOf(p) ? null : h("button", {class: "cr-go", type: "button", onclick: () => crStartSheet(p)}, h("span", {class: "cr-pl"}), h("span", {class: "cr-gt"}, h("b", null, "Iniciar treino"), h("span", null, "Início e fim marcados sozinhos"))),
       L.move.length && !mon ? moveDayPanel(p, L, mw) : null,
+      typePanel(),
       L.move.length ? h("div", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Histórico")), hist("move", [...L.move].sort(byDate), e => [h("b", null, e.type), ` · ${fmtMin(e.min)}${e.intensity ? " · " + INTENS.find(x => x[0] === e.intensity)[1].toLowerCase() : ""}`, h("span", null, " " + relDay(e.date) + (e.time ? " " + e.time + (e.end ? "\u2060–\u2060" + e.end : "") : ""))])) : null],
     sono: () => [card("sono", true, L.sleep.length ? h("div", {class: "mw mw-k"}, h("span", null, h("i", {class: "mw-z"}), "noite sem registro")) : null,
         refRow(L.sleep.length > 0, more("Referência", L.sleep.length ? (ss.count < 3 ? "Média a partir de 3 noites nos últimos 7 dias; regularidade a partir de 5."
