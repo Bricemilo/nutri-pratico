@@ -1883,3 +1883,14 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
   - "Registrar sessão" cria uma consulta realizada na Agenda (data, especialidade, profissional) com as anotações.
   - Evidência: resumo escrito do que ficou da sessão e da tarefa até a próxima melhora o resultado de sessão para sessão (revisão sistemática, 2023); adesão às tarefas associa-se a melhores resultados (r ≈ 0,26).
 - **Privacidade:** na lista, só data e profissional (um lápis indica anotação); o texto só aparece ao abrir. Nada disso aparece na Hoje; cada pessoa da família tem os seus.
+
+## 81. v60 — Exercício por tipo e horário habitual
+
+- **"Por tipo"** na tela Exercício, para o mesmo período do gráfico (a semana escolhida ou o mês tocado): tempo total e número de treinos de cada tipo, do maior para o menor, com uma barra fina proporcional ao maior.
+- **Horário habitual** embaixo de cada tipo, só com base suficiente:
+  - últimos 90 dias, a partir de 3 treinos com horário daquele tipo;
+  - períodos: madrugada (0–5h), manhã (5–12h), tarde (12–18h), noite (18–24h);
+  - mostra o período só quando ele reúne pelo menos metade dos treinos, com a mediana arredondada a 30 min ("de manhã, por volta das 7h · 13 de 14"); senão, "horários variados · N treinos";
+  - tipo sem horário registrado não ganha linha; o rodapé explica a regra só quando há algum horário.
+- Fatos e contagens, sem nota nem meta. Totais conferidos contra soma independente (semana, mês atual, outubro).
+- Telas estreitas com letra grande: o número desce para a linha de baixo em vez de cortar o nome.
