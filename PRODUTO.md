@@ -1894,3 +1894,18 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
   - tipo sem horário registrado não ganha linha; o rodapé explica a regra só quando há algum horário.
 - Fatos e contagens, sem nota nem meta. Totais conferidos contra soma independente (semana, mês atual, outubro).
 - Telas estreitas com letra grande: o número desce para a linha de baixo em vez de cortar o nome.
+
+## 82. v61 — Treino ao vivo no gráfico e "Trocar" com intensidade
+
+- **Trocar pergunta a intensidade de quem terminou:** ao trocar (ex.: bicicleta → musculação), o primeiro é registrado e a folha pergunta a intensidade dele na hora, com o aviso "Musculação já está contando" (o próximo começa no mesmo segundo).
+  - Tocar na intensidade salva e fecha; "Agora não" pula; o "Desfazer" do aviso volta ao exercício anterior, sem registro.
+  - Troca com menos de 1 minuto: nada a registrar, segue direto no cronômetro do novo.
+- **Treino ao vivo:** enquanto o cronômetro corre, o treino aparece como "agora" (nunca é gravado; vira registro só ao encerrar):
+  - no gráfico da semana, um pedaço a mais na coluna do dia, com brilho que sobe devagar (diferente das cores de intensidade); o número do dia e o total da semana sobem a cada minuto;
+  - no card do dia, a linha "Ciclismo 11 min · agora" (tocar abre o cronômetro); na Home, "min hoje" e "na semana" também sobem;
+  - os minutos ao vivo seguem a mesma conta do registro final (horários truncados no minuto): o número nunca muda ao encerrar;
+  - a cada minuto só números e alturas mudam (a tela não é redesenhada: nada pula nem fecha).
+- **Fechamento:** ao encerrar ou trocar, a barra do treino sai do brilho e assenta na cor da intensidade escolhida.
+- Com "reduzir movimento" do iPhone, nada se anima.
+- **Evidência:** automonitoramento com retorno imediato (moderada; Michie et al., 2009); ver o progresso avançar aumenta o esforço perto da meta (moderada; Kivetz et al., 2006). **Fora de propósito:** animação por tipo de exercício (sem evidência), confete, medalhas e sequências (gamificação: efeito pequeno que diminui com o tempo; Mazeas et al., 2022).
+- **Limite:** um app instalado pelo site não consegue mostrar o cronômetro na tela bloqueada do iPhone; o tempo segue certo porque é calculado pelo horário de início.
