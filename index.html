@@ -2216,6 +2216,17 @@ html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
 .mw-e time .cr-end{overflow:visible}
 @media (max-width:420px){.mw-e:has(.cr-end) .mw-in{display:none}}
 @media (max-width:359px){.mw-e .cr-end{display:none}}
+/* v61 · treino ao vivo no gráfico: o pedaço "agora" tem um brilho que sobe devagar (energia subindo), diferente das cores de intensidade;
+   ao encerrar, o treino recém-registrado sai desse brilho e assenta na cor da intensidade escolhida */
+.mw-s{transition:height .9s cubic-bezier(.2,.8,.2,1)}
+.mw i.lv-on,.mwd i.lv-on{background:linear-gradient(0deg,color-mix(in srgb,var(--move) 62%,transparent),color-mix(in srgb,var(--move) 55%,#fff) 50%,color-mix(in srgb,var(--move) 62%,transparent));
+  background-size:100% 200%;box-shadow:0 0 12px color-mix(in srgb,var(--move) 42%,transparent);animation:lv-up 2.4s linear infinite}
+@keyframes lv-up{from{background-position:0 0}to{background-position:0 200%}}
+.mw-d.live .mw-n{color:var(--move)}
+.mw-e .mw-ag{font-style:normal;font-weight:600;color:var(--move)}
+.mw i.just,.mwd i.just{animation:lv-set 1.4s cubic-bezier(.3,.7,.2,1) .35s both}
+@keyframes lv-set{from{background:color-mix(in srgb,var(--move) 55%,#fff);box-shadow:0 0 12px color-mix(in srgb,var(--move) 42%,transparent)}}
+.cr-nx{display:flex;align-items:center;justify-content:center;gap:8px;margin:12px 0 0;font-size:var(--t-sm);font-weight:600;color:var(--ink-2)}
 /* v57 · Abertura e Face ID. A abertura é o ícone do app no fundo escuro, no mesmo lugar e tamanho da imagem de abertura do iPhone,
    então não há tela vazia nem salto. Se o carregamento passar de 0,7 s, um feixe de luz cruza o ícone; ao ficar pronto, ele esmaece e o app aparece.
    Nada espera de propósito. Com o Face ID ligado, a mesma tela vira a tranca: o ícone fica e o pedido do iPhone aparece por cima. */
@@ -3548,7 +3559,7 @@ function relDay(k){
 function healthCtx(p){
   const L = logsOf(p), r = C.energyOf(p), t = today();
   return {energyOk: r.ok && !!r.get, hasPlan: p.plan.meals.some(m => filled(m).length), age: C.ageOf(p.birth),
-    move: {count: L.move.length, week: C.moveWeek(L.move, t)}, sleep: {count: L.sleep.length, stats: C.sleepStats(L.sleep, t)}};
+    move: {count: L.move.length, week: C.moveWeek(mvList(p, L), t)}, sleep: {count: L.sleep.length, stats: C.sleepStats(L.sleep, t)}};
 }
 // Registro do consumo é opcional: o app funciona como planejador puro. A marcação de "feita" só aparece
 // para quem ativa (ou já usava) o acompanhamento; ausência de marcação nunca significa que a pessoa não comeu.
@@ -3681,6 +3692,10 @@ function renderHome(p){
       fn: () => openMod({hsub: "sono"}), empty: ["Sem registro", "Última noite"]}),
     adult ? card({lv: "l1", cls: "wb", icon: "smile", title: "Emocional", value: lastMood ? MOODS[lastMood.mood - 1] : null, sub: lastMood ? `${relDay(lastMood.date)}${lastMood.time ? ", " + lastMood.time : ""}` : "",
       fn: () => openMod({hsub: "bem-estar"}), empty: ["Sem registros", "Como você está?"]}) : null);
+  // v61 · treino em andamento: os minutos de hoje e da semana sobem sozinhos a cada minuto
+  { const lv = liveMv(p), c = pillars.querySelector(".hc.move"); if (lv && c && mw.total > 0) { const b = c.querySelector(".hc-v b"), sb = c.querySelector(".hc-s");
+    if (b && lv.date === today()) b.dataset.lvb = moveToday - lv.min;
+    if (sb && mw.days.some(d => d.key === lv.date)) { sb.dataset.lvb = mw.total - lv.min; sb.dataset.lvf = "sem"; } } }
   // B · hidratação (meta diária do perfil) e suplementos e medicamentos ativos. O GET saiu da Home: continua em Perfil → Planejamento.
   const careRow = h("div", {class: "hgrid hg-b"},
     card({lv: "l2", cls: "water", icon: "drop", title: "Hidratação", value: w.ml ? fmtL(w.ml) : null, unit: "L", sub: w.src === "manual" ? "Meta definida por você" : "Recomendação diária",
@@ -3974,17 +3989,19 @@ function renderAgendaTab(p){ ({agenda: renderAgenda, consultas: renderAppts, exa
    vigorosa), minutos do dia no alto; dia passado sem registro = traço; dias que ainda não chegaram ficam vazios. Tocar num dia mostra, logo abaixo,
    cada treino: tipo, minutos, intensidade e horário (quando informado). Ao abrir: hoje, se houver registro; senão, o dia mais recente com registro. */
 let moveSel = null;
-function moveWeekChart(p, L, mw, nowI){
-  const keys = mw.days.map(d => d.key), byDay = keys.map(k => L.move.filter(e => e.date === k && e.min > 0).sort((a, b) => (a.time || "99:99") < (b.time || "99:99") ? -1 : 1));
+function moveWeekChart(p, mv, mw, nowI){
+  const keys = mw.days.map(d => d.key), byDay = keys.map(k => mv.filter(e => e.date === k && (e.min > 0 || e.live)).sort((a, b) => (a.time || "99:99") < (b.time || "99:99") ? -1 : 1));
   const max = Math.max(60, ...mw.days.map(d => d.min));
   if (!moveSel || !keys.includes(moveSel) || keys.indexOf(moveSel) > nowI) { let i = nowI; if (!keys.includes(today())) { while (i > 0 && !byDay[i].length) i--; } moveSel = keys[i]; }
   const IN = {leve: "lv", moderada: "md", vigorosa: "vg"};
-  const cols = keys.map((k, i) => { const list = byDay[i], tot = mw.days[i].min, fut = i > nowI, on = k === moveSel;
-    const label = `${WD[i]}${tot ? `: ${tot} minutos` : fut ? "" : ": sem registro"}`;
-    return h("button", {class: "mw-d" + (on ? " on" : "") + (i === nowI ? " now" : "") + (fut ? " fut" : ""), type: "button", disabled: fut, "aria-pressed": fut ? null : String(on), "aria-label": label,
+  // v61 · treino em andamento: um pedaço a mais na coluna do dia, que pulsa e cresce a cada minuto
+  const cols = keys.map((k, i) => { const list = byDay[i], tot = mw.days[i].min, fut = i > nowI, on = k === moveSel, lv = list.find(e => e.live), base = tot - (lv ? lv.min : 0);
+    const label = `${WD[i]}${lv ? `: treino em andamento${tot ? `, ${tot} minutos` : ""}` : tot ? `: ${tot} minutos` : fut ? "" : ": sem registro"}`;
+    return h("button", {class: "mw-d" + (on ? " on" : "") + (i === nowI ? " now" : "") + (fut ? " fut" : "") + (lv ? " live" : ""), type: "button", disabled: fut, "aria-pressed": fut ? null : String(on), "aria-label": label,
         onclick: () => { moveSel = k; render(); }},
-      h("span", {class: "mw-n"}, tot ? String(tot) : ""),
-      h("span", {class: "mw-b"}, list.length ? h("span", {class: "mw-s", style: `height:${Math.max(8, tot / max * 100)}%`}, list.map(e => h("i", {class: IN[e.intensity] || "md", style: `flex:${e.min} 1 0`}))) : fut ? null : h("i", {class: "mw-z"})),
+      h("span", {class: "mw-n", "data-lvb": lv ? base : null, "data-lvf": lv ? "n" : null}, tot ? String(tot) : ""),
+      h("span", {class: "mw-b"}, list.length ? h("span", {class: "mw-s", "data-t": base, "data-lv": lv ? "" : null, style: `height:${Math.max(8, tot / max * 100)}%`},
+        list.map(e => e.live ? h("i", {class: "lv-on", style: `flex:${Math.max(1, e.min)} 1 0`}) : h("i", {class: (IN[e.intensity] || "md") + (e.id === crJust ? " just" : ""), style: `flex:${e.min} 1 0`}))) : fut ? null : h("i", {class: "mw-z"})),
       h("span", {class: "mw-w"}, WD[i])); });
   return h("div", {class: "mw"},
     h("div", {class: "mw-g", role: "group", "aria-label": "Minutos de exercício por dia nesta semana. Toque num dia para ver os treinos."}, cols),
@@ -4149,16 +4166,18 @@ function moodDayPanel(p, L){
       : h("p", {class: "mw-none"}, moodSel === today() ? "Nenhum registro hoje." : "Nenhum registro neste dia."));
 }
 // caixa própria com os treinos do dia escolhido no gráfico (tipo, minutos, intensidade, horário); tocar abre a edição
-function moveDayPanel(p, L, mw){
+function moveDayPanel(p, mv, mw){
   if (!moveSel) return null;
-  const sel = L.move.filter(e => e.date === moveSel && e.min > 0).sort((a, b) => (a.time || "99:99") < (b.time || "99:99") ? -1 : 1);
-  const IN = {leve: "lv", moderada: "md", vigorosa: "vg"}, tot = sel.reduce((a, e) => a + e.min, 0);
+  const sel = mv.filter(e => e.date === moveSel && (e.min > 0 || e.live)).sort((a, b) => (a.time || "99:99") < (b.time || "99:99") ? -1 : 1);
+  const IN = {leve: "lv", moderada: "md", vigorosa: "vg"}, tot = sel.reduce((a, e) => a + e.min, 0), lvS = sel.find(e => e.live);
   const dayName = k => new Date(k + "T12:00").toLocaleDateString("pt-BR", {weekday: "long", day: "2-digit", month: "2-digit"});
   return h("div", {class: "panel mwd", "aria-live": "polite"},
-      h("div", {class: "mw-dh"}, h("b", null, dayName(moveSel)), h("span", null, `${tot} min`)),
+      h("div", {class: "mw-dh"}, h("b", null, dayName(moveSel)), h("span", lvS ? {"data-lvb": tot - lvS.min} : null, fmtMin(tot))),
       sel.length ? null : h("p", {class: "mw-none"}, moveSel === today() ? "Nenhum treino registrado hoje." : "Nenhum treino registrado neste dia."),
-      sel.map(e => h("button", {class: "mw-e", type: "button", onclick: () => EDIT_LOG.move(p, e), "aria-label": `${e.type}, ${e.min} minutos${e.intensity ? ", " + e.intensity : ""}${e.time ? (e.end ? `, das ${e.time} às ${e.end}` : ", às " + e.time) : ""}. Ver ou editar.`},
-        h("i", {class: IN[e.intensity] || "md"}), h("b", null, e.type), h("span", null, `${e.min} min`, e.intensity ? h("em", {class: "mw-in"}, " · " + e.intensity) : null), h("time", null, e.time || "", e.time && e.end ? h("span", {class: "cr-end"}, "–" + e.end) : null), h("span", {class: "li-go", html: ICON.right}))));
+      sel.map(e => e.live ? h("button", {class: "mw-e live", type: "button", onclick: () => crSheet(p), "aria-label": `${e.type}, em andamento desde ${e.time}. Abrir cronômetro.`},
+        h("i", {class: "lv-on"}), h("b", null, e.type), h("span", null, h("span", {"data-lvb": 0}, fmtMin(e.min)), h("em", {class: "mw-ag"}, " · agora")), h("time", null, e.time), h("span", {class: "li-go", html: ICON.right}))
+      : h("button", {class: "mw-e", type: "button", onclick: () => EDIT_LOG.move(p, e), "aria-label": `${e.type}, ${e.min} minutos${e.intensity ? ", " + e.intensity : ""}${e.time ? (e.end ? `, das ${e.time} às ${e.end}` : ", às " + e.time) : ""}. Ver ou editar.`},
+        h("i", {class: (IN[e.intensity] || "md") + (e.id === crJust ? " just" : "")}), h("b", null, e.type), h("span", null, `${e.min} min`, e.intensity ? h("em", {class: "mw-in"}, " · " + e.intensity) : null), h("time", null, e.time || "", e.time && e.end ? h("span", {class: "cr-end"}, "–" + e.end) : null), h("span", {class: "li-go", html: ICON.right}))));
 }
 /* v46 · os três pilares mostram a semana de segunda a domingo; "‹ ›" no cabeçalho do cartão percorre as semanas anteriores
    (a mesma semana vale para Exercício, Sono e Emocional; o Resumo mostra sempre a semana atual). */
@@ -4173,7 +4192,8 @@ function renderHealth(p){
   const minWk = -Math.max(0, Math.round((new Date(C.weekKeys(t)[0] + "T12:00") - new Date(C.weekKeys(first)[0] + "T12:00")) / 864e5 / 7));
   if (hWeek < minWk) hWeek = minWk; if (hWeek > 0) hWeek = 0;
   const wk = sub === "resumo" ? 0 : hWeek, wkKeys = C.weekKeys(C.addDays(t, 7 * wk)), sun = wkKeys[6], cur = wk === 0;
-  const mw = C.moveWeek(L.move, cur ? t : sun), mref = C.moveRef(age), ss = C.sleepStats(L.sleep, sun), sref = C.sleepRef(age);
+  const MV = mvList(p, L), lvW = MV.length > L.move.length && wkKeys.includes(MV[MV.length - 1].date) ? MV[MV.length - 1] : null;
+  const mw = C.moveWeek(MV, cur ? t : sun), mref = C.moveRef(age), ss = C.sleepStats(L.sleep, sun), sref = C.sleepRef(age);
   const nowI = cur ? wkKeys.indexOf(t) : 6, last7 = wkKeys;
   const wkLabel = cur ? "Esta semana" : (() => { const a = new Date(wkKeys[0] + "T12:00"), b = new Date(sun + "T12:00"), m = d => d.toLocaleDateString("pt-BR", {month: "short"}).replace(".", "");
     return a.getMonth() === b.getMonth() ? `${a.getDate()}–${b.getDate()} ${m(b)}` : `${a.getDate()} ${m(a)} – ${b.getDate()} ${m(b)}`; })();
@@ -4258,13 +4278,13 @@ function renderHealth(p){
   const wkMood = (() => { if (!wkMoodN) return null; const n = {}; let best = null; for (const e of wkMoods) { n[e.mood] = (n[e.mood] || 0) + 1; if (best == null || n[e.mood] >= n[best]) best = e.mood; } return best; })();
   const sleepBars = () => bars(ss.nights.map((n, i) => i > nowI ? null : n.min || 0), 600, ss.nights.map(n => wdOf(n.key)), cur ? nowI : -1);
   // dias da semana que ainda não chegaram ficam em branco (não são "sem registro")
-  const moveBars = () => moveWeekChart(p, L, mw, nowI);
+  const moveBars = () => moveWeekChart(p, MV, mw, nowI);
   const moodChart = () => moodWeekChart(L, last7, nowI);
   const more = (title, ...ps) => h("details", {class: "src more"}, h("summary", null, title), ...ps.filter(Boolean).map(x => h("p", null, x)));
   // o número principal de cada pilar; médias só com dados suficientes
   const P = {
     movimento: mon ? {cls: "move", icon: "dumbbell", title: "Exercício", has: L.move.length > 0, value: fmtDur(moMv.total), ctx: `${inMon}${moMv.days ? ` · ${moMv.days} ${moMv.days === 1 ? "dia" : "dias"}` : ""}`,
-      chart: yrMove, add: () => moveSheet(p), addL: "Registrar exercício"} : {cls: "move", icon: "dumbbell", title: "Exercício", has: L.move.length > 0, value: fmtMin(mw.total), ctx: mw.activeDays ? `${cur ? "nesta" : "na"} semana · ${mw.activeDays} ${mw.activeDays === 1 ? "dia" : "dias"}` : cur ? "nesta semana" : "na semana",
+      chart: yrMove, add: () => moveSheet(p), addL: "Registrar exercício"} : {cls: "move", icon: "dumbbell", title: "Exercício", has: MV.length > 0, value: fmtMin(mw.total), lvb: lvW ? mw.total - lvW.min : null, ctx: mw.activeDays ? `${cur ? "nesta" : "na"} semana · ${mw.activeDays} ${mw.activeDays === 1 ? "dia" : "dias"}` : cur ? "nesta semana" : "na semana",
       empty: "Caminhada, musculação, tênis… registre em segundos.", chart: moveBars, add: () => moveSheet(p), addL: "Registrar exercício"},
     sono: mon ? {cls: "sleep", icon: "moon", title: "Sono", has: L.sleep.length > 0, value: moSl.n ? fmtDur(moSl.avg) : "Sem registros", none: !moSl.n,
       ctx: moSl.n > 1 ? `média de ${moSl.n} noites` : moSl.n === 1 ? "1 noite registrada" : inMon, chart: yrSleep, add: () => sleepSheet(p), addL: "Registrar sono"}
@@ -4280,7 +4300,7 @@ function renderHealth(p){
   const row = k => { const c = P[k];
     return h("button", {class: "hrow " + c.cls, type: "button", id: k, onclick: () => go({hsub: k}), "aria-label": `${c.title}: ${c.has ? `${c.value}, ${c.ctx}` : "sem registros"}. Ver detalhes.`},
       h("span", {class: "hp-i", html: ICON[c.icon]}),
-      h("span", {class: "hr-m"}, h("span", {class: "hr-t"}, c.title), c.has ? h("span", {class: "hr-v"}, h("b", {class: c.value.length > 8 ? "long" : null}, c.value), h("span", null, c.ctx)) : h("span", {class: "hr-e"}, "Sem registros ainda")),
+      h("span", {class: "hr-m"}, h("span", {class: "hr-t"}, c.title), c.has ? h("span", {class: "hr-v"}, h("b", {class: c.value.length > 8 ? "long" : null, "data-lvb": c.lvb}, c.value), h("span", null, c.ctx)) : h("span", {class: "hr-e"}, "Sem registros ainda")),
       h("span", {class: "li-go", html: ICON.right})); };
   const w = waterOf(p);
   const waterRow = h("button", {class: "hrow water", type: "button", onclick: () => openMod({hsub: "agua"}), "aria-label": w.ml ? `Hidratação: ${fmtL(w.ml)} litros por dia, ${w.src === "manual" ? "definida por você" : "recomendação"}.` : "Hidratação: definir recomendação."},
@@ -4293,15 +4313,15 @@ function renderHealth(p){
         full ? h("span", {class: "hp-t"}, c.title) : h("button", {class: "hp-t link0", type: "button", onclick: () => go({hsub: k})}, c.title, h("span", {class: "li-go", html: ICON.right})),
         full && c.has ? wkNav() : null,
         full ? null : h("button", {class: "hp-add", type: "button", "aria-label": c.addL, onclick: c.add}, ic("plus"))),
-      c.has ? [h("div", {class: "hp-v"}, h("b", {class: c.none ? "none" : c.value.length > 8 ? "long" : null}, c.value), h("span", null, c.ctx)), full ? h("div", {class: "hp-chart"}, c.chart()) : c.chart()] : h("p", {class: "hc-e"}, c.empty, full ? [h("br"), "Para registrar, toque em + no alto da tela."] : null),
+      c.has ? [h("div", {class: "hp-v"}, h("b", {class: c.none ? "none" : c.value.length > 8 ? "long" : null, "data-lvb": c.lvb}, c.value), h("span", null, c.ctx)), full ? h("div", {class: "hp-chart"}, c.chart()) : c.chart()] : h("p", {class: "hc-e"}, c.empty, full ? [h("br"), "Para registrar, toque em + no alto da tela."] : null),
 ...extra);
   };
   const detail = {
-    movimento: () => [card("movimento", true, L.move.length ? h("div", {class: "mw mw-k", "aria-hidden": "true"}, h("span", null, h("i", {class: "lv"}), "leve"), h("span", null, h("i", {class: "md"}), "moderada"), h("span", null, h("i", {class: "vg"}), "vigorosa"), h("span", null, h("i", {class: "mw-z"}), "sem registro")) : null,
+    movimento: () => [card("movimento", true, MV.length ? h("div", {class: "mw mw-k", "aria-hidden": "true"}, h("span", null, h("i", {class: "lv"}), "leve"), h("span", null, h("i", {class: "md"}), "moderada"), h("span", null, h("i", {class: "vg"}), "vigorosa"), h("span", null, h("i", {class: "mw-z"}), "sem registro")) : null,
         refRow(L.move.length > 0, more("Referência", mref && mref.week && !mref.perDay && L.move.length ? `Nesta semana: ${mw.mv} min de atividade moderada ou vigorosa (a leve não entra na conta).` : null,
           mref ? mref.text : "Abaixo de 5 anos o app não usa meta numérica de atividade.", "O app não converte atividade em calorias: as estimativas variam muito entre pessoas."))),
       crOf(p) ? null : h("button", {class: "cr-go", type: "button", onclick: () => crStartSheet(p)}, h("span", {class: "cr-pl"}), h("span", {class: "cr-gt"}, h("b", null, "Iniciar treino"), h("span", null, "Início e fim marcados sozinhos"))),
-      L.move.length && !mon ? moveDayPanel(p, L, mw) : null,
+      MV.length && !mon ? moveDayPanel(p, MV, mw) : null,
       typePanel(),
       L.move.length ? h("div", {class: "panel"}, h("div", {class: "panel-h"}, h("span", null, "Histórico")), hist("move", [...L.move].sort(byDate), e => [h("b", null, e.type), ` · ${fmtMin(e.min)}${e.intensity ? " · " + INTENS.find(x => x[0] === e.intensity)[1].toLowerCase() : ""}`, h("span", null, " " + relDay(e.date) + (e.time ? " " + e.time + (e.end ? "\u2060–\u2060" + e.end : "") : ""))])) : null],
     sono: () => [card("sono", true, L.sleep.length ? h("div", {class: "mw mw-k"}, h("span", null, h("i", {class: "mw-z"}), "noite sem registro")) : null,
@@ -5894,6 +5914,21 @@ function moveSheet(p, done, rec){
 const CR_ASK = 3 * 3600e3;
 const crAsk = T => Date.now() - (T.askedAt || T.start) > CR_ASK;   // "Continuar treinando" adia a pergunta por mais 3 horas
 const crOf = p => p && p.timer && p.timer.start > 0 && p.timer.type ? p.timer : null;
+/* v61 · treino ao vivo no gráfico: enquanto o cronômetro corre, o treino aparece como um registro "agora" (não é gravado; some ao encerrar).
+   Os minutos seguem a mesma conta do registro final (horários truncados no minuto), então o número ao vivo nunca difere do que será salvo. */
+const crMin = (T, now = Date.now()) => Math.max(0, Math.floor(now / 60e3) - Math.floor(T.start / 60e3));
+let crLm = -1, crJust = null;   // crJust: id do treino recém-encerrado (a barra dele "assenta" na cor da intensidade)
+function liveMv(p){ const T = crOf(p); if (!T) return null; const lm = crMin(T); crLm = lm;
+  return {id: "live", live: true, type: T.type, min: lm, intensity: null, date: C.dayKey(new Date(T.start)), time: hmOf(T.start)}; }
+const mvList = (p, L) => { const e = liveMv(p); return e ? [...L.move, e] : L.move; };
+// a cada minuto novo só os números e as alturas mudam (sem redesenhar a tela: nada pula, nada fecha)
+const LVF = {min: v => fmtMin(v), n: v => v ? String(v) : "", sem: v => `${fmtMin(v)} na semana`};
+function crPaintMin(lm){
+  for (const x of document.querySelectorAll("[data-lvb]")) x.textContent = LVF[x.dataset.lvf || "min"](Number(x.dataset.lvb) + lm);
+  for (const g of document.querySelectorAll(".mw-g")) { const ss = [...g.querySelectorAll(".mw-s[data-t]")]; if (!ss.some(x => x.dataset.lv != null)) continue;
+    const tot = x => Number(x.dataset.t) + (x.dataset.lv != null ? lm : 0), max = Math.max(60, ...ss.map(tot));
+    for (const x of ss) { x.style.height = `${Math.max(8, tot(x) / max * 100)}%`; const i = x.querySelector(".lv-on"); if (i) i.style.flex = `${Math.max(1, lm)} 1 0`; } }
+}
 const hmOf = ms => { const d = new Date(ms); return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`; };
 const clockOf = ms => { const s = Math.max(0, Math.floor(ms / 1000)), hh = Math.floor(s / 3600), mm = Math.floor(s % 3600 / 60), ss = s % 60;
   return hh ? `${hh}:${pad2(mm)}:${pad2(ss)}` : `${pad2(mm)}:${pad2(ss)}`; };
@@ -5918,6 +5953,7 @@ let crTick = null, crAskOn = false;
 function crRun(){ const p = active(), T = crOf(p);
   if (!T) { clearInterval(crTick); crTick = null; return; }
   const now = Date.now(); for (const x of document.querySelectorAll("[data-cr]")) x.textContent = clockOf(now - Number(x.dataset.cr));
+  const lm = crMin(T, now); if (lm !== crLm) { crLm = lm; crPaintMin(lm); }
   if (crAsk(T) !== crAskOn) paintLive(); }
 // barra ao vivo acima das abas (em todas as telas), como um mini player: tocar abre o cronômetro
 let liveSlot = null;
@@ -5953,18 +5989,19 @@ function crSheet(p){
   const L = logsOf(p);
   sheet("Cronômetro de treino", (el, close) => {
     const body = h("div", {class: "cr-sh"});
-    let mode = "run", done = null, was = null;
+    let mode = "run", done = null, was = null, nextT = null;
     const T0 = () => crOf(p);
     // a cada troca de estado os botões mudam de lugar: um toque duplo não pode cair no botão novo
     const hold = () => { body.classList.add("cr-hold"); clearTimeout(hold.t); hold.t = setTimeout(() => body.classList.remove("cr-hold"), 450); };
     let last = "";
     // encerrado: uma pergunta só (intensidade, opcional). Tocar já salva e fecha; o Desfazer vem no aviso
-    const leave = () => { const e = done, T = was; close(); toast(`${e.type} · ${fmtDur(e.min)}${e.intensity ? " · " + e.intensity : ""} registrado`, () => crUndoStop(p, T, e)); };
+    const leave = () => { const e = done, T = was; close(); crJust = e.id; render(); setTimeout(() => { if (crJust === e.id) crJust = null; }, 3000); toast(`${e.type} · ${fmtDur(e.min)}${e.intensity ? " · " + e.intensity : ""} registrado`, () => crUndoStop(p, T, e)); };
     function paint(){
       const T = T0(), key = mode + (T ? T.type + T.start : "");
       if (key !== last) { last = key; hold(); }
       if (mode === "done" && done) return put(body,
         h("div", {class: "cr-ok", html: ICON.check}), h("h2", null, `${done.type} · ${fmtDur(done.min)}`), h("p", {class: "sh-sub cr-c"}, `${done.time}–${done.end}`),
+        nextT ? h("p", {class: "cr-nx"}, h("i", {class: "cr-dot"}), `${nextT} já está contando`) : null,
         h("p", {class: "cr-qi"}, "Intensidade"),
         h("div", {class: "cr-in"}, INTENS.map(([v, l]) => h("button", {type: "button", onclick: () => { done.intensity = v; done.updated = Date.now(); touch(p); render(); leave(); }}, l))),
         h("button", {class: "btn plain block cr-skip", type: "button", onclick: leave}, "Agora não"));
@@ -5986,7 +6023,7 @@ function crSheet(p){
       // o início é corrigível (esqueceu de ligar na hora): parece texto, abre o seletor de horário do iPhone
       const startIn = h("input", {class: "cr-hm", type: "time", id: "cr-ini", value: hmOf(T.start), "aria-label": "Horário de início"});
       startIn.addEventListener("change", () => { const v = startIn.value; if (!/^\d\d:\d\d$/.test(v)) return; const d = new Date(); d.setHours(+v.slice(0, 2), +v.slice(3), 0, 0);
-        let ms = d.getTime(); if (ms > Date.now()) ms -= 864e5; T.start = ms; touch(p); paintLive(); paint(); });
+        let ms = d.getTime(); if (ms > Date.now()) ms -= 864e5; T.start = ms; touch(p); render(); paint(); });
       const sw = mode === "swap";
       put(body,
         h("h2", {class: "cr-t"}, h("i", {class: "cr-dot"}), T.type),
@@ -5999,8 +6036,10 @@ function crSheet(p){
     function finish(ms){ was = Object.assign({}, T0()); done = crStop(p, ms); render();
       if (!done) { close(); toast("Menos de 1 minuto: não registrado", () => { p.timer = was; touch(p); render(); }); return; }
       haptic(); mode = "done"; paint(); }
-    function swap(t){ const T = Object.assign({}, T0()), now = Date.now(), e = crStop(p, now); p.timer = {type: t, start: now}; touch(p); haptic(); mode = "run"; render(); paint();
-      toast(e ? `${e.type} · ${fmtDur(e.min)} registrado` : `${t} começou`, () => { crUndoStop(p, T, e); paint(); }); }
+    // v61 · trocar = encerrar um e começar o outro no mesmo instante; a intensidade é perguntada de quem terminou (o próximo já está contando)
+    function swap(t){ const T = Object.assign({}, T0()), now = Date.now(), e = crStop(p, now); p.timer = {type: t, start: now}; touch(p); haptic(); render();
+      if (e) { was = T; done = e; nextT = t; mode = "done"; paint(); return; }
+      mode = "run"; paint(); toast(`${t} começou`, () => { crUndoStop(p, T, null); paint(); }); }
     paint(); el.append(body);
   });
 }
