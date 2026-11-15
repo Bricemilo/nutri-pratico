@@ -2226,7 +2226,6 @@ html.big-text .hc.cnt .hc-v.hc-lg{white-space:normal}
 .mw-e .mw-ag{font-style:normal;font-weight:600;color:var(--move)}
 .mw i.just,.mwd i.just{animation:lv-set 1.4s cubic-bezier(.3,.7,.2,1) .35s both}
 @keyframes lv-set{from{background:color-mix(in srgb,var(--move) 55%,#fff);box-shadow:0 0 12px color-mix(in srgb,var(--move) 42%,transparent)}}
-.cr-nx{display:flex;align-items:center;justify-content:center;gap:8px;margin:12px 0 0;font-size:var(--t-sm);font-weight:600;color:var(--ink-2)}
 /* v57 · Abertura e Face ID. A abertura é o ícone do app no fundo escuro, no mesmo lugar e tamanho da imagem de abertura do iPhone,
    então não há tela vazia nem salto. Se o carregamento passar de 0,7 s, um feixe de luz cruza o ícone; ao ficar pronto, ele esmaece e o app aparece.
    Nada espera de propósito. Com o Face ID ligado, a mesma tela vira a tranca: o ícone fica e o pedido do iPhone aparece por cima. */
@@ -5989,7 +5988,7 @@ function crSheet(p){
   const L = logsOf(p);
   sheet("Cronômetro de treino", (el, close) => {
     const body = h("div", {class: "cr-sh"});
-    let mode = "run", done = null, was = null, nextT = null;
+    let mode = "run", done = null, was = null, swAt = 0, swIn = null;
     const T0 = () => crOf(p);
     // a cada troca de estado os botões mudam de lugar: um toque duplo não pode cair no botão novo
     const hold = () => { body.classList.add("cr-hold"); clearTimeout(hold.t); hold.t = setTimeout(() => body.classList.remove("cr-hold"), 450); };
@@ -6001,11 +6000,22 @@ function crSheet(p){
       if (key !== last) { last = key; hold(); }
       if (mode === "done" && done) return put(body,
         h("div", {class: "cr-ok", html: ICON.check}), h("h2", null, `${done.type} · ${fmtDur(done.min)}`), h("p", {class: "sh-sub cr-c"}, `${done.time}–${done.end}`),
-        nextT ? h("p", {class: "cr-nx"}, h("i", {class: "cr-dot"}), `${nextT} já está contando`) : null,
         h("p", {class: "cr-qi"}, "Intensidade"),
         h("div", {class: "cr-in"}, INTENS.map(([v, l]) => h("button", {type: "button", onclick: () => { done.intensity = v; done.updated = Date.now(); touch(p); render(); leave(); }}, l))),
         h("button", {class: "btn plain block cr-skip", type: "button", onclick: leave}, "Agora não"));
       if (!T) { close(); return; }
+      /* v62 · Trocar na ordem do treino: 1) intensidade de quem terminou, 2) qual é o próximo (um toque já começa).
+         O fim de um e o início do outro são o instante do toque em "Trocar"; nada é gravado antes de escolher o próximo:
+         fechar a folha no meio do caminho deixa tudo como estava (o exercício atual continua contando). */
+      if (mode === "swIn") { const m = Math.max(1, Math.floor(swAt / 60e3) - Math.floor(T.start / 60e3));
+        return put(body, h("h2", null, `${T.type} · ${fmtDur(m)}`), h("p", {class: "sh-sub cr-c"}, `${hmOf(T.start)}–${hmOf(swAt)}`),
+          h("p", {class: "cr-qi"}, "Intensidade"),
+          h("div", {class: "cr-in"}, INTENS.map(([v, l]) => h("button", {type: "button", onclick: () => { swIn = v; mode = "swTo"; paint(); }}, l))),
+          h("button", {class: "btn plain block cr-skip", type: "button", onclick: () => { swIn = null; mode = "swTo"; paint(); }}, "Agora não")); }
+      if (mode === "swTo") { const m = Math.floor(swAt / 60e3) - Math.floor(T.start / 60e3), il = swIn && INTENS.find(x => x[0] === swIn)[1].toLowerCase();
+        return put(body, h("h2", null, "Próximo treino"),
+          h("p", {class: "sh-sub"}, swAt - T.start >= 60e3 ? `${T.type} · ${fmtDur(m)}${il ? " · " + il : ""}` : `${T.type} · menos de 1 minuto, não entra no registro`),
+          h("div", {class: "cr-types"}, moveTypes(L).filter(t => t !== T.type && t !== "Outra").map(t => h("button", {type: "button", onclick: () => swap(t)}, t)))); }
       const el0 = Date.now() - T.start;
       if (crAsk(T)) {
         // esqueceu ligado: a pessoa diz a que horas terminou (pré-preenchido com agora; nada é salvo sem confirmar)
@@ -6024,22 +6034,20 @@ function crSheet(p){
       const startIn = h("input", {class: "cr-hm", type: "time", id: "cr-ini", value: hmOf(T.start), "aria-label": "Horário de início"});
       startIn.addEventListener("change", () => { const v = startIn.value; if (!/^\d\d:\d\d$/.test(v)) return; const d = new Date(); d.setHours(+v.slice(0, 2), +v.slice(3), 0, 0);
         let ms = d.getTime(); if (ms > Date.now()) ms -= 864e5; T.start = ms; touch(p); render(); paint(); });
-      const sw = mode === "swap";
       put(body,
         h("h2", {class: "cr-t"}, h("i", {class: "cr-dot"}), T.type),
         h("div", {class: "cr-big", "data-cr": T.start, role: "timer", "aria-live": "off"}, clockOf(el0)),
         h("label", {class: "cr-ini", for: "cr-ini"}, "desde ", startIn),
-        sw ? h("div", {class: "cr-types"}, moveTypes(L).filter(t => t !== T.type && t !== "Outra").map(t => h("button", {type: "button", onclick: () => swap(t)}, t))) : null,
-        h("div", {class: "cr-two"}, h("button", {class: "btn ghost" + (sw ? " on" : ""), type: "button", "aria-expanded": String(sw), onclick: () => { mode = sw ? "run" : "swap"; paint(); }}, sw ? "Cancelar" : "Trocar"),
+        h("div", {class: "cr-two"}, h("button", {class: "btn ghost", type: "button", onclick: () => { swAt = Date.now(); swIn = null; mode = Date.now() - T.start >= 60e3 ? "swIn" : "swTo"; paint(); }}, "Trocar"),
           h("button", {class: "btn primary", type: "button", onclick: () => finish(Date.now())}, "Encerrar")));
     }
     function finish(ms){ was = Object.assign({}, T0()); done = crStop(p, ms); render();
       if (!done) { close(); toast("Menos de 1 minuto: não registrado", () => { p.timer = was; touch(p); render(); }); return; }
       haptic(); mode = "done"; paint(); }
-    // v61 · trocar = encerrar um e começar o outro no mesmo instante; a intensidade é perguntada de quem terminou (o próximo já está contando)
-    function swap(t){ const T = Object.assign({}, T0()), now = Date.now(), e = crStop(p, now); p.timer = {type: t, start: now}; touch(p); haptic(); render();
-      if (e) { was = T; done = e; nextT = t; mode = "done"; paint(); return; }
-      mode = "run"; paint(); toast(`${t} começou`, () => { crUndoStop(p, T, null); paint(); }); }
+    // trocar: grava quem terminou (com a intensidade escolhida) e começa o próximo no mesmo instante; o Desfazer volta ao anterior
+    function swap(t){ const T = Object.assign({}, T0()), e = crStop(p, swAt); if (e && swIn) e.intensity = swIn; p.timer = {type: t, start: swAt}; touch(p); haptic(); close();
+      if (e) { crJust = e.id; setTimeout(() => { if (crJust === e.id) crJust = null; }, 3000); } render();
+      toast(e ? `${e.type} registrado · ${t} começou` : `${t} começou`, () => crUndoStop(p, T, e)); }
     paint(); el.append(body);
   });
 }
