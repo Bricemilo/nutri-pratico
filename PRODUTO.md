@@ -1909,3 +1909,12 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
 - Com "reduzir movimento" do iPhone, nada se anima.
 - **Evidência:** automonitoramento com retorno imediato (moderada; Michie et al., 2009); ver o progresso avançar aumenta o esforço perto da meta (moderada; Kivetz et al., 2006). **Fora de propósito:** animação por tipo de exercício (sem evidência), confete, medalhas e sequências (gamificação: efeito pequeno que diminui com o tempo; Mazeas et al., 2022).
 - **Limite:** um app instalado pelo site não consegue mostrar o cronômetro na tela bloqueada do iPhone; o tempo segue certo porque é calculado pelo horário de início.
+
+## 83. v62 — Trocar na ordem do treino
+
+- **Nova ordem:** Trocar → intensidade de quem terminou (Leve, Moderada, Vigorosa ou "Agora não") → "Próximo treino" (um toque já começa). Mesmos 3 toques de antes, na ordem natural: termina, avalia, começa o outro.
+- **Horários:** o toque em "Trocar" marca o fim de um e o início do outro (sem buraco entre os dois; o tempo de escolher conta para o próximo).
+- **Nada é gravado antes de escolher o próximo:** fechar a folha no meio do caminho deixa tudo como estava (o exercício atual continua contando).
+- Ao escolher o próximo: a folha fecha, a barra do anterior assenta na cor da intensidade e o aviso "Ciclismo registrado · Musculação começou" traz Desfazer (volta ao anterior, sem registro).
+- Troca com menos de 1 minuto: pula a intensidade e vai direto ao próximo, sem registrar.
+- Substitui a ordem da v61 (escolher o próximo e só depois a intensidade), a pedido do Camilo.
