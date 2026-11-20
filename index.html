@@ -146,6 +146,9 @@ h2.sec{font-size:0.765rem;font-weight:650;letter-spacing:.08em;text-transform:up
 .bk-steps b{color:var(--ink);font-weight:650}
 .bk-sep{height:1px;background:var(--line);margin:8px 0 4px}
 .btn.bk-copy{min-height:40px}
+.wl-back{margin-top:14px}
+.wl-note{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:16px;text-align:center}
+.wl-note svg{width:14px;height:14px;flex:none}
 .bk-ok{margin:0;text-align:center;color:var(--ok);font-size:var(--t-sm);font-weight:600;line-height:1.45}
 
 /* Autocompletar */
@@ -3501,7 +3504,11 @@ function renderWelcome(){
     h("section", {class: "card hero stack"},
       h("div", {class: "cta"}, h("span", {class: "ic", html: ICON.user}), h("div", null, h("b", null, "Comece pelo seu perfil"), "Nome, data de nascimento e sexo. Leva menos de um minuto.")),
       h("button", {class: "btn primary block", onclick: () => profileSheet()}, "Criar meu perfil")),
-    h("section", {class: "card", style: "margin-top:14px"}, dataRow())));
+    // v65 · quem já usa o app (troca de celular ou de endereço) encontra o caminho logo na entrada
+    h("section", {class: "card stack wl-back"},
+      h("div", {class: "cta"}, h("span", {class: "ic", html: ICON.repeat}), h("div", null, h("b", null, "Já usa o Briceno Life?"), "Traga os seus dados com o arquivo de backup que você salvou.")),
+      h("button", {class: "btn ghost block", type: "button", onclick: () => backupSheet({restore: true})}, "Restaurar meus dados")),
+    h("p", {class: "note wl-note"}, ic("lock"), "Os seus dados ficam só neste aparelho.")));
 }
 
 /* ---------- Refeição feita (consumo) e refeições favoritas ----------
@@ -7389,16 +7396,6 @@ function profileSheet(p){
 /* ---------- dados e backup ---------- */
 const DAY = 864e5;
 const nPeople = n => n === 1 ? "1 perfil" : `${n} perfis`;
-function dataRow(){
-  const real = S.patients.filter(p => !p.example).length;
-  const days = S.lastBackup ? Math.floor((Date.now() - S.lastBackup) / DAY) : null;
-  const due = real > 0 && (days == null || days >= 7);
-  const when = days == null ? "Nenhum backup feito ainda" : days === 0 ? "Último backup: hoje" : days === 1 ? "Último backup: ontem" : `Último backup: há ${days} dias`;
-  return h("div", {class: "datacard" + (due ? " due" : "")},
-    h("span", {class: "dc-ic", html: ICON.lock}),
-    h("div", {class: "dc-t"}, h("b", null, "Salvos só neste aparelho"), h("span", null, when)),
-    h("button", {class: "btn sm " + (due ? "primary" : "ghost"), onclick: backupSheet}, due ? "Fazer backup" : "Backup"));
-}
 /* v63 · backup completo: o arquivo leva também os documentos anexados (PDF e imagens), em base64 dentro do mesmo JSON
    ({app, version, exported, data, docs: {id: {type, b64}}}). Arquivos antigos, sem "docs", continuam sendo restaurados como antes.
    O arquivo é preparado assim que a folha abre, para que o toque em "Exportar" abra o compartilhamento do iPhone na hora. */
@@ -7418,7 +7415,7 @@ async function packDocs(){
   return {docs, n, miss, bytes};
 }
 const nDocs = n => n === 1 ? "1 documento" : `${n} documentos`;
-function backupSheet(){
+function backupSheet(opts = {}){
   const backupText = docs => JSON.stringify(Object.assign({app: "nutri-pratico", version: VERSION, exported: new Date().toISOString(), data: S}, docs ? {docs} : {}));
   sheet("Backup", (el, close) => {
     const status = h("div", {class: "err", style: "color:var(--muted)"});
@@ -7519,6 +7516,18 @@ function backupSheet(){
       pasteBox);
     restoreBox.hidden = true;
     const restoreBtn = h("button", {class: "btn ghost block", type: "button", "aria-expanded": "false", onclick: () => { restoreBox.hidden = false; restoreBtn.hidden = true; }}, "Restaurar um backup");
+    if (opts.restore) {   // v65 · vindo das boas-vindas: só restaurar, com o passo a passo
+      restoreBox.firstChild.remove();
+      el.append(h("h2", null, "Restaurar meus dados"),
+        h("ol", {class: "bk-steps"},
+          h("li", null, "Toque em ", h("b", null, embedded ? "Colar texto do backup" : "Escolher o arquivo do backup"), "."),
+          embedded ? h("li", null, "Cole o texto copiado e toque em ", h("b", null, "Continuar"), ".")
+            : [h("li", null, "Abra ", h("b", null, "iCloud Drive"), " (ou onde você salvou) e toque no arquivo ", h("b", null, "briceno-life-backup"), " ou ", h("b", null, "nutri-pratico-backup"), "."),
+               h("li", null, "Confira e toque em ", h("b", null, "Restaurar"), ".")]),
+        h("div", {class: "bk-row"}, ...restoreBox.childNodes, file, status, confirmBox,
+          h("button", {class: "btn plain block", type: "button", onclick: close}, "Fechar")));
+      return;
+    }
     el.append(h("h2", null, "Backup"), sub,
       steps,
       h("div", {class: "bk-row"},
