@@ -1932,3 +1932,14 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
 - **Testes (simulador, não iPhone):** exportar com 3 documentos (um ausente), apagar tudo como num endereço novo, restaurar do arquivo; dados idênticos e documentos idênticos byte a byte; toque duplo sem duplicar; backup antigo sem documentos; telas de 393 e 320 px; todos os testes anteriores sem falhas.
 - **Limites:** o arquivo não tem criptografia (o aviso diz isso). Backup criptografado, opcional, fica como pendência antes da comercialização (com o risco explicado: senha esquecida = backup perdido). Arquivos muito grandes (dezenas de MB de documentos) ainda não foram testados no iPhone.
 - **Versão estável anterior marcada** no repositório como a branch `v62-estavel` (commit 6254a5b), para voltar se for preciso.
+
+## 85. v64 — Tela de backup mais clara
+
+- **Passo a passo na própria tela** (no iPhone): 1. toque em Salvar backup; 2. escolha Salvar em Arquivos; 3. escolha iCloud Drive e toque em Salvar. Em computador, avisa que o arquivo vai para os downloads.
+- **Um botão principal: "Salvar backup"** (antes "Exportar backup (arquivo)"). Ao terminar, aparece em verde, logo abaixo do botão, o nome do arquivo e onde conferir; "Último backup" muda para "hoje" na hora (antes só ao reabrir).
+- **"Copiar como texto"** vira um botão discreto.
+- **Restauração recolhida** em "Restaurar um backup" (uso raro: troca de celular ou de endereço). Ao abrir, explica que substitui os dados deste aparelho e mostra "Escolher o arquivo do backup", "Colar texto do backup" e, se existir, "Voltar à cópia de antes da atualização".
+- **Nome do arquivo:** `briceno-life-backup-AAAA-MM-DD.json` (antes `nutri-pratico-backup-…`). Backups com o nome antigo continuam aceitos (a restauração lê o conteúdo, não o nome). Formato, chave de armazenamento e identificadores sem mudança.
+- **Motivo:** o Camilo abriu a tela e não soube onde tocar nem o que fazer depois.
+- **Testes (simulador, não iPhone):** salvar, apagar tudo e restaurar do arquivo (dados e documentos idênticos); nome do arquivo; restauração por texto colado; 393 e 320 px; todos os testes anteriores sem falhas.
+- **Versão estável anterior** guardada como a branch `v63-estavel`.
