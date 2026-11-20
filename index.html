@@ -4837,8 +4837,8 @@ function labSheet(p, r, exam, after, name0){
 }
 
 /* ---------- Documentos de exames ----------
-   PDF ou imagem guardados neste aparelho (IndexedDB, banco "briceno-docs"), ligados ao exame pelo id. Não entram no backup em arquivo
-   e não passam por leitura automática (sem OCR, sem interpretação). Excluir o exame ou o documento apaga o arquivo depois do prazo do "Desfazer". */
+   PDF ou imagem guardados neste aparelho (IndexedDB, banco "briceno-docs"), ligados ao exame pelo id. Desde a v63 entram no backup em
+   arquivo (Exportar backup); o "Copiar backup" leva só os dados. Não passam por leitura automática (sem OCR, sem interpretação). Excluir o exame ou o documento apaga o arquivo depois do prazo do "Desfazer". */
 const DOCS = (() => {
   let dbp = null;
   const open = () => dbp || (dbp = new Promise((res, rej) => { try { const r = indexedDB.open("briceno-docs", 1);
@@ -4849,7 +4849,7 @@ const DOCS = (() => {
 })();
 const docRefd = id => S.patients.some(x => { const c = careOf(x); return [...c.exams, ...c.appts, ...c.procs].some(e => (e.docs || []).some(d => d.id === id)); });
 function docsGC(ids){ if (!ids.length || !DOCS.ok) return; setTimeout(() => { for (const id of ids) if (!docRefd(id)) DOCS.del(id).catch(() => {}); }, 6500); }
-const fmtSize = b => b >= 1048576 ? `${g1(b / 1048576)} MB` : `${Math.max(1, Math.round(b / 1024))} kB`;
+const fmtSize = b => b >= 1048576 ? `${g1(b / 1048576)}\u00a0MB` : `${Math.max(1, Math.round(b / 1024))}\u00a0kB`;
 function attachDoc(p, e, f, after){
   if (!/^(application\/pdf|image\/)/.test(f.type)) { toast("Use um PDF ou uma imagem"); return; }
   if (f.size > 15 * 1048576) { toast("Arquivo acima de 15 MB"); return; }
@@ -4883,7 +4883,7 @@ function docsBlock(p, e, file, after){
         const i = e.docs.indexOf(m); e.docs.splice(i, 1); touch(p); render(); after(); docsGC([m.id]); toast("Documento removido", () => { e.docs.splice(i, 0, m); touch(p); render(); after(); }); }}])})))) : null,
     slot,
     h("button", {class: "btn ghost block", type: "button", style: "margin-top:8px", onclick: () => file.click()}, ic("clip"), "Anexar PDF ou imagem"),
-    h("p", {class: "note"}, "Os documentos ficam só neste aparelho e não entram no backup em arquivo. O app não lê nem interpreta o conteúdo.")];
+    h("p", {class: "note"}, "Os documentos ficam neste aparelho e entram no backup em arquivo. O app não lê nem interpreta o conteúdo.")];
 }
 
 /* ---------- Evolução dos resultados (gráfico de linha) ----------
@@ -7394,27 +7394,64 @@ function dataRow(){
     h("div", {class: "dc-t"}, h("b", null, "Salvos só neste aparelho"), h("span", null, when)),
     h("button", {class: "btn sm " + (due ? "primary" : "ghost"), onclick: backupSheet}, due ? "Fazer backup" : "Backup"));
 }
+/* v63 · backup completo: o arquivo leva também os documentos anexados (PDF e imagens), em base64 dentro do mesmo JSON
+   ({app, version, exported, data, docs: {id: {type, b64}}}). Arquivos antigos, sem "docs", continuam sendo restaurados como antes.
+   O arquivo é preparado assim que a folha abre, para que o toque em "Exportar" abra o compartilhamento do iPhone na hora. */
+function docMetas(st){ const out = new Map(), seen = new Set();
+  (function walk(v){ if (!v || typeof v !== "object" || seen.has(v)) return; seen.add(v);
+    if (Array.isArray(v)) { for (const x of v) walk(x); return; }
+    if (Array.isArray(v.docs)) for (const d of v.docs) if (d && typeof d.id === "string" && d.type && !out.has(d.id)) out.set(d.id, d);
+    for (const k in v) if (k !== "docs") walk(v[k]); })(st && st.patients);
+  return [...out.values()]; }
+const blobB64 = b => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(",")[1] || ""); r.onerror = () => rej(r.error); r.readAsDataURL(b); });
+const b64Blob = (b64, type) => { const bin = atob(b64), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new Blob([u], {type}); };
+async function packDocs(){
+  const metas = docMetas(S), docs = {}; let n = 0, miss = 0, bytes = 0;
+  if (!DOCS.ok) return {docs, n, miss: metas.length, bytes};
+  for (const m of metas) { let rec = null; try { rec = await DOCS.get(m.id); } catch (e) {}
+    if (rec && rec.blob) { docs[m.id] = {type: m.type, b64: await blobB64(rec.blob)}; n++; bytes += rec.blob.size; } else miss++; }
+  return {docs, n, miss, bytes};
+}
+const nDocs = n => n === 1 ? "1 documento" : `${n} documentos`;
 function backupSheet(){
-  const backupText = () => JSON.stringify({app: "nutri-pratico", version: VERSION, exported: new Date().toISOString(), data: S});
+  const backupText = docs => JSON.stringify(Object.assign({app: "nutri-pratico", version: VERSION, exported: new Date().toISOString(), data: S}, docs ? {docs} : {}));
   sheet("Backup", (el, close) => {
     const status = h("div", {class: "err", style: "color:var(--muted)"});
     const file = h("input", {type: "file", accept: "application/json,.json", hidden: true});
     const confirmBox = h("div");
     const marked = () => { S.lastBackup = Date.now(); saveNow(); };
+    const nMeta = docMetas(S).length;
+    // o arquivo completo (dados + documentos) é montado já na abertura
+    let pack = null, packErr = false;
+    const ready = embedded ? Promise.resolve(null) : packDocs().then(r => (pack = r), () => { packErr = true; return null; });
+    const docsLine = h("p", {class: "note", style: "margin:-8px 0 14px"});
+    const paintDocs = () => {
+      if (embedded) { docsLine.textContent = "O backup contém os dados de saúde da família, sem criptografia. Guarde em um lugar só seu."; return; }
+      const base = "O arquivo leva todos os dados de saúde da família";
+      if (!nMeta) { docsLine.textContent = base + ", sem criptografia. Guarde o arquivo em um lugar só seu."; return; }
+      if (!pack) { docsLine.textContent = packErr ? base + ". Não foi possível ler os documentos anexados; o arquivo sairá só com os dados." : base + ` e ${nDocs(nMeta)} anexados. Preparando…`; return; }
+      docsLine.textContent = base + ` e ${nDocs(pack.n)} anexados (${fmtSize(pack.bytes)}), sem criptografia. Guarde o arquivo em um lugar só seu.` + (pack.miss ? ` ${pack.miss === 1 ? "1 documento não está" : pack.miss + " documentos não estão"} neste aparelho e não entra${pack.miss === 1 ? "" : "m"}.` : "");
+    };
+    paintDocs(); ready.then(paintDocs);
+    let busy = false;
     async function exportNow(){
-      const name = `nutri-pratico-backup-${new Date().toISOString().slice(0, 10)}.json`;
-      const blob = new Blob([backupText()], {type: "application/json"});
-      const done = () => { marked(); status.textContent = "Backup gerado. Guarde o arquivo em Arquivos, iCloud ou e-mail."; };
+      if (busy) return; busy = true;
       try {
-        const f = new File([blob], name, {type: "application/json"});
-        if (navigator.canShare && navigator.canShare({files: [f]})) { await navigator.share({files: [f], title: "Backup Briceno Life"}); done(); return; }
-      } catch (e) { if (e && e.name === "AbortError") return; }
-      try { const a = h("a", {href: URL.createObjectURL(blob), download: name}); document.body.append(a); a.click(); a.remove(); done(); }
-      catch (e) { status.textContent = "Não foi possível gerar o arquivo neste navegador."; }
+        if (!pack && !packErr && nMeta) { status.textContent = "Preparando os documentos…"; await ready; status.textContent = ""; }
+        const name = `nutri-pratico-backup-${new Date().toISOString().slice(0, 10)}.json`;
+        const blob = new Blob([backupText(pack ? pack.docs : null)], {type: "application/json"});
+        const done = () => { marked(); status.textContent = pack && pack.n ? `Backup gerado com ${nDocs(pack.n)}. Guarde o arquivo em Arquivos, iCloud ou e-mail.` : "Backup gerado. Guarde o arquivo em Arquivos, iCloud ou e-mail."; };
+        try {
+          const f = new File([blob], name, {type: "application/json"});
+          if (navigator.canShare && navigator.canShare({files: [f]})) { await navigator.share({files: [f], title: "Backup Briceno Life"}); done(); return; }
+        } catch (e) { if (e && e.name === "AbortError") return; }
+        try { const a = h("a", {href: URL.createObjectURL(blob), download: name}); document.body.append(a); a.click(); a.remove(); done(); }
+        catch (e) { status.textContent = "Não foi possível gerar o arquivo neste navegador."; }
+      } finally { busy = false; }
     }
     function copyNow(){
-      const txt = backupText();
-      const ok = () => { marked(); status.textContent = "Backup copiado. Cole em “Colar backup” no app instalado."; };
+      const txt = backupText(null);
+      const ok = () => { marked(); status.textContent = nMeta && !embedded ? "Backup copiado, sem os documentos. Para levar tudo, use Exportar backup." : "Backup copiado. Cole em “Colar backup” no app instalado."; };
       const fallback = () => {
         const ta = h("textarea", {style: "position:fixed;top:-1000px"}); ta.value = txt; document.body.append(ta); ta.select();
         try { document.execCommand("copy") ? ok() : (status.textContent = "Não foi possível copiar."); } catch (e) { status.textContent = "Não foi possível copiar."; }
@@ -7427,28 +7464,42 @@ function backupSheet(){
     pasteBox.hidden = true;
     file.addEventListener("change", () => {
       const f = file.files[0]; if (!f) return;
-      const rd = new FileReader(); rd.onload = () => offerRestore(rd.result); rd.readAsText(f); file.value = "";
+      status.textContent = "Lendo o arquivo…";
+      const rd = new FileReader(); rd.onload = () => { status.textContent = ""; offerRestore(rd.result); }; rd.onerror = () => { status.textContent = "Não foi possível ler o arquivo."; }; rd.readAsText(f); file.value = "";
     });
     function offerRestore(text, label){
       let b; try { b = JSON.parse(String(text).trim()); } catch (e) {}
       const d = b && (b.data || (Array.isArray(b.patients) ? b : null));
       if (!d || !Array.isArray(d.patients) || !d.prefs) { status.textContent = "Esse conteúdo não é um backup do Briceno Life."; return; }
+      const docs = b && b.data && b.docs && typeof b.docs === "object" ? b.docs : {};
+      const ids = Object.keys(docs).filter(id => docs[id] && typeof docs[id].b64 === "string" && docs[id].type);
+      let going = false;
       put(confirmBox, h("div", {class: "confirm", style: "flex-wrap:wrap"},
-        h("span", {style: "flex:1 1 100%"}, `Substituir ${nPeople(S.patients.length)} deste aparelho por ${nPeople(d.patients.length)} ${label || (b.exported ? "do backup de " + new Date(b.exported).toLocaleDateString("pt-BR") : "do backup")}?`),
+        h("span", {style: "flex:1 1 100%"}, `${S.patients.length ? `Substituir ${nPeople(S.patients.length)} deste aparelho por` : "Restaurar"} ${nPeople(d.patients.length)}${ids.length ? ` e ${nDocs(ids.length)}` : ""} ${label || (b.exported ? "do backup de " + new Date(b.exported).toLocaleDateString("pt-BR") : "do backup")}?`),
         h("button", {class: "btn ghost", type: "button", style: "flex:1", onclick: () => confirmBox.replaceChildren()}, "Cancelar"),
-        h("button", {class: "btn primary", type: "button", style: "flex:1", onclick: () => {
+        h("button", {class: "btn primary", type: "button", style: "flex:1", onclick: async () => {
+          if (going) return; going = true;
+          // 1) documentos primeiro: gravar arquivo novo não apaga nada; se falhar, os dados ficam como estavam
+          if (ids.length) {
+            if (!DOCS.ok) { status.textContent = "Este navegador não guarda documentos. Nada foi alterado."; confirmBox.replaceChildren(); going = false; return; }
+            status.textContent = `Restaurando ${nDocs(ids.length)}…`;
+            try { for (const id of ids) await DOCS.put({id, blob: b64Blob(docs[id].b64, docs[id].type)}); }
+            catch (e) { status.textContent = "Não foi possível guardar os documentos neste aparelho (espaço cheio ou bloqueado). Os dados não foram alterados."; confirmBox.replaceChildren(); going = false; return; }
+            try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (x) {}
+          }
+          // 2) dados, com a cópia de segurança de antes
           const prev = JSON.stringify(S);
           try { localStorage.setItem(KEY + ".antes-de-restaurar", prev); } catch (e) {}
           try { localStorage.setItem(KEY, JSON.stringify(d)); }
-          catch (e) { status.textContent = "Não foi possível restaurar: o armazenamento deste aparelho está cheio ou bloqueado. Nada foi alterado."; confirmBox.replaceChildren(); return; }
+          catch (e) { status.textContent = "Não foi possível restaurar: o armazenamento deste aparelho está cheio ou bloqueado. Nada foi alterado."; confirmBox.replaceChildren(); going = false; return; }
           for (const f of db.list.filter(x => x.own)) db.remove(f.id);
-          S = null; load(); close(); go({tab: "hoje", open: [], edit: null}); toast("Backup restaurado");
+          S = null; load(); close(); go({tab: "hoje", open: [], edit: null}); toast(ids.length ? `Backup restaurado com ${nDocs(ids.length)}` : "Backup restaurado");
         }}, "Restaurar")));
     }
     let snap = null; try { for (const k of SNAPS) if (!snap) snap = localStorage.getItem(k); } catch (e) {}   // a cópia mais recente feita antes de uma atualização
     el.append(h("h2", null, "Backup"),
       h("p", {class: "sh-sub"}, S.lastBackup ? `Último backup: ${new Date(S.lastBackup).toLocaleDateString("pt-BR")}` : "Nenhum backup feito ainda."),
-      h("p", {class: "note", style: "margin:-8px 0 14px"}, "O backup contém os dados de saúde da família (inclusive agenda, exames, resultados, procedimentos, prioridades e medições), sem criptografia. Guarde o arquivo em um lugar só seu. Documentos anexados (PDF e imagens) não entram no backup: ficam só neste aparelho."),
+      docsLine,
       h("div", {class: "bk-row"},
         embedded ? null : h("button", {class: "btn primary block", type: "button", onclick: exportNow}, "Exportar backup (arquivo)"),
         h("button", {class: embedded ? "btn primary block" : "btn ghost block", type: "button", onclick: copyNow}, "Copiar backup"),
