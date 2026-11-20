@@ -1918,3 +1918,17 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
 - Ao escolher o próximo: a folha fecha, a barra do anterior assenta na cor da intensidade e o aviso "Ciclismo registrado · Musculação começou" traz Desfazer (volta ao anterior, sem registro).
 - Troca com menos de 1 minuto: pula a intensidade e vai direto ao próximo, sem registrar.
 - Substitui a ordem da v61 (escolher o próximo e só depois a intensidade), a pedido do Camilo.
+
+## 84. v63 — Backup completo, com os documentos anexados
+
+- **"Exportar backup (arquivo)"** passa a levar também os documentos anexados a exames, consultas e procedimentos (PDF e imagens), dentro do mesmo arquivo `.json` (campo `docs`, em base64). A folha mostra quantos documentos vão e o tamanho; se algum documento referido não estiver neste aparelho, avisa e o arquivo sai sem ele.
+- O arquivo é preparado assim que a folha abre, para que o toque em "Exportar" abra o compartilhamento do iPhone na hora.
+- **"Copiar backup"** continua levando só os dados (documentos não cabem bem na área de transferência) e avisa isso quando há documentos.
+- **Restauração em duas etapas:** primeiro grava os documentos (só acrescenta, não apaga nada); depois troca os dados, numa única gravação, com a cópia "antes-de-restaurar" guardada antes. Se a restauração for interrompida ou faltar espaço durante os documentos, os dados continuam exatamente como estavam (no máximo sobram arquivos sem uso, que não aparecem). Toque duplo protegido.
+- Num aparelho vazio, a pergunta é "Restaurar 2 perfis e 3 documentos…" (antes: "Substituir 0 perfis…").
+- **Compatível:** backups antigos (sem documentos) restauram como antes. Formato, chave de armazenamento e identificadores sem mudança.
+- **Motivo:** é a base da mudança para o endereço definitivo da empresa (os dados de um app web ficam presos ao endereço; mudar exige backup e restauração) e protege contra perda do aparelho.
+- **Evidência:** não se aplica (recurso de segurança dos dados, não de saúde).
+- **Testes (simulador, não iPhone):** exportar com 3 documentos (um ausente), apagar tudo como num endereço novo, restaurar do arquivo; dados idênticos e documentos idênticos byte a byte; toque duplo sem duplicar; backup antigo sem documentos; telas de 393 e 320 px; todos os testes anteriores sem falhas.
+- **Limites:** o arquivo não tem criptografia (o aviso diz isso). Backup criptografado, opcional, fica como pendência antes da comercialização (com o risco explicado: senha esquecida = backup perdido). Arquivos muito grandes (dezenas de MB de documentos) ainda não foram testados no iPhone.
+- **Versão estável anterior marcada** como `v62-estavel` no repositório, para voltar se for preciso.
