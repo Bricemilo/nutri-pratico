@@ -173,6 +173,11 @@ h2.sec{font-size:0.765rem;font-weight:650;letter-spacing:.08em;text-transform:up
 .sheet h2{font-size:1.294rem;letter-spacing:-.02em;margin:0 0 4px;font-weight:650;text-wrap:balance}
 .sheet .sh-sub{font-size:var(--t-sm);color:var(--muted);margin:0 0 16px}
 .bk-row{display:flex;flex-direction:column;gap:10px}
+.bk-steps{margin:2px 0 16px;padding-left:1.4em;display:flex;flex-direction:column;gap:6px;color:var(--ink-2);font-size:var(--t-body);line-height:1.45}
+.bk-steps b{color:var(--ink);font-weight:650}
+.bk-sep{height:1px;background:var(--line);margin:8px 0 4px}
+.btn.bk-copy{min-height:40px}
+.bk-ok{margin:0;text-align:center;color:var(--ok);font-size:var(--t-sm);font-weight:600;line-height:1.45}
 
 /* Autocompletar */
 .acw{position:relative}
@@ -7457,13 +7462,14 @@ function backupSheet(){
     // o arquivo completo (dados + documentos) é montado já na abertura
     let pack = null, packErr = false;
     const ready = embedded ? Promise.resolve(null) : packDocs().then(r => (pack = r), () => { packErr = true; return null; });
-    const docsLine = h("p", {class: "note", style: "margin:-8px 0 14px"});
+    const docsLine = h("p", {class: "note", style: "margin:0;text-align:center"});
     const paintDocs = () => {
-      if (embedded) { docsLine.textContent = "O backup contém os dados de saúde da família, sem criptografia. Guarde em um lugar só seu."; return; }
-      const base = "O arquivo leva todos os dados de saúde da família";
-      if (!nMeta) { docsLine.textContent = base + ", sem criptografia. Guarde o arquivo em um lugar só seu."; return; }
+      const tail = " Sem criptografia: guarde em um lugar só seu.";
+      if (embedded) { docsLine.textContent = "Leva todos os dados de saúde da família." + tail; return; }
+      const base = "Leva todos os dados de saúde da família";
+      if (!nMeta) { docsLine.textContent = base + "." + tail; return; }
       if (!pack) { docsLine.textContent = packErr ? base + ". Não foi possível ler os documentos anexados; o arquivo sairá só com os dados." : base + ` e ${nDocs(nMeta)} anexados. Preparando…`; return; }
-      docsLine.textContent = base + ` e ${nDocs(pack.n)} anexados (${fmtSize(pack.bytes)}), sem criptografia. Guarde o arquivo em um lugar só seu.` + (pack.miss ? ` ${pack.miss === 1 ? "1 documento não está" : pack.miss + " documentos não estão"} neste aparelho e não entra${pack.miss === 1 ? "" : "m"}.` : "");
+      docsLine.textContent = base + ` e ${nDocs(pack.n)} anexados (${fmtSize(pack.bytes)}).` + (pack.miss ? ` ${pack.miss === 1 ? "1 documento não está" : pack.miss + " documentos não estão"} neste aparelho e não entra${pack.miss === 1 ? "" : "m"}.` : "") + tail;
     };
     paintDocs(); ready.then(paintDocs);
     let busy = false;
@@ -7471,9 +7477,9 @@ function backupSheet(){
       if (busy) return; busy = true;
       try {
         if (!pack && !packErr && nMeta) { status.textContent = "Preparando os documentos…"; await ready; status.textContent = ""; }
-        const name = `nutri-pratico-backup-${new Date().toISOString().slice(0, 10)}.json`;
+        const name = `briceno-life-backup-${C.dayKey(new Date())}.json`;
         const blob = new Blob([backupText(pack ? pack.docs : null)], {type: "application/json"});
-        const done = () => { marked(); status.textContent = pack && pack.n ? `Backup gerado com ${nDocs(pack.n)}. Guarde o arquivo em Arquivos, iCloud ou e-mail.` : "Backup gerado. Guarde o arquivo em Arquivos, iCloud ou e-mail."; };
+        const done = () => { marked(); sub.textContent = "Último backup: hoje"; saved.hidden = false; saved.textContent = `Pronto: ${name}${pack && pack.n ? `, com ${nDocs(pack.n)}` : ""}. Para conferir, abra o app Arquivos → iCloud Drive.`; };
         try {
           const f = new File([blob], name, {type: "application/json"});
           if (navigator.canShare && navigator.canShare({files: [f]})) { await navigator.share({files: [f], title: "Backup Briceno Life"}); done(); return; }
@@ -7530,17 +7536,31 @@ function backupSheet(){
         }}, "Restaurar")));
     }
     let snap = null; try { for (const k of SNAPS) if (!snap) snap = localStorage.getItem(k); } catch (e) {}   // a cópia mais recente feita antes de uma atualização
-    el.append(h("h2", null, "Backup"),
-      h("p", {class: "sh-sub"}, S.lastBackup ? `Último backup: ${new Date(S.lastBackup).toLocaleDateString("pt-BR")}` : "Nenhum backup feito ainda."),
-      docsLine,
+    // v64 · tela mais clara: um caminho principal (Salvar backup, com o passo a passo do iPhone) e a restauração recolhida
+    let shareFiles = false; try { shareFiles = !!(navigator.canShare && navigator.canShare({files: [new File(["{}"], "b.json", {type: "application/json"})]})); } catch (e) {}
+    const steps = embedded ? null : h("ol", {class: "bk-steps"},
+      h("li", null, "Toque em ", h("b", null, "Salvar backup"), "."),
+      shareFiles ? [h("li", null, "Na janela do iPhone, escolha ", h("b", null, "Salvar em Arquivos"), "."), h("li", null, "Escolha ", h("b", null, "iCloud Drive"), " e toque em ", h("b", null, "Salvar"), ".")]
+        : h("li", null, "O arquivo vai para a pasta de downloads deste aparelho."));
+    const sub = h("p", {class: "sh-sub"}, S.lastBackup ? `Último backup: ${new Date(S.lastBackup).toLocaleDateString("pt-BR")}` : "Nenhum backup feito ainda.");
+    const saved = h("p", {class: "bk-ok", role: "status"}); saved.hidden = true;
+    const restoreBox = h("div", {class: "bk-row"},
+      h("p", {class: "note", style: "margin:0"}, "Para trocar de celular ou de endereço do app. Os dados deste aparelho são substituídos pelos do backup."),
+      embedded ? null : h("button", {class: "btn primary block", type: "button", onclick: () => file.click()}, "Escolher o arquivo do backup"),
+      h("button", {class: embedded ? "btn primary block" : "btn ghost block", type: "button", onclick: () => { pasteBox.hidden = false; pasteArea.focus(); }}, "Colar texto do backup"),
+      snap ? h("button", {class: "btn ghost block", type: "button", onclick: () => offerRestore(snap, "da cópia automática feita antes da atualização")}, "Voltar à cópia de antes da atualização") : null,
+      pasteBox);
+    restoreBox.hidden = true;
+    const restoreBtn = h("button", {class: "btn ghost block", type: "button", "aria-expanded": "false", onclick: () => { restoreBox.hidden = false; restoreBtn.hidden = true; }}, "Restaurar um backup");
+    el.append(h("h2", null, "Backup"), sub,
+      steps,
       h("div", {class: "bk-row"},
-        embedded ? null : h("button", {class: "btn primary block", type: "button", onclick: exportNow}, "Exportar backup (arquivo)"),
-        h("button", {class: embedded ? "btn primary block" : "btn ghost block", type: "button", onclick: copyNow}, "Copiar backup"),
-        h("div", {class: "eyebrow", style: "margin-top:8px"}, "Restaurar"),
-        h("button", {class: "btn ghost block", type: "button", onclick: () => { pasteBox.hidden = false; pasteArea.focus(); }}, "Colar backup"),
-        embedded ? null : h("button", {class: "btn ghost block", type: "button", onclick: () => file.click()}, "Restaurar de um arquivo"),
-        snap ? h("button", {class: "btn ghost block", type: "button", onclick: () => offerRestore(snap, "da cópia automática feita antes da atualização")}, "Voltar à cópia de antes da atualização") : null,
-        pasteBox, file, status, confirmBox,
+        embedded ? h("button", {class: "btn primary block", type: "button", onclick: copyNow}, "Copiar backup")
+          : h("button", {class: "btn primary block", type: "button", onclick: exportNow}, "Salvar backup"),
+        saved, docsLine,
+        embedded ? null : h("button", {class: "btn plain block bk-copy", type: "button", onclick: copyNow}, "Copiar como texto"),
+        h("div", {class: "bk-sep"}),
+        restoreBtn, restoreBox, file, status, confirmBox,
         h("button", {class: "btn plain block", type: "button", onclick: close}, "Fechar")));
   });
 }
