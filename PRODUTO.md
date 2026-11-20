@@ -1943,3 +1943,13 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
 - **Motivo:** o Camilo abriu a tela e não soube onde tocar nem o que fazer depois.
 - **Testes (simulador, não iPhone):** salvar, apagar tudo e restaurar do arquivo (dados e documentos idênticos); nome do arquivo; restauração por texto colado; 393 e 320 px; todos os testes anteriores sem falhas.
 - **Versão estável anterior** guardada como a branch `v63-estavel`.
+
+## 86. v65 — Entrada com "Já usa o Briceno Life? Restaurar meus dados"
+
+- **Boas-vindas (aparelho ou endereço sem dados):** além de "Criar meu perfil", um bloco "Já usa o Briceno Life? Traga os seus dados com o arquivo de backup que você salvou" com o botão **Restaurar meus dados**. Embaixo: "Os seus dados ficam só neste aparelho."
+- **"Restaurar meus dados"** abre a folha de backup só no modo restaurar, com o passo a passo (1. Escolher o arquivo do backup; 2. iCloud Drive → arquivo `briceno-life-backup` ou `nutri-pratico-backup`; 3. Restaurar). Sem "Salvar backup" ali, porque ainda não há o que salvar.
+- Sai a faixa "Salvos só neste aparelho · Nenhum backup feito ainda · Backup" da tela de boas-vindas (função `dataRow`, que só era usada ali).
+- **Motivo:** na mudança para o endereço novo (briceno-life.pages.dev), o Camilo abriu o app vazio e não encontrou de imediato onde restaurar.
+- **Mudança de endereço (registro):** em 20/11/2026 o Life passou a ser publicado também pelo Cloudflare Pages (projeto `briceno-life`, ramo `main`, pasta `docs`, sem etapa de montagem). O Camilo instalou o ícone novo no iPhone e restaurou o backup com sucesso (relato dele, no iPhone). O endereço antigo (GitHub Pages) continua no ar até a confirmação final.
+- **Testes (simulador, não iPhone):** restaurar por esse caminho num aparelho vazio (dados e documentos idênticos); 393 e 320 px; todos os testes anteriores sem falhas.
+- **Versão estável anterior** guardada como a branch `v64-estavel`.
