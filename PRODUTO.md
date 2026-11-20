@@ -1931,4 +1931,4 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
 - **Evidência:** não se aplica (recurso de segurança dos dados, não de saúde).
 - **Testes (simulador, não iPhone):** exportar com 3 documentos (um ausente), apagar tudo como num endereço novo, restaurar do arquivo; dados idênticos e documentos idênticos byte a byte; toque duplo sem duplicar; backup antigo sem documentos; telas de 393 e 320 px; todos os testes anteriores sem falhas.
 - **Limites:** o arquivo não tem criptografia (o aviso diz isso). Backup criptografado, opcional, fica como pendência antes da comercialização (com o risco explicado: senha esquecida = backup perdido). Arquivos muito grandes (dezenas de MB de documentos) ainda não foram testados no iPhone.
-- **Versão estável anterior marcada** como `v62-estavel` no repositório, para voltar se for preciso.
+- **Versão estável anterior marcada** no repositório como a branch `v62-estavel` (commit 6254a5b), para voltar se for preciso.
