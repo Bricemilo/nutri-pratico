@@ -1,7 +1,7 @@
-<title>Briceno Life</title>
+<title>Briceño Life</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Briceno Life">
+<meta name="apple-mobile-web-app-title" content="Life">
 <style>
 /* Layout: uma coluna de app nativo (máx. 600px) sobre preto quente, barra de abas no rodapé.
    Superfícies em grafite separam os blocos; o cobre marca só o essencial; macros em champanhe, pátina, rosé e sálvia. */
@@ -3473,7 +3473,7 @@ function topBar(...right){
   const p = active();
   return h("header", {class: "top"}, h("div", {class: "top-row"},
     p ? h("button", {class: "who", "aria-label": `${p.name}. Meu perfil e família`, onclick: switcher}, avatar(p), h("b", null, firstName(p.name)), ic("chev"))
-      : h("div", {class: "brand"}, h("img", {class: "mark mark-b", src: BRAND_MARK, alt: "", width: "28", height: "28"}), "Briceno Life"),
+      : h("div", {class: "brand"}, h("img", {class: "mark mark-b", src: BRAND_MARK, alt: "", width: "28", height: "28"}), "Briceño Life"),
     h("div", {class: "spacer"}), right));
 }
 // abre o Perfil guardando a tela de origem: o "‹" do Perfil volta para ela
@@ -3506,7 +3506,7 @@ function renderWelcome(){
       h("button", {class: "btn primary block", onclick: () => profileSheet()}, "Criar meu perfil")),
     // v65 · quem já usa o app (troca de celular ou de endereço) encontra o caminho logo na entrada
     h("section", {class: "card stack wl-back"},
-      h("div", {class: "cta"}, h("span", {class: "ic", html: ICON.repeat}), h("div", null, h("b", null, "Já usa o Briceno Life?"), "Traga os seus dados com o arquivo de backup que você salvou.")),
+      h("div", {class: "cta"}, h("span", {class: "ic", html: ICON.repeat}), h("div", null, h("b", null, "Já usa o Briceño Life?"), "Traga os seus dados com o arquivo de backup que você salvou.")),
       h("button", {class: "btn ghost block", type: "button", onclick: () => backupSheet({restore: true})}, "Restaurar meus dados")),
     h("p", {class: "note wl-note"}, ic("lock"), "Os seus dados ficam só neste aparelho.")));
 }
@@ -4438,7 +4438,7 @@ function medSheet(p, m, cat0){
 }
 // lembretes de um item: um evento diário por horário (hora local), do início (ou hoje) até o término, com aviso na hora
 function medCal(p, m){
-  const td = today(), from = m.start && m.start > td ? m.start : td, title = p.notif && p.notif.detail ? m.name : "Lembrete Briceno Life";
+  const td = today(), from = m.start && m.start > td ? m.start : td, title = p.notif && p.notif.detail ? m.name : "Lembrete Briceño Life";
   const until = m.end ? `;UNTIL=${m.end.replace(/-/g, "")}T235900` : "", rule = m.freq === "Semanal" ? "FREQ=WEEKLY" : m.freq === "Dias alternados" ? "FREQ=DAILY;INTERVAL=2" : "FREQ=DAILY";
   const ics = C.icsCalendar(m.times.map((t, i) => ({uid: `${m.id}-${i}@briceno`, title, date: from, time: t, floating: true, durMin: 5, rrule: rule + until, rem: [0], transparent: true})));
   deliverICS(ics, "lembretes.ics").then(ok => { if (ok) toast("Arquivo do Calendário criado"); }, () => toast("Não foi possível criar o arquivo"));
@@ -5032,7 +5032,7 @@ function calExport(p, e){
   if (!dateOk(e.date)) { toast("Informe a data antes"); return; }
   const k = kindOf(p, e), detail = p.notif && p.notif.detail, seq = ((e.cal && e.cal.seq) || 0) + (e.cal ? 1 : 0);
   const ics = C.icsCalendar([{uid: e.id + "@briceno", title: calTitle(p, e), date: e.date, time: e.time, tz: e.tz || DEVICE_TZ, durMin: k === "exame" ? 30 : 60,
-    location: detail ? [e.place, e.mode === "online" ? "" : e.addr].filter(Boolean).join(" · ") : "", desc: detail ? "Registrado no Briceno Life." : "", rem: e.rem || [], seq}]);
+    location: detail ? [e.place, e.mode === "online" ? "" : e.addr].filter(Boolean).join(" · ") : "", desc: detail ? "Registrado no Briceño Life." : "", rem: e.rem || [], seq}]);
   deliverICS(ics, `${k === "consulta" ? "consulta" : k === "proc" ? "procedimento" : "exame"}-${e.date}.ics`).then(ok => {
     if (!ok) return; e.cal = {at: Date.now(), seq, sig: calSig(p, e)}; touch(p); render(); toast("Arquivo do Calendário criado");
   }, () => toast("Não foi possível criar o arquivo"));
@@ -5044,7 +5044,7 @@ function calBlock(p, e){
   return h("div", {class: "calb"},
     h("button", {class: "btn ghost block", type: "button", onclick: () => calExport(p, e)}, ic("cal"), e.cal ? "Enviar de novo ao Calendário" : n ? "Adicionar ao Calendário com os lembretes" : "Adicionar ao Calendário"),
     h("p", {class: "note" + (stale ? " warn" : "")}, stale ? "O compromisso mudou depois de ir para o Calendário. Envie de novo e confira lá: o Calendário pode manter também a versão anterior."
-      : e.cal ? `Enviado ao Calendário em ${fmtMoment(e.cal.at)}. Os avisos são do app Calendário; o Briceno Life não envia notificações.`
+      : e.cal ? `Enviado ao Calendário em ${fmtMoment(e.cal.at)}. Os avisos são do app Calendário; o Briceño Life não envia notificações.`
       : "Os avisos ficam no app Calendário do aparelho, que é quem notifica. No iPhone, escolha Calendário na tela de compartilhar; se não aparecer, salve em Arquivos e toque no arquivo para adicionar."));
 }
 // cancelado ou excluído depois de ir para o Calendário: o app não consegue apagar lá
@@ -5777,7 +5777,7 @@ function waterRemSheet(p){
     function commit(){
       const ev = every(), slots = C.slotTimes(start.value, end.value, ev); if (!slots.length || !d.days.length) return;
       c.waterRem = {on: true, every: d.every === "x" ? ev : d.every, start: start.value, end: end.value, days: WDAYS.map(x => x[0]).filter(k => d.days.includes(k)), at: Date.now()};
-      const rule = c.waterRem.days.length === 7 ? "FREQ=DAILY" : "FREQ=WEEKLY;BYDAY=" + c.waterRem.days.join(","), title = p.notif && p.notif.detail ? "Hidratação · beber água, se quiser" : "Lembrete Briceno Life";
+      const rule = c.waterRem.days.length === 7 ? "FREQ=DAILY" : "FREQ=WEEKLY;BYDAY=" + c.waterRem.days.join(","), title = p.notif && p.notif.detail ? "Hidratação · beber água, se quiser" : "Lembrete Briceño Life";
       const ics = C.icsCalendar(slots.map((t, i) => ({uid: `agua-${p.id}-${i}@briceno`, title, date: today(), time: t, floating: true, durMin: 5, rrule: rule, rem: [0], transparent: true})), "Hidratação");
       touch(p); close(); render();
       deliverICS(ics, "hidratacao.ics").then(okk => { if (okk) toast("Arquivo do Calendário criado"); }, () => toast("Não foi possível criar o arquivo"));
@@ -7143,7 +7143,7 @@ function renderProfile(p){
         S.patients.some(x => !x.example) && (days == null || days >= 7), days == null ? "Sem backup" : `Backup ${days === 0 ? "hoje" : days === 1 ? "ontem" : `há ${days} dias`}`),
       row("faceid", "Abrir com Face ID", lockCfg() ? "Ligado neste aparelho" : "Desligado", () => lockSheet()),
       row("sliders", "Configurações", tracks(p) ? "Registro do consumo ligado · sugestões" : "Só planejamento · sugestões", () => prefsSheet()),
-      row("book", "Fontes e metodologia", "Como o Briceno Life calcula", () => scienceSheet(p)))));
+      row("book", "Fontes e metodologia", "Como o Briceño Life calcula", () => scienceSheet(p)))));
 }
 // Necessidade energética: seção recolhível. Fechada mostra só o GET e o protocolo; aberta, o seletor de protocolo,
 // TMB, GET, IMC e a ação de usar como meta. As fórmulas ficam em scienceSheet.
@@ -7273,7 +7273,7 @@ function prefsSheet(){
     const cal = () => h("div", null, h("div", {class: "lbl2"}, `Lembretes de ${firstName(p.name)} no Calendário`),
       h("div", {class: "seg", role: "radiogroup", "aria-label": "Texto dos lembretes"}, [[false, "Título discreto"], [true, "Com detalhes"]].map(([v, l]) =>
         h("button", {type: "button", role: "radio", class: !!(p.notif && p.notif.detail) === v ? "on" : "", "aria-checked": String(!!(p.notif && p.notif.detail) === v), onclick: () => { p.notif = Object.assign({}, p.notif, {detail: v}); touch(p); paint(); }}, l))),
-      h("p", {class: "note"}, "Discreto: o Calendário e a tela bloqueada mostram “Compromisso de saúde” ou “Lembrete Briceno Life”. Com detalhes: o tipo do compromisso, o nome do item e o local."));
+      h("p", {class: "note"}, "Discreto: o Calendário e a tela bloqueada mostram “Compromisso de saúde” ou “Lembrete Briceño Life”. Com detalhes: o tipo do compromisso, o nome do item e o local."));
     const paint = () => put(body, track(), cal(), list("meals", "Nomes de refeições sugeridos", DEFAULT_MEALS), list("objectives", "Objetivos sugeridos", DEFAULT_OBJ),
       h("div", {class: "lbl2"}, "Alimentos recentes"), h("button", {class: "btn ghost block", type: "button", disabled: !S.prefs.recent.length, onclick: () => { S.prefs.recent = []; save(); paint(); toast("Recentes apagados"); }},
         S.prefs.recent.length ? `Limpar ${S.prefs.recent.length} recentes` : "Nenhum recente"));
@@ -7289,8 +7289,8 @@ function scienceSheet(p){
     h("div", null, h("div", {class: "k"}, "TMB"), h("div", {class: "v"}, tmb == null ? "—" : k0(tmb))),
     h("div", null, h("div", {class: "k"}, fl), h("div", {class: "v"}, fator == null ? "—" : nf2.format(fator))),
     h("div", null, h("div", {class: "k"}, "GET"), h("div", {class: "v acc"}, get == null ? "—" : k0(get))));
-  sheet("Como o Briceno Life calcula", el => {
-    el.append(h("h2", null, "Como o Briceno Life calcula"));
+  sheet("Como o Briceño Life calcula", el => {
+    el.append(h("h2", null, "Como o Briceño Life calcula"));
     if (r.ok){
       el.append(h("p", {class: "sh-sub"}, `Cálculo de ${firstName(p.name)}: ${fq.format(e.weight)} kg, ${fq.format(e.height)} cm, ${ageLabel(r.age)}.`),
         h("div", {class: "card-t"}, "FAO/OMS 1985"), resGrid(r.fao.tmb, r.fao.fa, "FA", r.child ? null : r.fao.get),
@@ -7305,7 +7305,7 @@ function scienceSheet(p){
     el.append(methodProse());
   });
 }
-function methodSheet(){ sheet("Como o Briceno Life calcula", el => el.append(h("h2", null, "Como o Briceno Life calcula"), methodProse())); }
+function methodSheet(){ sheet("Como o Briceño Life calcula", el => el.append(h("h2", null, "Como o Briceño Life calcula"), methodProse())); }
 function methodProse(){
   return h("div", {class: "prose"},
     h("h3", null, "Gasto energético"),
@@ -7329,7 +7329,7 @@ function methodProse(){
 
 /* ---------- Necessidade energética ----------
    Resumo primeiro (TMB, GET e protocolo escolhido); as equações ficam em "Fórmulas e cálculos". */
-// Limitações em uma frase, exibidas sob o seletor (o detalhe fica em "Como o Briceno Life calcula").
+// Limitações em uma frase, exibidas sob o seletor (o detalhe fica em "Como o Briceño Life calcula").
 const METHOD_NOTE = {
   dri: "Padrão. Estima o gasto total por idade, peso, altura e atividade. Feita para pessoas saudáveis; em sobrepeso, gestação ou doenças é menos precisa.",
   fao: "Taxa basal pelo peso (Schofield) × fator de atividade. Não usa a altura; os fatores descrevem grupos, não indivíduos.",
@@ -7446,7 +7446,7 @@ function backupSheet(opts = {}){
         const done = () => { marked(); sub.textContent = "Último backup: hoje"; saved.hidden = false; saved.textContent = `Pronto: ${name}${pack && pack.n ? `, com ${nDocs(pack.n)}` : ""}. Para conferir, abra o app Arquivos → iCloud Drive.`; };
         try {
           const f = new File([blob], name, {type: "application/json"});
-          if (navigator.canShare && navigator.canShare({files: [f]})) { await navigator.share({files: [f], title: "Backup Briceno Life"}); done(); return; }
+          if (navigator.canShare && navigator.canShare({files: [f]})) { await navigator.share({files: [f], title: "Backup Briceño Life"}); done(); return; }
         } catch (e) { if (e && e.name === "AbortError") return; }
         try { const a = h("a", {href: URL.createObjectURL(blob), download: name}); document.body.append(a); a.click(); a.remove(); done(); }
         catch (e) { status.textContent = "Não foi possível gerar o arquivo neste navegador."; }
@@ -7473,7 +7473,7 @@ function backupSheet(opts = {}){
     function offerRestore(text, label){
       let b; try { b = JSON.parse(String(text).trim()); } catch (e) {}
       const d = b && (b.data || (Array.isArray(b.patients) ? b : null));
-      if (!d || !Array.isArray(d.patients) || !d.prefs) { status.textContent = "Esse conteúdo não é um backup do Briceno Life."; return; }
+      if (!d || !Array.isArray(d.patients) || !d.prefs) { status.textContent = "Esse conteúdo não é um backup do Briceño Life."; return; }
       const docs = b && b.data && b.docs && typeof b.docs === "object" ? b.docs : {};
       const ids = Object.keys(docs).filter(id => docs[id] && typeof docs[id].b64 === "string" && docs[id].type);
       let going = false;
@@ -7557,7 +7557,7 @@ const recHash = async s => b64u(await crypto.subtle.digest("SHA-256", new TextEn
 function recNew(){ const A = "ABCDEFGHJKMNPQRSTUVWXYZ23456789", r = rnd(8); let c = ""; for (let i = 0; i < 8; i++) c += A[r[i] % A.length]; return c.slice(0, 4) + "-" + c.slice(4); }
 async function faceOK(){ try { return !!(window.PublicKeyCredential && window.isSecureContext && await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()); } catch (e) { return false; } }
 async function faceCreate(){
-  const cred = await navigator.credentials.create({publicKey: {challenge: rnd(32), rp: {name: "Briceno Life"}, user: {id: rnd(16), name: "Briceno Life", displayName: "Briceno Life"},
+  const cred = await navigator.credentials.create({publicKey: {challenge: rnd(32), rp: {name: "Briceño Life"}, user: {id: rnd(16), name: "Briceño Life", displayName: "Briceño Life"},
     pubKeyCredParams: [{type: "public-key", alg: -7}, {type: "public-key", alg: -257}], timeout: 60000, attestation: "none",
     authenticatorSelection: {authenticatorAttachment: "platform", userVerification: "required", residentKey: "preferred"}}});
   return b64u(cred.rawId);
@@ -7590,7 +7590,7 @@ function paintLock(mode){
     h("button", {class: "bt-rec", type: "button", onclick: () => paintLock("rec")}, "Usar código de recuperação"));
 }
 function lockShow(){
-  locked = true; bootCover("lock"); boot.classList.remove("veil"); boot.setAttribute("aria-hidden", "false"); boot.setAttribute("role", "dialog"); boot.setAttribute("aria-label", "Briceno Life bloqueado");
+  locked = true; bootCover("lock"); boot.classList.remove("veil"); boot.setAttribute("aria-hidden", "false"); boot.setAttribute("role", "dialog"); boot.setAttribute("aria-label", "Briceño Life bloqueado");
   paintLock("idle"); unlock();   // pede o rosto na hora (iOS 17.4 ou mais novo permite sem toque); se o iPhone exigir um toque, fica o botão
 }
 async function unlock(){
@@ -7627,9 +7627,9 @@ function lockSheet(){
         h("div", {style: "height:22px"}),
         h("button", {class: "btn danger block", type: "button", onclick: async () => { let ok = false; try { ok = await faceCheck(c.id); } catch (e) {}
           if (!ok) { toast("Não confirmado"); return; } lockSave(null); close(); render(); toast("Face ID desligado"); }}, "Desligar"));
-      if (!await faceOK()) return put(body, h("h2", null, "Abrir com Face ID"), h("p", {class: "sh-sub"}, "Este aparelho ou navegador não oferece Face ID para apps da web. No iPhone, abra o Briceno Life pelo ícone na tela de início."));
+      if (!await faceOK()) return put(body, h("h2", null, "Abrir com Face ID"), h("p", {class: "sh-sub"}, "Este aparelho ou navegador não oferece Face ID para apps da web. No iPhone, abra o Briceño Life pelo ícone na tela de início."));
       put(body, h("h2", null, "Abrir com Face ID"),
-        h("p", {class: "sh-sub"}, "Ao abrir o Briceno Life, o iPhone confirma que é você. Se o rosto não for reconhecido, vale o código do iPhone."),
+        h("p", {class: "sh-sub"}, "Ao abrir o Briceño Life, o iPhone confirma que é você. Se o rosto não for reconhecido, vale o código do iPhone."),
         h("p", {class: "note"}, "É uma tranca na entrada do app: os dados continuam só neste aparelho, como hoje."),
         h("div", {class: "confirmbar"}, h("button", {class: "btn primary block", type: "button", onclick: async () => {
           try { paint.id = await faceCreate(); } catch (e) { toast("Face ID não ativado"); return; }
