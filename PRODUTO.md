@@ -1953,3 +1953,11 @@ As frases explicativas foram para dentro de "Referência": os minutos de ativida
 - **Mudança de endereço (registro):** em 20/11/2026 o Life passou a ser publicado também pelo Cloudflare Pages (projeto `briceno-life`, ramo `main`, pasta `docs`, sem etapa de montagem). O Camilo instalou o ícone novo no iPhone e restaurou o backup com sucesso (relato dele, no iPhone). O endereço antigo (GitHub Pages) continua no ar até a confirmação final.
 - **Testes (simulador, não iPhone):** restaurar por esse caminho num aparelho vazio (dados e documentos idênticos); 393 e 320 px; todos os testes anteriores sem falhas.
 - **Versão estável anterior** guardada como a branch `v64-estavel`.
+
+## 87. v66 — Nome Briceño Life, com til
+
+- **Nome do app:** "Briceño Life", com til, em todo o app (topo, boas-vindas, "Como o Briceño Life calcula", backup, Face ID, lembretes do Calendário). Segue a marca da empresa aprovada: BRICEÑO, com til na marca e "briceno" sem til em endereços e arquivos técnicos.
+- **Nome embaixo do ícone do iPhone:** "Life" (`apple-mobile-web-app-title` e `short_name` do manifesto), como a Apple faz com "Apple Music" → "Music". O B em cobre do ícone já identifica a Briceño. O iPhone só mostra o nome novo quando o ícone é adicionado de novo à tela inicial (sempre com backup antes).
+- **Sem mudança:** chave de armazenamento `nutripratico.v1`, identificadores internos, endereço, formato e nome do arquivo de backup (`briceno-life-backup-…`).
+- **Testes (simulador, não iPhone):** todos os testes anteriores sem falhas; boas-vindas em 393 e 320 px.
+- **Versão estável anterior** guardada como a branch `v65-estavel`.
